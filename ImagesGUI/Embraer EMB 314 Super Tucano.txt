@@ -1,0 +1,463 @@
+Embraer EMB 314 Super Tucano
+From Wikipedia, the free encyclopedia
+Jump to navigation
+Jump to search
+EMB 314 / A-29 Super Tucano
+A-29 Over Afghanistan.jpg
+Role 	Attack and counter-insurgency aircraft
+National origin 	Brazil
+Manufacturer 	Embraer Defense and Security
+First flight 	2 June 1999
+Introduction 	2003
+Status 	In production
+Primary users 	Brazilian Air Force
+Colombian Air Force
+Afghan Air Force
+Ecuadorian Air Force
+Produced 	2003–present
+Number built 	247+[1]
+Unit cost 	
+
+$9–18 million[2][3]
+$430–500/hour (operational cost)[4][5]
+Developed from 	Embraer EMB 312 Tucano
+
+The Embraer EMB 314 Super Tucano (About this soundpronunciation), also named ALX or A-29, is a Brazilian turboprop light attack aircraft designed and built by Embraer as a development of the Embraer EMB 312 Tucano. The A-29 Super Tucano carries a wide variety of weapons, including precision-guided munitions, and was designed to be a low-cost system operated in low-threat environments.[6]
+
+In addition to its manufacture in Brazil, Embraer has set up a production line in the United States in conjunction with Sierra Nevada Corporation for the A-29's many export customers.
+Contents
+
+    1 Design and development
+    2 Operational history
+        2.1 Afghanistan
+        2.2 Brazil
+            2.2.1 Sivam Program
+            2.2.2 Operation Ágata
+            2.2.3 Operation Ágata 2
+            2.2.4 Operation Ágata 3
+        2.3 Chile
+        2.4 Colombia
+            2.4.1 Anti-FARC operation Phoenix
+            2.4.2 Anti-FARC operation Sodoma
+        2.5 Dominican Republic
+        2.6 Ecuador
+        2.7 Honduras
+        2.8 Indonesia
+        2.9 Nigeria
+        2.10 Philippines
+        2.11 United States
+            2.11.1 Civilian
+            2.11.2 Military
+                2.11.2.1 Special operations
+                2.11.2.2 Air force
+                    2.11.2.2.1 Afghanistan
+                    2.11.2.2.2 Light attack experiment
+        2.12 Potential operators
+            2.12.1 Equatorial Guinea
+            2.12.2 Guatemala
+            2.12.3 Lebanon
+            2.12.4 Libya
+            2.12.5 Mozambique
+            2.12.6 Paraguay
+            2.12.7 Peru
+            2.12.8 Suriname
+            2.12.9 Sweden
+            2.12.10 Thailand
+            2.12.11 UAE
+        2.13 Missed contracts
+    3 Operators
+    4 Aircraft on display
+    5 Specifications (EMB 314 Super Tucano)
+    6 See also
+    7 References
+        7.1 Notes
+        7.2 Bibliography
+    8 External links
+
+Design and development
+See also: Development of the EMB-312 Tucano
+
+During the mid-1980s, Embraer was working on the Short Tucano alongside a new version designed EMB-312G1, carrying the same Garrett engine. The EMB-312G1 prototype flew for the first time in July 1986. However, the project was dropped because the Brazilian Air Force was not interested in it. Nonetheless, the lessons from recent combat use of the aircraft in Peru and Venezuela led Embraer to keep up the studies. Besides a trainer, it researched a helicopter attack version designated "helicopter killer" or EMB-312H.[7] The study was stimulated by the unsuccessful bid for the US military Joint Primary Aircraft Training System program. A proof-of-concept prototype flew for the first time in September 1991. The aircraft features a 1.37-m (4.49-ft) fuselage extension with the addition of sections before and after of the cockpit to restore its center of gravity and stability, a strengthened airframe, cockpit pressurization, and stretched nose to house the more powerful PT6A-67R (1,424 shp) engine. Two new prototypes with the PT6A-68A (1,250 shp) engine were built in 1993. The second prototype flew for the first time in May 1993 and the third prototype flew in October 1993.[8]
+This EMB-312H prototype first flew on 9 September 1991, and currently is on display at the Memorial Aeroespacial Brasileiro in São José dos Campos.
+
+The request for a light attack aircraft was part of the Brazilian government's Amazon Surveillance System project. This aircraft would fly with the R-99A and R-99B aircraft then in service and be used to intercept illegal aircraft flights and patrol Brazil's borders. The ALX project was then created by the Brazilian Air Force, which was also in need of a military trainer to replace the Embraer EMB 326GB Xavante. The new aircraft was to be suited to the Amazon region (high temperature, moisture, and precipitation; low threat). The ALX was then specified as a turboprop engine aircraft with a long range and autonomy, able to operate night and day, in any meteorological conditions, and able to land on short airfields lacking infrastructure.[9]
+
+In August 1995, the Brazilian Ministry of Aeronautics awarded Embraer a $50 million contract for ALX development. Two EMB-312Hs were updated to serve as ALX prototypes. These made their initial flights in their new configuration in 1996 and 1997, respectively. The initial flight of a production-configured ALX, further modified from one of the prototypes, occurred on 2 June 1999. The second prototype was brought up to two-seater configuration and performed its first flight on 22 October 1999. The changes had been so considerable that the type was given a new designation, the EMB-314 Super Tucano.[8] The total cost of the aircraft development was quoted to be between US$200 million and US$300 million.[10]
+
+The aircraft differs from the baseline EMB-312 Tucano trainer aircraft in several respects. It is powered by a more powerful 1,200 kW (1,600 shp) Pratt & Whitney Canada PT6A-68C engine (compared to the EMB-312's 560 kW (750 shp) powerplant); has a strengthened airframe to sustain higher g loads and increase fatigue life to 18,000–12,000 hours in operational environments; a reinforced landing gear to handle greater takeoff weights and heavier stores load, up to 1,550 kg (3,300 lb); Kevlar armour protection; two internal, wing-mounted .50 cal. machine guns (with 200 rounds of ammunition each);[11] capacity to carry various ordnance on five weapon hardpoints including Giat NC621 20 mm cannon pods, Mk 81/82 bombs, MAA-1 Piranha air-to-air missiles (AAMs), BLG-252 cluster bombs, and SBAT-70/19 or LAU-68A/G rocket pods on its underwing stations; and has a night-vision goggle-compatible "glass cockpit" with hands-on-throttle-and-stick controls; provision for a datalink; a video camera and recorder; an embedded mission-planning capability; forward-looking infrared; chaff/flare dispensers; missile approach warning receiver systems and radar warning receivers; and zero-zero ejection seats.[12] The structure is corrosion-protected and the side-hinged canopy has a windshield able to withstand bird strike impacts up to 500 km/h (270 kn).[13]
+The A-29A incorporates an additional tank for 400 l of fuel.
+
+In 1996, Embraer selected the Israeli firm Elbit Systems to supply the mission avionics for the ALX. For this contract, Elbit was chosen over GEC-Marconi and Sextant Avionique. The Israeli company supplies such equipment as the mission computer, head-up displays, and navigation and stores management systems.[14]
+
+On 13 October 2010, the Super Tucano A-29B had passed the mark of 48,000 hours since 21 July 2005 on full-scale wing-fuselage structural fatigue tests, conducted by the Aeronautical Systems Division, part of the Aeronautics and Space Institute at the Structural Testing Laboratory. The tests involve a complex system of hydraulics and tabs that apply pressure to the aircraft structure, simulating air pressure from flying at varying altitudes. The simulation continued for another year to complete the engine-fatigue life test and crack-propagation studies for a damage-tolerance analysis program of conducted by Embraer and the Aeronautics and Space Institute.[15][16]
+
+Embraer developed an advanced training and support system suite called Training Operational Support System (TOSS) an integrated computational tool composed of four systems: computer-based training enabling the student to rehearse the next sortie on a computer simulation; an aviation mission planning station, which uses the three-dimensional (3D) visuals to practice planned missions and to check intervisibility between aircraft and from aircraft and other entities; a mission debriefing station employing real aircraft data to play back missions for review and analysis; and a flight simulator.[17] MPS and MDS was enhanced with MAK’s 3D visualization solution to support airforces pre-existing data, including GIS, Web-based servers and a plug-in for custom terrain formats.[18]
+
+In 2012, Boeing Defense, Space & Security was selected to integrate the Joint Direct Attack Munition and Small Diameter Bomb to the Super Tucano.[19] In 2013, Embraer Defense and Security disclosed that its subsidiary, OrbiSat, was developing a new radar for the Super Tucano.[20] A Colombian general disclosed that the side-looking airborne radar will be able to locate ground targets smaller than a car with digital precision.[21]
+Operational history
+Afghanistan
+Ambox current red.svg
+	
+This section needs to be updated. Please update this article to reflect recent events or newly available information. (December 2016)
+Afghan Air Force Embraer A-29 Super Tucano (YA-1407)
+
+In 2011, the Super Tucano was declared the winner of the US Light Air Support contract competition over the Hawker Beechcraft AT-6B Texan II.[22] The contract was cancelled in 2012 citing Hawker Beechcraft's appeal when its proposal was disqualified during the procurement process,[23] but rewon in 2013. Twenty of these light attack aircraft were purchased for the Afghan Air Force.[24]
+First Afghan Super Tucanos
+
+The first four aircraft arrived in Afghanistan in January 2016, with a further four due before the end of 2016. Combat-ready Afghan A-29 pilots graduated from training at Moody Air Force Base, Georgia, and returned to Afghanistan to represent the first of 30 pilots trained by the 81st Fighter Squadron at Moody AFB. A fleet of 20 A-29s will be in place by 2018, according to a senior U.S. defense official. The Pentagon purchased the Super Tucanos in a $427 million contract with Sierra Nevada Corp. and Embraer, with the aircraft produced at Embraer's facility on the grounds of Jacksonville International Airport in Jacksonville, Florida.[25] The first four aircraft arrived at Hamid Karzai International Airport on January 15, 2016.[26] In 2017, the Afghan Air Force conducted roughly 2,000 airstrike sorties, about 40 a week. The AAF had a record high in October with more than 80 missions in a single week. By March 2018, the AAF had 12 A-29s in service. On 22 March 2018, the Afghan Air Force deployed a GBU-58 Paveway II bomb from an A-29 Super Tucano in combat, marking the first time the Afghan military has dropped a laser-guided weapon against the Taliban.[27]
+Brazil
+A-29 Super Tucanos of Brazilian Air Force
+Smoke Squadron EMB-314
+
+In August 2001, the Brazilian Air Force awarded Embraer a contract for 76 Super Tucano / ALX aircraft with options for a further 23. A total of 99 aircraft was acquired from a contract estimated to be worth U$214.1 million; 66 of these aircraft are two-seater versions, designated A-29B. The remaining 33 aircraft are the single-seat A-29 ALX version.[28] The first aircraft was delivered in December 2003. By September 2007, 50 aircraft had entered service.[29] The 99th, and last, aircraft was delivered in June 2012.[30]
+Sivam Program
+
+One of the main missions of the aircraft is border patrol under the Sivam programme. On 3 June 2009, two Brazilian Air Force Super Tucanos, guided by an Embraer E-99, intercepted a Cessna U206G engaged in drug trafficking activities. Inbound from Bolivia, the Cessna was intercepted in the region of Alta Floresta d'Oeste, and after exhausting all procedures, one of the Super Tucanos fired a warning shot from its 12.7 mm machine guns, after which the aircraft followed the Super Tucanos to Cacoal airport. This incident was the first use of powers granted under the Shoot-Down Act, which was enacted in October 2004 to legislate for the downing of illegal flights. A total of 176 kg of pure cocaine base paste, enough to produce almost a ton of cocaine, was discovered on board the Cessna; the aircraft's two occupants attempted a ground escape before being arrested by federal police in Pimenta Bueno.[31]
+Operation Ágata
+
+On 5 August 2011, Brazil started Operation Ágata, part of a major "Frontiers Strategic Plan" launched in June, with almost 30 continuous days of rigorous military activity in the region of Brazil’s border with Colombia; it mobilized 35 aircraft and more than 3,000 military personnel of the Brazilian Army, Brazilian Navy, and Brazilian Air Force surveillance against drug trafficking, illegal mining and logging, and trafficking of wild animals. A-29s of 1 / 3º Aviation Group (GAV), Squadron Scorpion, launched a strike upon an illicit airstrip, deploying eight 230 kg (500 lb) computer-guided Mk 82 bombs to render the airstrip unusable.[32]
+
+Multiple RQ-450 UAVs were assigned for night operations, locating remote jungle airstrips used by drug smuggling gangs along the border. The UAVs were typically guarded by several E-99 aircraft. The RQ-450 located targets for the A-29 Super Tucanos, allowing them to bomb the airstrips with an extremely high level of accuracy, making use of night vision systems and computer systems calculating the impact points of munitions.[33]
+Operation Ágata 2
+
+On 15 September 2011, Brazil launched the Operation Ágata 2 on the borders with Uruguay, Argentina, and Paraguay. Part of this border is the infamous Triple Frontier. A-29s from Maringá, Dourados, and Campo Grande, and Brazilian upgraded Northrop F-5 Tiger II/F-5EMs from Canoas, intercepted a total of 33 aircraft during Operation Ágata 2 in this area.[34] Brazilian forces had seized 62 tons of narcotics, made 3,000 arrests, and destroyed three illicit airstrips, while over 650 tons of weapons and explosives have been seized.[35]
+Operation Ágata 3
+
+On 22 November 2011, Brazil launched the Operation Ágata 3 on the borders with Bolivia, Peru, and Paraguay. It involved 6,500 personnel, backed by 10 ships and 200 land patrol vehicles, in addition to 70 aircraft, including fighter, transport, and reconnaissance aircraft. This was the largest Brazilian coordinated action involving the Army, Navy, and Air Force against illegal trafficking and organized crime, along a border strip of almost 7,000 km. A-1 (AMX), Northrop F-5 Tiger II/ F-5EM and A-29 Super Tucanos from Tabatinga, Campo Grande, Cuiabá, Vilhena, and Porto Velho were employed in defending air space, supported by airborne early warning and control E-99, equipped with a 250-km-range radar capable of detecting low-flying aircraft, and R-99, remote sensing and surveillance.[36]
+
+On 7 December 2011, Brazilian Ministry of Defence informed the nation that drug seizures were up by 1,319% over the last six months, compared to prior six months.[37]
+Chile
+Chilean Air Force EMB-314
+
+In August 2008, the Chilean Air Force signed a contract valued at $120 millions for 12 A-29Bs.[38] The contract includes a broad integrated logistic support package and an advanced training and operation support system (TOSS), covering not only the aircraft, but also an integrated suite for ground support stations. The FACH's TOSS consists of three systems: a mission planning station in which instructor and student program all phases of flight, setting the various parameters of each phase along with navigation, communications, goals, and simulations; a mission debriefing station empowering students with the ability to review all and each flight aspects and phases, enabling to look at the errors and correct them for their next mission; and a flight simulator.[39]
+
+The first four aircraft arrived in December 2009, with the remaining deliveries taking place in March, April, and May of the following year.[40] The aircraft are based at Los Cóndores Air Base (45 km from Iquique) and are used for tactical instruction at the 1st Air Brigade for the Aviation Group #1,[41] the fully digital cockpit allows students to do a smooth transition between the T-35 Pillán (basic trainer) and the F-16.[40]
+Colombia
+A-29 Super Tucano of the Colombian Air Force
+
+A total of 25 Super Tucanos (variant AT-29B) were purchased by the Colombian Air Force in a US$234 million deal, purchased directly from the Brazilian company Embraer. The first three aircraft arrived 14 December 2006 to the military airfield of CATAM in Bogotá. Two more aircraft were delivered the week of 16 December 2006, 10 more in the first half of 2007, and the rest in June 2008.[42]
+
+On 18 January 2007, a squadron of Colombian Air Force Super Tucanos launched the first-ever combat mission of its type, attacking FARC positions in the jungle with Mark 82 bombs. This attack made use of the Super Tucano's constantly computed impact point capability; the aircraft's performance in action was a reported success.[5]
+
+On 11 July 2012, the first aircraft was lost near the Jambalo town, when the aircraft were flying in one operation against FARC; rebels claim they shot down the aircraft with .50 cal. (12.7 mm) machine gun, but the Colombian Air Force challenged the rebel group's claims after inspection of the aircraft wreckage.[43]
+Anti-FARC operation Phoenix
+
+In 2008, the Colombian Air Force used a Super Tucano armed with Griffin laser-guided bombs inside Ecuadorian airspace during "Operation Phoenix", to destroy a guerrilla cell and kill the second-in-command chief of FARC, Raúl Reyes. This event led to a diplomatic break between the two countries.[44]
+Anti-FARC operation Sodoma
+
+On 21 September 2010, Operation Sodoma in the Meta department began, 120 miles south of the capital Bogotá. FARC commander Mono Jojoy was killed in a massive military operation in the early hours of 22 September, a squadron of 25 EMB-314s launched seven tonnes of explosives on the camp, while some 600 special forces troops descended by rope from helicopters, opposed by 700 guerrillas; 20 guerrillas died in the attack.[45]
+
+On 2 October 2010, Super Tucanos using infrared cameras spotted and bombarded the FARC 57th front in the Chocó Department during Operation Darién. The bombardment, just a kilometer away from the Panama border, killed five rebels, including several commanders.[46]
+
+Anti-FARC operation Odiseo
+Colombian Super Tucano deploys flares
+
+On 15 October 2011, Operation Odiseo started with a total of 969 different military bodies of the Colombian armed forces. A total of 18 aircraft participated in Operation Odiseo. On 4 November 2011, five Super Tucanos were used to launch a heavy bombing of 1000 lb(450 kg) and 250 lb(135 kg), plus high-precision smart bombs. This operation ended with the death of the leader of the Revolutionary Armed Forces of Colombia (Fuerzas Armadas Revolucionarias de Colombia, FARC), Alfonso Cano. It was biggest blow in the history of the guerrilla organization.[47]
+
+Anti-FARC operation Frontera
+
+At dawn of 22 February 2012, EMB-314s identified the camp of FARC's 57th Front, 15 km north of Bojayá near the border with Panama. In Operation Frontera, Super Tucanos dropped two high-precision bombs, destroying the camp and killing six FARC rebels, including Pedro Alfonso Alvarado (alias "Mapanao"), who was responsible for the Bojayá massacre in 2002, which killed 119 civilians.[48][49]
+
+Espada de Honor War Plan
+
+The Espada de Honor War Plan is an aggressive Colombian counterinsurgency strategy that aims to dismantle FARC´s structure, both militarily and financially. It targets FARC leadership and is focused on eliminating the 15 most powerful economic and military fronts.[50]
+
+During at Operacion Faraón, at the dawn of 21 March 2012, five Super Tucanos bombarded the FARC´s 10th Front guerrilla camp in Arauca, near the Venezuelan border, killing 33 rebels.[51][52] Five days later, in Operation Armagedón, nine Super Tucanos from Apiay Air Base attacked the FARC´s 27th front camp in Vista Hermosa, Meta, using coordinates received from a guerrilla informant recruited by the police intelligence, launching 40 guided 500-lb bombs within three minutes, totally destroying the camp and killing 36 rebels.[53] In late May, Super Tucanos bombarded a National Liberation Army camp located in rural Santa Rosa at Bolívar Department.[54] On 31 May 2012, a bombardment over the Western Front of the ELN at an inhospitable area of the Chocó Department killed seven rebels.[55] On 6 June 2012, during a minute and half bombardment over FARC's 37th front located in northern Antioquia Department, five Super Tucanos dropped 250-kg bombs, killing eight rebels.[56] In September, Super Tucanos provided reconnaissance and close air support during an "Omega" operation, during which seven terrorists were gunned down and four were captured, including "Fredy Cooper", the 7th front's leader of the Public Order Company.[57] On 5 September 2012, "Danilo Garcia", leader of the FARC's 33rd Front, was killed in a bombing raid; Danilo was considered "the right hand of supreme FARC leader alias Timochenko". Intelligence indicated that the bodies of 15 guerrillas may have been buried in the bombing.[58] Eight A-29s carried out an air strike on 27 September during Operación Saturno at the FARC's 37th front camp in the northwest of Antioquia Department, resulting in the death of Efrain Gonzales Ruiz, "Pateñame", leader of the 35th and 37th fronts, and 13 others.[59][60] In April 2013, two Super Tucanos bombarded the FARC's 59th front fort in Serranía del Perijá municipality Barrancas, La Guajira.[61]
+Dominican Republic
+A Dominican Republic A-29 pilot taxis after a mission as part of an exercise to combat illegal drug trafficking.
+
+In August 2001, Embraer announced the signing of a contract with the Dominican Republic for 10 Super Tucano aircraft, to use for pilot training, internal security, border patrol and counter-narcotics trafficking missions. The order was reduced to eight aircraft in January 2009, for a total amount of US$93 million.[62] The first two Super Tucano aircraft were delivered to the Dominican Republic on 18 December 2009, three were delivered in June 2010, and the remaining three in October 2010.[63]
+
+In February 2011, Dominican Republic Air Force Chief of Operations Col. Hilton Cabral stated: "since the introduction of the Super Tucano aircraft and ground-based radars, illicit air tracks into the Dominican Republic had dropped by over 80 percent."[64] In August 2011, the Dominican Air Force said that since taking delivery of the Super Tucanos in 2009, it has driven away drug flights to the point that they no longer enter the country's airspace.[65] In May 2012, the Dominican president Leonel Fernández gave cooperative order for the army forces to support a fleet of Super Tucanos for the antidrug fight on Haiti.[66]
+Ecuador
+Super Tucano Ecuadorian Air Force
+
+The Ecuadorian Air Force operates 18 Super Tucanos; they are established at Manta Air Base in two squadrons: 2313 "Halcones" (used for border surveillance and flight training) and 2311 "Dragones" (used for counterinsurgency).[67] Ecuadorian Super Tucanos use the PT-6A-68A (1,300 shp) engine.[68]
+
+On 23 March 2009, Embraer announced that negotiations over a nine-month-old agreement with the Ecuadorian air force have finally been completed. The deal covers the supply of 24 turboprop-powered Super Tucanos, with these to replace Ecuador’s aging fleet of Vietnam-era Cessna A-37 Dragonfly strike aircraft, and help reassert control over the country’s airspace.[69]
+
+In May 2010, after receiving its sixth Super Tucano from a contract worth $270 million, Ecuador announced a reduction in its order for the Embraer EMB-314 Super Tucano from 24 to 18 aircraft to release funds to buy some used South African Air Force Denel Cheetah C fighters. By cutting its order for the EMB-314 type, the Defence Ministry says the accrued savings would allow it to purchase the second-hand Cheetahs, and bolster the air force's flagging air defence component.[70]
+Honduras
+
+On 3 September 2011, the head of the Honduran Air Force (Fuerza Aérea Hondureña, or FAH), said that Honduras was to procure four Super Tucanos.[71] On 7 February 2012, ministers of the Honduran government informed the Brazilian Trade Ministry of the interest in acquiring a large number of Super Tucanos.[72] However, due to the economic situation, the government was forced to repair their aging aircraft inventory, instead of proceeding with purchasing eight EMB-314 aircraft.[73]
+
+On 17 October 2014, the Ministry of Foreign Affairs and International Cooperation announced the go-ahead for acquiring two new Embraer A-29 Super Tucanos by the FAH following approval from the country's National Council for Security and Defence. Honduras had been looking to buy new Super Tucanos for several years, but until then had been unable to finance a purchase. As part of the deal, six of the FAH's surviving Embraer EMB-312A Tucanos, acquired in 1984, will be refurbished and upgraded by the manufacturer. Originally operated only by the Academia Militar de Aviación at Palmerola for training, they have recently been armed for counter-narcotics missions. Just three were airworthy as the Brazilian deal was signed for the aircraft to be upgraded and the other three be made airworthy again. Together with the two newly acquired Super Tucanos, this will boost efforts to maintain security within the country.[74][75]
+Indonesia
+
+In late January 2010, Indonesian Air Force commander Air Marshal Imam Sufaat made it clear that Indonesia had split the competition, designating the Embraer EMB-314 Super Tucano turboprop from Brazil as the preferred replacement for their OV-10s. Indonesia signed a memorandum of understanding with Embraer at the Indo Defense 2010 exhibition in Jakarta. Indonesia ordered eight EMB-314 Super Tucanos at first, with an option for another eight on the same terms. The first Super Tucanos were scheduled to arrive in 2012, and the order also included ground-support stations and a logistics package. Defense Minister Purnomo Yusgiantoro added that state aircraft maker PT Dirgantara Indonesia would be used for maintenance work, and they also hoped Dirgantara would wind up manufacturing some parts and components. Subsequent contracts have ordered a total of 16 of these Super Tucano planes for the Indonesian Air Force.
+
+While Indonesia could have made a unified choice to replace its OV-10 Bronco FAC light attack and Bae Hawk Mk.53 trainer fleets with a multirole jet, the demands of forward air control and counterinsurgency wars give slower and more stable platforms an advantage.
+
+On 10 July 2012, Indonesia ordered a second set of eight Super Tucano aircraft, along with a full flight simulator. This brought their order total to 16.
+
+In August 2012, Indonesia received the first four airplanes from the initial batch ordered in November 2010. Embraer Defense delivered Indonesia's first four Super Tucanos at a ceremony held in its facility in Gavião Peixoto, São Paulo, Brazil.[76] Deliveries of the second batch of Super Tucanos were delayed from their original schedule for more than seven months.[77] Ultimately in September 2014, the second batch left the factory in Brazil on their ferry flight to Malang Abdul Rachman Saleh Air Base in East Java. They will be based at the Malang air base on Indonesia's Java island. They are operated by Skadron Udara 21 as part of the 2nd Wing. The first four aircraft from the second batch passed through Gran Canaria on November 2, 2015, on their delivery flight. The final four A29B Super Tucanos left Brazil on February 15, 2016, passing through Malta-Luqa International Airport on February 21 and ultimately arriving at Indonesia's Malang Abdul Rachman Saleh Air Force Base on February 29, 2016. One of 16 aircraft was lost in a crash on February 10, 2016.[78][79][80][81]
+Nigeria
+
+In November 2013, Nigeria has shown interest in acquiring twelve brand new Super Tucanos. Three aircraft were already bought from the Brazilian Air Force inventory in 2017. [82] In April 2017, the United States indicated that it would be moving forward with a deal to sell up to 12 of the aircraft for up to US$600 million, ending delays that had been caused by human-rights concerns.[83] In August 2017, the US Department of State had approved of the sale of 12 aircraft and associated supplies and weapons.[84][85][86][87]
+
+In November 2018, Nigeria purchased 12 Super Tucanos from Sierra Nevada for $329 million, six of which are to be fitted with forward-looking infrared systems. The aircraft are scheduled to be completed in May 2024.[88][89][90][91]
+Philippines
+
+The Philippines considered the acquisition of six Super Tucano aircraft to replace the aging Philippine Air Force OV-10 Bronco.[92] In June 2012, Department of National Defense Secretary Voltaire Gazmin was said to be looking for a "government-to-government" procurement deal with Brazil to acquire the Super Tucanos.[93] On 20 June 2012, the Department of National Defense reported that a total of six Embraer EMB 314 Super Tucanos will be acquired for PhP4.968 billion.[94] In October 2017, the Department of National Defense announced it was close to signing a contract with Embraer for six Super Tucano aircraft with options for more.[95]
+
+On 1 December 2017, Embraer announced a firm order for six A-29 Super Tucano light attack and training aircraft from the Philippines Air Force (PAF).[96]
+United States
+A U.S. Super Tucano flying over Moody Air Force Base as part of training program for the Afghan pilots.
+Civilian
+
+One Super Tucano was purchased by a subsidiary of Blackwater Worldwide, an American private military contractor.[97][98] The aircraft lacked the machine guns normally attached to the wings. In 2012, that aircraft was subsequently purchased by Tactical Air Support, Inc., of Reno, Nevada.[99][100]
+Military
+Special operations
+
+In 2008, the U.S. Navy began testing the Super Tucano at the behest of the U.S. Special Operations Command for its potential use to support special warfare operations,[101] giving it the official U.S. designation A-29B.[102]
+Air force
+Afghanistan
+
+In 2009, the Super Tucano was offered in a U.S. Air Force competition for 100 counterinsurgency aircraft.[103] On 12 April 2010, Brazil signed a defensive pact that opened negotiations for the acquisition of 200 Super Tucanos by the U.S.[104] On 16 November 2011, the AT-6 was excluded from the LAS program, effectively selecting the Super Tucano. According to GAO: "the Air Force concluded that HBDC had not adequately corrected deficiencies in its proposal… that multiple deficiencies and significant weaknesses found in HBDC’s proposal make it technically unacceptable and results in unacceptable mission capability risk". Hawker Beechcraft's protest against its exclusion was dismissed.[105][106] However, the contract award was disputed and a stop-work was issued in January 2012.[107]
+Afghan Air Force Embraer A-29 Super Tucano
+
+For this procurement, the avionics are supplied by Elbit Systems of America. Sierra Nevada, the US-based prime contractor will be building the Super Tucano in Jacksonville, Florida.[108] The 81st Fighter Squadron, based at Moody Air Force Base, was reactivated on 15 January 2015 and received the A-29 aircraft and provided training to pilots and maintainers from the Afghan Air Force.[109] Purchased for the Afghan Air Force, all 20 aircraft are planned for turn over to the Afghans in batches by December 2018.[110] Until all the A-29s are turned over to the Afghan Air Force, they will not have a fixed-wing close air support aircraft, but have armed helicopter options.[111]
+Afghan Air Force Embraer A-29 Super Tucano (YA-1406)
+Light attack experiment
+
+In August 2017, the Air Force conducted the "Light Attack Experiment" to evaluate potential light attack aircraft. Following this, it decided to continue experimenting with two non-developmental aircraft, the Textron Aviation AT-6B Wolverine derivative of the T-6 Texan II and the Sierra Nevada/Embraer A-29 Super Tucano. Tests were scheduled to be conducted at Davis-Monthan Air Force Base, Arizona between May and July 2018. The tests are intended "to experiment with maintenance, data networking and sensors… [to] gather the data needed for a rapid procurement", according to Secretary of the Air Force Heather Wilson. Experimentation will examine logistics requirements, weapons and sensor issues, and future interoperability with partner forces.[112] The Air Force expects to have the information it needs to potentially buy light attack aircraft in a future competition, without conducting a combat demonstration, based on data collected during the first round of the experiment and future data anticipated to be collected in the next phase of experimentation. The A-29 Super Tucano had a fatal crash while over the Red Rio Bombing Range, White Sands Missile Range.[113]
+Potential operators
+Equatorial Guinea
+
+Equatorial Guinea was said to be interested in purchasing the EMB 314 Super Tucano.[114]
+Guatemala
+
+In August 2011, the Guatemalan Air Force requested credit approval of $166 million to buy six EMB-314s, control centers, radar, and equipment, in the context of a programme named "C4I".[115] In September 2012, the president of Guatemala stated that Super Tucanos would arrive within a year and half.[116] In the following month, the Guatemalan Congress approved a loan for the C4I programme, including the purchase of six Embraer A-29 Super Tucanos, to be granted by Brazilian and Spanish banks (BNDES and BBVA).[117] The deal was finalized in April 2013.[118] The first two aircraft were expected to arrive in April 2014, followed by two units in 2015 and two more in 2016.[119] However, the president of Guatemala cancelled the order in November 2013.[120] In January 2015, the Guatemalan defence minister disclosed that his country was looking at purchasing two aircraft from Embraer.[121]
+Lebanon
+
+The Pentagon has also proposed to provide to Lebanon a contract for 10 EMB-314s.[122] Six Tucanos with 2,000 advanced precision-kill weapon systems are going to Lebanon in 2015 via the US LAS program, but financed by Saudi Arabia at US$462 million.[123]
+Libya
+
+The Libyan government is interested in buying up to 24 Super Tucanos.[124]
+Mozambique
+
+Brazil planned to donate three EMB-312s for Mozambique Air Force, which may also acquire three Super Tucanos. In 2016, the donation deal was canceled by the Brazilian government.[125][126]
+Paraguay
+
+In October 2009, the President of Paraguay was leaning toward buying Super Tucanos.[127] According to Paraguayan newspaper La Nación, the commander of the Paraguayan Air Forces has started to procure six EMB-314 aircraft.[128] In May 2012, the Paraguayan Air Force selected the Super Tucano to reinforce the air force capabilities.[129] However, after the impeachment of Fernando Lugo, all negotiations were temporarily suspended.[130]
+Peru
+
+In March 2011, a Brazilian federal representative discoursed about the Unasur treaty, stating that it could promote the surveillance integration in the Amazon Basin and facilitate the sale of 12 Super Tucanos and upgrade kits for 20 Peruvian EMB-312s.[131] The defence minister of Peru has announced they have suspended the acquisition of Super Tucano in favor of the Korean KT-1.[132] On 14 February 2012, Brazilian Ministry of Defence said Peru is considering buying ten Super Tucano.[133] However, in November 2012, a government-to-government contract was signed for 20 KT-1s.[134] The governments of Peru and Brazil reactivated negotiations for the acquisition of 12 A-29 Super Tucanos to replace A-37 Dragonfly aircraft that are due to withdraw in 2017.[135]
+Suriname
+
+Suriname is interested in purchasing between two and four Super Tucanos for light attack roles.[136]
+Sweden
+
+Sweden has proposed to replace its Saab 105 trainer aircraft for Super Tucanos, if Brazil chooses to buy Gripen NG.[137]
+Thailand
+
+Embraer has also quoted Thailand as a potential customers for the type.[138]
+UAE
+
+In September 2010, it was announced that Brazil and the United Arab Emirates were working a deal that includes sales of Super Tucanos.[139] It was reported in early 2015 that the UAE is negotiating with Embraer the purchase of 24 Super Tucanos, the deal would include six aircraft from Brazilian Air Force inventory for immediately delivery.[140]
+Missed contracts
+
+After the U.S. ban on Czech aircraft Aero L-159 Alca export on 7 August 2009, the Bolivian Defense Minister said they were considering six aircraft from Brazil or China with comparable role as the Aero L-159.[141] On 9 October 2009, it was announced that China would manufacture six K-8 for Bolivia, and to be used for antidrug operations at the price of $9.7 million per aircraft.[142]
+
+In February 2006, a 36-unit sale for Venezuela fell through because it was thought the U.S. would block the transfer of U.S.-built components.[143] Venezuelan President Hugo Chávez claimed the U.S. was responsible for pressuring Brazil not to sign the contract.[144]
+
+In November 2010, the President of the Legislative Defense Committee of El Salvador stated they would purchase an estimated 10 EMB-314s.[145] It was postponed in February 2011 by lack of funds.[146] In 2013, the El Salvador Air Force acquired 10 Cessna A-37 retired from Chilean Air Force.[147]
+
+Elbit Systems and Embraer offered the EMB-314 for the United Kingdom's basic trainer contest.[148] However, the Beechcraft T-6C Texan II formed part of the preferred bid for the requirement in October 2014.[149]
+Operators
+Embraer A-29 Super Tucano operators
+
+ Afghanistan
+
+    Afghan Air Force – 26 A-29 Super Tucanos ordered, with deliveries from 2016 to late 2018.[150] The aircraft are being built by Sierra Nevada Corporation and Embraer in Jacksonville, Florida, and supplied to Afghanistan via the U.S. Air Force's Light Air Support (LAS) program. The first was delivered to the U.S. service in September 2014.[151][152] The first eight Afghan airmen were trained in the U.S. to form a new Afghan fighter squadron.[153] The first four aircraft arrived at Hamid Karzai International Airport in Kabul on January 15, 2016, followed by four more in July 2016 and four more in March 2017.[154][150][155] In October 2017, the U.S. Air Force ordered six more, bringing the total to 26.[156][157][158]
+
+ Angola
+
+    National Air Force of Angola – six aircraft ordered.[159] Deliveries were scheduled to begin in early 2012;[160] but the first three were delivered on 31 January 2013.[161]
+
+ Brazil
+
+    Brazilian Air Force – 99 aircraft[162] (33 A-29A & 66 A-29B).[28] At least four aircraft have been lost.[163][164][165][166]
+        First Squadron of the Third Aviation Group (1º/3º GAv) "Esquadrão Escorpião" (Scorpion Squadron)
+        Second Squadron of the Third Aviation Group (2º/3º GAv) "Esquadrão Grifo" (Griffon Squadron)
+        Third Squadron of the Third Aviation Group (3º/3º GAv) "Esquadrão Flecha" (Arrow Squadron)
+        Second Squadron of the Fifth Aviation Group (2º/5º GAv) "Esquadrão Joker" (Joker Squadron)
+        The Aerial Demonstration Squadron "Esquadrilha da Fumaça" Smoke Squadron (EDA)
+
+ Burkina Faso
+
+    Air Force of Burkina Faso – 3 aircraft delivered in September 2011 of version A-29B.[167]
+        Combat Squadron (Escadrille de Chasse) located at Ouagadougou Air Base
+
+ Chile
+
+    Chilean Air Force 18 aircraft (12 first batch in 2008 and 6 second batch in 2018).[168][169]
+        Grupo de Aviacion N°1 located at Base aérea "Los Cóndores" in Iquique
+
+ Colombia
+
+    Colombian Air Force – 25 aircraft, introduced between 2006 and 2008.[170]
+
+At least one aircraft crashed, claimed shot down by FARC.[171][172]
+
+        211 Combat Squadron "Grifos" of the Twenty-first Combat Group at the Captain Luis F. Gómez Niño Air Base
+        312 Combat Squadron "Drakos" of the Thirty-first Combat Group at the Major General Alberto Pauwels Rodríguez Air Base at Malambo, near Barranquilla
+        611 Combat Squadron of the Sixty-first Combat Group at the Captain Ernesto Esguerra Cubides Air Base
+
+ Dominican Republic
+
+    Dominican Air Force – 8 aircraft [63]
+        Escuadrón de Combate “Dragones” at the San Isidro Air Base
+
+ Ecuador
+
+    Ecuadorian Air Force – 18 aircraft,[173] all delivered by 2011.[174][175]
+
+Ala de Combate No.23, "Luchando Vencerás", Base Aérea Eloy Alfaro, Manta
+
+        Escuadrón de Combate 2313 "Halcones"
+        Escuadrón de Combate 2311 "Dragones"
+
+ Ghana
+
+    Ghana Air Force – 5 aircraft ordered in 2015.[176] The total value of the contract was $88million with loan from BNDES, which also includes logistics support and a training system for pilots and mechanics in Ghana. The first aircraft were expected to arrive on the second half of 2016, and will be used as advanced training, border surveillance and internal security missions.[177] Ghana’s Air Force has plans to expand the acquisition with four additional Super Tucano A-29s turboprop-powered aircraft with light attack, reconnaissance and training capabilities according to Air Vice-Marshal Michael Samson-Oje of Ghana. If finalized, the deal will increase Ghana’s A-29 quantity to nine. The latest negotiations follow Ghana’s pre-existing contract with Embraer for the supply of five A-29s, which was confirmed by both sides at the Paris Air Show in June 2015.[178]
+
+ Honduras
+
+    Honduran Air Force – 2 aircraft ordered in 2014.[179]
+
+ Indonesia
+
+    Indonesian Air Force – 16 aircraft ordered & delivered, one lost in a crash February 2016.[180][181] The first four aircraft of the first batch of eight were delivered as of August 2012.,[182] the delivery of the second batch of four aircraft was delayed till September 2014.[77] A total of 16 were ordered in 2011[183] with deliveries taking place in 2012, 2014, 2015 and 2016.[184] In March 2012, Indonesian Ministry of Defense informed the possibility of a future joint production, further modernization and sales in the Asia-Pacific region.[185]
+        Air Squadron 21 at the Lanud Abdul Rachman Saleh air base
+
+ Lebanon
+
+    Lebanese Air Force – 6 A-29s, first two delivered in October 2017, four more in 2018.[186][187][188] First two aircraft delivered in October 2017.[189] All six delivered in May 2018.[190] Operating in the 7th Squadron.[citation needed]
+
+ Mali
+
+    Mali Air Force – 4 A-29 delivered in July 2018. Six originally ordered but due to financial issues the order was reduced to four aircraft.[191]
+
+ Mauritania
+
+Mauritania Air Force A-29B Super Tucano at Paris Air Show 2013.
+
+    Mauritanian Air Force – 4 aircraft ordered, received two aircraft as of December 2012, two more aircraft on order.[192] In July 2011, it was mentioned that it was considering the acquisition of Super Tucano aircraft.[193] Negotiations for the acquisitions of Super Tucanos started in December 2011.[194] On 28 March 2012 at Chile's FIDAE defense and air show, Embraer announced sales of undisclosed numbers of aircraft to Mauritania.[195] On 19 October 2012, Embraer delivered the first EMB-314, fitted with a FLIR Safire III infrared turret for border surveillance operations.[196]
+
+ Nigeria
+
+    Nigerian Air Force – 12 aircraft on order[197]
+
+ Philippines
+
+    Philippine Air Force – 6 aircraft on order, with an option for 18 more. To be assigned to the 15th Strike Wing. Deliveries will commence in 2019.[198][199][200]
+
+ Senegal
+
+    Senegalese Air Force – 3 aircraft on order.[201] In September 2012 it was informed that the country was in a procurement process for acquisition of the type.[202] In April 2013, the Brazilian minister of Defence disclosed that Senegal is the 4th African nation to order the Super Tucano,[203] in the following day Embraer confirmed the order, which includes a training system for pilots and mechanics (TOSS) in Senegal, bringing autonomy to that country's Air Force in preparing qualified personnel.[201]
+
+ United States
+
+    EP Aviation – part of Academi (formerly Blackwater) – at least one twin-seater variant for pilot training (delivered in February 2008), possible further orders for counter-insurgency role.[204][205][206] Later sold in 2010 to Tactical Air Support in Reno, NV.
+    United States Navy leased an aircraft for testing, as part of the Imminent Fury program.[207]
+    The first A-29 Super Tucano of the Pentagon's Light Air Support (LAS) program, destined for the Afghan Air Force, has been delivered to the US Air Force in Jacksonville, Florida by the Sierra Nevada Corporation and Embraer in September 2014.[151] The LAS contract was developed by the Pentagon to supply Afghanistan’s military with 20 planes, which should ensure air superiority in the country after the majority of US forces leave. Because the contract is a foreign military sale, Nevada-based SNC and Brazil-based Embraer deliver the planes to the Air Force, which then passes them on to the Afghan military.[152] The first of 20 A-29 Super Tucano aircraft arrived at Moody Air Force Base on September 26, 2014 in preparation for the Afghanistan pilot and maintenance training mission.[208]
+
+Aircraft on display
+
+EMB 314B Super Tucano
+
+    FAB-5900 - Brazilian Air Force - Memorial Aeroespacial Brasileiro, São José dos Campos[209]
+    FAB-5925 - Brazilian Air Force - Boa Vista Air Base/ALA 7, Boa Vista, Roraima
+
+Specifications (EMB 314 Super Tucano)
+Each wing can be loaded with 200 rounds for the FN Herstal M3P 12,7 mm (.50 in) machine gun, which has a firing rate of up to 1,100 rounds per minute.
+Pilots from the 81st Fighter Squadron drop a 500-pound inert training bomb from an A-29 Super Tucano on the range near Moody Air Force Base, Georgia.
+
+Data from Type Analysis: Embraer Super Tucano (All specifications from Janes 2010–2011 unless otherwise indicated[210])
+
+General characteristics
+
+    Crew: Pilot plus one navigator/student in tandem on Martin Baker Mk 10 LCX zero-zero ejection seats
+    Payload: 1,500 kg (3,307 lb)
+    Length: 11.38 m (37 ft 4 in)
+    Wingspan: 11.14 m (36 ft 6.5 in)
+    Height: 3.97 m (13 ft 0.25 in)
+    Wing area: 19.4 m2 (208.8 sq ft)
+    Empty weight: 3,200 kg (7,055 lb)
+    Max. takeoff weight: 5,400 kg (11,905 lb)
+    Powerplant: 1 × Pratt & Whitney Canada PT6A-68C turboprop, 1,196 kW (1,600 shp)
+    Propellers: Hartzell 5-blade constant speed, fully feathering, reversible-pitch propeller
+
+Performance
+
+    Maximum speed: 590 km/h (319 knots, 367 mph)
+    Cruise speed: 520 km/h (281 knots, 323 mph)
+    Stall speed: 148 km/h (80 knots, 92 mph)
+    g-limit: +7/-3.5 g)
+    Range: 720 nmi (827 mi, 1,330 km)
+    Combat radius: 550 km (300 nmi, 342 mi) (hi-lo-hi profile, 1,500 kg (3,300 lb) of external stores)[211]
+    Ferry range: 1,541 nmi (1,774 mi, 2,855 km) [212]
+    Endurance: 8hrs 24mins[212]
+    Service ceiling: 10,668 m (35,000 ft)
+    Rate of climb: 16.4 m/s (3,242 ft/min)
+
+Armament
+
+    Guns: [9]
+        Internal: (2×) 12.7 mm (0.50 in) 1,100 rounds per minute FN Herstal M3P machine guns, one in each wing.
+        pod: 1 20 mm (0.79 in) 650 rounds per minute GIAT M20A1 cannon below the fuselage.
+        pod: 1 12.7 mm (0.50 in) FN Herstal HMP for M3P machine gun under each wing
+        pod: up to 4 7.62 mm (0.30 in) 3,000 rounds per minute Dillon Aero M134 Minigun (under development) under wings.[213]
+    Hardpoints: 5 (two under each wing and one under fuselage centreline) with a capacity of 1,550 kg (3,300 lb)
+    Rockets:
+        (4x) pods 70 mm (2.75 in) LM-70/19[215](SBAT-70[221][222])
+        (4x) pods 70 mm (2.75 in) LAU-68A/G[223]
+    Missiles:
+        Air-to-air:
+            AIM-9L Sidewinder
+            MAA-1A Piranha
+            MAA-1B Piranha (under development) [214]
+            Python 3
+            Python 4
+        Air-to-ground:
+            AGM-65 Maverick[215]
+            Roketsan Cirit
+        General-purpose bombs:
+            (10x) Mk 81[9]
+            (5x) Mk 82[9]
+            M-117[216]
+        Incendiary bombs:
+            BINC-300[citation needed]
+        Cluster bombs:
+            BLG-252
+        Precision-guided bombs:
+            FPG-82 (under development)[217] Friuli Aeroespacial INS/GPS guidance kit for Mk 82.
+            SMKB-82[218] – INS/GPS guidance kit for Mk 82.
+            GBU-54 (under development)[219]
+            GBU-38 (under development)[219]
+            GBU-39 (under development)[219]
+            Paveway II[220]
+            Lizard – Elbit laser guidance kit.
+            Griffin – IAI laser guidance kit.
+    Others:
+        Chaff & Flare (countermeasures)
+        FLIR AN/AAQ-22 Star SAFIRE II (Electro-Optical/Infrared Sensors)
+
+Avionics
+
+    MIL-STD-1553[224] standards.
+    NVG ANVIS-9 (Night Vision)
+    CCIP / CCRP / CCIL / DTOS / LCOS / SSLC (Computerized Attack Modes)[216]
+    Rohde & Schwarz M3AR VHF/UHF Airborne Transceiver (two-way encrypted[225] Data Link provision)[226]
+    HUD / HOTAS
+    HMD with UFCP(Up Front Control Panel)
+    Laser INS with GPS Navigational System.
+    CMFD(Colored Multi-Function Display) liquid crystal active matrix
+    Integrated Radio Communication and Navigation
+    Video Camera/Recorder
+    Automatic Pilot with embedded mission planning capability
+    Stormscope WX-1000E (Airborne weather mapping system)
+    Laser Range Finder
+    WiPak[227] Support – (Wi-Fi integration for Paveway bombs).
+    Training and Operation Support System (TOSS).[18][228]

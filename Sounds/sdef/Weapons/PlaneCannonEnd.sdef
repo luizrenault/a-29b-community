@@ -1,0 +1,3 @@
+inherit = "Weapons/PlaneCannon"
+wave = "Effects/Weapons/PlaneCannonEnd"
+detached = true

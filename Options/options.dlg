@@ -1,0 +1,227 @@
+dialog = {
+	["children"] = {
+		["containerPlugin"] = {
+			["children"] = {
+				["CPLabelLabel"] = {
+					["children"] = {
+					},
+					["params"] = {
+						["bounds"] = {
+							[1] = {
+								["h"] = 25,
+								["w"] = 200,
+								["x"] = 57,
+								["y"] = 84,
+							},
+						},
+						["enabled"] = {
+							[1] = true,
+						},
+						["pictureFile"] = {
+						},
+						["skinName"] = {
+						},
+						["text"] = {
+							[1] = "$CPDICT",
+						},
+						["tooltip"] = {
+							[1] = "",
+						},
+						["visible"] = {
+							[1] = true,
+						},
+						["zindex"] = {
+							[1] = 0,
+						},
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "staticOptionsCaptionSkin",
+						},
+						["states"] = {
+							["released"] = {
+								[1] = {
+									["text"] = {
+										["horzAlign"] = {
+											["offset"] = 0,
+											["type"] = "min",
+										},
+									},
+								},
+							},
+						},
+					},
+					["type"] = "Static",
+				},
+				["CPLocalListComboList"] = {
+					["children"] = {
+					},
+					["params"] = {
+						["bounds"] = {
+							[1] = {
+								["h"] = 25,
+								["w"] = 151,
+								["x"] = 273,
+								["y"] = 84,
+							},
+						},
+						["enabled"] = {
+							[1] = true,
+						},
+						["pictureFile"] = {
+						},
+						["skinName"] = {
+						},
+						["tabOrder"] = {
+							[1] = 0,
+						},
+						["text"] = {
+						},
+						["tooltip"] = {
+							[1] = "",
+						},
+						["visible"] = {
+							[1] = true,
+						},
+						["zindex"] = {
+							[1] = 0,
+						},
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
+						},
+					},
+					["type"] = "ComboList",
+				},
+				["nameLabel"] = {
+					["children"] = {
+					},
+					["params"] = {
+						["bounds"] = {
+							[1] = {
+								["h"] = 18,
+								["w"] = 367,
+								["x"] = 57,
+								["y"] = 41,
+							},
+						},
+						["enabled"] = {
+							[1] = true,
+						},
+						["pictureFile"] = {
+						},
+						["skinName"] = {
+						},
+						["text"] = {
+							[1] = "$modName",
+						},
+						["tooltip"] = {
+							[1] = "",
+						},
+						["visible"] = {
+							[1] = true,
+						},
+						["zindex"] = {
+							[1] = 0,
+						},
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "staticOptionsTitleSkin",
+						},
+					},
+					["type"] = "Static",
+				},
+			},
+			["params"] = {
+				["bounds"] = {
+					[1] = {
+						["h"] = 600,
+						["w"] = 974,
+						["x"] = 0,
+						["y"] = 0,
+					},
+				},
+				["enabled"] = {
+					[1] = true,
+				},
+				["layout"] = {
+					[1] = {
+					},
+				},
+				["pictureFile"] = {
+				},
+				["skinName"] = {
+				},
+				["text"] = {
+					[1] = "",
+				},
+				["tooltip"] = {
+					[1] = "",
+				},
+				["visible"] = {
+					[1] = true,
+				},
+				["zindex"] = {
+					[1] = 2,
+				},
+			},
+			["skin"] = {
+				["params"] = {
+					["name"] = "panelSkin",
+				},
+			},
+			["type"] = "Panel",
+		},
+	},
+	["params"] = {
+		["bounds"] = {
+			[1] = {
+				["h"] = 851,
+				["w"] = 1135,
+				["x"] = 0,
+				["y"] = 0,
+			},
+		},
+		["draggable"] = {
+			[1] = true,
+		},
+		["enabled"] = {
+			[1] = true,
+		},
+		["hasCursor"] = {
+			[1] = true,
+		},
+		["layout"] = {
+			[1] = {
+			},
+		},
+		["lockFlow"] = {
+			[1] = false,
+		},
+		["modal"] = {
+			[1] = false,
+		},
+		["offscreen"] = {
+			[1] = false,
+		},
+		["resizable"] = {
+			[1] = false,
+		},
+		["skinName"] = {
+		},
+		["text"] = {
+			[1] = "New dialog",
+		},
+		["zOrder"] = {
+			[1] = 0,
+		},
+	},
+	["skin"] = {
+		["params"] = {
+			["name"] = "windowSkin",
+		},
+	},
+	["type"] = "Window",
+}
