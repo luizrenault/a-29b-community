@@ -24,9 +24,6 @@ elements["PNT_129"].animation_speed = {2, 2}
 elements["PNT_132"] = default_movable_axis("Flaps Control Handle", devices.FLAPS, device_commands.flaps, 132, 0.0,-0.17, true, false)
 
 
-elements["PNT_951"] = default_button("STD", devices.EXTANIM, device_commands.AltPressureStd, 951)
-elements["PNT_952"] = default_button("Brightness WIP", devices.GEAR, device_commands.FuelGaugeExtButton, 952)
-elements["PNT_953"] = default_axis("BARO", devices.EXTANIM, device_commands.AltPressureKnob, 953, 0.0, 0.2, false, true)
 
 
 
@@ -37,6 +34,12 @@ elements["PNT_963"] = default_2_position_tumb("External Power (ON/Off)",        
 elements["PNT_964"] = default_2_position_tumb("Backup (Auto/Off)",                              devices.ELECTRIC_SYSTEM, device_commands.ElecBkp,        964,TOGGLECLICK_MID_FWD)
 elements["PNT_965"] = default_3_position_tumb("Emergency Override (Emergency/Auto/Auto)",       devices.ELECTRIC_SYSTEM, device_commands.ElecEmer,       965,nil,true,TOGGLECLICK_MID_FWD)
 elements["PNT_966"] = default_3_position_tumb("Aircraft Interconnect (On/Off/Off)",             devices.ELECTRIC_SYSTEM, device_commands.ElecAcftIntc,   966,nil,true,TOGGLECLICK_MID_FWD)
+
+
+-- BASIC FLIGHT INSTRUMENT
+elements["PNT_951"] = default_button("Bright",                                                  devices.EXTANIM,         device_commands.FuelGaugeExtButton, 951)
+elements["PNT_952"] = default_button("STD",                                                     devices.EXTANIM,         device_commands.AltPressureStd, 952)
+elements["PNT_953"] = default_axis("BARO",                                                      devices.EXTANIM,         device_commands.AltPressureKnob, 953, 0.0, 0.2, false, true)
 
 -- ICE PROTECTION
 elements["PNT_991"] = default_2_position_tumb("Propeller (On/Off)",                             devices.ICEPROT, device_commands.IcePropeller,   991,TOGGLECLICK_MID_FWD)
@@ -134,6 +137,97 @@ elements["PNT_773"] = default_3_position_tumb("Slave (Free/Slave/Fast Slave)",  
 
 -- AUDIO
 elements["PNT_761"] = default_2_position_tumb("Audio Selector (Normal/Backup)",                 devices.GEAR,    device_commands.AudioNormal,        761,TOGGLECLICK_MID_FWD)
+
+-- ASI
+elements["PNT_751"] = 
+{
+    class				= {class_type.BTN, class_type.LEV},
+	hint				= ("Cage/Adjust (Cage/Up/Down)"),
+	device				= devices.EXTANIM,
+	action				= {device_commands.ASICage, device_commands.ASIAdjust},
+	stop_action			= {device_commands.ASICage, 0},
+	is_repeatable		= {},
+	arg					= {756, 755},
+	arg_value			= {1.0, 1.0},
+	arg_lim				= {{0, 1}, {-1, 1}},
+	relative			= {false, false},
+	cycle				= false,
+	gain				= {1.0, 0.02},
+	use_release_message	= {true, false},
+	use_OBB 			= true,
+}
+
+-- CMFD1
+elements["PNT_501"] = default_button("CMFD #1 Button 1",                                        devices.CMFD1, device_commands.CMFD1Button1,         501)
+elements["PNT_502"] = default_button("CMFD #1 Button 2",                                        devices.CMFD1, device_commands.CMFD1Button2,         502)
+elements["PNT_503"] = default_button("CMFD #1 Button 3",                                        devices.CMFD1, device_commands.CMFD1Button3,         503)
+elements["PNT_504"] = default_button("CMFD #1 Button 4",                                        devices.CMFD1, device_commands.CMFD1Button4,         504)
+elements["PNT_505"] = default_button("CMFD #1 Button 5",                                        devices.CMFD1, device_commands.CMFD1Button5,         505)
+elements["PNT_506"] = default_button("CMFD #1 Button 6",                                        devices.CMFD1, device_commands.CMFD1Button6,         506)
+elements["PNT_507"] = default_button("CMFD #1 Button 7",                                        devices.CMFD1, device_commands.CMFD1Button7,         507)
+elements["PNT_508"] = default_button("CMFD #1 Button 8",                                        devices.CMFD1, device_commands.CMFD1Button8,         508)
+elements["PNT_509"] = default_button("CMFD #1 Button 9",                                        devices.CMFD1, device_commands.CMFD1Button9,         509)
+elements["PNT_510"] = default_button("CMFD #1 Button 10",                                       devices.CMFD1, device_commands.CMFD1Button10,        510)
+elements["PNT_511"] = default_button("CMFD #1 Button 11",                                       devices.CMFD1, device_commands.CMFD1Button11,        511)
+elements["PNT_512"] = default_button("CMFD #1 Button 12",                                       devices.CMFD1, device_commands.CMFD1Button12,        512)
+elements["PNT_513"] = default_button("CMFD #1 Button 13",                                       devices.CMFD1, device_commands.CMFD1Button13,        513)
+elements["PNT_514"] = default_button("CMFD #1 Button 14",                                       devices.CMFD1, device_commands.CMFD1Button14,        514)
+elements["PNT_515"] = default_button("CMFD #1 Button 15",                                       devices.CMFD1, device_commands.CMFD1Button15,        515)
+elements["PNT_516"] = default_button("CMFD #1 Button 16",                                       devices.CMFD1, device_commands.CMFD1Button16,        516)
+elements["PNT_517"] = default_button("CMFD #1 Button 17",                                       devices.CMFD1, device_commands.CMFD1Button17,        517)
+elements["PNT_518"] = default_button("CMFD #1 Button 18",                                       devices.CMFD1, device_commands.CMFD1Button18,        518)
+elements["PNT_519"] = default_button("CMFD #1 Button 19",                                       devices.CMFD1, device_commands.CMFD1Button19,        519)
+elements["PNT_520"] = default_button("CMFD #1 Button 20",                                       devices.CMFD1, device_commands.CMFD1Button20,        520)
+elements["PNT_521"] = default_button("CMFD #1 Button 21",                                       devices.CMFD1, device_commands.CMFD1Button21,        521)
+elements["PNT_522"] = default_button("CMFD #1 Button 22",                                       devices.CMFD1, device_commands.CMFD1Button22,        522)
+elements["PNT_523"] = default_button("CMFD #1 Button 23",                                       devices.CMFD1, device_commands.CMFD1Button23,        523)
+elements["PNT_524"] = default_button("CMFD #1 Button 24",                                       devices.CMFD1, device_commands.CMFD1Button24,        524)
+elements["PNT_525"] = default_button("CMFD #1 Button 25",                                       devices.CMFD1, device_commands.CMFD1Button25,        525)
+elements["PNT_526"] = default_button("CMFD #1 Button 26",                                       devices.CMFD1, device_commands.CMFD1Button26,        526)
+elements["PNT_527"] = default_button("CMFD #1 Button 27",                                       devices.CMFD1, device_commands.CMFD1Button27,        527)
+elements["PNT_528"] = default_button("CMFD #1 Button 28",                                       devices.CMFD1, device_commands.CMFD1Button28,        528)
+elements["PNT_529"] = default_2_position_tumb("CMFD #1 Power (On/Off)",                         devices.CMFD1, device_commands.CMFD1ButtonOn,        529)
+elements["PNT_530"] = springloaded_3_pos_tumb("CMFD #1 Gain",                                   devices.CMFD1, device_commands.CMFD1ButtonGain,      530, true)
+elements["PNT_531"] = springloaded_3_pos_tumb("CMFD #1 Symbology",                              devices.CMFD1, device_commands.CMFD1ButtonSymb,      531, true)
+elements["PNT_532"] = springloaded_3_pos_tumb("CMFD #1 Bright",                                 devices.CMFD1, device_commands.CMFD1ButtonBright,    532, true)
+
+-- CMFD2
+elements["PNT_551"] = default_button("CMFD #2 Button 1",                                        devices.CMFD2, device_commands.CMFD2Button1,         551)
+elements["PNT_552"] = default_button("CMFD #2 Button 2",                                        devices.CMFD2, device_commands.CMFD2Button2,         552)
+elements["PNT_553"] = default_button("CMFD #2 Button 3",                                        devices.CMFD2, device_commands.CMFD2Button3,         553)
+elements["PNT_554"] = default_button("CMFD #2 Button 4",                                        devices.CMFD2, device_commands.CMFD2Button4,         554)
+elements["PNT_555"] = default_button("CMFD #2 Button 5",                                        devices.CMFD2, device_commands.CMFD2Button5,         555)
+elements["PNT_556"] = default_button("CMFD #2 Button 6",                                        devices.CMFD2, device_commands.CMFD2Button6,         556)
+elements["PNT_557"] = default_button("CMFD #2 Button 7",                                        devices.CMFD2, device_commands.CMFD2Button7,         557)
+elements["PNT_558"] = default_button("CMFD #2 Button 8",                                        devices.CMFD2, device_commands.CMFD2Button8,         558)
+elements["PNT_559"] = default_button("CMFD #2 Button 9",                                        devices.CMFD2, device_commands.CMFD2Button9,         559)
+elements["PNT_560"] = default_button("CMFD #2 Button 10",                                       devices.CMFD2, device_commands.CMFD2Button10,        560)
+elements["PNT_561"] = default_button("CMFD #2 Button 11",                                       devices.CMFD2, device_commands.CMFD2Button11,        561)
+elements["PNT_562"] = default_button("CMFD #2 Button 12",                                       devices.CMFD2, device_commands.CMFD2Button12,        562)
+elements["PNT_563"] = default_button("CMFD #2 Button 13",                                       devices.CMFD2, device_commands.CMFD2Button13,        563)
+elements["PNT_564"] = default_button("CMFD #2 Button 14",                                       devices.CMFD2, device_commands.CMFD2Button14,        564)
+elements["PNT_565"] = default_button("CMFD #2 Button 15",                                       devices.CMFD2, device_commands.CMFD2Button15,        565)
+elements["PNT_566"] = default_button("CMFD #2 Button 16",                                       devices.CMFD2, device_commands.CMFD2Button16,        566)
+elements["PNT_567"] = default_button("CMFD #2 Button 17",                                       devices.CMFD2, device_commands.CMFD2Button17,        567)
+elements["PNT_568"] = default_button("CMFD #2 Button 18",                                       devices.CMFD2, device_commands.CMFD2Button18,        568)
+elements["PNT_569"] = default_button("CMFD #2 Button 19",                                       devices.CMFD2, device_commands.CMFD2Button19,        569)
+elements["PNT_570"] = default_button("CMFD #2 Button 20",                                       devices.CMFD2, device_commands.CMFD2Button20,        570)
+elements["PNT_571"] = default_button("CMFD #2 Button 21",                                       devices.CMFD2, device_commands.CMFD2Button21,        571)
+elements["PNT_572"] = default_button("CMFD #2 Button 22",                                       devices.CMFD2, device_commands.CMFD2Button22,        572)
+elements["PNT_573"] = default_button("CMFD #2 Button 23",                                       devices.CMFD2, device_commands.CMFD2Button23,        573)
+elements["PNT_574"] = default_button("CMFD #2 Button 24",                                       devices.CMFD2, device_commands.CMFD2Button24,        574)
+elements["PNT_575"] = default_button("CMFD #2 Button 25",                                       devices.CMFD2, device_commands.CMFD2Button25,        575)
+elements["PNT_576"] = default_button("CMFD #2 Button 26",                                       devices.CMFD2, device_commands.CMFD2Button26,        576)
+elements["PNT_577"] = default_button("CMFD #2 Button 27",                                       devices.CMFD2, device_commands.CMFD2Button27,        577)
+elements["PNT_578"] = default_button("CMFD #2 Button 28",                                       devices.CMFD2, device_commands.CMFD2Button28,        578)
+elements["PNT_579"] = default_2_position_tumb("CMFD #2 Power (On/Off)",                         devices.CMFD2, device_commands.CMFD2ButtonOn,        579)
+elements["PNT_580"] = springloaded_3_pos_tumb("CMFD #2 Gain",                                   devices.CMFD2, device_commands.CMFD2ButtonGain,      580, true)
+elements["PNT_581"] = springloaded_3_pos_tumb("CMFD #2 Symbology",                              devices.CMFD2, device_commands.CMFD2ButtonSymb,      581, true)
+elements["PNT_582"] = springloaded_3_pos_tumb("CMFD #2 Bright",                                 devices.CMFD2, device_commands.CMFD2ButtonBright,    582, true)
+
+-- CMFD2
+elements["PNT_491"] = default_button("Clock Selection",                                         devices.EXTANIM, device_commands.ClockSel,           491)
+elements["PNT_492"] = default_button("Clock Control",                                           devices.EXTANIM, device_commands.ClockCtrl,          492)
 
 
 

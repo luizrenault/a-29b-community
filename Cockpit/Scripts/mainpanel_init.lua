@@ -101,24 +101,31 @@ RightBrakePedal.parameter_name		= "RIGHT_BRAKE_PEDAL"
 -- Propeller.controller				= controllers.base_gauge_EngineLeftRPM
 
 VerticalVelocity					= CreateGauge()
-VerticalVelocity.arg_number			= 800
+VerticalVelocity.arg_number			= 662
 VerticalVelocity.input				= {-6000*ft_to_meter/60, -4000*ft_to_meter/60, -2000*ft_to_meter/60, -1000*ft_to_meter/60, -500*ft_to_meter/60, 0, 500*ft_to_meter/60, 1000*ft_to_meter/60, 2000*ft_to_meter/60, 4000*ft_to_meter/60, 6000*ft_to_meter/60} --1000ft/min => m/s
-VerticalVelocity.output				= {-1.0, -0.80, -0.60, -0.40, -0.20, 0.0, 0.20, 0.40, 0.60, 0.80, 1.0}
+VerticalVelocity.output				= {-1.0, -0.76, -0.50, -0.29, -0.15, 0.0, 0.15, 0.29, 0.50, 0.76, 1.0}
 VerticalVelocity.controller			= controllers.base_gauge_VerticalVelocity
 
 local RADIANS_TO_DEGREES = 57.2958
 
-AttGyroStbyPitch                = CreateGauge()
-AttGyroStbyPitch.arg_number     = 660
-AttGyroStbyPitch.input          = {-90/RADIANS_TO_DEGREES, 90/RADIANS_TO_DEGREES}
-AttGyroStbyPitch.output         = {-1.0, 1.0}
-AttGyroStbyPitch.controller		= controllers.base_gauge_Pitch
 
-AttGyroStbyRoll                 = CreateGauge()
-AttGyroStbyRoll.arg_number      = 661
-AttGyroStbyRoll.input           = {-180/RADIANS_TO_DEGREES, 180/RADIANS_TO_DEGREES}
-AttGyroStbyRoll.output          = {1.0, -1.0}
-AttGyroStbyRoll.controller		= controllers.base_gauge_Roll
+ASIRoll                 = CreateGauge()
+ASIRoll.arg_number      = 752
+ASIRoll.input           = {-180/RADIANS_TO_DEGREES, 180/RADIANS_TO_DEGREES}
+ASIRoll.output          = {1.0, -1.0}
+ASIRoll.controller		= controllers.base_gauge_Roll
+
+ASIPitch                = CreateGauge()
+ASIPitch.arg_number     = 753
+ASIPitch.input          = {-90/RADIANS_TO_DEGREES, 90/RADIANS_TO_DEGREES}
+ASIPitch.output         = {-1.0, 1.0}
+ASIPitch.controller		= controllers.base_gauge_Pitch
+
+ASIOff                = CreateGauge("parameter")
+ASIOff.arg_number     = 754
+ASIOff.input          = {0, 1}
+ASIOff.output         = {0, 1}
+ASIOff.parameter_name		= "ELEC_AVIONICS_OK"
 
 PnlBacklight	                 = CreateGauge("parameter")
 PnlBacklight.arg_number      	= 201

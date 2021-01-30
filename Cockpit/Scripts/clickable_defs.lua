@@ -304,8 +304,8 @@ end
 
 -- rotary axis with push button
 function default_button_axis(hint_, device_, command_1, command_2, arg_1, arg_2, limit_1, limit_2)
-    local limit_1_ = limit_1 or 1.0
-    local limit_2_ = limit_2 or 1.0
+    local limit_1_ = limit_1 or {0, 1.0}
+    local limit_2_ = limit_2 or {0, 1.0}
     return {
         class               = {class_type.BTN, class_type.LEV},
         hint                = hint_,
@@ -314,10 +314,10 @@ function default_button_axis(hint_, device_, command_1, command_2, arg_1, arg_2,
         stop_action         = {command_1, 0},
         arg                 = {arg_1, arg_2},
         arg_value           = {1, 0.5},
-        arg_lim             = {{0, limit_1_}, {0, limit_2_}},
+        arg_lim             = {limit_1_, limit_2_},
         animated            = {false, true},
-        animation_speed     = {0, 0.4},
-        gain                = {1.0, 0.1},
+        animation_speed     = {1, 1},
+        gain                = {1.0, 0.5},
         relative            = {false, false},
         updatable           = true,
         use_OBB             = true,

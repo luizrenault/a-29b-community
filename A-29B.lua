@@ -49,14 +49,14 @@ A_29B =  {
 	attribute  	= {wsType_Air, wsType_Airplane, wsType_Fighter, WSTYPE_PLACEHOLDER ,A_29B,"Fighters", "Refuelable",},
 	Categories	= {"{78EFB7A2-FD52-4b57-A6A6-3BF0E1D6555F}", "Interceptor",},	
 	    M_empty									=	3356,  -- kg
-		M_nominal								=	3900,  -- kg
+		M_nominal								=	3900,  -- kg  -- kg ~ %50 fuel, combat load
 		M_max									=	5400,  -- kg
 		M_fuel_max								=   509 + 239 + 249*2 + 231,   -- kg Asas, Fuselage, Subalar, Ventral,
 		H_max									=	10668 , -- m
 
 		average_fuel_consumption 	= 0.302, -- this is highly relative, but good estimates are 36-40l/min = 28-31kg/min = 0.47-0.52kg/s -- 45l/min = 35kg/min = 0.583kg/s
 		CAS_min 					= 56, -- if this is not OVERAL FLIGHT TIME, but jus LOITER TIME, than it sholud be 10-15 minutes.....CAS capability in minute (for AI)
-		V_opt 						= 67,-- Cruise speed (for AI)
+		V_opt 						= 67,-- Cruise speed (for AI) –- Assume Mach 0.80 at 20000 ft as optimal. See -- http://www.nasa.gov/centers/dryden/pdf/87789main_H-636.pdf and		–- http://www.hochwarth.com/misc/AviationCalculator.html 		–- Mach 0.8 at 20000 = XXX kts TAS = XXX m / s
 		V_take_off 					= 28, -- Take off speed in m/s (for AI)
 		V_land 						= 46, -- Land speed in m/s (for AI)
 		V_max_sea_level 			= 165, -- Max speed at sea level in m/s (for AI)
@@ -75,7 +75,7 @@ A_29B =  {
 
 		main_gear_pos 				= 	{-1,	-2.03,	2.},
 		nose_gear_pos 				= 	{2.808,	-2.09,	0},
-		tand_gear_max				=	3.769,
+		tand_gear_max				=	3.769, -- tangent of degrees of rotation max of nose wheel steering
 		wing_area 					= 19.4, -- wing area in m2
 		wing_span 					= 11.135, -- wing spain in m
 		wing_type 					= 0,
@@ -88,18 +88,20 @@ A_29B =  {
 		range 						= 1568, -- Max range in km (for AI)
 		RCS 						= 2.5, -- Radar Cross Section m2
 		IR_emission_coeff 			= 0.1, -- Normal engine -- IR_emission_coeff = 1 is Su-27 without afterburner. It is reference.
-		IR_emission_coeff_ab 		= 0, -- With afterburner
-		wing_tip_pos 				= {-0.82, -0.250,     5.5},
-		nose_gear_wheel_diameter	=	0.754,
-		main_gear_wheel_diameter	=	0.972,
+		IR_emission_coeff_ab 		= 0.1, -- With afterburner
+		wing_tip_pos 				= {-0.82, -0.250,     5.5}, -- wingtip coords for visual effects
+		nose_gear_wheel_diameter	=	0.754, --in m
+		main_gear_wheel_diameter	=	0.972, -- in m
 		brakeshute_name 			= 0, -- Landing - brake chute visual shape after separation
+		
+		-- The following is used for graphical AB effects
 		engines_count				= 1, -- Engines count
 		engines_nozzles = 
 		{
 			[1] = 
 			{
 				pos 		=  {1.624990,0.047866,-0.56}, -- nozzle coords
-				elevation   =  0, -- AFB cone elevation
+				elevation   =  0, -- AFB cone elevation –- for engines mounted at an angle to fuselage, change elevation
 				diameter	 = 0*0.1, -- AFB cone diameter
 				exhaust_length_ab   = -3.0, -- lenght in m
 				exhaust_length_ab_K = 0.3, -- AB animation
@@ -153,8 +155,16 @@ A_29B =  {
 			[11] = 	{0.50,	0.084,	-2.7534},
 		}, -- end of fires_pos
 	
-		detection_range_max		 = 0,
-		radar_can_see_ground 	 = false, -- this should be examined (what is this exactly?)
+		detection_range_max		 = 0, --is the max range in kilometers that the radar can see something large (e.g. a bomber, tanker, AWACS, etc.).
+		radar_can_see_ground 	 = false, -- ground target identification capability, but this has not been verified
+
+		CanopyGeometry = { -- Mk1 eyeball sensor for visual spotting targets
+			azimuth = {-160.0, 160.0}, -- pilot view horizontal (AI)
+			elevation = {-40.0, 90.0} -- pilot view vertical (AI)
+		},
+
+		Sensors = {
+		},
 
 		HumanRadio = {
 			frequency = 127.5,  -- Radio Freq
@@ -164,7 +174,21 @@ A_29B =  {
 			modulation = MODULATION_AM
 		},
 	
-		
+		-- Countermeasures
+		SingleChargeTotal = 60,
+		CMDS_Incrementation = 15,
+		ChaffDefault = 30,
+		ChaffChargeSize = 1,
+		FlareDefault = 15,
+		FlareChargeSize = 2,
+		CMDS_Edit = false,
+		chaff_flare_dispenser = {
+			[1] =
+			{
+				dir = {-1, 0, 0}, -- dispenses to rear
+				pos = {-6, 0, -0.8}, -- left rear of fuselage
+			}, -- end of [1]
+		}, -- end of chaff_flare_dispenser
 
 		Pylons =     {
 			pylon(1, 0, -0.200, -0.90, -3.230000,
@@ -270,93 +294,139 @@ A_29B =  {
 		aircraft_task(Escort),
       	aircraft_task(FighterSweep),
 		aircraft_task(GroundAttack),
+		aircraft_task(PinpointStrike),
       	aircraft_task(CAS),
        	aircraft_task(AFAC),
 		aircraft_task(RunwayAttack),
 		aircraft_task(AntishipStrike),
+		aircraft_task(Intercept),
    	},	
-	DefaultTask = aircraft_task(CAP),
+	DefaultTask = aircraft_task(Intercept),
 
 
 
 	SFM_Data = {
 		aerodynamics = 
 		{
-			Cy0	=	0,
-			Mzalfa	=	6,
-			Mzalfadt	=	1,
-			kjx = 2.95,
-			kjz = 0.00125,
-			Czbe = -0.016,
-			cx_gear = 0.0268,
-			cx_flap = 0.06,
-			cy_flap = 0.4,
-			cx_brk = 0.085,
+			Cy0	=	0.1, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
+			Mzalfa	=	4.355, -- Horizontal tail pitch coefficient
+			Mzalfadt	=	1,  -- Wing pitch coefficient
+			kjx = 2.25, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
+			kjz = 0.00125,  -- Unknown pitch constant. All planes use 0.00125 -- -- Inertia parametre Z - Dimension (clean) airframe drag coefficient at Z (Front) Simply the wing area in square meters (as that is a major factor in drag calculations)
+			Czbe = -0.016, -- Directional stability coefficient  -- coefficient, along Z axis (perpendicular), affects yaw, negative value means force orientation in FC coordinate system
+			cx_gear = 0.0277, -- Additional coefficient of drag for gear extended
+			cx_flap = 0.095, -- Additional coefficient of drag for flap extended
+			cy_flap = 0.31, -- Additional coefficient of lift for flap extended
+			cx_brk = 0.06, -- Additional coefficient of drag for air brakes
 			table_data = 
 			{
+			-- Cx0 - Coefficient of drag for zero lift
+			-- Cya - Coefficient of lift for angle of attack
+			-- B - Induced drag factor
+			-- B4 - Viscous drag factor
+			-- Omxmax - Roll rate
+			-- Aldop - Visual effects settings for stability / controlability
+			-- Cymax - Maximum coefficient of lift, corresponding to αstall
+			-- 
 			--      M	 Cx0		 Cya		 B		 B4	      Omxmax	Aldop	Cymax
-				{0.0,	0.0185,		0.055,		0.08,		0.22,	0.65,	25.0,	1.2 	},
-				{0.2,	0.0185,		0.055,		0.08,		0.22,	1.80,	30.0,	1.2     },
-				{0.4,	0.0519,		0.055,		0.08,	   	0.22,	3.00,	30.0,	1.2     },
-				{0.6,	0.0510,		0.055,		0.05,		0.28,	4.20,	28.0,	1.2     },
-				{0.7,	0.0510,		0.055,		0.05,		0.28,	4.20,	27.0,	1.15    },
-				{0.8,	0.115,		0.055,		0.05,		0.28,	4.20,	25.7,	1.1     },
-				{0.9,	0.200,		0.058,		0.09,		0.20,	4.20,	23.1,	1.07    },
-				{1.0,	0.200,		0.062,		0.17,		0.15,	4.20,	18.9,	1.04    },
-				{1.1,	0.200,		0.062,	   	0.235,		0.09,	3.78,	17.4,	1.02    },
-				{1.2,	0.200,		0.062,	   	0.285,		0.08,	2.94,	17.0,	1.00 	},		
-				{1.3,	0.200,		0.06,	   	0.29,		0.10,	2.10,	16.0,	0.92 	},				
-				{1.4,	0.200,		0.056,	   	0.3,		0.136,	1.80,	15.0,	0.80 	},					
-				{1.6,	0.200,		0.052,	   	0.34,		0.21,	1.08,	13.0,	0.7 	},					
-				{1.8,	0.0400,		0.042,	   	0.34,		2.43,	0.96,	12.0,	0.55 	},		
-				{2.2,	0.0400,		0.037,	   	0.49,		3.5,	0.84,	 10.0,	0.37 	},					
-				{2.5,	0.0400,		0.033,		0.6,		4.7,	0.84,	 9.0,	0.3 	},		
-				{3.9,	0.0400,		0.023,		0.9,		6.0,	0.84,	 7.0,	0.2		},				
+					{0.0,	0.0187,	0.0746,		0.052,	0.012,	0.15,		22.0,		1.45,	},
+					{0.2,	0.0187,	0.0746,		0.052,	0.012,	0.796144,	22.0,		1.45,   },
+					{0.3,	0.0187,	0.0722,		0.052,	0.015,	1.24,		19.0,		1.2,    },
+					{0.5,	0.0187,	0.0798,		0.045,	0.025,	1.323,		17.0,		1.08,   },
+					{0.59,	0.0187,	0.084,		0.047,	0.026,	1.129077,	17.0,		1.07,   },
+					{0.67,	0.0187,	0.0907,		0.047,	0.021,	0.943,		14.5,		0.98,   },
+					{0.74,	0.0227,	0.0855,		0.08,	0.16,	0.675,		10.0,	  	0.72,   },
+					{0.76,	0.032,	0.078,		0.1,	0.25,	0.577,		9.0,  		0.6,    },
+					{0.8,	0.063,	0.072,		0.2,	0.36,	0.456,		6.0,	    0.4,	},
+					{0.83,	0.1,	0.0725,		0.34,	2.4,	0.32,		4.5,		0.3,	},
+					{0.9,	0.126,	0.073,		0.56,	3.0,	0.076,		3.0,	    0.2,	},
+					{1.1,	0.16,	0.03,		0.56,	3.0,	0.076,		1.0,		0.3		},
 			}
 		}, -- end of aerodynamics
 		engine = 
 		{
-			Nmg								=	64.6,
-			MinRUD	=	0,
-			MaxRUD	=	1,
-			MaksRUD	=	0.85,
-			ForsRUD	=	0.91,
-			typeng	=	3,
-            --[[
-                E_TURBOJET = 0
-                E_TURBOJET_AB = 1
-                E_PISTON = 2
-                E_TURBOPROP = 3
-                E_TURBOFAN    = 4
-                E_TURBOSHAFT = 5
-            --]]
-			hMaxEng	=	19.5,
-			dcx_eng	=	0.0114,
-			cemax	=	1.24,
-			cefor	=	2.56,
-			dpdh_m	=	7000,
-			dpdh_f	=	9000.0,
+			Nmg		=	64.6, -- % RPM at idle
+			MinRUD	=	0, -- always 0 in current modeled aircraft -- Min state of the throttle
+			MaxRUD	=	1, -- always 1 in current modeled aircraft -- Max state of the throttle
+			MaksRUD	=	1, -- .85 for afterburning, 1 for non-afterburning engine. -- Military power state of the throttle
+			ForsRUD	=	1, -- .91 for afterburning, 1 for non-afterburning -- Afterburner state of the throttle
+			typeng	=	3, -- E_TURBOJET = 0, E_TURBOJET_AB = 1, E_PISTON = 2, E_TURBOPROP = 3,	E_TURBOFAN    = 4,	E_TURBOSHAFT = 5
+			hMaxEng	=	19.5, -- maximum operating altitude for the engine in km -- typically higher than service ceiling of the aircraft
+			dcx_eng	=	0.0114, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
+			cemax	=	1.24, -- kg / sec - fuel consumption for a single engine in dry configuration
+			cefor	=	2.56, -- kg / sec - fuel consumption for a single engine in afterburner configuration
+			dpdh_m	=	7000, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			dpdh_f	=	9000.0, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			table_data = {
+			-- Pmax - total thrust in Newtons (kN * 1000) for all engines
+			-- Pfor - total thrust in Newtons (kN * 1000) for all engines
 			--   M		Pmax		 Pfor
-				{0.0,	65000,		112000},
-				{0.2,	64000,		100000},
-				{0.4,	62000,		105000},
-				{0.6,	63000,		107000},
-				{0.7,	65000,		110000},
-				{0.8,	65000,		120000},
-				{0.9,	65000,		135000},
-				{1.0,	67000,		150000},
-				{1.1,	63000,		158000},
-				{1.2,	 94000,		168000},
-				{1.3,	 84000,		185000},
-				{1.4,	 71000,		100000},
-				{1.6,	 34000,		118000},
-				{1.8,	 19000,		137000},
-				{2.2,	 17000,		170000},
-				{2.5,	 19000,		190000},
-				{3.9,	 82000,		110000},
-				}                 
+				{0.0,		16620.0},
+				{0.1,		15600.0},
+				{0.2,		14340.0},
+				{0.3,		13320.0},
+				{0.4,		12230.0},
+				{0.5,		11300.0},
+				{0.6,		10600.0},
+				{0.7,		10050.0},
+				{0.8,		 9820.0},
+				{0.9,		 5902.0},
+				{1.0,		 3469.0}
+			}                 
 		}, -- end of engine
+		-- thrust_max = -- thrust interpolation table by altitude and mach number, 2d table.  Modified for carrier takeoffs at/around 71 foot deck height
+        --         {
+        --             M       =   {0, 0.1, 0.225, 0.23, 0.3, 0.5, 0.7, 0.8, 0.9, 1.1},
+        --             H       =   {0, 19, 20, 23, 24, 250, 4572, 7620, 10668, 13716, 16764, 19812},
+        --             thrust  =  {-- M    0     0.1    0.225   0.23,   0.3    0.5     0.7     0.8     0.9     1.1
+        --                         {   41370,  39460,  38060,  38056,  37023,  36653,  36996,  37112,  36813,  34073 },--H = 0 (sea level)
+        --                         {   41370,  39460,  38060,  38056,  37023,  36653,  36996,  37112,  36813,  34073 },--H = 19 (~62.3 feet)
+        --                         {   41370,  39460,  38060,  38056,  37023,  36653,  36996,  37112,  36813,  34073 },--H = 20 (~66.6 feet)
+        --                         {   41370,  39460,  38060,  38056,  37023,  36653,  36996,  37112,  36813,  34073 },--H = 23 (~75.5 feet)
+        --                         {   41370,  39460,  38060,  38056,  37023,  36653,  36996,  37112,  36813,  34073 },--H = 24 (~78.7 feet)
+        --                         {   41370,  39460,  38060,  38056,  37023,  36653,  36996,  37112,  36813,  34073 },--H = 250 (820 feet)
+        --                         {   27254,  25799,  24765,  24761,  24203,  24599,  26227,  27254,  28353,  29785 },--H = 4572 (15kft)
+        --                         {   20818,  19203,  18130,  18127,  17548,  17473,  18638,  19608,  20684,  22873 },--H = 7620 (25kft)
+        --                         {   10876,  11076,  11128,  11130,  11556,  12193,  13024,  13674,  14434,  16098 },--H = 10668 (35kft)
+        --                         {   6025,   6379,    6676,   6680,  6837,   7433,   8194,   8603,   9101,   10075 },--H = 13716 (45kft)
+        --                         {   3336,   3554,    3837,   3840,  3990,   4484,   5000,   5307,   5596,   6232  },--H = 16764 (55kft)
+        --                         {   1904,   2042,    2296,   2300,  2433,   2798,   3212,   3483,   3639,   4097  },--H = 19812 (65kft)
+        --                        },
+        --         },
+		-- extended =
+		-- {
+		--   Cx0 = -- Interpolierung von Cx0 bei Geschwindikeit M und HÃ¶he H
+		--   {-- minimum Cx0 ist xxx maximum Cx0 ist yyy
+		-- 	M       = {0, 0.2, 0.4, 0.6, 0.7, 0.8, 0.9, 1, 1.05, 1.1, 1.2, 1.3, 1.5, 1.7, 1.8, 2, 2.1, 2.2, 3.9},--Machnumber as above
+		-- 	H       = {0, 4572, 10668, 13716, 16764}, --HÃ¶he = SeaLevel, 15kft, 35kft, 45kft, 55kft
+		-- 	Cdmin   = {--M    0     0.2     0.4     0.6     0.7     0.8     0.9     1       1.05    1.1     1.2     1.3     1.5     1.7     1.8       2      2.1     2.2     3.9
+		-- 			   {    0.015,  0.5,    0.04,   0.019, 0.018,  0.015,  0.018,  0.045,   0.048,  0.05,   0.048,  0.047,  0.046,  0.046,  0.046,   0.046,  0.046,  0.046,  0.046,}, --SeaLevel 0
+		-- 			   {    0.015,  0.015,  0.1,    0.027, 0.02,   0.019,  0.02,   0.045,   0.048,  0.05,   0.048,  0.047,  0.046,  0.046,  0.046,   0.046,  0.046,  0.046,  0.046,},-- 15kft
+		-- 			   {    0.015,  0.015,  0.015,  0.12,  0.08,   0.04,   0.035,  0.05,    0.055,  0.06,   0.065,  0.06,   0.05,   0.04,   0.035,   0.025,  0.02,   0.015,  0.015,},-- 35kft
+		-- 			   {    0.015,  0.015,  0.015,  0.015, 0.12,   0.1,    0.07,   0.075,   0.077,  0.08,   0.075,  0.07,   0.055,  0.05,   0.049,   0.0475, 0.045,  0.035,  0.031,},-- 45kft
+		-- 			   {    0.015,  0.015,  0.015,  0.015, 0.05,   0.09,   0.11,   0.14,    0.13,   0.12,   0.1,    0.09,   0.07,   0.06,   0.055,   0.05,   0.0475, 0.042,  0.035,},-- 55kft
+		-- 			  },
+		--   },
+		-- }, -- end of Cx0
+	
+		-- 	extended = -- added new abilities for engine performance setup. thrust data now can be specified as 2d table by Mach number and altitude. thrust specific fuel consumption tuning added as well
+		-- 	{
+		-- 		-- matching TSFC to mil thrust consumption at altitude at mach per NATOPS navy trials
+		-- 		TSFC_max =  -- thrust specific fuel consumption by altitude and Mach number for RPM  100%, 2d table
+		-- 		{
+		-- 			M 		 = {0, 0.5, 0.8, 0.9, 1.0},
+		-- 			H		 = {0, 3048, 6096, 9144, 12192},
+		-- 			TSFC	 = {-- M 0      0.5     0.8       0.9     1.0
+		-- 						{   0.86,  0.92,  1.012,    1.012,  1.003},--H = 0       -- SL
+		-- 						{   0.86,  0.99,  1.025,    1.025,  1.016},--H = 3048    -- 10000'
+		-- 						{   0.86,  0.96,  1.008,    1.008,  0.999},--H = 6096    -- 20000'
+		-- 						{   0.86,  0.95,  0.984,    0.984,  0.974},--H = 9144    -- 30000'
+		-- 						{   0.86,  0.94,  0.976,    0.976,  0.967},--H = 12192   -- 40000'
+		-- 			}
+		-- 		},
+		-- },              
+
+
 	},
 
 	--damage , index meaning see in  Scripts\Aircrafts\_Common\Damage.lua

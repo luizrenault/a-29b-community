@@ -8,7 +8,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Version 0.0.1 - 26 January 2021
+
+
+## Version 0.0.2b - 28 January 2021
+
+### Added
+- New 3D Models: CMFD #1 and #2, ASI, VSI, BFI, Warning, Caution, Fire and Brake indicators.
+
+
+### Changed
+
+  
+
+### Deprecated
+
+  
+
+### Removed
+
+  
+
+### Fixed
+
+- Left mirror texture.
+- VSI scale.
+- Backlight color to green
+- Front glass missing frame. 
+
+
+## Version 0.0.1b - 27 January 2021
 
 ### Added
 
@@ -23,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Internal lights are working but maybe with wrong colors.
 - BFI (Basic Flight Instruments) partially implemented.
 - ASI (Attitude Standby Indicator) partially implemented.
-- Vertical Velocity Indicator partially implemented (wrong scale).
+- VSI( Vertical Velocity Indicator) partially implemented (wrong scale).
 - Canopy animations.
 - Currently working clickable cockpit panels: 
     - Gear;

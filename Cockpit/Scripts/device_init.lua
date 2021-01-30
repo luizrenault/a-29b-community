@@ -43,6 +43,8 @@ creators[devices.ICEPROT]         = {"avLuaDevice"           ,LockOn_Options.scr
 creators[devices.ENVIRON]         = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/environ.lua"}
 creators[devices.GEAR]            = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/gear_old.lua"}
 creators[devices.BRAKES]          = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/brakes.lua"}
+creators[devices.CMFD1]          = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/cmfd1.lua"}
+creators[devices.CMFD2]          = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/cmfd2.lua"}
 
 
 
