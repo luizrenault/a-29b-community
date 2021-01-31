@@ -38,4 +38,8 @@ preload_texture={
 		LockOn_Options.script_path.."/BFI/Resources/BFI_Bank.png",
 		LockOn_Options.script_path.."/BFI/Resources/BFI_Horizon.bmp",
 		LockOn_Options.script_path.."/HDD/Resources/BFI_Ias.bmp",
+		-- LockOn_Options.script_path.."/CMFD/Resources/font_CMFD.dds",
 	}
+
+
+dofile(LockOn_Options.script_path .. "CMFD/materials.lua")

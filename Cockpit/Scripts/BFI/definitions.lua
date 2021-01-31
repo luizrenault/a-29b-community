@@ -99,7 +99,6 @@ function Add_Object_Text_(object, objectname, objectparent, objectmaterial, obje
 	object.element_params = objectelementparams
 	object.controllers = objectcontrollers
 	object.init_pos = {initpixelposx+stringdefs_value[3], initpixelposy+stringdefs_value[4]}
-	print_message_to_user(stringdefs_value)
 	object.alignment		= objectalignment
 	if format_value ~= nil then
 		if type(format_value) == "table" then
