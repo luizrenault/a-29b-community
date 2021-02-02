@@ -1,3 +1,5 @@
+-- - SE A NP ≥ 106% POR MAIS DE 3 SEGUNDOS NO MODO AUTOMÁTICO, A PMU REVERTE PARA O MODO MANUAL.
+
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
 

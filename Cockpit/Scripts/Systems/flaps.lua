@@ -40,8 +40,8 @@ local ias_knots = 0 -- * rate_met2knot
 local FlapExtensionTimeSeconds = 6      -- flaps take 6 seconds to extend/retract fully
 
 --Creating local variables
-local FLAPS_STATE	=	0 -- 0 = retracted, 0.5 = takeoff, 1.0 = landing -- "current" flap position		
-local FLAPS_TARGET  =   0 -- 0 = retracted, 0.5 = takeoff, 1.0 = landing -- "future" flap position
+local FLAPS_STATE	=	0 -- 0 = retracted, 1.0 = extended -- "current" flap position		
+local FLAPS_TARGET  =   0 -- 0 = retracted, 1.0 = extended -- "future" flap position
 local FLAPS_TARGET_LAST = 0
 local MOVING = 0          -- 1 = we "want" movement to a new position
 
@@ -97,7 +97,7 @@ function SetCommand(command,value)
         if FLAPS_TARGET >= 0.5 then
             dev:performClickableAction(device_commands.flaps, 0, false)
         else
-            dev:performClickableAction(device_commands.flaps, 0.5, false)
+            dev:performClickableAction(device_commands.flaps, 1, false)
         end
     elseif command == Keys.PlaneFlapsOn then
         dev:performClickableAction(device_commands.flaps, 1.0, false)

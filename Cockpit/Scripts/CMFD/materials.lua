@@ -116,6 +116,7 @@ materials["CMFD_IND_RED"]        = {255,   0,   0, 240}
 materials["CMFD_IND_GREEN"]      = {  0, 255,   0, 150}
 materials["CMFD_IND_DGREEN"]     = {  3,  67,  40, 240}
 materials["CMFD_IND_BLUE"]       = {  0,   0, 255, 240}
+materials["CMFD_IND_CYAN"]       = {  0,   178, 255, 255}
 materials["CMFD_IND_BLUE_L"]     = { 70, 130, 180, 255}
 materials["CMFD_IND_BLACK"]      = {  0,   0,   0, 240}
 materials["CMFD_IND_DARK"]       = {  0,   0,   0, 128}
@@ -227,6 +228,7 @@ textures["cmfd_tex_eicas"]        = {IND_TEX_PATH .. "a29b_cmfd.png", materials[
 
 
 textures["cmfd_mesh_def"]        = {nil, materials["CMFD_IND_DEF"]}
+textures["cmfd_mesh_cyan"]        = {nil, materials["CMFD_IND_CYAN"]}
 textures["cmfd_mesh_r"]          = {nil, materials["CMFD_IND_RED"]}
 textures["cmfd_mesh_g"]          = {nil, materials["CMFD_IND_GREEN"]}
 textures["cmfd_mesh_b"]          = {nil, materials["CMFD_IND_BLUE"]}
@@ -261,6 +263,7 @@ fonts["cmfd_font_def"]  = {fontdescription["font_CMFD"], 10, materials["CMFD_IND
 fonts["cmfd_font_g"]    = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_GREEN"]}
 fonts["cmfd_font_dg"]   = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_DGREEN"]}
 fonts["cmfd_font_b"]    = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_BLUE"]}
+fonts["cmfd_font_cyan"] = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_CYAN"]}
 fonts["cmfd_font_w"]    = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_WHITE"]}
 fonts["cmfd_font_wy"]   = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_WHITE_Y"]}
 fonts["cmfd_font_d"]    = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_DARK"]}

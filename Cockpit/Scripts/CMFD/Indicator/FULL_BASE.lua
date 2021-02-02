@@ -96,6 +96,32 @@ text_strpoly.parent_element    = page_root.name
 AddElementObject(text_strpoly)
 text_strpoly = nil
 
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = "osb_txt_sel_left"
+mesh_poly.init_pos          = {0, HH/2}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { {HW, HH}, {HW,-HH}, {-HW,-HH}, {-HW, HH }}
+mesh_poly.indices           = default_box_indices
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"CMFD2Primary"}
+mesh_poly.controllers       = {{"parameter_in_range", 0, -0.05, 0.05}}
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = "osb_txt_sel_right"
+mesh_poly.init_pos          = {0, HH/2}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { {HW, HH}, {HW,-HH}, {-HW,-HH}, {-HW, HH }}
+mesh_poly.indices           = default_box_indices
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"CMFD2Primary"}
+mesh_poly.controllers       = {{"parameter_in_range", 0 ,0.95, 1.05}}
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
 
 text_strpoly                = CreateElement "ceStringPoly"
 text_strpoly.material       = CMFD_FONT_DEF
@@ -103,8 +129,8 @@ text_strpoly.stringdefs     = CMFD_STRINGDEFS_DEF_X08
 text_strpoly.init_pos       = {CMFD_FONT_UD2_X, -H2W_SCALE+HH}
 text_strpoly.alignment      = "CenterBottom"
 text_strpoly.formats        = {"%s"}
-text_strpoly.element_params = {"CMFD2SelLeftName"}
-text_strpoly.controllers    = {{"text_using_parameter",0,0}}
+text_strpoly.element_params = {"CMFD2SelLeftName", "CMFD2Primary"}
+text_strpoly.controllers    = {{"text_using_parameter",0,0}, {"change_color_when_parameter_equal_to_number", 1, 0, -1, -1, -1}}
 text_strpoly.name           = "osb_txt_sel_left"
 text_strpoly.value          = "AAA"
 text_strpoly.parent_element    = page_root.name
@@ -117,8 +143,8 @@ text_strpoly.stringdefs     = CMFD_STRINGDEFS_DEF_X08
 text_strpoly.init_pos       = {CMFD_FONT_UD5_X, -H2W_SCALE+HH}
 text_strpoly.alignment      = "CenterBottom"
 text_strpoly.formats        = {"%s"}
-text_strpoly.element_params = {"CMFD2SelRightName"}
-text_strpoly.controllers    = {{"text_using_parameter",0,0}}
+text_strpoly.element_params = {"CMFD2SelRightName", "CMFD2Primary"}
+text_strpoly.controllers    = {{"text_using_parameter",0,0}, {"change_color_when_parameter_equal_to_number", 1, 1, -1, -1, -1}}
 text_strpoly.name           = "osb_txt_sel_right"
 text_strpoly.value          = "BBB"
 text_strpoly.parent_element    = page_root.name
@@ -126,31 +152,6 @@ AddElementObject(text_strpoly)
 text_strpoly = nil
 
 
-mesh_poly                   = CreateElement "ceMeshPoly"
-mesh_poly.parent_element    = "osb_txt_sel_left"
-mesh_poly.init_pos          = {0, HH/2}
-mesh_poly.material          = CMFD_MATERIAL_DEF
-mesh_poly.primitivetype     = "lines"
-mesh_poly.vertices          = { {HW, HH}, {HW,-HH}, {-HW,-HH}, {-HW, HH }}
-mesh_poly.indices           = {0,1,1,2,2,3,3,0}
-mesh_poly.isvisible         = true
-mesh_poly.element_params    = {"CMFD2Primary"}
-mesh_poly.controllers       = {{"parameter_in_range", 0, -0.05, 0.05}}
-AddElementObject(mesh_poly)
-mesh_poly = nil
-
-mesh_poly                   = CreateElement "ceMeshPoly"
-mesh_poly.parent_element    = "osb_txt_sel_right"
-mesh_poly.init_pos          = {0, HH/2}
-mesh_poly.material          = CMFD_MATERIAL_DEF
-mesh_poly.primitivetype     = "lines"
-mesh_poly.vertices          = { {HW, HH}, {HW,-HH}, {-HW,-HH}, {-HW, HH }}
-mesh_poly.indices           = {0,1,1,2,2,3,3,0}
-mesh_poly.isvisible         = true
-mesh_poly.element_params    = {"CMFD2Primary"}
-mesh_poly.controllers       = {{"parameter_in_range", 0 ,0.95, 1.05}}
-AddElementObject(mesh_poly)
-mesh_poly = nil
 
 
 
