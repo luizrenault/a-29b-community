@@ -1,3 +1,51 @@
+function basic_dump (o)
+    if type(o) == "number" then
+      return tostring(o)
+    elseif type(o) == "string" then
+      return string.format("%q", o)
+    else -- nil, boolean, function, userdata, thread; assume it can be converted to a string
+      return tostring(o)
+    end
+  end
+  
+  
+  function dump (name, value, saved, result)
+    seen = seen or {}       -- initial value
+    result = result or ""
+    result=result..name.." = "
+    if type(value) ~= "table" then
+      result=result..basic_dump(value).."\n"
+      log.info(result)
+      result = ""
+    elseif type(value) == "table" then
+      if seen[value] then    -- value already saved?
+        result=result.."->"..seen[value].."\n"  -- use its previous name
+      else
+        seen[value] = name   -- save name for next time
+        result=result.."{}\n"     -- create a new table
+        for k,v in pairs(value) do      -- save its fields
+          local fieldname = string.format("%s[%s]", name,
+                                          basic_dump(k))
+          if fieldname~="_G[\"seen\"]" then
+            result=dump(fieldname, v, seen, result)
+          end
+        end
+      end
+    end
+    return result
+  end
+
+ log.info("=====================================================")
+-- param = list_cockpit_params()
+-- dump("_G", _G)
+-- dump("_G", getmetatable(_G))
+
+-- dump("GetSelf", GetSelf())
+-- dump("GetSelf", getmetatable(GetSelf()))
+
+-- print_message_to_user("Page: " .. check_page())
+
+
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."CMFD/CMFD_pageID_defs.lua")
@@ -526,134 +574,231 @@ dev:listen_command(device_commands.CMFD2ButtonGain)
 dev:listen_command(device_commands.CMFD2ButtonSymb)
 dev:listen_command(device_commands.CMFD2ButtonBright)
 
+dev:listen_command(device_commands.CMFD1OSS1)
+dev:listen_command(device_commands.CMFD1OSS2)
+dev:listen_command(device_commands.CMFD1OSS3)
+dev:listen_command(device_commands.CMFD1OSS4)
+dev:listen_command(device_commands.CMFD1OSS5)
+dev:listen_command(device_commands.CMFD1OSS6)
+dev:listen_command(device_commands.CMFD1OSS7)
+dev:listen_command(device_commands.CMFD1OSS8)
+dev:listen_command(device_commands.CMFD1OSS9)
+dev:listen_command(device_commands.CMFD1OSS10)
+dev:listen_command(device_commands.CMFD1OSS11)
+dev:listen_command(device_commands.CMFD1OSS12)
+dev:listen_command(device_commands.CMFD1OSS13)
+dev:listen_command(device_commands.CMFD1OSS14)
+dev:listen_command(device_commands.CMFD1OSS15)
+dev:listen_command(device_commands.CMFD1OSS16)
+dev:listen_command(device_commands.CMFD1OSS17)
+dev:listen_command(device_commands.CMFD1OSS18)
+dev:listen_command(device_commands.CMFD1OSS19)
+dev:listen_command(device_commands.CMFD1OSS20)
+dev:listen_command(device_commands.CMFD1OSS21)
+dev:listen_command(device_commands.CMFD1OSS22)
+dev:listen_command(device_commands.CMFD1OSS23)
+dev:listen_command(device_commands.CMFD1OSS24)
+dev:listen_command(device_commands.CMFD1OSS25)
+dev:listen_command(device_commands.CMFD1OSS26)
+dev:listen_command(device_commands.CMFD1OSS27)
+dev:listen_command(device_commands.CMFD1OSS28)
+dev:listen_command(device_commands.CMFD1ButtonOn)
+dev:listen_command(device_commands.CMFD1ButtonGain)
+dev:listen_command(device_commands.CMFD1ButtonSymb)
+dev:listen_command(device_commands.CMFD1ButtonBright)
+
+local CMFDNumber=get_param_handle("CMFDNumber")
+CMFDNumber:set(0)
+
+local CMFD1Format=get_param_handle("CMFD1Format")
+CMFD1Format:set(SUB_PAGE_ID.ADHSI)
+
 local CMFD2Format=get_param_handle("CMFD2Format")
 CMFD2Format:set(SUB_PAGE_ID.EICAS)
 
-local CMFD2Soi=get_param_handle("CMFD2Soi")
-CMFD2Soi:set(1)
+local CMFDDoi=get_param_handle("CMFDDoi")
+CMFDDoi:set(1)
+
+local CMFD1DCLT=get_param_handle("CMFD1DCLT")
+CMFD1DCLT:set(0)
+
+local CMFD2DCLT=get_param_handle("CMFD2DCLT")
+CMFD2DCLT:set(0)
+
+local CMFD1Primary=get_param_handle("CMFD1Primary")
+CMFD1Primary:set(0) -- 0=Left or OSS 19     1=Right or PSS 16
 
 local CMFD2Primary=get_param_handle("CMFD2Primary")
 CMFD2Primary:set(0) -- 0=Left or OSS 19     1=Right or PSS 16
 
+local CMFD1Sel=get_param_handle("CMFD1Sel")
+CMFD1Sel:set(SUB_PAGE_ID.ADHSI)
+
+local CMFD2Sel=get_param_handle("CMFD2Sel")
+CMFD2Sel:set(SUB_PAGE_ID.EICAS)
+
+local CMFD1SelLeft=get_param_handle("CMFD1SelLeft")
+CMFD1SelLeft:set(SUB_PAGE_ID.ADHSI)
+
 local CMFD2SelLeft=get_param_handle("CMFD2SelLeft")
 CMFD2SelLeft:set(SUB_PAGE_ID.EICAS)
+
+local CMFD1SelLeftName=get_param_handle("CMFD1SelLeftName")
+CMFD1SelLeftName:set(SUB_PAGE_NAME[CMFD1SelLeft:get()])
 
 local CMFD2SelLeftName=get_param_handle("CMFD2SelLeftName")
 CMFD2SelLeftName:set(SUB_PAGE_NAME[CMFD2SelLeft:get()])
 
+local CMFD1SelRight=get_param_handle("CMFD1SelRight")
+CMFD1SelRight:set(SUB_PAGE_ID.BLANK)
 
 local CMFD2SelRight=get_param_handle("CMFD2SelRight")
 CMFD2SelRight:set(SUB_PAGE_ID.BLANK)
 
+local CMFD1SelRightName=get_param_handle("CMFD1SelRightName")
+CMFD1SelRightName:set(SUB_PAGE_NAME[CMFD1SelRight:get()])
+
 local CMFD2SelRightName=get_param_handle("CMFD2SelRightName")
 CMFD2SelRightName:set(SUB_PAGE_NAME[CMFD2SelRight:get()])
 
-
-
-
 -- HSD, SMS, UFCP, DVR, EW, ADHSI, EICAS, FLIR, EMERG, PFL, BIT, HUD, DTE e NAV
 
-
-function SetCommandMenu1(command,value)
+function SetCommandMenu1(command,value, CMFD)
     local selected=-1
-    if command==device_commands.CMFD2OSS1 then CMFD2Format:set(SUB_PAGE_ID.MENU2)
-    elseif command==device_commands.CMFD2OSS3 then selected=SUB_PAGE_ID.BLANK
-    elseif command==device_commands.CMFD2OSS5 then selected=SUB_PAGE_ID.BLANK
-    elseif command==device_commands.CMFD2OSS6 then selected=SUB_PAGE_ID.BLANK
-    elseif command==device_commands.CMFD2OSS7 then selected=SUB_PAGE_ID.DTE
-    elseif command==device_commands.CMFD2OSS8 then selected=SUB_PAGE_ID.FLIR
-    elseif command==device_commands.CMFD2OSS9 then selected=SUB_PAGE_ID.DVR
-    elseif command==device_commands.CMFD2OSS10 then selected=SUB_PAGE_ID.EMERG
-    elseif command==device_commands.CMFD2OSS11 then selected=SUB_PAGE_ID.PFL
-    elseif command==device_commands.CMFD2OSS12 then selected=SUB_PAGE_ID.BIT
-    elseif command==device_commands.CMFD2OSS13 then selected=SUB_PAGE_ID.NAV
-    elseif command==device_commands.CMFD2OSS14 then selected=SUB_PAGE_ID.BLANK
-    elseif command==device_commands.CMFD2OSS21 then selected=SUB_PAGE_ID.BLANK
-    elseif command==device_commands.CMFD2OSS22 then selected=SUB_PAGE_ID.EICAS
-    elseif command==device_commands.CMFD2OSS23 then selected=SUB_PAGE_ID.UFCP
-    elseif command==device_commands.CMFD2OSS24 then selected=SUB_PAGE_ID.ADHSI
-    elseif command==device_commands.CMFD2OSS25 then selected=SUB_PAGE_ID.EW
-    elseif command==device_commands.CMFD2OSS26 then selected=SUB_PAGE_ID.SMS
-    elseif command==device_commands.CMFD2OSS27 then selected=SUB_PAGE_ID.HUD
-    elseif command==device_commands.CMFD2OSS28 then selected=SUB_PAGE_ID.HSD
+    if command==device_commands.CMFD1OSS1 or command==device_commands.CMFD2OSS1 then CMFD["Format"]:set(SUB_PAGE_ID.MENU2)
+    elseif command == device_commands.CMFD1OSS2 or command == device_commands.CMFD2OSS2 then
+        -- Função: Restaurar a configuração padrão do sistema para os formatos Primário e Secundário e para o DOI de cada modo principal.
+    elseif command == device_commands.CMFD1OSS4 or command == device_commands.CMFD2OSS4 then
+        -- Função: Restaurar os valores padrão do brilho da simbologia e do contraste das imagens de vídeo.
+        -- Esta função é usada para se fazer uma recuperação rápida de ajustes errôneos de contraste ou brilho.
+    elseif command==device_commands.CMFD1OSS3 or command==device_commands.CMFD2OSS3 then selected=SUB_PAGE_ID.BLANK
+    elseif command==device_commands.CMFD1OSS5 or command==device_commands.CMFD2OSS5 then selected=SUB_PAGE_ID.BLANK
+    elseif command==device_commands.CMFD1OSS6 or command==device_commands.CMFD2OSS6 then selected=SUB_PAGE_ID.BLANK
+    elseif command==device_commands.CMFD1OSS7 or command==device_commands.CMFD2OSS7 then selected=SUB_PAGE_ID.DTE
+    elseif command==device_commands.CMFD1OSS8 or command==device_commands.CMFD2OSS8 then selected=SUB_PAGE_ID.FLIR
+    elseif command==device_commands.CMFD1OSS9 or command==device_commands.CMFD2OSS9 then selected=SUB_PAGE_ID.DVR
+    elseif command==device_commands.CMFD1OSS10 or command==device_commands.CMFD2OSS10 then selected=SUB_PAGE_ID.EMERG
+    elseif command==device_commands.CMFD1OSS11 or command==device_commands.CMFD2OSS11 then selected=SUB_PAGE_ID.PFL
+    elseif command==device_commands.CMFD1OSS12 or command==device_commands.CMFD2OSS12 then selected=SUB_PAGE_ID.BIT
+    elseif command==device_commands.CMFD1OSS13 or command==device_commands.CMFD2OSS13 then selected=SUB_PAGE_ID.NAV
+    elseif command==device_commands.CMFD1OSS14 or command==device_commands.CMFD2OSS14 then selected=SUB_PAGE_ID.BLANK
+    elseif command==device_commands.CMFD1OSS21 or command==device_commands.CMFD2OSS21 then selected=SUB_PAGE_ID.BLANK
+    elseif command==device_commands.CMFD1OSS22 or command==device_commands.CMFD2OSS22 then selected=SUB_PAGE_ID.EICAS
+    elseif command==device_commands.CMFD1OSS23 or command==device_commands.CMFD2OSS23 then selected=SUB_PAGE_ID.UFCP
+    elseif command==device_commands.CMFD1OSS24 or command==device_commands.CMFD2OSS24 then selected=SUB_PAGE_ID.ADHSI
+    elseif command==device_commands.CMFD1OSS25 or command==device_commands.CMFD2OSS25 then selected=SUB_PAGE_ID.EW
+    elseif command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26 then selected=SUB_PAGE_ID.SMS
+    elseif command==device_commands.CMFD1OSS27 or command==device_commands.CMFD2OSS27 then selected=SUB_PAGE_ID.HUD
+    elseif command==device_commands.CMFD1OSS28 or command==device_commands.CMFD2OSS28 then selected=SUB_PAGE_ID.HSD
     end
+
     if selected > 0 then
-        CMFD2Format:set(selected)
-        if CMFD2Primary:get()==1 then
-            CMFD2SelRight:set(selected)
-            CMFD2SelRightName:set(SUB_PAGE_NAME[selected])
-            if CMFD2SelLeft:get() == selected then
-                CMFD2SelLeft:set(SUB_PAGE_ID.BLANK)
-                CMFD2SelLeftName:set(SUB_PAGE_NAME[SUB_PAGE_ID.BLANK])
+        CMFD["Format"]:set(selected)
+        CMFD["Sel"]:set(selected)
+        if CMFD["Primary"]:get()==1 then
+            CMFD["SelRight"]:set(selected)
+            CMFD["SelRightName"]:set(SUB_PAGE_NAME[selected])
+            if CMFD["SelLeft"]:get() == selected then
+                CMFD["SelLeft"]:set(SUB_PAGE_ID.BLANK)
+                CMFD["SelLeftName"]:set(SUB_PAGE_NAME[SUB_PAGE_ID.BLANK])
             end
         else 
-            CMFD2SelLeft:set(selected)
-            CMFD2SelLeftName:set(SUB_PAGE_NAME[selected])
-            if CMFD2SelRight:get() == selected then
-                CMFD2SelRight:set(SUB_PAGE_ID.BLANK)
-                CMFD2SelRightName:set(SUB_PAGE_NAME[SUB_PAGE_ID.BLANK])
+            CMFD["SelLeft"]:set(selected)
+            CMFD["SelLeftName"]:set(SUB_PAGE_NAME[selected])
+            if CMFD["SelRight"]:get() == selected then
+                CMFD["SelRight"]:set(SUB_PAGE_ID.BLANK)
+                CMFD["SelRightName"]:set(SUB_PAGE_NAME[SUB_PAGE_ID.BLANK])
             end
         end
     end
-
 end
 
-function SetCommandMenu2(command,value)
-    if command==device_commands.CMFD2OSS1 then CMFD2Format:set(SUB_PAGE_ID.MENU1)
+function SetCommandMenu2(command,value, CMFD)
+    if command==device_commands.CMFD1OSS1 or command==device_commands.CMFD2OSS1 then CMFD["Format"]:set(SUB_PAGE_ID.MENU1)
+    elseif command == device_commands.CMFD2OSS2 then
+        -- Função: Restaurar a configuração padrão do sistema para os formatos Primário e Secundário e para o DOI de cada modo principal.
+    elseif command == device_commands.CMFD2OSS4 then
+        -- Função: Restaurar os valores padrão do brilho da simbologia e do contraste das imagens de vídeo.
+        -- Esta função é usada para se fazer uma recuperação rápida de ajustes errôneos de contraste ou brilho.
     end
 end
 
-function SetCommandEicas(command,value)
-    if command==device_commands.CMFD2OSS13 then fuel_joker = fuel_joker + 5
-    elseif command==device_commands.CMFD2OSS14 then fuel_joker = fuel_joker - 5
-    elseif command==device_commands.CMFD2OSS11 then fuel_init = fuel_init + 5
-    elseif command==device_commands.CMFD2OSS12 then fuel_init = fuel_init - 5
-    elseif command==device_commands.CMFD2OSS25 then oat_base = oat_base - 1
-    elseif command==device_commands.CMFD2OSS26 then oat_base = oat_base + 1
+function SetCommandEicas(command,value, CMFD)
+    if command==device_commands.CMFD1OSS13 or command==device_commands.CMFD2OSS13 then fuel_joker = fuel_joker + 5
+    elseif command==device_commands.CMFD1OSS14 or command==device_commands.CMFD2OSS14 then fuel_joker = fuel_joker - 5
+    elseif command==device_commands.CMFD1OSS11 or command==device_commands.CMFD2OSS11 then fuel_init = fuel_init + 5
+    elseif command==device_commands.CMFD1OSS12 or command==device_commands.CMFD2OSS12 then fuel_init = fuel_init - 5
+    elseif command==device_commands.CMFD1OSS25 or command==device_commands.CMFD2OSS25 then oat_base = oat_base - 1
+    elseif command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26 then oat_base = oat_base + 1
     end
 end
 
 function SetCommand(command,value)
-    CMFD2FormatSelected=CMFD2Format:get()
+    local cmfdnumber = 0
+    local formatselected = 0
+    local CMFD={}
+
+    if command >= device_commands.CMFD1OSS1 and command <= device_commands.CMFD1ButtonBright then 
+        CMFD["Number"]          = 1
+        CMFD["DCLT"]            = CMFD1DCLT
+        CMFD["Primary"]         = CMFD1Primary
+        CMFD["Format"]          = CMFD1Format
+        CMFD["SelLeft"]         = CMFD1SelLeft
+        CMFD["SelRight"]        = CMFD1SelRight
+        CMFD["SelLeftName"]     = CMFD1SelLeftName
+        CMFD["SelRightName"]    = CMFD1SelRightName
+        CMFD["Sel"]             = CMFD1Sel
+        CMFD["Selected"]        = CMFD1Format:get()
+    elseif command >= device_commands.CMFD2OSS1 and command <= device_commands.CMFD2ButtonBright then 
+        CMFD["Number"]          = 2
+        CMFD["DCLT"]            = CMFD2DCLT
+        CMFD["Primary"]         = CMFD2Primary
+        CMFD["Format"]          = CMFD2Format
+        CMFD["SelLeft"]         = CMFD2SelLeft
+        CMFD["SelRight"]        = CMFD2SelRight
+        CMFD["SelLeftName"]     = CMFD2SelLeftName
+        CMFD["SelRightName"]    = CMFD2SelRightName
+        CMFD["Sel"]             = CMFD2Sel
+        CMFD["Selected"]        = CMFD2Format:get()
+    end
+
     if value == 1 then
-        debug_message_to_user("CMFD2: command "..tostring(command).." = "..tostring(value) .. " Tela=" .. tostring(CMFD2FormatSelected))
-        if CMFD2FormatSelected == SUB_PAGE_ID.MENU1 then SetCommandMenu1(command,value) 
-        elseif CMFD2FormatSelected == SUB_PAGE_ID.MENU2 then SetCommandMenu2(command,value) 
-        elseif CMFD2FormatSelected == SUB_PAGE_ID.EICAS then SetCommandEicas(command,value) 
+        print_message_to_user("CMFD: command "..tostring(command).." = "..tostring(value) .. " Tela=" .. tostring(CMFD["Selected"]))
+        
+        if CMFD["Selected"] == SUB_PAGE_ID.MENU1 then SetCommandMenu1(command,value, CMFD) 
+        elseif CMFD["Selected"] == SUB_PAGE_ID.MENU2 then SetCommandMenu2(command,value, CMFD) 
+        elseif CMFD["Selected"] == SUB_PAGE_ID.EICAS then SetCommandEicas(command,value, CMFD) 
         end
 
-        if command==device_commands.CMFD2OSS1 then
-        elseif command == device_commands.CMFD2OSS2 then
-            -- Função: Restaurar a configuração padrão do sistema para os formatos Primário e Secundário e para o DOI de cada modo principal.
-        elseif command == device_commands.CMFD2OSS4 then
-            -- Função: Restaurar os valores padrão do brilho da simbologia e do contraste das imagens de vídeo.
-            -- Esta função é usada para se fazer uma recuperação rápida de ajustes errôneos de contraste ou brilho.
-        elseif command == device_commands.CMFD2OSS15 then
+        if command == device_commands.CMFD1OSS15 or command == device_commands.CMFD2OSS15 then
+            CMFD["DCLT"]:set((CMFD["DCLT"]:get()+1)%2)
             -- OSS 15 (DCLT) – Tem a função de alternar entre ocultar e apresentar as legendas adjacentes aos OSS 1 a 14 e 21 a 28.
             -- A legenda DCLT fica em vídeo inverso quando a função de ocultar estiver ativada e em vídeo normal quando desativada.
             -- Mesmo quando as legendas estiverem ocultas, os OSS continuam com suas funções habilitadas.
-            -- A função DCLT é individual para cada formato, e é mantida a última seleção feita.        
-        elseif command == device_commands.CMFD2OSS16 then
-            if CMFD2Primary:get()==1 then
-                if (CMFD2FormatSelected == SUB_PAGE_ID.MENU1) or (CMFD2FormatSelected == SUB_PAGE_ID.MENU2) then
-                    CMFD2Format:set(CMFD2SelRight:get())
+            -- A função DCLT é individual para cada formato, e é mantida a última seleção feita.
+        elseif command == device_commands.CMFD1OSS16 or command == device_commands.CMFD2OSS16 then
+            if CMFD["Primary"]:get()==1 then
+                if (CMFD["Selected"] == SUB_PAGE_ID.MENU1) or (CMFD["Selected"] == SUB_PAGE_ID.MENU2) then
+                    CMFD["Format"]:set(CMFD["SelRight"]:get())
                 else 
-                    CMFD2Format:set(SUB_PAGE_ID.MENU1)
+                    CMFD["Sel"]:set(CMFD["SelRight"]:get())
+                    CMFD["Format"]:set(SUB_PAGE_ID.MENU1)
                 end
             else 
-                CMFD2Primary:set(1)
-                CMFD2Format:set(CMFD2SelRight:get())
+                CMFD["Primary"]:set(1)
+                CMFD["Format"]:set(CMFD["SelRight"]:get())
             end
-        elseif command == device_commands.CMFD2OSS19 then
-            if CMFD2Primary:get()==0 then
-                if (CMFD2FormatSelected == SUB_PAGE_ID.MENU1) or (CMFD2FormatSelected == SUB_PAGE_ID.MENU2) then
-                    CMFD2Format:set(CMFD2SelLeft:get())
+        elseif command == device_commands.CMFD1OSS19 or command == device_commands.CMFD2OSS19 then
+            if CMFD["Primary"]:get()==0 then
+                if (CMFD["Selected"] == SUB_PAGE_ID.MENU1) or (CMFD["Selected"] == SUB_PAGE_ID.MENU2) then
+                    CMFD["Format"]:set(CMFD["SelLeft"]:get())
                 else 
-                    CMFD2Format:set(SUB_PAGE_ID.MENU1)
+                    CMFD["Sel"]:set(CMFD["SelLeft"]:get())
+                    CMFD["Format"]:set(SUB_PAGE_ID.MENU1)
                 end
             else 
-                CMFD2Primary:set(0)
-                CMFD2Format:set(CMFD2SelLeft:get())
+                CMFD["Primary"]:set(0)
+                CMFD["Format"]:set(CMFD["SelLeft"]:get())
             end
             -- OSS 16 e 19 (Formatos Primário e Secundário) – Têm a função de selecionar o formato primário de apresentação.
             -- As legendas adjacentes aos OSS 16 e 19 representam os formatos primário e secundário selecionados e podem ser qualquer uma daquelas que representam os formatos possíveis de serem selecionados, quais sejam: HSD, SMS, UFCP, DVR, EW, ADHSI, EICAS, FLIR, EMERG, PFL, BIT, HUD, DTE e NAV.
@@ -661,7 +806,8 @@ function SetCommand(command,value)
             -- Pressionando-se o OSS adjacente à legenda do formato secundário (vídeo normal), inverte-se a seleção de formato primário e secundário entre as duas opções.
             -- Pressionando-se o OSS adjacente à legenda do formato primário (vídeo inverso), seleciona-se o formato MENU. Selecionando-se um outro formato a partir do formato MENU, este passa a ser o novo formato primário.
             -- Os displays primário e secundário apresentados ao ligar o sistema aviônico são determinados pelo modo principal selecionado ou da programação carregada por meio do DTC.
-        elseif command == device_commands.CMFD2OSS17 then
+        elseif command == device_commands.CMFD1OSS17 or command == device_commands.CMFD2OSS17 then
+            CMFDDoi:set(CMFD["Number"])
             -- OSS 17 (DOI) – Tem a função de indicar se o respectivo CMFD é o display de interesse (Display Of Interest – DOI) selecionado.
             -- A seleção do DOI é feita pressionando-se o OSS 17 do respectivo CMFD ou movendo-se para a esquerda ou para a direita no Interruptor de Gerenciamento dos Displays no manche.
             -- O CMFD selecionado como DOI é aquele que estiver habilitado no momento para ser controlado pelos interruptores da função HOTAS.
@@ -670,13 +816,12 @@ function SetCommand(command,value)
             --  • Seta para baixo (⇓) no CMFD direito ou esquerdo indica que o referido display da nacele traseira é o DOI;
             --  • Nenhuma seta nos CMFD indica que o HUD é o DOI.
             -- A seleção do DOI é mantida de acordo com a última seleção feita ou modificada através da programação carregada por meio do DTC.
-        elseif command == device_commands.CMFD2OSS18 then
+        elseif command == device_commands.CMFD1OSS18 or command == device_commands.CMFD2OSS18 then
             -- OSS 18 (SWAP) – Tem a função de trocar os formatos que estiverem sendo apresentados nos CMFDs da esquerda e da direita.
             -- Ao pressionar o OSS 18, o formato que esta sendo apresentado no CMFD esquerdo passa a ser apresentado no CMFD direito e vice-versa.
             -- Pode-se efetuar a troca (SWAP) entre os displays primário e secundário de um mesmo CMFD através de dois movimentos para a esquerda no Interruptor de Gerenciamento dos Displays (DMS) no punho do manche para o CMFD da esquerda. Analogamente pode-se fazer a mesma troca no CMFD da direita.
             -- A função de troca (SWAP) continua disponível mesmo que o CMFD direito não esteja instalado.
-
-        elseif command == device_commands.CMFD2OSS20 then
+        elseif command == device_commands.CMFD1OSS20 or command == device_commands.CMFD2OSS20 then
             -- OSS 20 (IND) – Tem a função de individualizar a seleção dos formatos dos CMFDs dianteiro e traseiro de um mesmo lado.
             -- Esta função está habilitada somente na nacele traseira e a sua ativação e desativação é feita pressionando-se o OSS 20. Entretanto, a legenda é apresentada nas duas naceles.
             -- Quando a função estiver ativada, a legenda IND é apresentada com uma moldura. Neste caso, é possível selecionar formatos distintos nos CMFDs do mesmo lado.
@@ -689,7 +834,7 @@ function SetCommand(command,value)
 end
 
 
-print_message_to_user("CMFD2: load end")
+startup_print("CMFD2: load end")
 need_to_be_closed = false -- close lua state after initialization
 
 

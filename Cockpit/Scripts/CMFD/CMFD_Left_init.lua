@@ -1,12 +1,11 @@
 dofile(LockOn_Options.script_path.."CMFD/CMFD_pageID_defs.lua")
-cmfd_id = CMFD.LMFCD
+cmfd_id = CMFD.LCMFD
 
 dofile(LockOn_Options.script_path.."CMFD/CMFD_init_COMMON.lua")
 
 -- debugGUI = true
 
 init_pageID = PAGE_ID
-
 
 dofile(LockOn_Options.common_script_path.."ViewportHandling.lua")
 

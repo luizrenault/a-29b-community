@@ -6,8 +6,8 @@ purposes       = {render_purpose.GENERAL, render_purpose.HUD_ONLY_VIEW}
 
 local cmfd_page_path = LockOn_Options.script_path .. "CMFD/Indicator/"
 dofile(cmfd_page_path .. "../utils.lua")
-
 dofile(cmfd_page_path .. "../CMFD_pageID_defs.lua")
+
 
 page_subsets = {
     [SUB_PAGE_ID.BASE        ] = cmfd_page_path .. "FULL_BASE.lua",

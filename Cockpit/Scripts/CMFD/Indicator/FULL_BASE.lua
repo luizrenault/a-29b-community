@@ -1,13 +1,35 @@
+--[[
+
+mesh_poly.controllers       = {{"parameter_compare_with_number", 0, 1}}
+mesh_poly.controllers       = {{"compare_parameters", 0, 1}}
+mesh_poly.controllers       = {{"change_color_when_parameter_equal_to_number",0,1, -1,-1,-1}}
+mesh_poly.controllers       = {{"parameter_in_range", 0, -0.05, 0.05}}
+
+change_texture_state_using_parameter
+change_color_when_parameter_equal_to_number
+line_object_set_point_using_parameters
+move_left_right_using_parameter
+move_up_down_using_parameter
+opacity_using_parameter
+rotate_using_parameter
+text_using_parameter
+
+]]
+
+local CMFDNumber=get_param_handle("CMFDNumber")
+CMFDNumber:set(CMFDNumber:get()+1)
+local CMFDNu = CMFDNumber:get()
+
+
 dofile(LockOn_Options.script_path .. "CMFD/CMFD_defs.lua")
 dofile(LockOn_Options.script_path .. "CMFD/CMFD_pageID_defs.lua")
 
 local page_root = create_page_root()
 
-
-
 local aspect = GetAspect()
 local HW = 0.15
 local HH = 0.04 * H2W_SCALE
+
 
 local CMFD_base             = CreateElement "ceMeshPoly" -- untextured shape
 CMFD_base.name              = create_guid_string()
@@ -22,79 +44,61 @@ CMFD_base.vertices          = { {1, aspect}, { 1,-aspect}, { -1,-aspect}, {-1,as
 CMFD_base.indices           = {0,1,2,0,2,3 }
 Add(CMFD_base)
 
-
--- -- TODO: add controller
--- split_white_line                 = CreateElement "ceMeshPoly"
--- split_white_line.name            = "split_white_line"
--- split_white_line.material        = CMFD_MATERIAL_WHITE_Y
--- split_white_line.primitivetype   = "triangles"
--- split_white_line.vertices        = {{ 1.0,  0.006},
---                                     { 1.0, -0.006},
---                                     {-1.0, -0.006},
---                                     {-1.0,  0.006},}
--- split_white_line.indices         = DEF_BOX_INDICES
--- split_white_line.init_pos        = {0, -0.4, 0}
--- --split_white_line.h_clip_relation = h_clip_relations.COMPARE
--- split_white_line.level           = PAGE_LEVEL_BASE
--- split_white_line.isdraw          = true
--- split_white_line.isvisible       = true
--- split_white_line.use_mipfilter   = true
--- split_white_line.additive_alpha  = true
--- split_white_line.collimated      = false
--- split_white_line.parent_element  = page_root.name
--- --split_white_line.controllers     = {{"apply_contrast"}}
--- Add(split_white_line)
--- split_white_line = nil
-
-
 -- -- OSB
 
 local osb_txt = {
-    {value="DCLT",          init_pos={CMFD_FONT_UD6_X, -H2W_SCALE+HH},                      align="CenterBottom",   formats={"%s"}, controller={}},
     {value="SWAP",          init_pos={CMFD_FONT_UD3_X, -H2W_SCALE+HH},                      align="CenterBottom",   formats={"%s"}, controller={}},
     {value="IND",           init_pos={CMFD_FONT_UD1_X, -H2W_SCALE+HH},                      align="CenterBottom",   formats={"%s"}, controller={}},
 }
-
--- local text_strpoly
--- for i=1, #(osb_txt) do
---     text_strpoly                 = CreateElement "ceStringPoly"
---     text_strpoly.material        = CMFD_FONT_DEF
---     text_strpoly.stringdefs      = CMFD_STRINGDEFS_DEF_X08
---     text_strpoly.init_pos        = osb_txt[i].init_pos
---     text_strpoly.alignment       = osb_txt[i].align
---     text_strpoly.controllers     = osb_txt[i].controller
---     --text_strpoly.parent_element  = page_root.name
---     if osb_txt[i].level then
---         text_strpoly.level       = osb_txt[i].level
---     end
---     text_strpoly.isdraw          = true
---     text_strpoly.isvisible       = true
---     text_strpoly.h_clip_relation = h_clip_relations.REWRITE_LEVEL
---     text_strpoly.parent_element  = page_root.name
---     AddElementObject(text_strpoly)
---     text_strpoly = nil
--- end
-
 
 local HW = 0.15
 local HH = 0.04 * H2W_SCALE
 
 local text_strpoly
 local mesh_poly
--- Draw SOI
+
+-- DCLT
 text_strpoly                = CreateElement "ceStringPoly"
 text_strpoly.material       = CMFD_FONT_DEF
 text_strpoly.stringdefs     = CMFD_STRINGDEFS_DEF_X08
-text_strpoly.init_pos       = {CMFD_FONT_UD4_X, -H2W_SCALE+HH}
+text_strpoly.init_pos       = {CMFD_FONT_UD6_X, -H2W_SCALE+HH}
 text_strpoly.alignment      = "CenterBottom"
 text_strpoly.formats        = "%s"
-text_strpoly.element_params = {"CMFD2Soi"}
-text_strpoly.controllers    = {{"parameter_in_range",0,0.95, 1.05}}
-text_strpoly.name           = "osb_txt_soi"
-text_strpoly.value          = "^"
+text_strpoly.element_params = {"CMFD"..CMFDNu.."DCLT"}
+text_strpoly.controllers    = {{"change_color_when_parameter_equal_to_number",0,1, -1,-1,-1}}
+text_strpoly.name           = "osb_txt_dclt"
+text_strpoly.value          = "DCLT"
 text_strpoly.parent_element    = page_root.name
 AddElementObject(text_strpoly)
 text_strpoly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = "osb_txt_dclt"
+mesh_poly.init_pos          = {0, HH/2}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { {HW, HH}, {HW,-HH}, {-HW,-HH}, {-HW, HH }}
+mesh_poly.indices           = default_box_indices
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"CMFD"..CMFDNu.."DCLT"}
+mesh_poly.controllers       = {{"parameter_in_range", 0, 0.95, 1.05}}
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+-- Draw DOI
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.init_pos          = {CMFD_FONT_UD4_X, -H2W_SCALE+HH}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "lines"
+mesh_poly.vertices          = { {-HH/6, 0}, {HH/6,0}, {HH/6,HH}, {HH/3, HH }, {0, 1.75*HH}, {-HH/3, HH }, {-HH/6, HH}}
+mesh_poly.indices           = {0,1, 1,2, 2,3, 3,4,  4,5, 5,6, 6,0}
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"CMFDDoi"}
+-- mesh_poly.controllers       = {{"parameter_compare_with_number", 0, 1}}
+mesh_poly.controllers       = {{"parameter_compare_with_number", 0, CMFDNu}}
+
+AddElementObject(mesh_poly)
+mesh_poly = nil
 
 mesh_poly                   = CreateElement "ceMeshPoly"
 mesh_poly.parent_element    = "osb_txt_sel_left"
@@ -104,10 +108,24 @@ mesh_poly.primitivetype     = "triangles"
 mesh_poly.vertices          = { {HW, HH}, {HW,-HH}, {-HW,-HH}, {-HW, HH }}
 mesh_poly.indices           = default_box_indices
 mesh_poly.isvisible         = true
-mesh_poly.element_params    = {"CMFD2Primary"}
-mesh_poly.controllers       = {{"parameter_in_range", 0, -0.05, 0.05}}
+mesh_poly.element_params    = {"CMFD"..CMFDNu.."Primary"}
+mesh_poly.controllers       = {{"parameter_compare_with_number", 0, 0}}
 AddElementObject(mesh_poly)
 mesh_poly = nil
+
+text_strpoly                = CreateElement "ceStringPoly"
+text_strpoly.material       = CMFD_FONT_DEF
+text_strpoly.stringdefs     = CMFD_STRINGDEFS_DEF_X08
+text_strpoly.init_pos       = {CMFD_FONT_UD2_X, -H2W_SCALE+HH}
+text_strpoly.alignment      = "CenterBottom"
+text_strpoly.formats        = {"%s"}
+text_strpoly.element_params = {"CMFD"..CMFDNu.."SelLeftName", "CMFD"..CMFDNu.."Primary"}
+text_strpoly.controllers    = {{"text_using_parameter",0,0}, {"change_color_when_parameter_equal_to_number", 1, 0, -1, -1, -1}}
+text_strpoly.name           = "osb_txt_sel_left"
+text_strpoly.value          = ""
+text_strpoly.parent_element    = page_root.name
+AddElementObject(text_strpoly)
+text_strpoly = nil
 
 mesh_poly                   = CreateElement "ceMeshPoly"
 mesh_poly.parent_element    = "osb_txt_sel_right"
@@ -117,25 +135,10 @@ mesh_poly.primitivetype     = "triangles"
 mesh_poly.vertices          = { {HW, HH}, {HW,-HH}, {-HW,-HH}, {-HW, HH }}
 mesh_poly.indices           = default_box_indices
 mesh_poly.isvisible         = true
-mesh_poly.element_params    = {"CMFD2Primary"}
-mesh_poly.controllers       = {{"parameter_in_range", 0 ,0.95, 1.05}}
+mesh_poly.element_params    = {"CMFD"..CMFDNu.."Primary"}
+mesh_poly.controllers       = {{"parameter_compare_with_number", 0 ,1}}
 AddElementObject(mesh_poly)
 mesh_poly = nil
-
-
-text_strpoly                = CreateElement "ceStringPoly"
-text_strpoly.material       = CMFD_FONT_DEF
-text_strpoly.stringdefs     = CMFD_STRINGDEFS_DEF_X08
-text_strpoly.init_pos       = {CMFD_FONT_UD2_X, -H2W_SCALE+HH}
-text_strpoly.alignment      = "CenterBottom"
-text_strpoly.formats        = {"%s"}
-text_strpoly.element_params = {"CMFD2SelLeftName", "CMFD2Primary"}
-text_strpoly.controllers    = {{"text_using_parameter",0,0}, {"change_color_when_parameter_equal_to_number", 1, 0, -1, -1, -1}}
-text_strpoly.name           = "osb_txt_sel_left"
-text_strpoly.value          = "AAA"
-text_strpoly.parent_element    = page_root.name
-AddElementObject(text_strpoly)
-text_strpoly = nil
 
 text_strpoly                = CreateElement "ceStringPoly"
 text_strpoly.material       = CMFD_FONT_DEF
@@ -143,17 +146,13 @@ text_strpoly.stringdefs     = CMFD_STRINGDEFS_DEF_X08
 text_strpoly.init_pos       = {CMFD_FONT_UD5_X, -H2W_SCALE+HH}
 text_strpoly.alignment      = "CenterBottom"
 text_strpoly.formats        = {"%s"}
-text_strpoly.element_params = {"CMFD2SelRightName", "CMFD2Primary"}
+text_strpoly.element_params = {"CMFD"..CMFDNu.."SelRightName", "CMFD"..CMFDNu.."Primary"}
 text_strpoly.controllers    = {{"text_using_parameter",0,0}, {"change_color_when_parameter_equal_to_number", 1, 1, -1, -1, -1}}
 text_strpoly.name           = "osb_txt_sel_right"
-text_strpoly.value          = "BBB"
+text_strpoly.value          = ""
 text_strpoly.parent_element    = page_root.name
 AddElementObject(text_strpoly)
 text_strpoly = nil
-
-
-
-
 
 for i=1, #(osb_txt) do
     text_strpoly                = CreateElement "ceStringPoly"

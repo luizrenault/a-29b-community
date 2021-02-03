@@ -1,3 +1,82 @@
+function basic_dump (o)
+  if type(o) == "number" then
+    return tostring(o)
+  elseif type(o) == "string" then
+    return string.format("%q", o)
+  else -- nil, boolean, function, userdata, thread; assume it can be converted to a string
+    return tostring(o)
+  end
+end
+
+
+function dump (name, value, saved, result)
+  seen = seen or {}       -- initial value
+  result = result or ""
+  result=result..name.." = "
+  if type(value) ~= "table" then
+    result=result..basic_dump(value).."\n"
+  elseif type(value) == "table" then
+    if seen[value] then    -- value already saved?
+      result=result.."->"..seen[value].."\n"  -- use its previous name
+    else
+      seen[value] = name   -- save name for next time
+      result=result.."{}\n"     -- create a new table
+      for k,v in pairs(value) do      -- save its fields
+        local fieldname = string.format("%s[%s]", name,
+                                        basic_dump(k))
+        if fieldname~="_G[\"seen\"]" then
+          result=dump(fieldname, v, seen, result)
+        end
+      end
+    end
+  end
+  return result
+end
+
+function dump (name, value, saved, result)
+  seen = seen or {}       -- initial value
+  result = result or ""
+  result=result..name.." = "
+  if type(value) ~= "table" then
+    result=result..basic_dump(value).."\n"
+    log.info(result)
+    result = ""
+  elseif type(value) == "table" then
+    if seen[value] then    -- value already saved?
+      result=result.."->"..seen[value].."\n"  -- use its previous name
+      log.info(result)
+      result = ""
+      else
+      seen[value] = name   -- save name for next time
+      result=result.."{}\n"     -- create a new table
+      log.info(result)
+      result = ""
+        for k,v in pairs(value) do      -- save its fields
+        local fieldname = string.format("%s[%s]", name,
+                                        basic_dump(k))
+        if fieldname~="_G[\"seen\"]" then
+          result=dump(fieldname, v, seen, result)
+        end
+      end
+    end
+  end
+  return result
+end
+
+-- log.info("=====================================================")
+-- param = list_cockpit_params()
+-- dump("_G", _G)
+-- dump("_G", getmetatable(_G))
+
+-- dump("GetSelf", GetSelf())
+-- dump("GetSelf", getmetatable(GetSelf()))
+
+-- dump("GetRenderTarget", GetRenderTarget())
+-- dump("GetRenderTarget", getmetatable(GetRenderTarget()))
+
+-- dump("ccIndicator", ccIndicator)
+
+
 -- Utility functions/classes
 
 function startup_print(...)

@@ -1,8 +1,11 @@
 dofile(LockOn_Options.script_path .. "CMFD/CMFD_defs.lua")
 dofile(LockOn_Options.script_path .. "CMFD/CMFD_pageID_defs.lua")
 
+local CMFDNumber=get_param_handle("CMFDNumber")
+local CMFDNu = CMFDNumber:get()
+
 local page_root = create_page_root()
-page_root.element_params = {"CMFD2Format"}
+page_root.element_params = {"CMFD"..CMFDNu.."Format"}
 page_root.controllers = {{"parameter_in_range",0,SUB_PAGE_ID.NOAUX - 0.05, SUB_PAGE_ID.END + 0.05}}
 
 
