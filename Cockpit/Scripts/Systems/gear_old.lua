@@ -200,10 +200,10 @@ function update_gear()
     ias_knots = sensor_data.getIndicatedAirSpeed() * 3.6 * rate_met2knot
     if ias_knots > 150 then 
         if GEAR_ERR==0 and (GEAR_LEFT_STATE > 0.2 or GEAR_RIGHT_STATE > 0.2  or GEAR_NOSE_STATE > 0.2) then
-            -- GEAR_ERR = 1
+            GEAR_ERR = 1
             -- TODO: maybe some aircraft animation showing gear panels damaged or gear landing light ripped away etc.
             -- TODO: maybe play a metallic "clunk" noise to notify the player that this has happened
-            -- print_message_to_user("Landing gear overspeed damage!") -- delete me once we have a sound effect or other notification
+            print_message_to_user("Landing gear overspeed damage!") -- delete me once we have a sound effect or other notification
         end
     end
 	

@@ -44,7 +44,7 @@ function SetCommand(command,value)
         dev:performClickableAction(device_commands.EmerParkBrake, -1, true)
     elseif command == iCommandPlaneWheelBrakeOn then
         -- dev:performClickableAction(device_commands.EngineStart, 0, true)
-        print_message_to_user("LG=" ..tostring(sensor_data:getWOW_LeftMainLandingGear()))
+        -- print_message_to_user("LG=" ..tostring(sensor_data:getWOW_LeftMainLandingGear()))
     end
 end
 

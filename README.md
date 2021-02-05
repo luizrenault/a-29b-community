@@ -10,15 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
-## Version 0.0.2b - 28 January 2021
+## Version 0.0.2a - 04 February 2021
 
 ### Added
-- New 3D Models: CMFD #1 and #2, ASI, VSI, BFI, Warning, Caution, Fire and Brake indicators.
-
+- New 3D Models: CMFD #1 and #2.
+- CMFD #1 and #2 working properly.
+    - EICAS format finished. Not all values are shown properly because the aircraft systems are not implemented yet.
+- ADHSI format as a static image. Will be implemented soon.
 
 ### Changed
-
-  
+- BFI background color from blue to black.
+- ASI, VSI, BFI, Throttle, Warning, Caution, Fire and Brake indicators 3D models by new ones.
+- Fligh model tunning but far from ideal.
+- Flaps with only two positions UP and DOWN (20 deg).
 
 ### Deprecated
 
@@ -36,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Front glass missing frame. 
 
 
-## Version 0.0.1b - 27 January 2021
+## Version 0.0.1a - 27 January 2021
 
 ### Added
 
@@ -79,7 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Throttle and Stick are inconsistent with the real ones;
 
 ### Contributors
-- Renault, Milaré, Malamem, Marvila, Battesti, Jorge Rodrigues and many others.
+- Renault, Milaré, Malamem, Marvila, Cavanha, Risali, Jorge Rodrigues and many others.
 
 
 ### Changed

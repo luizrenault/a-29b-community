@@ -174,8 +174,8 @@ local elec_power_ok = get_param_handle("ELEC_POWER_OK")
 local elec_avionics_ok = get_param_handle("ELEC_AVIONICS_OK")
 
 function update()
-    if (get_cockpit_draw_argument_value(961) == 0) or 
-    ((get_cockpit_draw_argument_value(962) == 1) and (sensor_data.getEngineLeftRPM()>=50))  then 
+    if (get_cockpit_draw_argument_value(961) == 0) or --Battery On
+    ((get_cockpit_draw_argument_value(962) == 1) and (sensor_data.getEngineLeftRPM()>=50))  then -- Generator On and Engine On
         elec_power_ok:set(1)
         elec_avionics_ok:set(get_cockpit_draw_argument_value(843))
     else

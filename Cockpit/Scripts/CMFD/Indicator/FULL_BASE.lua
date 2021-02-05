@@ -87,6 +87,7 @@ mesh_poly = nil
 
 -- Draw DOI
 mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
 mesh_poly.init_pos          = {CMFD_FONT_UD4_X, -H2W_SCALE+HH}
 mesh_poly.material          = CMFD_MATERIAL_DEF
 mesh_poly.primitivetype     = "lines"

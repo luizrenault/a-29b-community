@@ -186,10 +186,10 @@ elements["PNT_525"] = default_button("CMFD #1 OSS 25",                          
 elements["PNT_526"] = default_button("CMFD #1 OSS 26",                                       devices.CMFD, device_commands.CMFD1OSS26,        526)
 elements["PNT_527"] = default_button("CMFD #1 OSS 27",                                       devices.CMFD, device_commands.CMFD1OSS27,        527)
 elements["PNT_528"] = default_button("CMFD #1 OSS 28",                                       devices.CMFD, device_commands.CMFD1OSS28,        528)
-elements["PNT_529"] = default_2_position_tumb("CMFD #1 Power (On/Off)",                         devices.CMFD, device_commands.CMFD1ButtonOn,        529)
-elements["PNT_530"] = springloaded_3_pos_tumb("CMFD #1 Gain",                                   devices.CMFD, device_commands.CMFD1ButtonGain,      530, true)
-elements["PNT_531"] = springloaded_3_pos_tumb("CMFD #1 Symbology",                              devices.CMFD, device_commands.CMFD1ButtonSymb,      531, true)
-elements["PNT_532"] = springloaded_3_pos_tumb("CMFD #1 Bright",                                 devices.CMFD, device_commands.CMFD1ButtonBright,    532, true)
+elements["PNT_529"] = default_2_position_tumb("CMFD #1 Power (On/Off)",                      devices.CMFD, device_commands.CMFD1ButtonOn,        529)
+elements["PNT_530"] = springloaded_3_pos_tumb("CMFD #1 Gain",                                devices.CMFD, device_commands.CMFD1ButtonGain,      530, true)
+elements["PNT_531"] = springloaded_3_pos_tumb("CMFD #1 Symbology",                           devices.CMFD, device_commands.CMFD1ButtonSymb,      531, true)
+elements["PNT_532"] = springloaded_3_pos_tumb("CMFD #1 Bright",                              devices.CMFD, device_commands.CMFD1ButtonBright,    532, true)
 
 -- CMFD2
 elements["PNT_551"] = default_button("CMFD #2 OSS 1",                                        devices.CMFD, device_commands.CMFD2OSS1,         551)
@@ -220,10 +220,10 @@ elements["PNT_575"] = default_button("CMFD #2 OSS 25",                          
 elements["PNT_576"] = default_button("CMFD #2 OSS 26",                                       devices.CMFD, device_commands.CMFD2OSS26,        576)
 elements["PNT_577"] = default_button("CMFD #2 OSS 27",                                       devices.CMFD, device_commands.CMFD2OSS27,        577)
 elements["PNT_578"] = default_button("CMFD #2 OSS 28",                                       devices.CMFD, device_commands.CMFD2OSS28,        578)
-elements["PNT_579"] = default_2_position_tumb("CMFD #2 Power (On/Off)",                         devices.CMFD, device_commands.CMFD2ButtonOn,        579)
-elements["PNT_580"] = springloaded_3_pos_tumb("CMFD #2 Gain",                                   devices.CMFD, device_commands.CMFD2ButtonGain,      580, true)
-elements["PNT_581"] = springloaded_3_pos_tumb("CMFD #2 Symbology",                              devices.CMFD, device_commands.CMFD2ButtonSymb,      581, true)
-elements["PNT_582"] = springloaded_3_pos_tumb("CMFD #2 Bright",                                 devices.CMFD, device_commands.CMFD2ButtonBright,    582, true)
+elements["PNT_579"] = default_2_position_tumb("CMFD #2 Power (On/Off)",                      devices.CMFD, device_commands.CMFD2ButtonOn,        579)
+elements["PNT_580"] = springloaded_3_pos_tumb("CMFD #2 Gain",                                devices.CMFD, device_commands.CMFD2ButtonGain,      580, true)
+elements["PNT_581"] = springloaded_3_pos_tumb("CMFD #2 Symbology",                           devices.CMFD, device_commands.CMFD2ButtonSymb,      581, true)
+elements["PNT_582"] = springloaded_3_pos_tumb("CMFD #2 Bright",                              devices.CMFD, device_commands.CMFD2ButtonBright,    582, true)
 
 -- CMFD2
 elements["PNT_491"] = default_button("Clock Selection",                                         devices.EXTANIM, device_commands.ClockSel,           491)

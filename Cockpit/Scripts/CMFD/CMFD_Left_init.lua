@@ -29,4 +29,4 @@ local h = LockOn_Options.screen.height;
 --     render_target_always      = true
 -- end
 
-print_message_to_user("CMFD: load end")
+startup_print("CMFD: load end")

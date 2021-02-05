@@ -420,6 +420,68 @@ function SetCircleMesh(obj, radius_outer, radius_inner, iarc, iclipped)
     obj.indices  = inds
 end
 
+function SetCircleMeshStartEnd(obj, radius_outer, radius_inner, istart, iarc, iclipped)
+    local verts    = {}
+    local inds     = {}
+    local solid    = radius_inner == nil or radius_inner == 0
+    local arc      = iarc or 360
+    local count    = 36
+    local delta    = math.rad(arc/count)
+    local start    = math.rad(istart or 0)
+    local clipped  = iclipped or false
+    
+    if arc > 360 or arc < -360 then
+        arc = 360
+    end
+
+    local min_i    = 1
+    local max_i    = count + 1
+    verts[1] = {0,0}
+    for i=min_i,max_i do
+        k = i
+        
+        ---- for ADI clipped ball shape
+        -- clip nodes are 3 from each side
+        if clipped then
+            if i < 4 or i > 34 then -- equal to 3, 33
+                k = 4
+            elseif i > 16 and i < 22 then -- equal to 15, 21
+                k = 16
+            end
+        end
+        
+        if solid then
+            verts[1 + i]      = { radius_outer * math.cos(start+delta *(k-1)), radius_outer * math.sin(start+delta *(k-1)), }
+            inds[3*(i-1) + 1] = 0
+            inds[3*(i-1) + 2] = i - 1 
+            inds[3*(i-1) + 3] = i 
+        else
+            verts[2*(i - 1) + 1] = { radius_outer * math.cos(start+delta *(k-1)), radius_outer * math.sin(start+delta *(k-1)), }
+            verts[2*(i - 1) + 2] = { radius_inner * math.cos(start+delta *(k-1)), radius_inner * math.sin(start+delta *(k-1)), }
+            
+            if i == max_i  then
+              if arc == 360 then  
+                inds[6*(i-1) + 1] = 2*(i     - 1)
+                inds[6*(i-1) + 2] = 2*(min_i - 1)
+                inds[6*(i-1) + 3] = 2*(i     - 1) + 1 
+                inds[6*(i-1) + 4] = 2*(i     - 1) + 1
+                inds[6*(i-1) + 5] = 2*(min_i - 1)
+                inds[6*(i-1) + 6] = 2*(min_i - 1) + 1 
+              end        
+            else 
+                inds[6*(i-1) + 1] = 2*(i - 1)
+                inds[6*(i-1) + 2] = 2*(i) 
+                inds[6*(i-1) + 3] = 2*(i - 1) + 1 
+                inds[6*(i-1) + 4] = 2*(i - 1) + 1
+                inds[6*(i-1) + 5] = 2*(i) 
+                inds[6*(i-1) + 6] = 2*(i)     + 1  
+            end
+        end
+    end
+    obj.vertices = verts              
+    obj.indices  = inds
+end
+
 
 function CMFD_tex_coord (UL_X,UL_Y,W,H,SZX,SZY)
     local ux = UL_X / SZX
@@ -433,19 +495,35 @@ function CMFD_tex_coord (UL_X,UL_Y,W,H,SZX,SZY)
 end
 
 function create_page_root()
+    local CMFDNumber=get_param_handle("CMFDNumber")
+    local CMFDNu = CMFDNumber:get()
+
     local page_root = CreateElement "ceSimple"
-    page_root.name            = create_guid_string()
+    page_root.name            = "screen"
     page_root.material        = CMFD_MATERIAL_DEF
     page_root.init_pos        = {0, 0, 0}
     page_root.init_rot        = {0, 0, 0}
     page_root.level           = CMFD_DEFAULT_LEVEL
     page_root.h_clip_relation = h_clip_relations.COMPARE -- COMPARE -- REWRITE_LEVEL
     page_root.isvisible       = true
-    -- page_root.controllers     = {{"check_power"},--[[{"apply_brightness"}]]}
     page_root.use_mipfilter   = true
-    page_root.additive_alpha  = true
-    --page_root.collimated      = false
+    page_root.additive_alpha  = false
+    page_root.element_params  = {"CMFD"..CMFDNu.."On", "CMFD"..CMFDNu.."SwOn"}
+    page_root.controllers     = {{"parameter_compare_with_number",0,1}, {"parameter_compare_with_number",1,1}}
+    Add(page_root)
+    page_root=nil
 
+    page_root = CreateElement "ceSimple"
+    page_root.name            = create_guid_string()
+    page_root.parent_element  = "screen"
+    page_root.material        = CMFD_MATERIAL_DEF
+    page_root.init_pos        = {0, 0, 0}
+    page_root.init_rot        = {0, 0, 0}
+    page_root.level           = CMFD_DEFAULT_LEVEL
+    page_root.h_clip_relation = h_clip_relations.COMPARE -- COMPARE -- REWRITE_LEVEL
+    page_root.isvisible       = true
+    page_root.use_mipfilter   = true
+    page_root.additive_alpha  = false
     Add(page_root)
     return page_root
 end

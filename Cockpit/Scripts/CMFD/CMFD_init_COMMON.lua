@@ -16,6 +16,7 @@ page_subsets = {
     [SUB_PAGE_ID.MENU1       ] = cmfd_page_path .. "CMFD_Menu1.lua",
     [SUB_PAGE_ID.MENU2       ] = cmfd_page_path .. "CMFD_Menu2.lua",
     [SUB_PAGE_ID.EICAS       ] = cmfd_page_path .. "CMFD_EICAS.lua",
+    [SUB_PAGE_ID.ADHSI       ] = cmfd_page_path .. "CMFD_ADHSI.lua",
 }
 
 pages = {
@@ -26,6 +27,7 @@ pages = {
         SUB_PAGE_ID.MENU1, 
         SUB_PAGE_ID.MENU2,
         SUB_PAGE_ID.EICAS,
+        SUB_PAGE_ID.ADHSI
     },
 }
 

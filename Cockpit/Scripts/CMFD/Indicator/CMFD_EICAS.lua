@@ -641,6 +641,96 @@ Poly_Text.controllers       = {{"text_using_parameter",0,0},
 AddToUpper(Poly_Text)
 Poly_Text = nil
 
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.337, -0.481, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+SetCircleMeshStartEnd(mesh_poly, 0.274, 0.228, 209, -238)
+mesh_poly.isvisible         = false -- mask only
+mesh_poly.h_clip_relation = h_clip_relations.INCREASE_IF_LEVEL
+mesh_poly.element_params    = {"EICAS_FUEL_TOT_ROT"}
+mesh_poly.controllers       = {{"rotate_using_parameter",0, 1.0 }}
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.337, -0.481, 0}
+mesh_poly.material          = CMFD_MATERIAL_RED
+mesh_poly.primitivetype     = "triangles"
+SetCircleMeshStartEnd(mesh_poly, 0.274, 0.228, 209, -22)
+mesh_poly.isvisible         = true
+mesh_poly.level             = page_root.level + 1
+mesh_poly.h_clip_relation = h_clip_relations.COMPARE
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.337, -0.481, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+SetCircleMeshStartEnd(mesh_poly, 0.274, 0.228, 187, -97)
+mesh_poly.isvisible         = true
+mesh_poly.level             = page_root.level + 1
+mesh_poly.h_clip_relation = h_clip_relations.COMPARE
+mesh_poly.element_params    = {"EICAS_FUEL_TOT_ROT"}
+mesh_poly.controllers       = {{"parameter_in_range",0, math.rad(-1), math.rad(230)}}
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.337, -0.481, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+SetCircleMeshStartEnd(mesh_poly, 0.274, 0.228, 90, -119)
+mesh_poly.isvisible         = true
+mesh_poly.level             = page_root.level + 1
+mesh_poly.h_clip_relation = h_clip_relations.COMPARE
+mesh_poly.element_params    = {"EICAS_FUEL_TOT_ROT"}
+mesh_poly.controllers       = {{"parameter_in_range",0, math.rad(-1), math.rad(119) }}
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.337, -0.481, 0}
+mesh_poly.material          = CMFD_MATERIAL_BLUE
+mesh_poly.primitivetype     = "triangles"
+SetCircleMeshStartEnd(mesh_poly, 0.225, 0.18, 209, -79.5)
+mesh_poly.isvisible         = false -- mask only
+mesh_poly.h_clip_relation = h_clip_relations.INCREASE_IF_LEVEL
+mesh_poly.element_params    = {"EICAS_FUEL_INT_ROT"}
+mesh_poly.controllers       = {{"rotate_using_parameter",0, 1.0 }}
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.337, -0.481, 0}
+mesh_poly.material          = CMFD_MATERIAL_RED
+mesh_poly.primitivetype     = "triangles"
+SetCircleMeshStartEnd(mesh_poly, 0.225, 0.18, 209, -22)
+mesh_poly.isvisible         = true
+mesh_poly.level             = page_root.level + 1
+mesh_poly.h_clip_relation = h_clip_relations.COMPARE
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.337, -0.481, 0}
+mesh_poly.material          = CMFD_MATERIAL_CYAN
+mesh_poly.primitivetype     = "triangles"
+SetCircleMeshStartEnd(mesh_poly, 0.225, 0.18, 187, -57.5)
+mesh_poly.isvisible         = true
+mesh_poly.level             = page_root.level + 1
+mesh_poly.h_clip_relation = h_clip_relations.COMPARE
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
 Poly_Text                   = CreateElement "ceStringPoly"
 Poly_Text.material          = CMFD_FONT_DEF
 Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
@@ -653,7 +743,6 @@ Poly_Text.controllers       = {{"text_using_parameter",0,0}}
 AddToUpper(Poly_Text)
 Poly_Text = nil
 
-
 Poly_Text                   = CreateElement "ceStringPoly"
 Poly_Text.material          = CMFD_FONT_DEF
 Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
@@ -665,7 +754,6 @@ Poly_Text.element_params    = {"EICAS_FUEL_JOKER"}
 Poly_Text.controllers       = {{"text_using_parameter",0,0}}
 AddToUpper(Poly_Text)
 Poly_Text = nil
-
 
 mesh_poly                   = CreateElement "ceMeshPoly"
 mesh_poly.parent_element    = page_root.name
@@ -682,6 +770,65 @@ mesh_poly = nil
 
 
 Poly_Text                   = CreateElement "ceStringPoly"
+Poly_Text.material          = CMFD_FONT_W
+Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
+Poly_Text.init_pos          = {0.888, -0.259, 0}
+Poly_Text.alignment         = "CenterCenter"
+Poly_Text.formats           = {"%s"}
+Poly_Text.parent_element    = page_root.name
+Poly_Text.element_params    = {"EICAS_INIT"}
+Poly_Text.controllers       = {{"parameter_compare_with_number",0,1}}
+Poly_Text.value             = "INIT"
+AddToUpper(Poly_Text)
+Poly_Text = nil
+
+Poly_Text                   = CreateElement "ceStringPoly"
+Poly_Text.material          = CMFD_FONT_W
+Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
+Poly_Text.init_pos          = {0.888, -0.259, 0}
+Poly_Text.alignment         = "CenterCenter"
+Poly_Text.formats           = {"%s"}
+Poly_Text.parent_element    = page_root.name
+Poly_Text.element_params    = {"EICAS_INIT"}
+Poly_Text.controllers       = {{"parameter_compare_with_number",0,0}}
+Poly_Text.value             = "DETOT"
+AddToUpper(Poly_Text)
+Poly_Text = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          = {0.888, -0.17, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { 
+                                {-0.05, 0}, {-0.045, 0}, {0.0,0.04},  {0.0, 0.045}, 
+                                {0.045, 0}, {0.05, 0}, {-0.045, 0.005}, {0.045, 0.005}
+                              }
+mesh_poly.indices           = {0,1,2, 2,3,0, 4,5,2, 2,5,3, 1,4,6, 6,4,7 }
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_INIT"}
+mesh_poly.controllers       = {{"parameter_compare_with_number",0 , 1}}
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          = {0.888, -0.403, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { 
+                                {-0.05, 0}, {-0.045, 0}, {0.0,-0.04},  {0.0, -0.045}, 
+                                {0.045, 0}, {0.05, 0}, {-0.045, -0.005}, {0.045, -0.005}
+                              }
+mesh_poly.indices           = {0,1,2, 2,3,0, 4,5,2, 2,5,3, 1,4,6, 6,4,7 }
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_INIT"}
+mesh_poly.controllers       = {{"parameter_compare_with_number",0 , 1}}
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+
+Poly_Text                   = CreateElement "ceStringPoly"
 Poly_Text.material          = CMFD_FONT_DEF
 Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
 Poly_Text.init_pos          = {0.925, -0.324, 0}
@@ -692,8 +839,6 @@ Poly_Text.element_params    = {"EICAS_FUEL_INIT"}
 Poly_Text.controllers       = {{"text_using_parameter",0,0}}
 AddToUpper(Poly_Text)
 Poly_Text = nil
-
-
 
 Poly_Text                   = CreateElement "ceStringPoly"
 Poly_Text.name              = "EICAS_Flaps"
@@ -765,4 +910,609 @@ mesh_poly.element_params    = {"EICAS_SPD_BRK"}
 mesh_poly.controllers       = {{"change_color_when_parameter_equal_to_number",0 , 1, 0,1,0}}
 AddElementObject(mesh_poly)
 mesh_poly = nil
+
+
+
+Poly_Text                   = CreateElement "ceStringPoly"
+Poly_Text.material          = CMFD_FONT_W
+Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
+Poly_Text.init_pos          = {-0.727, 1.2, 0}
+Poly_Text.alignment         = "CenterCenter"
+Poly_Text.formats           = {"%s"}
+Poly_Text.parent_element    = page_root.name
+Poly_Text.element_params    = {"EICAS_ERROR1_TEXT", "EICAS_ERROR1_COLOR"}
+Poly_Text.controllers       = { {"text_using_parameter",0,0}, 
+                                {"parameter_in_range", 1, 0.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",1 , 0, 0,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 3, 0,1,1},
+                                {"change_color_when_parameter_equal_to_number",1 , 4, -1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 5, -1,-1,-1},
+                              }
+Poly_Text.value             = "OIL PRESS"
+AddToUpper(Poly_Text)
+Poly_Text = nil
+
+
+HW = 0.155
+HH = 0.025 * H2W_SCALE
+w=0.01
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {-0.727, 1.2, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { {-HW-w, HH+w}, {HW+w, HH+w}, {HW+w,-HH-w}, {-HW-w, -HH-w },}
+mesh_poly.indices           = default_box_indices
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR1_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 3.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 4, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 5, 1,1,0},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {-0.727, 1.2, 0}
+mesh_poly.material          = CMFD_MATERIAL_WHITE
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { 
+                                {-HW-w, HH+w}, {HW+w,HH+w}, {HW+w,HH}, {-HW-w, HH },
+                                {-HW-w, HH+w}, {-HW,HH+w}, {-HW,-HH-w}, {-HW-w, -HH-w },
+                                {-HW-w, -HH}, {HW+w,-HH}, {HW+w,-HH-w}, {-HW-w, -HH-w },
+                                {HW, HH+w}, {HW+w,HH+w}, {HW+w,-HH-w}, {HW, -HH-w },
+                              }
+mesh_poly.indices           = {0,1,2, 0,2,3,  4,5,6,  4,6,7,  8,9,10, 8,10,11,  12,13,14, 12,14,15 }
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR1_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 0.95, 3.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 3, 0,1,1},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+
+
+Poly_Text                   = CreateElement "ceStringPoly"
+Poly_Text.material          = CMFD_FONT_W
+Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
+Poly_Text.init_pos          = {-0.364, 1.2, 0}
+Poly_Text.alignment         = "CenterCenter"
+Poly_Text.formats           = {"%s"}
+Poly_Text.parent_element    = page_root.name
+Poly_Text.element_params    = {"EICAS_ERROR2_TEXT", "EICAS_ERROR2_COLOR"}
+Poly_Text.controllers       = { {"text_using_parameter",0,0}, 
+                                {"parameter_in_range", 1, 0.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",1 , 0, 0,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 3, 0,1,1},
+                                {"change_color_when_parameter_equal_to_number",1 , 4, -1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 5, -1,-1,-1},
+                              }
+Poly_Text.value             = "CANOPY"
+AddToUpper(Poly_Text)
+Poly_Text = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {-0.364, 1.2, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { {-HW-w, HH+w}, {HW+w, HH+w}, {HW+w,-HH-w}, {-HW-w, -HH-w },}
+mesh_poly.indices           = default_box_indices
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR2_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 3.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 4, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 5, 1,1,0},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {-0.364, 1.2, 0}
+mesh_poly.material          = CMFD_MATERIAL_WHITE
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { 
+                                {-HW-w, HH+w}, {HW+w,HH+w}, {HW+w,HH}, {-HW-w, HH },
+                                {-HW-w, HH+w}, {-HW,HH+w}, {-HW,-HH-w}, {-HW-w, -HH-w },
+                                {-HW-w, -HH}, {HW+w,-HH}, {HW+w,-HH-w}, {-HW-w, -HH-w },
+                                {HW, HH+w}, {HW+w,HH+w}, {HW+w,-HH-w}, {HW, -HH-w },
+                              }
+mesh_poly.indices           = {0,1,2, 0,2,3,  4,5,6,  4,6,7,  8,9,10, 8,10,11,  12,13,14, 12,14,15 }
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR2_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 0.95, 3.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 3, 0,1,1},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+
+Poly_Text                   = CreateElement "ceStringPoly"
+Poly_Text.material          = CMFD_FONT_W
+Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
+Poly_Text.init_pos          = {0, 1.2, 0}
+Poly_Text.alignment         = "CenterCenter"
+Poly_Text.formats           = {"%s"}
+Poly_Text.parent_element    = page_root.name
+Poly_Text.element_params    = {"EICAS_ERROR3_TEXT", "EICAS_ERROR3_COLOR"}
+Poly_Text.controllers       = { {"text_using_parameter",0,0}, 
+                                {"parameter_in_range", 1, 0.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",1 , 0, 0,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 3, 0,1,1},
+                                {"change_color_when_parameter_equal_to_number",1 , 4, -1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 5, -1,-1,-1},
+                              }
+Poly_Text.value             = "CANOPY"
+AddToUpper(Poly_Text)
+Poly_Text = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.0, 1.2, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { {-HW-w, HH+w}, {HW+w, HH+w}, {HW+w,-HH-w}, {-HW-w, -HH-w },}
+mesh_poly.indices           = default_box_indices
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR3_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 3.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 4, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 5, 1,1,0},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0, 1.2, 0}
+mesh_poly.material          = CMFD_MATERIAL_WHITE
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { 
+                                {-HW-w, HH+w}, {HW+w,HH+w}, {HW+w,HH}, {-HW-w, HH },
+                                {-HW-w, HH+w}, {-HW,HH+w}, {-HW,-HH-w}, {-HW-w, -HH-w },
+                                {-HW-w, -HH}, {HW+w,-HH}, {HW+w,-HH-w}, {-HW-w, -HH-w },
+                                {HW, HH+w}, {HW+w,HH+w}, {HW+w,-HH-w}, {HW, -HH-w },
+                              }
+mesh_poly.indices           = {0,1,2, 0,2,3,  4,5,6,  4,6,7,  8,9,10, 8,10,11,  12,13,14, 12,14,15 }
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR3_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 0.95, 3.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 3, 0,1,1},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+Poly_Text                   = CreateElement "ceStringPoly"
+Poly_Text.material          = CMFD_FONT_W
+Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
+Poly_Text.init_pos          = {0.364, 1.2, 0}
+Poly_Text.alignment         = "CenterCenter"
+Poly_Text.formats           = {"%s"}
+Poly_Text.parent_element    = page_root.name
+Poly_Text.element_params    = {"EICAS_ERROR4_TEXT", "EICAS_ERROR4_COLOR"}
+Poly_Text.controllers       = { {"text_using_parameter",0,0}, 
+                                {"parameter_in_range", 1, 0.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",1 , 0, 0,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 3, 0,1,1},
+                                {"change_color_when_parameter_equal_to_number",1 , 4, -1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 5, -1,-1,-1},
+                              }
+Poly_Text.value             = "CANOPY"
+AddToUpper(Poly_Text)
+Poly_Text = nil
+
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.364, 1.2, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { {-HW-w, HH+w}, {HW+w, HH+w}, {HW+w,-HH-w}, {-HW-w, -HH-w },}
+mesh_poly.indices           = default_box_indices
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR4_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 3.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 4, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 5, 1,1,0},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.364, 1.2, 0}
+mesh_poly.material          = CMFD_MATERIAL_WHITE
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { 
+                                {-HW-w, HH+w}, {HW+w,HH+w}, {HW+w,HH}, {-HW-w, HH },
+                                {-HW-w, HH+w}, {-HW,HH+w}, {-HW,-HH-w}, {-HW-w, -HH-w },
+                                {-HW-w, -HH}, {HW+w,-HH}, {HW+w,-HH-w}, {-HW-w, -HH-w },
+                                {HW, HH+w}, {HW+w,HH+w}, {HW+w,-HH-w}, {HW, -HH-w },
+                              }
+mesh_poly.indices           = {0,1,2, 0,2,3,  4,5,6,  4,6,7,  8,9,10, 8,10,11,  12,13,14, 12,14,15 }
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR4_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 0.95, 3.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 3, 0,1,1},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+Poly_Text                   = CreateElement "ceStringPoly"
+Poly_Text.material          = CMFD_FONT_W
+Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
+Poly_Text.init_pos          = {0.727, 1.2, 0}
+Poly_Text.alignment         = "CenterCenter"
+Poly_Text.formats           = {"%s"}
+Poly_Text.parent_element    = page_root.name
+Poly_Text.element_params    = {"EICAS_ERROR5_TEXT", "EICAS_ERROR5_COLOR"}
+Poly_Text.controllers       = { {"text_using_parameter",0,0}, 
+                                {"parameter_in_range", 1, 0.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",1 , 0, 0,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 3, 0,1,1},
+                                {"change_color_when_parameter_equal_to_number",1 , 4, -1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 5, -1,-1,-1},
+                              }
+Poly_Text.value             = "OIL PRESS"
+AddToUpper(Poly_Text)
+Poly_Text = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.727, 1.2, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { {-HW-w, HH+w}, {HW+w, HH+w}, {HW+w,-HH-w}, {-HW-w, -HH-w },}
+mesh_poly.indices           = default_box_indices
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR5_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 3.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 4, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 5, 1,1,0},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.727, 1.2, 0}
+mesh_poly.material          = CMFD_MATERIAL_WHITE
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { 
+                                {-HW-w, HH+w}, {HW+w,HH+w}, {HW+w,HH}, {-HW-w, HH },
+                                {-HW-w, HH+w}, {-HW,HH+w}, {-HW,-HH-w}, {-HW-w, -HH-w },
+                                {-HW-w, -HH}, {HW+w,-HH}, {HW+w,-HH-w}, {-HW-w, -HH-w },
+                                {HW, HH+w}, {HW+w,HH+w}, {HW+w,-HH-w}, {HW, -HH-w },
+                              }
+mesh_poly.indices           = {0,1,2, 0,2,3,  4,5,6,  4,6,7,  8,9,10, 8,10,11,  12,13,14, 12,14,15 }
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR5_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 0.95, 3.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 3, 0,1,1},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+Poly_Text                   = CreateElement "ceStringPoly"
+Poly_Text.material          = CMFD_FONT_W
+Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
+Poly_Text.init_pos          = {-0.727, 1.07, 0}
+Poly_Text.alignment         = "CenterCenter"
+Poly_Text.formats           = {"%s"}
+Poly_Text.parent_element    = page_root.name
+Poly_Text.element_params    = {"EICAS_ERROR6_TEXT", "EICAS_ERROR6_COLOR"}
+Poly_Text.controllers       = { {"text_using_parameter",0,0}, 
+                                {"parameter_in_range", 1, 0.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",1 , 0, 0,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 3, 0,1,1},
+                                {"change_color_when_parameter_equal_to_number",1 , 4, -1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 5, -1,-1,-1},
+                              }
+Poly_Text.value             = "OIL PRESS"
+AddToUpper(Poly_Text)
+Poly_Text = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {-0.727, 1.07, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { {-HW-w, HH+w}, {HW+w, HH+w}, {HW+w,-HH-w}, {-HW-w, -HH-w },}
+mesh_poly.indices           = default_box_indices
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR6_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 3.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 4, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 5, 1,1,0},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {-0.727, 1.07, 0}
+mesh_poly.material          = CMFD_MATERIAL_WHITE
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { 
+                                {-HW-w, HH+w}, {HW+w,HH+w}, {HW+w,HH}, {-HW-w, HH },
+                                {-HW-w, HH+w}, {-HW,HH+w}, {-HW,-HH-w}, {-HW-w, -HH-w },
+                                {-HW-w, -HH}, {HW+w,-HH}, {HW+w,-HH-w}, {-HW-w, -HH-w },
+                                {HW, HH+w}, {HW+w,HH+w}, {HW+w,-HH-w}, {HW, -HH-w },
+                              }
+mesh_poly.indices           = {0,1,2, 0,2,3,  4,5,6,  4,6,7,  8,9,10, 8,10,11,  12,13,14, 12,14,15 }
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR6_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 0.95, 3.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 3, 0,1,1},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+Poly_Text                   = CreateElement "ceStringPoly"
+Poly_Text.material          = CMFD_FONT_W
+Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
+Poly_Text.init_pos          = {-0.364, 1.07, 0}
+Poly_Text.alignment         = "CenterCenter"
+Poly_Text.formats           = {"%s"}
+Poly_Text.parent_element    = page_root.name
+Poly_Text.element_params    = {"EICAS_ERROR7_TEXT", "EICAS_ERROR7_COLOR"}
+Poly_Text.controllers       = { {"text_using_parameter",0,0}, 
+                                {"parameter_in_range", 1, 0.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",1 , 0, 0,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 3, 0,1,1},
+                                {"change_color_when_parameter_equal_to_number",1 , 4, -1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 5, -1,-1,-1},
+                              }
+Poly_Text.value             = "OIL PRESS"
+AddToUpper(Poly_Text)
+Poly_Text = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {-0.364, 1.07, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { {-HW-w, HH+w}, {HW+w, HH+w}, {HW+w,-HH-w}, {-HW-w, -HH-w },}
+mesh_poly.indices           = default_box_indices
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR7_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 3.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 4, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 5, 1,1,0},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {-0.364, 1.07, 0}
+mesh_poly.material          = CMFD_MATERIAL_WHITE
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { 
+                                {-HW-w, HH+w}, {HW+w,HH+w}, {HW+w,HH}, {-HW-w, HH },
+                                {-HW-w, HH+w}, {-HW,HH+w}, {-HW,-HH-w}, {-HW-w, -HH-w },
+                                {-HW-w, -HH}, {HW+w,-HH}, {HW+w,-HH-w}, {-HW-w, -HH-w },
+                                {HW, HH+w}, {HW+w,HH+w}, {HW+w,-HH-w}, {HW, -HH-w },
+                              }
+mesh_poly.indices           = {0,1,2, 0,2,3,  4,5,6,  4,6,7,  8,9,10, 8,10,11,  12,13,14, 12,14,15 }
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR7_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 0.95, 3.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 3, 0,1,1},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+Poly_Text                   = CreateElement "ceStringPoly"
+Poly_Text.material          = CMFD_FONT_W
+Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
+Poly_Text.init_pos          = {0, 1.07, 0}
+Poly_Text.alignment         = "CenterCenter"
+Poly_Text.formats           = {"%s"}
+Poly_Text.parent_element    = page_root.name
+Poly_Text.element_params    = {"EICAS_ERROR8_TEXT", "EICAS_ERROR8_COLOR"}
+Poly_Text.controllers       = { {"text_using_parameter",0,0}, 
+                                {"parameter_in_range", 1, 0.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",1 , 0, 0,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 3, 0,1,1},
+                                {"change_color_when_parameter_equal_to_number",1 , 4, -1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 5, -1,-1,-1},
+                              }
+Poly_Text.value             = "OIL PRESS"
+AddToUpper(Poly_Text)
+Poly_Text = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0, 1.07, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { {-HW-w, HH+w}, {HW+w, HH+w}, {HW+w,-HH-w}, {-HW-w, -HH-w },}
+mesh_poly.indices           = default_box_indices
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR8_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 3.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 4, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 5, 1,1,0},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0, 1.07, 0}
+mesh_poly.material          = CMFD_MATERIAL_WHITE
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { 
+                                {-HW-w, HH+w}, {HW+w,HH+w}, {HW+w,HH}, {-HW-w, HH },
+                                {-HW-w, HH+w}, {-HW,HH+w}, {-HW,-HH-w}, {-HW-w, -HH-w },
+                                {-HW-w, -HH}, {HW+w,-HH}, {HW+w,-HH-w}, {-HW-w, -HH-w },
+                                {HW, HH+w}, {HW+w,HH+w}, {HW+w,-HH-w}, {HW, -HH-w },
+                              }
+mesh_poly.indices           = {0,1,2, 0,2,3,  4,5,6,  4,6,7,  8,9,10, 8,10,11,  12,13,14, 12,14,15 }
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR8_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 0.95, 3.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 3, 0,1,1},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+Poly_Text                   = CreateElement "ceStringPoly"
+Poly_Text.material          = CMFD_FONT_W
+Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
+Poly_Text.init_pos          = {0.364, 1.07, 0}
+Poly_Text.alignment         = "CenterCenter"
+Poly_Text.formats           = {"%s"}
+Poly_Text.parent_element    = page_root.name
+Poly_Text.element_params    = {"EICAS_ERROR9_TEXT", "EICAS_ERROR9_COLOR"}
+Poly_Text.controllers       = { {"text_using_parameter",0,0}, 
+                                {"parameter_in_range", 1, 0.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",1 , 0, 0,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 3, 0,1,1},
+                                {"change_color_when_parameter_equal_to_number",1 , 4, -1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 5, -1,-1,-1},
+                              }
+Poly_Text.value             = "OIL PRESS"
+AddToUpper(Poly_Text)
+Poly_Text = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.364, 1.07, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { {-HW-w, HH+w}, {HW+w, HH+w}, {HW+w,-HH-w}, {-HW-w, -HH-w },}
+mesh_poly.indices           = default_box_indices
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR9_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 3.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 4, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 5, 1,1,0},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.364, 1.07, 0}
+mesh_poly.material          = CMFD_MATERIAL_WHITE
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { 
+                                {-HW-w, HH+w}, {HW+w,HH+w}, {HW+w,HH}, {-HW-w, HH },
+                                {-HW-w, HH+w}, {-HW,HH+w}, {-HW,-HH-w}, {-HW-w, -HH-w },
+                                {-HW-w, -HH}, {HW+w,-HH}, {HW+w,-HH-w}, {-HW-w, -HH-w },
+                                {HW, HH+w}, {HW+w,HH+w}, {HW+w,-HH-w}, {HW, -HH-w },
+                              }
+mesh_poly.indices           = {0,1,2, 0,2,3,  4,5,6,  4,6,7,  8,9,10, 8,10,11,  12,13,14, 12,14,15 }
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR9_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 0.95, 3.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 3, 0,1,1},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+Poly_Text                   = CreateElement "ceStringPoly"
+Poly_Text.material          = CMFD_FONT_W
+Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
+Poly_Text.init_pos          = {0.727, 1.07, 0}
+Poly_Text.alignment         = "CenterCenter"
+Poly_Text.formats           = {"%s"}
+Poly_Text.parent_element    = page_root.name
+Poly_Text.element_params    = {"EICAS_ERROR10_TEXT", "EICAS_ERROR10_COLOR"}
+Poly_Text.controllers       = { {"text_using_parameter",0,0}, 
+                                {"parameter_in_range", 1, 0.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",1 , 0, 0,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 3, 0,1,1},
+                                {"change_color_when_parameter_equal_to_number",1 , 4, -1,0,0},
+                                {"change_color_when_parameter_equal_to_number",1 , 5, -1,-1,-1},
+                              }
+Poly_Text.value             = "OIL PRESS"
+AddToUpper(Poly_Text)
+Poly_Text = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.727, 1.07, 0}
+mesh_poly.material          = CMFD_MATERIAL_DEF
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { {-HW-w, HH+w}, {HW+w, HH+w}, {HW+w,-HH-w}, {-HW-w, -HH-w },}
+mesh_poly.indices           = default_box_indices
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR10_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 3.95, 5.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 4, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 5, 1,1,0},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+mesh_poly                   = CreateElement "ceMeshPoly"
+mesh_poly.parent_element    = page_root.name
+mesh_poly.init_pos          =  {0.727, 1.07, 0}
+mesh_poly.material          = CMFD_MATERIAL_WHITE
+mesh_poly.primitivetype     = "triangles"
+mesh_poly.vertices          = { 
+                                {-HW-w, HH+w}, {HW+w,HH+w}, {HW+w,HH}, {-HW-w, HH },
+                                {-HW-w, HH+w}, {-HW,HH+w}, {-HW,-HH-w}, {-HW-w, -HH-w },
+                                {-HW-w, -HH}, {HW+w,-HH}, {HW+w,-HH-w}, {-HW-w, -HH-w },
+                                {HW, HH+w}, {HW+w,HH+w}, {HW+w,-HH-w}, {HW, -HH-w },
+                              }
+mesh_poly.indices           = {0,1,2, 0,2,3,  4,5,6,  4,6,7,  8,9,10, 8,10,11,  12,13,14, 12,14,15 }
+mesh_poly.isvisible         = true
+mesh_poly.element_params    = {"EICAS_ERROR10_COLOR"}
+mesh_poly.controllers       = {{"parameter_in_range",0 , 0.95, 3.05},
+                                {"change_color_when_parameter_equal_to_number",0 , 1, 1,0,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 2, 1,1,0},
+                                {"change_color_when_parameter_equal_to_number",0 , 3, 0,1,1},
+                              }
+AddElementObject(mesh_poly)
+mesh_poly = nil
+
+
 

@@ -318,6 +318,12 @@ A_29B =  {
 			cx_flap = 0.095, -- Additional coefficient of drag for flap extended
 			cy_flap = 0.31, -- Additional coefficient of lift for flap extended
 			cx_brk = 0.06, -- Additional coefficient of drag for air brakes
+			
+			-- Hi guys. I try to calculate the rollrate, or maxrollrate (omxmax) for a plane and I've got the measurements of the plane, Cl (rolling moment coefficient) and Clp.
+			-- I've found a formula for Rollrate which looks like this:
+			-- rollrate = -((2 * v) / b) * (Cle / Clp) * ((Eleft - Eright) / 2)
+			-- v is (obiously) speed, b is wingspan, Cle coefficient of rolling moment due to aileron deflection, Clp coefficient of rolling dampening, E is the aileron deflection angle
+			-- If it Rolls to fast then decrease Omxmax. If The rollaccelleration is to quick, lower kjx.
 			table_data = 
 			{
 			-- Cx0 - Coefficient of drag for zero lift
@@ -329,7 +335,7 @@ A_29B =  {
 			-- Cymax - Maximum coefficient of lift, corresponding to αstall
 			-- 
 			--      M	 Cx0		 Cya		 B		 B4	      Omxmax	Aldop	Cymax
-					{0.0,	0.0187,	0.0746*2,		0.052,	0.012,	0.15,		22.0,		1.45*2,	},
+					{0.0,	0.0187,	0.0746*2,		0.052,	0.012,	0.79,		22.0,		1.45*2,	},
 					{0.2,	0.0187,	0.0746*2,		0.052,	0.012,	0.796144,	22.0,		1.45*2,   },
 					{0.3,	0.0187,	0.0722*2,		0.052,	0.015,	1.24,		19.0,		1.2*2,    },
 					{0.5,	0.0187,	0.0798*2,		0.045,	0.025,	1.323,		17.0,		1.08*2,   },
