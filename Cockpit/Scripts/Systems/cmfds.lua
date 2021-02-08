@@ -360,7 +360,7 @@ function update()
     ------------------- indicador digital de pressão hidráulica
     local hyd=sensor_data.getEngineLeftRPM()*50
     if hyd > 3200 then hyd = 3200 end -- simulação
-
+    
     if hyd < 0 then hyd = 0 end
     if hyd > 5000 then hyd = 5000 end
 

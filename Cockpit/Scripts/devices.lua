@@ -15,6 +15,7 @@ devices["ENVIRON"]           = counter()
 devices["GEAR"]             = counter()
 devices["BRAKES"]           = counter()
 devices["CMFD"]           = counter()
+devices["HUD"]           = counter()
 
 
 devices["CANOPY"]           = counter()

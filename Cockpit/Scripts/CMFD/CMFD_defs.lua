@@ -166,7 +166,7 @@ function AddElementObject(object)
     end
     if (object.h_clip_relation == nil) then
         object.h_clip_relation = h_clip_relations.COMPARE
-    end
+    end 
     
     if (object.level == nil) or (object.level < CMFD_DEFAULT_LEVEL) then
         object.level        = CMFD_DEFAULT_LEVEL

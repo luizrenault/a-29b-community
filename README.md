@@ -9,6 +9,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## Version 0.0.3a - 07 February 2021
+
+### Added
+- First version of the HUD. NAV mode partially implemented with VV/VAH > Off. Viewing angle is goot for VR, but clipped for monitors. Need to move pilot forward (not zooming in).
+- Free flight instant action mission.
+
+### Changed
+- Throttle scale. Still need to be fixed.
 
 ## Version 0.0.2a - 04 February 2021
 

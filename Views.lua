@@ -1,14 +1,13 @@
 ViewSettings = {
 	Cockpit = {
 	[1] = {-- player slot 1
-	--	CockpitLocalPoint      = {2.8000,1.59000,0.000000},--Cockpit nach = vorne,hoch 4.705000,1.336000,0.000000
-		CockpitLocalPoint      = {0.2000,0.45000,0.000000},--Cockpit nach = vorne,hoch 4.705000,1.336000,0.000000
+		CockpitLocalPoint      = {0.1000,0.294,0.000000},--Cockpit  = front,height 4.705000,1.336000,0.000000
 		CameraViewAngleLimits  = {20.000000,160.000000},
 		CameraAngleRestriction = {false,90.000000,0.400000},
 		CameraAngleLimits      = {190.000000,-75.000000,115.000000},--Kopf drehen = links rechts,runter,hoch
-		EyePoint               = {0.050000,0.000000,0.000000},--front/back,up/down,left/right}<-'neck dimension'in meters 
-		limits_6DOF            = {x = {0.030000,0.400000},y ={-0.300000,0.100000},z = {-0.300000,0.300000},roll = 90.000000},--Bewegen = hinten vorne,oben unten,links rechts
-		ShoulderSize		   = 0.25,-- bewegt K�rper, wenn Azimuth Wert mehr als 90 Grad
+		EyePoint               = {0.050000,0.100000,0.000000},--front/back,up/down,left/right}<-'neck dimension'in meters 
+		limits_6DOF            = {x = {0.030000,0.400000},y ={-0.300000,0.100000},z = {-0.300000,0.300000},roll = 90.000000},--Move = back front, top bottom, left right
+		ShoulderSize		   = 0.25,-- moves body when azimuth value is more than 90 degrees
 		Allow360rotation	   = false,
 	},	
 	}, -- Cockpit 

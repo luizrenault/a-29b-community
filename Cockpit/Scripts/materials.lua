@@ -43,3 +43,6 @@ preload_texture={
 
 
 dofile(LockOn_Options.script_path .. "CMFD/materials.lua")
+dofile(LockOn_Options.script_path .. "HUD/materials.lua")
+-- symbologyPaths =    {	LockOn_Options.script_path.."HUD/Resources",
+--                     }

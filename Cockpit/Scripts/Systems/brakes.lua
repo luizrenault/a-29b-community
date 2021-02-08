@@ -45,7 +45,28 @@ function SetCommand(command,value)
     elseif command == iCommandPlaneWheelBrakeOn then
         -- dev:performClickableAction(device_commands.EngineStart, 0, true)
         -- print_message_to_user("LG=" ..tostring(sensor_data:getWOW_LeftMainLandingGear()))
+
+        -- local lat, lon, alt, nalt = sensor_data.getSelfCoordinates()
+        -- print_message_to_user("SelfCoord: " ..tostring(lat).. " ".. tostring(lon).." "..tostring(alt).." "..tostring(nalt))
+
+        -- speed, speeda, speedb = sensor_data.getSelfAirspeed()
+        -- print_message_to_user("SelfAirspd: " ..tostring(speed) .. "  "..tostring(speeda) .." "..tostring(speedb))
+
+        -- speedd = math.sqrt(speed*speed + speeda*speeda + speedb*speedb)
+
+        -- local speed, speeda, speedb, speedc = sensor_data:getSelfVelocity()
+        -- print_message_to_user("SelfVel: " ..tostring(speed) .. ","..tostring(speeda) .." "..tostring(speedb).." ".. tostring(speedc))
+        
+        -- speeda = math.sqrt(speed*speed + speeda*speeda + speedb*speedb)
+        -- speed = sensor_data.getTrueAirSpeed()
+        -- speedb = sensor_data.getIndicatedAirSpeed()
+        -- print_message_to_user("TruefAirspd: " ..tostring(speed*1.94384) .. "  "..tostring(speedd*1.94384).. "  "..tostring(speeda*1.94384) .. "  ".. speedb*1.94384)
+
+        -- speed = sensor_data.getVerticalVelocity()
+        -- print_message_to_user("VertVel: " ..tostring(speed)  )
+
     end
+
 end
 
 

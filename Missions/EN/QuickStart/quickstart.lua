@@ -13,4 +13,8 @@ planes = {
         name = _("Takeoff"),
         file = "Caucasus A-29B Takeoff.miz"
     },
+    {
+        name = _("Free Flight"),
+        file = "Caucasus A-29B Free Flight.miz"
+    },
 }

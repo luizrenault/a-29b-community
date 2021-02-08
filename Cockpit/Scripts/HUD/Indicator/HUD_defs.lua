@@ -1,0 +1,637 @@
+dofile(LockOn_Options.common_script_path .. "elements_defs.lua")
+dofile(LockOn_Options.script_path .. "materials.lua")
+dofile(LockOn_Options.script_path .."HUD/HUD_ID_defs.lua")
+
+stringdefs				= {}
+stroke_font			= "font_stroke_HUD"
+stroke_material		= "HUD"
+
+
+-- 1mrad=0.001radian=0.0573degrees
+SetScale(MILLYRADIANS)
+--SetScale(FOV)
+
+-- 15.2 deg x 17 deg
+HUD_HALF_WIDTH  = math.rad(15.2) * 1000
+HUD_HALF_HEIGHT = math.rad(17.0) * 1000
+
+-- 角度/弧度换算
+DEGREE_TO_MRAD = 17.4532925199433
+DEGREE_TO_RAD  = 0.0174532925199433
+RAD_TO_DEGREE  = 57.29577951308233
+MRAD_TO_DEGREE = 0.05729577951308233
+
+-- 默认clip层
+HUD_DEFAULT_LEVEL     = 9
+HUD_NOCLIP_LEVEL      = HUD_DEFAULT_LEVEL - 1
+
+INDTEXTURE_PATH       = IND_TEX_PATH
+
+HUD_IND_COLOR         = materials["HUD_IND_DEF"]
+HUD_IND_COLOR_R       = materials["HUD_IND_RED"]
+HUD_IND_COLOR_G       = materials["HUD_IND_GREEN"]
+HUD_IND_COLOR_B       = materials["HUD_IND_BLUE"]
+HUD_IND_COLOR_W       = materials["HUD_IND_WHITE"]
+HUD_IND_COLOR_D       = materials["HUD_IND_DARK"]
+HUD_IND_COLOR_HIDE    = materials["HUD_IND_HIDE"]
+
+
+HUD_MAT_DEF       = "hud_mesh_def"
+HUD_MAT_BASE1     = "hud_mesh_base1"
+HUD_MAT_BASE2     = "hud_mesh_base2"
+
+HUD_TEX_IND1      = "hud_tex_ind1"
+HUD_TEX_IND1_R    = "hud_tex_ind1_r"
+HUD_TEX_IND1_Y    = "hud_tex_ind1_y"
+
+HUD_TEX_CLIP      = "hud_tex_clip"
+
+HUD_TEX_IND2      = "hud_tex_ind2"
+HUD_TEX_IND2_R    = "hud_tex_ind2_r"
+HUD_TEX_IND2_Y    = "hud_tex_ind2_y"
+
+HUD_LINE_DEF      = "hud_line_dashed_def"
+
+--[[
+local font_desc = fontdescription["font_HUD"]
+HUD_IND_FONT    = MakeFont(font_desc, HUD_IND_COLOR,   "HUD_IND_FONT")
+HUD_IND_FONT_R  = MakeFont(font_desc, HUD_IND_COLOR_R, "HUD_IND_FONT_R")
+HUD_IND_FONT_G  = MakeFont(font_desc, HUD_IND_COLOR_G, "HUD_IND_FONT_G")
+HUD_IND_FONT_B  = MakeFont(font_desc, HUD_IND_COLOR_B, "HUD_IND_FONT_B")
+HUD_IND_FONT_W  = MakeFont(font_desc, HUD_IND_COLOR_W, "HUD_IND_FONT_W")
+]]
+
+HUD_IND_FONT    = "hud_font_def"
+HUD_IND_FONT_G  = "hud_font_g"
+HUD_IND_FONT_B  = "hud_font_b"
+HUD_IND_FONT_W  = "hud_font_w"
+HUD_IND_FONT_R  = "hud_font_r"
+
+
+local fontscale = 1 -- 0.75
+
+HUD_FONT_W = 0.0045 * 144 / 128 * 1.27
+HUD_FONT_H = fontscale * HUD_FONT_W
+
+HUD_STRINGDEFS_DEF     = {HUD_FONT_W, HUD_FONT_H, HUD_FONT_W * 0.032625, 0}
+HUD_STRINGDEFS_DEF_X08 = {0.8 * HUD_FONT_W, 0.8 * HUD_FONT_H, 0, 0}
+HUD_STRINGDEFS_DEF_X15 = {1.5 * HUD_FONT_W, 1.5 * HUD_FONT_H, 0, 0}
+HUD_STRINGDEFS_DEF_X20 = {2.0 * HUD_FONT_W, 2.0 * HUD_FONT_H, 0, 0}
+
+
+DEF_BOX_INDICES = { 0,1,2, 0,2,3 }
+
+fpm_name = "hud_fpm"
+
+HUD_TEX_IND1_W  = 1200
+HUD_TEX_IND1_H  = 1200
+HUD_TEX_IND2_W  = 1200
+HUD_TEX_IND2_H  = 1200
+
+MIL2MMIL = 1000
+MMIL2MIL = 0.001
+
+horizon_offset   = -0.0 * DEGREE_TO_MRAD
+vert_bias        = -1.5 * DEGREE_TO_MRAD
+center_vert_bias = -4.0 * DEGREE_TO_MRAD
+
+general_vert_bias = -54.118
+spd_bar_vert_bias = general_vert_bias
+alt_bar_vert_bias = general_vert_bias
+hdg_bar_vert_bias =  16.198
+
+default_material = HUD_TEX_IND2
+
+collimated = true
+
+stroke_thickness  = 1 --0.25
+stroke_fuzziness  = 0.6
+
+HDG_origin_pos	= 130
+
+-- Set screen units and indicator scale
+
+-- MFD screen units definitions, also units conversion
+-- PX - F-16 - raster indicator pixel
+
+function roundDI(value)
+	if value > 0 then
+		return math.floor(value + 0.5)
+	else
+		return math.ceil(value - 0.5)
+	end
+end
+
+MeterToIn					= 39.3701
+InToMeter					= 1 / MeterToIn
+
+local PixelsPerSide			= 480
+local HalfPixelsPerSide		= PixelsPerSide / 2
+
+local ScreenSizeInch		= 4		-- inches
+
+-- Currently this values are used
+local PXtoIn_		= ScreenSizeInch / PixelsPerSide
+local InToPX_		= 1.0 / PXtoIn_
+
+local DegToRad_		= math.rad(1)
+local RadToDeg_		= 1.0 / DegToRad_
+
+local DegToMil_		= math.rad(1) * 1000
+local MilToDeg_		= 1.0 / DegToMil_
+
+local RadToMil_		= 1000
+local MilToRad_		= 1.0 / RadToMil_
+
+-- PX is a pixel in MFD indicators.
+function PXtoIn(param) return (param or 1) * PXtoIn_ end						-- PX to inches
+function InToPX(param) return (param or 1) * InToPX_ end						-- inches to PX
+
+function DegToRad(param) return (param or 1) * DegToRad_ end
+function RadToDeg(param) return (param or 1) * RadToDeg_ end
+
+function DegToMil(param) return (param or 1) * DegToMil_ end
+function MilToDeg(param) return (param or 1) * MilToDeg_ end
+
+function RadToMil(param) return (param or 1) * RadToMil_ end
+function MilToRad(param) return (param or 1) * MilToRad_ end
+
+local lclScale = GetScale()
+
+glyphHeight_100			= 7.0
+glyphWidth_100			= 4.0
+fontScaleY_100			= glyphHeight_100 * lclScale
+fontScaleX_100			= glyphWidth_100 * lclScale
+fontIntercharDflt_100	= 2.0
+fontInterlineDflt_100	= 2.0
+fontIntercharScale_100	= fontIntercharDflt_100 * lclScale
+fontInterlineScale_100	= fontInterlineDflt_100 * lclScale
+
+glyphHeight_75			= 6.0
+glyphWidth_75			= 3.0
+fontScaleY_75			= glyphHeight_75 * lclScale
+fontScaleX_75			= glyphWidth_75 * lclScale
+fontIntercharDflt_75	= 1.5
+fontInterlineDflt_75	= 2.0
+fontIntercharScale_75	= fontIntercharDflt_75 * lclScale
+fontInterlineScale_75	= fontInterlineDflt_75 * lclScale
+
+glyphHeight_120			= 8.0
+glyphWidth_120			= 4.0
+fontScaleY_120			= glyphHeight_120 * lclScale
+fontScaleX_120			= glyphWidth_120 * lclScale
+fontIntercharDflt_120	= 2.0
+fontInterlineDflt_120	= 2.0
+fontIntercharScale_120	= fontIntercharDflt_120 * lclScale
+fontInterlineScale_120	= fontInterlineDflt_120 * lclScale
+
+STROKE_FNT_DFLT_100			= 1
+STROKE_FNT_DFLT_100_NARROW	= 2
+STROKE_FNT_DFLT_75			= 3
+STROKE_FNT_DFLT_120			= 4
+
+
+stringdefs[STROKE_FNT_DFLT_100]			= {fontScaleY_100, fontScaleX_100, fontIntercharScale_100, fontInterlineScale_100}
+stringdefs[STROKE_FNT_DFLT_100_NARROW]	= {fontScaleY_100, fontScaleX_100, fontIntercharScale_75,  fontInterlineScale_100}
+stringdefs[STROKE_FNT_DFLT_75]			= {fontScaleY_75,  fontScaleX_75,  fontIntercharScale_75,  fontInterlineScale_75}
+stringdefs[STROKE_FNT_DFLT_120]			= {fontScaleY_120, fontScaleX_120, fontIntercharScale_120, fontInterlineScale_120}
+
+
+function AddElementObject(object)
+    if not object.name or string.len(object.name) < 1 then
+        object.name = create_guid_string()
+    end
+    
+    if (type(object.stringdefs) ~= "table") or (next(object.stringdefs) == nil) then
+        object.stringdefs   = HUD_STRINGDEFS_DEF
+    end
+    
+    if (not object.level) or (object.level < HUD_DEFAULT_LEVEL) then
+        object.level        = HUD_DEFAULT_LEVEL
+    end
+    
+    -- object.h_clip_relation  = h_clip_relations.COMPARE
+    object.isdraw           = true
+    object.isvisible        = true
+    object.use_mipfilter    = true
+    object.additive_alpha   = true
+    object.collimated       = true
+    Add(object)
+end
+
+function HUD_tex_coord(UL_X,UL_Y,W,H,SZX,SZY)
+    local ux = UL_X / SZX
+    local uy = UL_Y / SZY
+    local w  = W / SZX
+    local h  = H / SZY
+    return {{ux + w, uy},
+            {ux + w, uy + h},
+            {ux    , uy + h},
+            {ux    , uy}}
+end
+
+function SetMeshCircle(object, radius, numpts)
+    local verts = {}
+    local inds = {}
+
+    step = math.rad(360.0/numpts)
+    for i = 1, numpts do
+        verts[i] = {radius * math.cos(i * step), radius * math.sin(i * step)}
+    end
+
+    j = 0
+    for i = 0, 29 do
+        j = j + 1
+        inds[j] = 0
+        j = j + 1
+        inds[j] = i + 1
+        j = j + 1
+        inds[j] = i + 2
+    end
+
+    object.vertices = verts
+    object.indices  = inds
+
+end
+
+function AddHUDElement(object)
+    object.use_mipfilter      = true
+    object.h_clip_relation    = h_clip_relations.COMPARE  
+    object.level              = HUD_DEFAULT_LEVEL
+    object.additive_alpha     = true --additive blending 
+    object.collimated         = true
+    Add(object)
+end
+
+function AddToFPM(elem)
+    elem.parent_element = fpm_name
+    AddHUDElement(elem)
+    return elem
+end
+
+function AddToGunCross(elem)
+    --elem.parent_element  = "hud_gun_cross"
+    AddHUDElement(elem)
+    return elem
+end
+
+-------------------------
+
+
+function setClipLevel(obj, level)
+	level					= level or 0
+	obj.h_clip_relation		= h_clip_relations.COMPARE
+	obj.level				= HUD_DEFAULT_LEVEL + level
+end
+
+
+local function setStrokeSymbolProperties(symbol)
+
+	if override_materials == true then
+		-- Is used for outlined font generated by DMC
+		symbol.thickness			= override_thickness
+		symbol.fuzziness			= override_fuzziness
+    else
+		symbol.thickness			= stroke_thickness
+		symbol.fuzziness			= stroke_fuzziness
+	end
+
+	symbol.draw_as_wire			= dbg_drawStrokesAsWire
+	--symbol.use_specular_pass	= false -- ommitted for now as is set for the entire indicator
+end
+
+-- NOTE
+-- 'pos' is passed as a two-component table - x and y coordinates
+function setSymbolCommonProperties(symbol, name, pos, parent, controllers, material)
+	symbol.name					= name
+	symbol.isdraw				= true
+	symbol.material				= material or default_material
+	symbol.additive_alpha		= additive_alpha or false
+	symbol.collimated			= collimated or false
+	symbol.use_mipfilter		= use_mipfilter
+
+	if parent ~= nil then
+		symbol.parent_element = parent
+	end
+
+	if controllers ~= nil then
+		if type(controllers) == "table" then
+			-- symbol.controllers = controllers
+		end
+	end
+
+	pos							= pos or {0, 0}
+	symbol.init_pos				= {pos[1], pos[2], pos[3] or 0}
+	
+	if z_disabled == true then
+		symbol.z_enabled = false
+	end
+
+	setClipLevel(symbol)
+end
+
+local function buildStrokeLineVerts(length, dashed, stroke, gap)
+	local verts	= {}
+	local inds	= {}
+
+	if dashed == true and stroke ~= nil and gap ~= nil then
+		local segLength			= stroke + gap
+		local numOfWholePairs	= math.floor(length / segLength)
+		local reminder			= length - numOfWholePairs * segLength
+
+		local function addSeg(num)
+			local shift1 = num * 2
+			verts[shift1 + 1] = {0, num * segLength}
+			verts[shift1 + 2] = {0, num * segLength + stroke}
+
+			inds[shift1 + 1] = shift1
+			inds[shift1 + 2] = shift1 + 1
+		end
+
+		for segNum = 0, numOfWholePairs - 1 do
+			addSeg(segNum)
+		end
+
+		if reminder > 0 then
+			if reminder >= stroke then
+				addSeg(numOfWholePairs)
+			else
+				local shift1 = numOfWholePairs * 2
+				verts[shift1 + 1] = {0, numOfWholePairs * segLength}
+				verts[shift1 + 2] = {0, numOfWholePairs * segLength + reminder}
+
+				inds[shift1 + 1] = shift1
+				inds[shift1 + 2] = shift1 + 1
+			end
+		end
+	else
+		verts	= {{0, 0}, {0, length}}
+		inds	= {0, 1}
+	end
+
+	return verts, inds
+end
+
+
+-- Stroke line
+-- rot (CCW in degrees from up)
+-- pos (position of beginning of the line)
+function addStrokeLine(name, length, pos, rot, parent, controllers, dashed, stroke, gap, material)
+	local line		= CreateElement "ceSMultiLine"
+	setSymbolCommonProperties(line, name, pos, parent, controllers, material)
+	setStrokeSymbolProperties(line)
+
+	if rot ~= nil then
+		line.init_rot	= {rot}
+	end
+
+	local verts, inds = buildStrokeLineVerts(length, dashed, stroke, gap)
+	line.vertices	= verts
+	line.indices	= inds
+
+	Add(line)
+	return line
+end
+
+local function setSymbolAlignment(symbol, align)
+	if align ~= nil then
+		symbol.alignment = align
+	else
+		symbol.alignment = "CenterCenter"
+	end
+end
+
+
+-- Stroke symbol with points described in a .svg file
+function addStrokeSymbol(name, set, align, pos, parent, controllers, scale, material)
+	local symbol		= CreateElement "ceSMultiLine"
+	setSymbolCommonProperties(symbol, name, pos, parent, controllers, material)
+	setSymbolAlignment(symbol, align)
+	setStrokeSymbolProperties(symbol)
+	symbol.points_set	= set
+    symbol.scale		= scale or 1
+    symbol.collimated   = true -- Added
+	Add(symbol)
+	return symbol
+end
+
+function setPlaceholderCommonProperties(placeholder, name, pos, parent, controllers)
+	placeholder.name			= name
+	pos							= pos or {0, 0}
+	placeholder.init_pos		= {pos[1], pos[2], 0}
+	placeholder.collimated		= collimated or false
+
+	if parent ~= nil then
+		placeholder.parent_element	= parent
+	end	
+
+	if controllers ~= nil then
+		-- placeholder.controllers		= controllers
+	end
+end
+
+function addPlaceholder(name, pos, parent, controllers)
+	local placeholder			= CreateElement "ceSimple"
+	setPlaceholderCommonProperties(placeholder, name, pos, parent, controllers)
+
+	Add(placeholder)
+	return placeholder
+end
+
+
+function addRollIndicator(radius, longLine, delta, parent)
+	local radiusS = radius - delta				-- short ticks
+	local shortLine = longLine - delta
+	for i = 1,7 do
+		if i~=3 and i~=5 then
+			local aStep = 15 * (i-4)
+			addStrokeLine("HUD_Roll_IndicatorL_"..i, longLine, {radius * math.sin(math.rad(aStep)), -radius * math.cos(math.rad(aStep))}, aStep, parent)
+		end
+		if i~=1 and i~=4 and i~=7 then
+			local aStep = 10 * (i-4)
+			addStrokeLine("HUD_Roll_IndicatorS_"..i, shortLine, {radiusS * math.sin(math.rad(aStep)), -radiusS * math.cos(math.rad(aStep))}, aStep, parent)
+		end
+	end
+end
+
+-- Pitch Ladder (PL) line
+-- text shift (x, y) from the horizontal line end
+local PL_text_shift_x				= 2
+local PL_text_shift_y				= 0
+-- negative pitch line is dashed
+local PL_negline_stroke				= 5
+local PL_negline_gap				= 2
+
+function add_PL_line(name, width, half_gap, tick, shift_y, pitch, controllers, origin_name)
+	
+	local lineOrigin = addPlaceholder(name.."_origin", {0, shift_y}, origin_name, controllers)
+	
+	-- 0 - left side of the pitch line, 1 - right side respectively
+	for i = 0, 1 do
+		local side
+		local side_name
+		if i == 0 then
+			side = -1
+			side_name = "left"
+		else
+			side = 1
+			side_name = "right"
+		end
+
+		local tick_rot
+		if shift_y < 0 then
+			-- negative pitch
+			tick_rot = 0
+		else
+			-- positive pitch
+			tick_rot = 180
+		end
+		
+		local pitchLimited
+		if pitch > 90 then
+			-- above 90 degrees
+			pitchLimited = pitch - 180
+			tick_rot = 0
+		elseif pitch < -90 then
+			-- below -90 degrees
+			pitchLimited = pitch + 180
+			tick_rot = 180
+		else
+			pitchLimited = pitch
+		end
+		
+		local length	= width
+		local ydev		= 0
+		local lineRot	= 0
+		-- each pitch line is rotated by the pitch / 2 angle
+		if pitchLimited < 0 then
+			lineRot = pitchLimited / 2
+			length     = width / math.cos(math.rad(lineRot))
+			ydev       = width * math.sin(math.rad(lineRot))
+		end
+
+		addStrokeLine(name.."_hor_"..side_name, length, {half_gap * side, 0}, (lineRot - 90) * side, lineOrigin.name, nil, shift_y < 0, PL_negline_stroke, PL_negline_gap)
+		if tick > 0 then
+			addStrokeLine(name.."_tick_"..side_name, tick, {(half_gap + length) * side, ydev}, tick_rot, lineOrigin.name)
+		end
+		
+		if shift_y ~= 0 then
+			local text_shift_y
+			-- pitch numerics text is inverted below -90 and above 90 degrees
+			local inverted
+			if shift_y < 0 then
+				if pitch > -90 then
+					inverted = false
+					text_shift_y = PL_text_shift_y + length * math.sin(math.rad(lineRot))
+				else
+					inverted = true
+					text_shift_y = -PL_text_shift_y - length * math.sin(math.rad(lineRot))
+				end
+			else
+				if pitch < 90 then
+					inverted = false
+					text_shift_y = -PL_text_shift_y - length * math.sin(math.rad(lineRot))
+				else
+					inverted = true
+					text_shift_y = PL_text_shift_y + length * math.sin(math.rad(lineRot))
+				end
+			end
+			
+			local textAlign
+			if side < 0 then
+				if inverted == false then
+					textAlign = "RightCenter"
+				else
+					textAlign = "LeftCenter"
+				end
+			else
+				if inverted == false then
+					textAlign = "LeftCenter"
+				else
+					textAlign = "RightCenter"
+				end
+			end
+			
+			local pitchToPrint
+			if pitchLimited < 0 then
+				pitchToPrint = -pitchLimited
+			else
+				pitchToPrint = pitchLimited
+			end
+			
+			local text = addStrokeText(name.."_numerics_"..side_name, ""..pitchToPrint, STROKE_FNT_DFLT_75, textAlign, {(half_gap + width + PL_text_shift_x) * side, text_shift_y}, lineOrigin.name)
+			
+			if inverted == true then
+				text.init_rot = {180}
+			end
+			
+		end
+	end
+	return lineOrigin
+end
+
+-- Ghost horizon
+-- ghost horizon is dashed
+local PL_ghostHor_stroke			= 20
+local PL_ghostHor_gap				= 20
+
+function add_PL_GhostHorizon(name, length, half_gap, controllers, pos)
+	local lineOrigin = addPlaceholder(name.."_origin", pos, nil, controllers)
+	-- 0 - left side of the pitch line, 1 - right side respectively
+	for i = 0, 1 do
+		local side
+		local side_name
+		if i == 0 then
+			side = -1
+			side_name = "left"
+		else
+			side = 1
+			side_name = "right"
+		end
+
+		addStrokeLine(name..side_name, length, {half_gap * side, 0}, -90 * side, lineOrigin.name, nil, true, PL_ghostHor_stroke, PL_ghostHor_gap)
+	end
+	return lineOrigin
+end
+
+-- Stroke text with glyphs described in a .svg file
+function addStrokeText(name, value, stringdef, align, pos, parent, controllers, formats)
+	local txt = CreateElement "ceStringSLine"
+	setSymbolCommonProperties(txt, name, pos, parent, controllers, stroke_font)
+	setSymbolAlignment(txt, align)
+
+	-- custom size is noted in documents as in percents from the original one
+	if type(stringdef) == "table" then
+		txt.stringdefs = stringdef
+	else
+		txt.stringdefs = stringdefs[stringdef]
+	end
+
+	if value ~= nil then
+		txt.value = value
+	end
+
+	txt.formats		= formats
+
+	Add(txt)
+	return txt
+end
+
+-- made by four lines
+line_box_indices		= {0, 1, 1, 2, 2, 3, 3, 0}
+
+-- Box made of stroke lines
+function addStrokeBox(name, sideX, sideY, align, pos, parent, controllers, material)
+	local box		= CreateElement "ceSMultiLine"
+	setSymbolCommonProperties(box, name, pos, parent, controllers, material)
+	setSymbolAlignment(box, align)
+	setStrokeSymbolProperties(box)
+
+	local halfSideX	= sideX / 2
+	local halfSideY	= sideY / 2
+	box.vertices	= {{-halfSideX, -halfSideY}, {-halfSideX, halfSideY}, {halfSideX, halfSideY}, {halfSideX, -halfSideY}}
+	box.indices		= line_box_indices
+
+	Add(box)
+	return box
+end
