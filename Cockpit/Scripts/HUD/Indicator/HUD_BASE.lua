@@ -9,7 +9,7 @@ local num_points = 64
 local step       = math.rad(360.0/num_points)
 local TFOV       = math.rad(20.0/2) * 1000.0
 
-local CLIPFOV = math.rad(17/2) * 1000.0
+local CLIPFOV = math.rad(20/2) * 1000.0
 local Rs      = 0.955 * CLIPFOV -- side gap
 local Rl      = Rs * math.sin(math.rad(44.5))
 
@@ -32,8 +32,15 @@ for i = num_points/2 +  angle_offset/step , (num_points -  angle_offset/step) do
 end
 ]]
 -- inds
+
+local larg = 110
+local alt = 140
+local rece = 30
+
+verts = {{-larg, alt-rece}, {-larg+rece, alt }, { larg-rece, alt}, {larg, alt-rece}, {larg, -alt-rece}, {-larg, -alt-rece}}
+
 j = 0
-for i = 0, #verts do
+for i = 0, (#verts-3) do
     inds[j+1] = 0
     inds[j+2] = i + 1
     inds[j+3] = i + 2
@@ -45,7 +52,6 @@ total_field_of_view.name            = "total_field_of_view"
 total_field_of_view.primitivetype   = "triangles"
 total_field_of_view.vertices        = verts
 total_field_of_view.material        = HUD_MAT_BASE1
-total_field_of_view.vertices        = verts
 total_field_of_view.indices         = inds
 total_field_of_view.init_pos        = {0, 0, 0}
 total_field_of_view.init_rot        = {0, 0, -44.5} -- degree NOT rad
@@ -85,5 +91,5 @@ fake_double_eye_view.collimated      = true
 fake_double_eye_view.isvisible       = true
 fake_double_eye_view.additive_alpha  = true
 fake_double_eye_view.use_mipfilter   = true
--- Add(fake_double_eye_view)
+Add(fake_double_eye_view)
 

@@ -639,7 +639,7 @@ local CMFD2Format=get_param_handle("CMFD2Format")
 CMFD2Format:set(SUB_PAGE_ID.EICAS)
 
 local CMFDDoi=get_param_handle("CMFDDoi")
-CMFDDoi:set(1)
+CMFDDoi:set(0)
 
 local CMFD1DCLT=get_param_handle("CMFD1DCLT")
 CMFD1DCLT:set(0)

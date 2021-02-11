@@ -8,11 +8,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Version 0.0.4a - 10 February 2021
+
+### Added
+- New instrument textures.
+- NAV and NAV LANDING HUD modes almost completed.
+- UFCP animations.
+- Guns working.
+- Ground Crew Comm menu working (Rearm and Refuel).
+
+### Changed
+- More tunning on the SFM.
+
+### Fixed
+- Throttle and other panels scales.
 
 ## Version 0.0.3a - 07 February 2021
 
 ### Added
-- First version of the HUD. NAV mode partially implemented with VV/VAH > Off. Viewing angle is goot for VR, but clipped for monitors. Need to move pilot forward (not zooming in).
+- First version of the HUD. NAV mode partially implemented with VV/VAH > Off. Viewing angle is good for VR, but clipped for monitors. Need to move pilot forward (not zooming in).
 - Free flight instant action mission.
 
 ### Changed
@@ -91,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Throttle and Stick are inconsistent with the real ones;
 
 ### Contributors
-- Renault, Milaré, Malamem, Marvila, Cavanha, Risali, Jorge Rodrigues and many others.
+- Renault, Milaré, Athos, Malamem, Marvila, Cavanha, Risali, Eiras, Jorge Rodrigues and many others.
 
 
 ### Changed

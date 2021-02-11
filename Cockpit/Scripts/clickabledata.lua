@@ -76,7 +76,7 @@ elements["PNT_871"] = default_3_position_tumb("Fuel/Hydraulic/Bleed Shutoff (Ope
 
 -- THROTTLE
 elements["PNT_911"] = default_movable_axis("Throttle",                                          devices.EXTANIM, device_commands.Throttle,       911, 0.0,0.1, true, false)
-elements["PNT_912"] = default_3_position_tumb("Flaps (Up/Stop/Down)",                           devices.EXTANIM, device_commands.Flaps,          912,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_912"] = default_2_position_tumb("Flaps (Up/Stop/Down)",                           devices.EXTANIM, device_commands.Flaps,          912,nil,true,TOGGLECLICK_MID_FWD)
 elements["PNT_913"] = default_movable_axis("Friction",                                          devices.EXTANIM, device_commands.Friction,       913, 0.0,0.1, true, false)
 
 -- TRIMS
@@ -225,9 +225,54 @@ elements["PNT_580"] = springloaded_3_pos_tumb("CMFD #2 Gain",                   
 elements["PNT_581"] = springloaded_3_pos_tumb("CMFD #2 Symbology",                           devices.CMFD, device_commands.CMFD2ButtonSymb,      581, true)
 elements["PNT_582"] = springloaded_3_pos_tumb("CMFD #2 Bright",                              devices.CMFD, device_commands.CMFD2ButtonBright,    582, true)
 
--- CMFD2
-elements["PNT_491"] = default_button("Clock Selection",                                         devices.EXTANIM, device_commands.ClockSel,           491)
-elements["PNT_492"] = default_button("Clock Control",                                           devices.EXTANIM, device_commands.ClockCtrl,          492)
+-- CLOCK
+elements["PNT_491"] = default_button("Clock Selection",                                     devices.EXTANIM, device_commands.ClockSel,           491)
+elements["PNT_492"] = default_button("Clock Control",                                       devices.EXTANIM, device_commands.ClockCtrl,          492)
+
+-- UFCP
+elements["PNT_451"] = default_button("COM 1",                                           	devices.UFCP, device_commands.UFCP_COM1,          	451)
+elements["PNT_452"] = default_button("COM 2",                                           	devices.UFCP, device_commands.UFCP_COM2,          	452)
+elements["PNT_453"] = default_button("NAV AIDS",                                           	devices.UFCP, device_commands.UFCP_NAVAIDS,     	453)
+elements["PNT_454"] = default_button("A/G",                                           		devices.UFCP, device_commands.UFCP_A_G,          	454)
+elements["PNT_455"] = default_button("NAV",                                           		devices.UFCP, device_commands.UFCP_NAV,          	455)
+elements["PNT_456"] = default_button("A/A",                                           		devices.UFCP, device_commands.UFCP_A_A,          	456)
+elements["PNT_457"] = default_button("BARO/RALT",                                         	devices.UFCP, device_commands.UFCP_BARO_RALT,       457)
+elements["PNT_458"] = default_button("IDNT",                                           		devices.UFCP, device_commands.UFCP_IDNT,          	458)
+elements["PNT_459"] = default_button("1",                                           		devices.UFCP, device_commands.UFCP_1,          		459)
+elements["PNT_460"] = default_button("2",                                           		devices.UFCP, device_commands.UFCP_2,          		460)
+elements["PNT_461"] = default_button("3",                                     				devices.UFCP, device_commands.UFCP_3,          		461)
+elements["PNT_462"] = default_button("4",                                     				devices.UFCP, device_commands.UFCP_4,          		462)
+elements["PNT_463"] = default_button("5",                                     				devices.UFCP, device_commands.UFCP_5,          		463)
+elements["PNT_464"] = default_button("6",                                     				devices.UFCP, device_commands.UFCP_6,          		464)
+elements["PNT_465"] = default_button("7",                                     				devices.UFCP, device_commands.UFCP_7,          		465)
+elements["PNT_466"] = default_button("8",                                     				devices.UFCP, device_commands.UFCP_8,          		466)
+elements["PNT_467"] = default_button("9",                                     				devices.UFCP, device_commands.UFCP_9,          		467)
+elements["PNT_468"] = default_button("0",                                     				devices.UFCP, device_commands.UFCP_0,          		468)
+elements["PNT_469"] = default_button("Clear",                                           	devices.UFCP, device_commands.UFCP_CLR,          	469)
+elements["PNT_470"] = default_button("Enter",                                           	devices.UFCP, device_commands.UFCP_ENTR,          	470)
+elements["PNT_471"] = default_button("CZ",                                           		devices.UFCP, device_commands.UFCP_CZ,          	471)
+elements["PNT_472"] = default_button("Airspeed",                                           	devices.UFCP, device_commands.UFCP_AIRSPD,          472)
+elements["PNT_473"] = default_button("Warning Reset",                                       devices.UFCP, device_commands.UFCP_WARNRST,         473)
+elements["PNT_474"] = default_button("Up",                                           		devices.UFCP, device_commands.UFCP_UP,          	474)
+elements["PNT_475"] = default_button("Down",                                           		devices.UFCP, device_commands.UFCP_DOWN,          	475)
+
+elements["PNT_476"] = default_3_position_tumb("Day/Night/Auto",                        		devices.UFCP, device_commands.UFCP_DAY_NIGHT,     	476, false, true)
+elements["PNT_477"] = default_2_position_tumb("Radar Altimeter Transmit / Off",       		devices.UFCP, device_commands.UFCP_RALT,          	477)
+elements["PNT_478"] = default_3_position_tumb("DVR Rec/Standby/Off",                		devices.UFCP, device_commands.UFCP_DVR,          	478, false, true)
+elements["PNT_479"] = multiposition_switch_limited("EGI Nav/Align/Storage Heading/Off/Test",devices.UFCP, device_commands.UFCP_EGI,          	479,5,0.25)
+elements["PNT_480"] = default_axis_limited("UFC BRT/OFF",									devices.UFCP, device_commands.UFCP_UFC,          	480, 0, 0.15)
+elements["PNT_481"] = default_2_position_tumb("HUD Test",									devices.UFCP, device_commands.UFCP_HUD_TEST,      	481)
+elements["PNT_482"] = default_2_position_tumb("SBS On",										devices.UFCP, device_commands.UFCP_SBS_ON,      	482)
+elements["PNT_483"] = default_axis_limited("HUD Britghness",								devices.UFCP, device_commands.UFCP_HUD_BRIGHT,     	483)
+elements["PNT_484"] = default_axis_limited("SBS Adjust",	   								devices.UFCP, device_commands.UFCP_SBS_BRIGHT,   	484)
+
+elements["PNT_485"] = default_button("Right",												devices.UFCP, device_commands.UFCP_JOY_RIGHT,   	485)
+elements["PNT_486"] = default_button("Left",												devices.UFCP, device_commands.UFCP_JOY_LEFT,  	 	486)
+elements["PNT_487"] = default_button("Up",													devices.UFCP, device_commands.UFCP_JOY_UP,   		487)
+elements["PNT_488"] = default_button("Down",												devices.UFCP, device_commands.UFCP_JOY_DOWN,  	 	488)
+
+
+
 
 
 

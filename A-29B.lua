@@ -335,6 +335,7 @@ A_29B =  {
 			-- Cymax - Maximum coefficient of lift, corresponding to αstall
 			-- 
 			--      M	 Cx0		 Cya		 B		 B4	      Omxmax	Aldop	Cymax
+					{-0.1,	0.0187,	0.0746*2,		0.052,	0.012,	0.79,		22.0,		1.45*2,	},
 					{0.0,	0.0187,	0.0746*2,		0.052,	0.012,	0.79,		22.0,		1.45*2,	},
 					{0.2,	0.0187,	0.0746*2,		0.052,	0.012,	0.796144,	22.0,		1.45*2,   },
 					{0.3,	0.0187,	0.0722*2,		0.052,	0.015,	1.24,		19.0,		1.2*2,    },
@@ -361,12 +362,13 @@ A_29B =  {
 			dcx_eng	=	0.0114, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
 			cemax	=	0.13, -- kg / sec - fuel consumption for a single engine in dry configuration
 			cefor	=	0.13, -- kg / sec - fuel consumption for a single engine in afterburner configuration
-			dpdh_m	=	7000, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			dpdh_m	=	1000, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			dpdh_f	=	3000.0, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			table_data = {
 			-- Pmax - total thrust in Newtons (kN * 1000) for all engines
 			-- Pfor - total thrust in Newtons (kN * 1000) for all engines
 			--   M		Pmax		 Pfor
+				{-0.1,		16620.0},
 				{0.0,		16620.0},
 				{0.1,		15600.0},
 				{0.2,		14340.0},

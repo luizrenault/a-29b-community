@@ -185,6 +185,16 @@ fontInterlineDflt_120	= 2.0
 fontIntercharScale_120	= fontIntercharDflt_120 * lclScale
 fontInterlineScale_120	= fontInterlineDflt_120 * lclScale
 
+glyphHeight_60			= 5.0
+glyphWidth_60			= 3.0
+fontScaleY_60			= glyphHeight_60 * lclScale
+fontScaleX_60			= glyphWidth_60 * lclScale
+fontIntercharDflt_60	= 1.5
+fontInterlineDflt_60	= 2.0
+fontIntercharScale_60	= fontIntercharDflt_60 * lclScale
+fontInterlineScale_60	= fontInterlineDflt_60 * lclScale
+
+
 STROKE_FNT_DFLT_100			= 1
 STROKE_FNT_DFLT_100_NARROW	= 2
 STROKE_FNT_DFLT_75			= 3
@@ -195,6 +205,7 @@ stringdefs[STROKE_FNT_DFLT_100]			= {fontScaleY_100, fontScaleX_100, fontInterch
 stringdefs[STROKE_FNT_DFLT_100_NARROW]	= {fontScaleY_100, fontScaleX_100, fontIntercharScale_75,  fontInterlineScale_100}
 stringdefs[STROKE_FNT_DFLT_75]			= {fontScaleY_75,  fontScaleX_75,  fontIntercharScale_75,  fontInterlineScale_75}
 stringdefs[STROKE_FNT_DFLT_120]			= {fontScaleY_120, fontScaleX_120, fontIntercharScale_120, fontInterlineScale_120}
+
 
 
 function AddElementObject(object)
@@ -253,6 +264,9 @@ function SetMeshCircle(object, radius, numpts)
     object.indices  = inds
 
 end
+
+
+
 
 function AddHUDElement(object)
     object.use_mipfilter      = true
@@ -393,6 +407,16 @@ function addStrokeLine(name, length, pos, rot, parent, controllers, dashed, stro
 	return line
 end
 
+-- function addStrokeLineInitFinal(name, init, final, parent, controllers, material)
+-- 	local line		= CreateElement "ceSMultiLine"
+-- 	setSymbolCommonProperties(line, name, init, parent, controllers, material)
+-- 	setStrokeSymbolProperties(line)
+-- 	line.vertices	= {{0,0}, {final[1]-init[1], final[2]-init[2]}}
+-- 	line.indices	= {0,1}
+-- 	Add(line)
+-- 	return line
+-- end
+
 local function setSymbolAlignment(symbol, align)
 	if align ~= nil then
 		symbol.alignment = align
@@ -452,6 +476,8 @@ function addRollIndicator(radius, longLine, delta, parent)
 			addStrokeLine("HUD_Roll_IndicatorS_"..i, shortLine, {radiusS * math.sin(math.rad(aStep)), -radiusS * math.cos(math.rad(aStep))}, aStep, parent)
 		end
 	end
+	addStrokeCircle("HUD_Roll_Indicator_Arc", radius-longLine, {0,0}, parent, nill, { math.rad(-45), math.rad(-135)})
+	-- (name, radius, pos, parent, controllers, arc, segment, gap, dashed, material)
 end
 
 -- Pitch Ladder (PL) line
@@ -634,4 +660,27 @@ function addStrokeBox(name, sideX, sideY, align, pos, parent, controllers, mater
 
 	Add(box)
 	return box
+end
+
+-- Stroke circle
+function addStrokeCircle(name, radius, pos, parent, controllers, arc, segment, gap, dashed, material)
+	local segmentsN = 64
+
+	local circle			= CreateElement "ceSCircle"
+	setSymbolCommonProperties(circle, name, pos, parent, controllers, material)
+	setStrokeSymbolProperties(circle)
+	circle.radius			= {radius, radius}
+	circle.arc				= arc or {0, math.pi * 2}
+	circle.segment			= segment or math.pi * 4 / segmentsN
+	circle.gap				= gap or math.pi * 4 / segmentsN
+	circle.segment_detail	= 4
+
+	if dashed ~= nil then
+		circle.dashed		= dashed
+	else
+		circle.dashed		= false
+	end
+
+	Add(circle)
+	return circle
 end

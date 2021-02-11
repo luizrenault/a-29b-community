@@ -2,7 +2,6 @@ dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."HUD/HUD_ID_defs.lua")
 
-
 startup_print("hud: load")
 
 local dev = GetSelf()
@@ -11,6 +10,12 @@ local update_time_step = 0.02 --update will be called 50 times per second
 make_default_activity(update_time_step)
 
 local sensor_data = get_base_data()
+
+
+local function round_to(value, roundto)
+    value = value + roundto/2
+    return value - value % roundto
+end
 
 
 local HUD_PITCH = get_param_handle("HUD_PITCH")
@@ -24,6 +29,7 @@ local HUD_FPM_SLIDE = get_param_handle("HUD_FPM_SLIDE")
 local HUD_FPM_VERT = get_param_handle("HUD_FPM_VERT")
 local HUD_FPM_OOR = get_param_handle("HUD_FPM_OOR")
 local HUD_PL_SLIDE = get_param_handle("HUD_PL_SLIDE")
+local HUD_RI_ROLL = get_param_handle("HUD_RI_ROLL")
 
 -- Visuals
 local HUD_DRIFT_CO = get_param_handle("HUD_DRIFT_CO")
@@ -32,21 +38,55 @@ local HUD_VAH = get_param_handle("HUD_VAH")
 local HUD_VV = get_param_handle("HUD_VV")
 local HUD_FPM_CROSS = get_param_handle("HUD_FPM_CROSS")
 
+local HUD_NORMAL_ACCEL = get_param_handle("HUD_NORMAL_ACCEL")
+local HUD_MAX_ACCEL = get_param_handle("HUD_MAX_ACCEL")
+local HUD_RDY = get_param_handle("HUD_RDY")
+local HUD_RDY_S = get_param_handle("HUD_RDY_S")
+local HUD_DOI = get_param_handle("HUD_DOI")
+local HUD_RADAR_ALT = get_param_handle("HUD_RADAR_ALT")
+local HUD_RANGE = get_param_handle("HUD_RANGE")
+local HUD_TIME_MIN = get_param_handle("HUD_TIME_MIN")
+local HUD_TIME_SEC = get_param_handle("HUD_TIME_SEC")
+local HUD_FTI_DIST = get_param_handle("HUD_FTI_DIST")
+local HUD_FTI_NUM = get_param_handle("HUD_FTI_NUM")
+local HUD_VOR_DIST = get_param_handle("HUD_VOR_DIST")
+local HUD_VOR_MAG = get_param_handle("HUD_VOR_MAG")
+local HUD_MACH = get_param_handle("HUD_MACH")
+
+local HUD_MODE = get_param_handle("HUD_MODE")
+local HUD_MODE_TXT = get_param_handle("HUD_MODE_TXT")
+
+local HUD_AOA = get_param_handle("HUD_AOA")
+
+local CMFDDoi = get_param_handle("CMFDDoi")
+
+
 HUD_DCLT:set(0)
 HUD_DRIFT_CO:set(0)
 HUD_VAH:set(0)
 
+HUD_RDY:set(0)
+HUD_RDY_S:set(0)
+
+local hud_mode = HUD_MODE_ID.NAV
+
+local max_accel = 0
+
 function update()
-    
+    if hud_mode == HUD_MODE_ID.NAV and sensor_data.getLeftMainLandingGearDown() == 1 then hud_mode = HUD_MODE_ID.LANDING end
+    if hud_mode == HUD_MODE_ID.LANDING and sensor_data.getLeftMainLandingGearDown() == 0 then hud_mode = HUD_MODE_ID.NAV end
+
+    local hud_mode_txt = HUD_MODE_STR[hud_mode]
+
     local pitch = sensor_data.getPitch()
     local roll = sensor_data.getRoll()
     local hdg = math.floor(math.deg(-sensor_data.getHeading()))
     if hdg < 0 then hdg = 360 + hdg end
     hdg = hdg % 360
 
-    local altitude = sensor_data.getBarometricAltitude()*3.2808399
+    local altitude = round_to(sensor_data.getBarometricAltitude()*3.2808399,10)
     local alt_k = math.floor(altitude/1000)
-    local alt_n = (math.floor(altitude/10+0.5)*10)%1000
+    local alt_n = altitude%1000
 
     if pitch > 10 then pl_ghost = 1
     elseif pitch < -10 then pl_ghost = -1
@@ -96,6 +136,44 @@ function update()
         end
     end
 
+    ri_roll = roll
+    if ri_roll > math.rad(50) then 
+        ri_roll = math.rad(50)
+    elseif ri_roll < math.rad(-50) then
+        ri_roll = math.rad(-50)
+    end
+
+    local normal_accel = sensor_data.getVerticalAcceleration()
+    if normal_accel > max_accel then max_accel = normal_accel end
+    local max_accel_val = max_accel
+
+    if CMFDDoi:get() == 0 then hud_doi = 1 else hud_doi = 0 end
+
+    local radar_alt = sensor_data.getRadarAltitude() * 3.2808399
+    if radar_alt > 0 and radar_alt < 5000 then radar_alt = round_to(radar_alt, 10) else radar_alt = -1 end
+    
+    local range = -1
+
+    local time_min = 5
+    local time_sec = -1
+
+    local fti_dist = -1
+    local fti_num = 0
+    fti_dist = round_to(fti_dist, 0.1)
+
+    local vor_dist = -1
+    local vor_mag = 270
+
+    local mach = round_to(sensor_data.getMachNumber(), 0.01)
+    if hud_mode == HUD_MODE_ID.LANDING and sensor_data.getWOW_LeftMainLandingGear() == 0 then 
+        mach = -1 
+        max_accel_val = -1
+    end
+
+    local aoa = math.deg(sensor_data.getAngleOfAttack())
+    if aoa < -9 then aoa = -9 end
+    if aoa > 40 then aoa = 40 end
+    
     HUD_PITCH:set(pitch - pl_slide*math.sin(roll))
     HUD_ROLL:set(roll)
     HUD_HDG:set(hdg)
@@ -107,6 +185,31 @@ function update()
     HUD_FPM_CROSS:set(fpm_cross)
     HUD_PL_SLIDE:set(pl_slide)
     HUD_PL_GHOST:set(pl_ghost) 
+    HUD_RI_ROLL:set(ri_roll) 
+
+    HUD_NORMAL_ACCEL:set(normal_accel)
+    HUD_MAX_ACCEL:set(max_accel_val)
+    
+    HUD_DOI:set(hud_doi)
+
+    HUD_RADAR_ALT:set(radar_alt) 
+    HUD_RANGE:set(range) 
+
+    HUD_TIME_MIN:set(time_min) 
+    HUD_TIME_SEC:set(time_sec) 
+
+    HUD_FTI_DIST:set(fti_dist) 
+    HUD_FTI_NUM:set(fti_num) 
+
+    HUD_VOR_DIST:set(vor_dist) 
+    HUD_VOR_MAG:set(vor_mag) 
+
+    HUD_MACH:set(mach)
+    
+    HUD_MODE:set(hud_mode)
+    HUD_MODE_TXT:set(hud_mode_txt)
+
+    HUD_AOA:set(aoa)
 
     -- Escalas de Velocidade, Altitude ou Altura e Proa – Apresentadas quando as funções VV/VAH e VAH estão ativadas no UFCP ou no CMFD, estando em qualquer modo principal. Ficam ocultas quando estas funções estiverem desativadas;
     -- Escala de Velocidade Vertical – Apresentada somente quando a função VV/VAH estiver ativada no UFCP ou no CMFD e o modo principal NAV estiver em operação;

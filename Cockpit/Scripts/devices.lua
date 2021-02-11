@@ -21,5 +21,8 @@ devices["HUD"]           = counter()
 devices["CANOPY"]           = counter()
 devices["FLAPS"]            = counter()
 devices["EXTANIM"]          = counter()
+devices["WEAPON_SYSTEM"]          = counter()
+devices["INTERCOM"]			=counter()
+devices["UFCP"]			=counter()
 
 devices["TEST"]             = counter()

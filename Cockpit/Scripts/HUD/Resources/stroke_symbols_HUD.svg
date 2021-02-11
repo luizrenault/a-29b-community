@@ -23,11 +23,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="32.000001"
-     inkscape:cx="117.30784"
-     inkscape:cy="40.162922"
+     inkscape:zoom="11.313709"
+     inkscape:cx="64.130831"
+     inkscape:cy="37.05464"
      inkscape:document-units="px"
-     inkscape:current-layer="2-flightpath-marker-co"
+     inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:window-width="3840"
      inkscape:window-height="2097"
@@ -1132,5 +1132,12 @@
          sodipodi:open="true"
          d="m 35.520312,172.80534 a 1.190625,1.190625 0 0 1 0.435799,0.4358" />
     </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 28.971875,164.9729 h -0.396874 l 0.793749,-1.32292 0.793748,1.32292 h -0.39274 v 1.05833 h -0.797883 z"
+       id="hud-doi"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccccc"
+       inkscape:label="#hud-doi" />
   </g>
 </svg>

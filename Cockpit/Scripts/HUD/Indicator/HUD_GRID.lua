@@ -1,4 +1,58 @@
+-- function basic_dump (o)
+-- 	if type(o) == "number" then
+-- 	  return tostring(o)
+-- 	elseif type(o) == "string" then
+-- 	  return string.format("%q", o)
+-- 	else -- nil, boolean, function, userdata, thread; assume it can be converted to a string
+-- 	  return tostring(o)
+-- 	end
+-- end
+-- function dump (name, value, saved, result)
+-- 	seen = seen or {}       -- initial value
+-- 	result = result or ""
+-- 	result=result..name.." = "
+-- 	if type(value) ~= "table" then
+-- 	  result=result..basic_dump(value).."\n"
+-- 	  log.info(result)
+-- 	  result = ""
+-- 	elseif type(value) == "table" then
+-- 	  if seen[value] then    -- value already saved?
+-- 		result=result.."->"..seen[value].."\n"  -- use its previous name
+-- 		log.info(result)
+-- 		result = ""
+-- 		else
+-- 		seen[value] = name   -- save name for next time
+-- 		result=result.."{}\n"     -- create a new table
+-- 		log.info(result)
+-- 		result = ""
+-- 		  for k,v in pairs(value) do      -- save its fields
+-- 		  local fieldname = string.format("%s[%s]", name,
+-- 										  basic_dump(k))
+-- 		  if fieldname~="_G[\"seen\"]" then
+-- 			result=dump(fieldname, v, seen, result)
+-- 		  end
+-- 		end
+-- 	  end
+-- 	end
+-- 	return result
+--   end
+
+-- dump("_G", _G)
+-- dump("_G", getmetatable(_G))
+
+-- dump("GetSelf", GetSelf())
+-- dump("GetSelf", getmetatable(GetSelf()))
+
+-- dump("DCS", DCS)
+-- dump("DCS", getmetatable(DCS))
+
+-- local sensor_data = get_base_data()
+
+-- dump("sensor_data", sensor_data)
+-- dump("sensor_data", sensor_data)
+
 dofile(LockOn_Options.script_path .. "HUD/Indicator/HUD_defs.lua")
+dofile(LockOn_Options.script_path .. "HUD/HUD_ID_defs.lua")
 
 -- base                      = CreateElement "ceMeshPoly"
 -- base.name                 = "HUD_Center"
@@ -11,39 +65,48 @@ dofile(LockOn_Options.script_path .. "HUD/Indicator/HUD_defs.lua")
 -- base.scale=0.5
 -- AddElementObject(base)
 
--- local grid
--- grid                      = CreateElement "ceMeshPoly"
--- grid.primitivetype        = "lines"
--- grid.init_pos             = {0, 0, 0.0}
--- grid.material             = HUD_TEX_IND2
--- grid.vertices             ={{math.rad(-7.6)*1000, math.rad(5.5)*1000}, {math.rad(7.6)*1000,math.rad(5.5)*1000}, {math.rad(7.6)*1000,math.rad(-11.5)*1000}, {math.rad(-7.6)*1000,math.rad(-11.5)*1000},}
--- grid.indices              = {0,1, 1,2, 2,3, 3,0}
--- grid.isvisible            = true
+local grid
+grid                      = CreateElement "ceMeshPoly"
+grid.primitivetype        = "lines"
+grid.init_pos             = {0, 0, 0.0}
+grid.material             = HUD_TEX_IND2
+grid.vertices             ={{math.rad(-7.6)*1000, math.rad(5.5)*1000}, {math.rad(7.6)*1000,math.rad(5.5)*1000}, {math.rad(7.6)*1000,math.rad(-11.5)*1000}, {math.rad(-7.6)*1000,math.rad(-11.5)*1000},}
+grid.indices              = {0,1, 1,2, 2,3, 3,0}
+grid.isvisible            = true
 -- AddElementObject(grid)
--- grid = nil
+grid = nil
 
--- grid                      = CreateElement "ceMeshPoly"
--- grid.primitivetype        = "lines"
--- grid.init_pos             = {0, 0, 0.0}
--- grid.material             = HUD_TEX_IND2
--- grid.vertices             = {
---                                 {math.rad(-7.6)*1000, math.rad(1.2)*1000}, {math.rad(7.6)*1000,math.rad(1.2)*1000},
---                                 {0, math.rad(5.5)*1000}, {0,math.rad(-11.5)*1000},
---                                 {math.rad(-7.6)*1000, math.rad(-3.7)*1000}, {math.rad(7.6)*1000,math.rad(-3.7)*1000},
---                                 {math.rad(-7.6)*1000, 0}, {math.rad(7.6)*1000,0},
---                             }
--- grid.indices              = {0,1, 2,3, 4,5, 6,7}
--- grid.isvisible            = true
--- -- AddElementObject(grid)
--- grid = nil
+grid                      = CreateElement "ceMeshPoly"
+grid.primitivetype        = "lines"
+grid.init_pos             = {0, 0, 0.0}
+grid.material             = HUD_TEX_IND2
+grid.vertices             = {
+                                {math.rad(-7.6)*1000, math.rad(1.2)*1000}, {math.rad(7.6)*1000,math.rad(1.2)*1000},
+                                {0, math.rad(5.5)*1000}, {0,math.rad(-11.5)*1000},
+                                {math.rad(-7.6)*1000, math.rad(-3.7)*1000}, {math.rad(7.6)*1000,math.rad(-3.7)*1000},
+                                {math.rad(-7.6)*1000, 0}, {math.rad(7.6)*1000,0},
+                            }
+grid.indices              = {0,1, 2,3, 4,5, 6,7}
+grid.isvisible            = true
+-- AddElementObject(grid)
+grid = nil
 
 -- HUD boresight cross
+
+
+-- print_message_to_user("Scale: ".. tostring(GetScale()))
+
+-- SetCustomScale(0.8*GetScale())
 
 boresightShiftY = 98		--DegToMil(4.8)
 
 local object
 
-local HUD_BoresightRoot = addStrokeSymbol("HUD_Boresight_Cross", {"stroke_symbols_HUD", "1-boresight-cross"}, "FromSet", {0, boresightShiftY})
+-- object = addStrokeSymbol("HUD_Base", {"a29hud", "nav-mode"}, "FromSet", {0, -34}, nil, nil, 0.85, "INDICATION_COMMON_RED")
+-- object = addStrokeSymbol("HUD_Base", {"a29hud", "landing-mode"}, "FromSet", {0, 0}, nil, nil, 0.9, "INDICATION_COMMON_AMBER")
+
+
+local HUD_BoresightRoot = addStrokeSymbol("HUD_Boresight_Cross", {"stroke_symbols_HUD", "1-boresight-cross"}, "FromSet", {0, math.rad(1.2)*1000})
 
 -- Flight Path Marker - FPM
 local HUD_FPM_origin = addPlaceholder("HUD_FPM_origin", {0, 0}, nil, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_FPM_Pos"}})
@@ -75,7 +138,7 @@ PL_origin.element_params            = {"HUD_PITCH", "HUD_ROLL", "HUD_PL_SLIDE"}
 PL_origin.controllers 		        = {{"move_left_right_using_parameter", 2, 0.75}, {"rotate_using_parameter",1, 1 }, {"move_up_down_using_parameter",0,-0.75}, }
 
 local PL_horizon_line_half_gap		= 16
-local PL_long_horizon_line_width	= 60
+local PL_long_horizon_line_width	= 70
 
 local PL_pitch_line_half_gap		= 16
 local PL_pitch_line_width			= 25
@@ -100,18 +163,24 @@ for i = counterBegin, counterEnd, 5 do
 	end
 end
 
--- -- Roll Indicator
--- local HUD_RI_origin	= addPlaceholder("HUD_RI_origin", {0, -60}, nil, {{"HUD_RI_Pos"}})
--- addRollIndicator(53, 8, 2, HUD_RI_origin.name)
+-- Roll Indicator
+local HUD_RI_origin	= addPlaceholder("HUD_RI_origin", {0, -60}, nil, {{"HUD_RI_Pos"}})
+HUD_RI_origin.element_params = {"HUD_MODE"}
+HUD_RI_origin.controllers = {{"parameter_compare_with_number", 0, HUD_MODE_ID.LANDING}}
 
--- addStrokeSymbol("HUD_Roll_Indicator_Caret", {"stroke_symbols_HUD", "11-roll-caret"}, "FromSet", {0, 0}, HUD_RI_origin.name, {{"HUD_RI_Roll", -55}})
+local HUD_RI_origin_rot	= addPlaceholder("HUD_RI_origin_rot", {0, 0}, HUD_RI_origin.name)
+HUD_RI_origin_rot.element_params = {"HUD_RI_ROLL"}
+HUD_RI_origin_rot.controllers = {{"rotate_using_parameter", 0, 1}}
+addRollIndicator(90, 8, 2, HUD_RI_origin.name)
+addStrokeSymbol("HUD_Roll_Indicator_Caret", {"stroke_symbols_HUD", "11-roll-caret"}, "FromSet", {0, -94}, HUD_RI_origin_rot.name, {{"HUD_RI_Roll", -55}})
+
 
 --
 local HUD_Indication_bias = addPlaceholder("HUD_Indication_bias", {0, 0}, nil, {{"HUD_Indication_Bias"}})
 
 
 -- Velocity numerics
-local HUD_Vel_num_origin	= addPlaceholder("HUD_Vel_num_origin", {-91, -5.5}, HUD_Indication_bias.name)
+local HUD_Vel_num_origin	= addPlaceholder("HUD_Vel_num_origin", {-93, 0}, HUD_Indication_bias.name)
 HUD_Vel_num_origin.element_params = {"HUD_VAH"}
 HUD_Vel_num_origin.controllers = {{"parameter_compare_with_number",0,0}}
 
@@ -120,6 +189,7 @@ object.element_params = {"HUD_IAS"}
 object.controllers = {{"text_using_parameter",0,0}}
 
 addStrokeSymbol("HUD_Velocity_box", {"stroke_symbols_HUD", "9-velocity-box"}, "FromSet", {-9, 0}, HUD_Vel_num_origin.name)
+addStrokeLine("HUD_VelScaleLine", 10, {13, 0}, 90, HUD_Vel_num_origin.name)
 
 -- Velocity scale
 local velScale50KnotsStep		= 25
@@ -127,7 +197,9 @@ local velScaleLongTickLen		= 5
 local velScaleShortTickLen		= 3
 local Mil_PerOneKnots			= velScale50KnotsStep / 50
 
-local HUD_VelScale_origin = addPlaceholder("HUD_VelScale_origin", {-85.5 + velScaleLongTickLen, -5.5}, HUD_Indication_bias.name, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_VelScaleOrigin"}})
+
+
+local HUD_VelScale_origin = addPlaceholder("HUD_VelScale_origin", {-87.5 + velScaleLongTickLen, 0}, HUD_Indication_bias.name, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_VelScaleOrigin"}})
 HUD_VelScale_origin.element_params = {"HUD_VAH"}
 HUD_VelScale_origin.controllers = {{"parameter_compare_with_number",0,1}}
 
@@ -151,7 +223,7 @@ end
 addStrokeLine("HUD_Window2_VelScaleLine", 10, {velScaleLongTickLen + 4.5, 0}, 90, HUD_VelScale_origin.name)
 
 -- Altitude numerics
-local HUD_Alt_num_origin	= addPlaceholder("HUD_Alt_num_origin", {120, -6}, HUD_Indication_bias.name)
+local HUD_Alt_num_origin	= addPlaceholder("HUD_Alt_num_origin", {115, 0}, HUD_Indication_bias.name)
 HUD_Alt_num_origin.element_params = {"HUD_VAH"}
 HUD_Alt_num_origin.controllers = {{"parameter_compare_with_number",0,0}}
 
@@ -166,6 +238,7 @@ object.element_params = {"HUD_ALT_N"}
 object.controllers = {{"text_using_parameter",0,0}}
 
 addStrokeSymbol("HUD_Altitude_box", {"stroke_symbols_HUD", "10-altitude-box"}, "FromSet", {-15, 0}, HUD_Alt_num_origin.name)
+addStrokeLine("HUD_AltScaleLine", 10, {-41, 0}, -90, HUD_Alt_num_origin.name)
 
 -- Altitude scale
 local altScale500FeetStep		= 25
@@ -173,7 +246,7 @@ local altScaleLongTickLen		= 5
 local altScaleShortTickLen		= 3
 local Mil_Per100Feet			= altScale500FeetStep / 50
 
-local HUD_AltScale_origin = addPlaceholder("HUD_AltScale_origin", {86 - altScaleLongTickLen, -5.5}, HUD_Indication_bias.name, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_AltScaleOrigin"}})
+local HUD_AltScale_origin = addPlaceholder("HUD_AltScale_origin", {86 - altScaleLongTickLen, 0}, HUD_Indication_bias.name, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_AltScaleOrigin"}})
 HUD_AltScale_origin.element_params = {"HUD_VAH"}
 HUD_AltScale_origin.controllers = {{"parameter_compare_with_number",0,1}}
 
@@ -197,7 +270,7 @@ end
 addStrokeLine("HUD_AltScaleLine", 10, {-velScaleLongTickLen - 4.5, 0}, -90, HUD_AltScale_origin.name)
 
 -- Heading numerics
-local HUD_Hdg_origin	= addPlaceholder("HUD_Hdg_origin", {0, HDG_origin_pos}, nil, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_Heading_Bias"}})
+local HUD_Hdg_origin	= addPlaceholder("HUD_Hdg_origin", {0, 95}, nil, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_Heading_Bias"}})
 HUD_Hdg_origin.element_params = {"HUD_VAH"}
 HUD_Hdg_origin.controllers = {{"parameter_compare_with_number",0,0}}
 
@@ -232,3 +305,97 @@ end
 
 -- heading index
 addStrokeLine("HUD_HeadingScaleIndex", 2 * hdgScaleLongTickLen, {0, 2}, 0, HUD_HdgScale_origin.name)
+
+-- Normal Acceleration
+object = addStrokeText("HUD_NormalAccel", "1.0", STROKE_FNT_DFLT_120, "CenterCenter", {-72.5, 65}, nil, nil, {"%1.1f"})
+object.element_params = {"HUD_NORMAL_ACCEL"}
+object.controllers = {{"text_using_parameter",0,0}}
+
+-- Max Acceleration
+object = addStrokeText("HUD_MaxAccel", "1.0", STROKE_FNT_DFLT_120, "RightCenter", {-65, -71}, nil, nil, {"%1.1f"})
+object.element_params = {"HUD_MAX_ACCEL"}
+object.controllers = {{"text_using_parameter",0,0}, {"parameter_in_range", 0, -0.05, 100}}
+
+
+-- Weapon Ready
+object = addStrokeText("HUD_Rdy", "RDY", STROKE_FNT_DFLT_120, "CenterCenter", {-85, 75})
+object.element_params = {"HUD_RDY"}
+object.controllers = {{"parameter_compare_with_number",0,1}}
+
+object = addStrokeText("HUD_Rdy", "S", STROKE_FNT_DFLT_120, "CenterCenter", {-70, 75})
+object.element_params = {"HUD_RDY_S"}
+object.controllers = {{"parameter_compare_with_number",0,1}}
+
+
+-- DOI
+object = addStrokeSymbol("HUD_Doi", {"stroke_symbols_HUD", "hud-doi"}, "FromSet", {94, 45})
+object.element_params = {"HUD_DOI"}
+object.controllers = {{"parameter_compare_with_number",0,1}}
+
+-- Radar Altimeter
+addStrokeText("HUD_Radar_Alt_R", "R", STROKE_FNT_DFLT_120, "CenterCenter", {60, -60})
+addStrokeBox("HUD_Radar_Alt_Box", 27.5, 11, "CenterCenter", {85, -60})
+object = addStrokeText("HUD_Radar_Alt", "5000", STROKE_FNT_DFLT_120, "RightCenter", {97.5, -60}, nil, nil, {"%03.0f"})
+object.element_params = {"HUD_RADAR_ALT"}
+object.controllers = {{"text_using_parameter",0,0}, {"parameter_in_range",0,-0.05,5005}}
+
+object = addStrokeText("HUD_Radar_Alt_XXXX", "XXXX", STROKE_FNT_DFLT_120, "RightCenter", {97.5, -60})
+object.element_params = {"HUD_RADAR_ALT"}
+object.controllers = {{"parameter_compare_with_number",0,-1}}
+
+-- Range indicator
+object = addStrokeText("HUD_Range", "324", STROKE_FNT_DFLT_120, "CenterCenter", {75, -77}, nil, nil, {"%.0f"})
+object.element_params = {"HUD_RANGE"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"parameter_in_range",0,-0.05, 9999}}
+
+-- Time indicator
+object = addStrokeText("HUD_Time", "00:00", STROKE_FNT_DFLT_120, "CenterCenter", {74, -88}, nil, nil, {"%02.0f:","%02.0f"})
+object.element_params = {"HUD_TIME_MIN", "HUD_TIME_SEC"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",1,-0.05, 60}}
+
+
+-- FTY distance indicator
+object = addStrokeText("HUD_FTI_Dist", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"%02.1f>","%02.0f"})
+object.element_params = {"HUD_FTI_DIST", "HUD_FTI_NUM"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0,-0.05, 99.94}}
+
+object = addStrokeText("HUD_FTI_Dist_100", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"%3.0f>","%02.0f"})
+object.element_params = {"HUD_FTI_DIST", "HUD_FTI_NUM"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0, 99.95, 999.5}}
+
+object = addStrokeText("HUD_FTI_Dist_XXX", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"XXX>%02.0f"})
+object.element_params = {"HUD_FTI_DIST", "HUD_FTI_NUM"}
+object.controllers = {{"text_using_parameter", 1, 0}, {"parameter_compare_with_number",0,-1}}
+
+-- VOR
+object = addStrokeText("HUD_VOR", "101V090", STROKE_FNT_DFLT_120, "CenterCenter", {80, -110}, nil, nil, {"%2.1fV","%03.0f"})
+object.element_params = {"HUD_VOR_DIST", "HUD_VOR_MAG"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0,-0.05, 99.94}}
+
+object = addStrokeText("HUD_VOR_100", "101V090", STROKE_FNT_DFLT_120, "CenterCenter", {80, -110}, nil, nil, {"%3.0fV","%03.0f"})
+object.element_params = {"HUD_VOR_DIST", "HUD_VOR_MAG"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0,99.95, 999.5}}
+
+-- MACH
+object = addStrokeText("HUD_Mach", "5000", STROKE_FNT_DFLT_120, "RightCenter", {-65, -60}, nil, nil, {"%01.2f"})
+object.element_params = {"HUD_MACH"}
+object.controllers = {{"text_using_parameter",0,0}, {"parameter_in_range",0,-0.05,2}}
+
+-- Mode
+object = addStrokeText("HUD_Mode", "", STROKE_FNT_DFLT_120, "RightCenter", {-65, -82}, nil, nil, {"%s"})
+object.element_params = {"HUD_MODE_TXT"}
+object.controllers = {{"text_using_parameter",0,0}}
+
+-- AoA
+object = addStrokeText("HUD_AoA", "", STROKE_FNT_DFLT_120, "RightCenter", {-100, -71}, nil, nil, {"%.1f"})
+object.element_params = {"HUD_AOA"}
+object.controllers = {{"text_using_parameter",0,0}, {"parameter_in_range", 0, -9.1, 40.1}}
+
+-- EGIR
+object = addStrokeText("HUD_EGIR_OFF", "OFF", STROKE_FNT_DFLT_120, "RightCenter", {-65, -93})
+object.element_params = {"HUD_EGIR"}
+object.controllers = {{"parameter_compare_with_number", 0, 0}}
+
+object = addStrokeText("HUD_EGIR_ALIGN", "ALIGN", STROKE_FNT_DFLT_120, "RightCenter", {-65, -93})
+object.element_params = {"HUD_EGIR"}
+object.controllers = {{"parameter_compare_with_number", 0, 1}}
