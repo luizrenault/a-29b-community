@@ -32,14 +32,19 @@ dev:listen_command(device_commands.EmerParkBrake)
 dev:listen_command(iCommandPlaneWheelBrakeOn)
 dev:listen_command(iCommandPlaneWheelBrakeOff)
 
+local pbrake_light = get_param_handle("PBRAKE_LIGHT")
+
 function SetCommand(command,value)
     debug_message_to_user("brakes: command "..tostring(command).." = "..tostring(value))
     if command==device_commands.EmerParkBrake then
         if value ==-1 then
             dispatch_action(nil,iCommandPlaneWheelBrakeOff)
+            pbrake_light:set(0)
         else 
             dispatch_action(nil,iCommandPlaneWheelBrakeOn)
+            pbrake_light:set(1)
         end
+
     elseif command == iCommandPlaneWheelBrakeOff then
         dev:performClickableAction(device_commands.EmerParkBrake, -1, true)
     elseif command == iCommandPlaneWheelBrakeOn then

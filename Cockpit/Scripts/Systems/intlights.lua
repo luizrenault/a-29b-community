@@ -1,5 +1,6 @@
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
+dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 
 startup_print("intlights: load")
 
@@ -73,8 +74,6 @@ function SetCommand(command,value)
         elseif value == 1 then 
             nvg=0.3
         end
-elseif command == iCommandEnginesStop then
-        -- dev:performClickableAction(device_commands.EngineStart, 0, true)
     end
 end
 
@@ -82,18 +81,21 @@ local pnlbacklight = get_param_handle("PNL_BACKLIGHT")
 local cslbacklight = get_param_handle("CSL_BACKLIGHT")
 local chartlight = get_param_handle("CHART_LIGHT")
 
-local elec_power_ok = get_param_handle("ELEC_POWER_OK")
-
 function update()
-    local nvggain=nvg*elec_power_ok:get()
-
-    pnlbacklight:set(pnlbacklightvalue*nvggain)
-    cslbacklight:set(cslbacklightvalue*nvggain)
-    chartlight:set(chartlightvalue*nvggain)
-    if nvggain==0.3 then
-        stormlight:set(0)
+    if get_elec_main_bar_ok() then 
+    pnlbacklight:set(pnlbacklightvalue*nvg)
+    cslbacklight:set(cslbacklightvalue*nvg)
+    chartlight:set(chartlightvalue*nvg)
+        if nvg==0.3 then
+            stormlight:set(0)
+        else 
+            stormlight:set(stormlightvalue*nvg)
+        end
     else 
-        stormlight:set(stormlightvalue*nvggain)
+        pnlbacklight:set(0)
+        cslbacklight:set(0)
+        chartlight:set(0)
+        stormlight:set(0)
     end
 end
 

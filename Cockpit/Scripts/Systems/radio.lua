@@ -6,7 +6,7 @@ startup_print("radio: load")
 local dev = GetSelf()
 
 local update_time_step = 0.02 --update will be called 50 times per second
-make_default_activity(update_time_step)
+-- make_default_activity(update_time_step)
 
 local sensor_data = get_base_data()
 
@@ -22,7 +22,7 @@ function post_initialize()
     elseif birth=="GROUND_COLD" then
         -- dev:performClickableAction(device_commands.EnvRecFan, 0, true)
     end
-    startup_print("weapon: postinit end")
+    startup_print("radio: postinit end")
 end
 
 -- dev:listen_command(device_commands.IcePitotSec)

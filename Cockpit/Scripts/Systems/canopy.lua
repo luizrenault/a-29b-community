@@ -5,6 +5,7 @@
 
 dofile(LockOn_Options.common_script_path.."devices_defs.lua")
 dofile(LockOn_Options.script_path.."devices.lua")
+dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
 -- dofile(LockOn_Options.script_path.."Systems/stores_config.lua")
 dofile(LockOn_Options.script_path.."command_defs.lua")
 -- dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
@@ -58,6 +59,7 @@ function SetCommand(command,value)
 end
 
 local prev_canopy_val = -1
+local canopy_warning = 0
 function update()
 	local current_canopy_position = get_aircraft_draw_argument_value(canopy_ext_anim_arg)
     if current_canopy_position > 0.95 then
@@ -77,6 +79,13 @@ function update()
         local canopy_lever_clickable_ref = get_clickable_element_reference("PNT_129")
         canopy_lever_clickable_ref:update() -- ensure the connector moves too
         prev_canopy_val = cockpit_lever
+    end
+    if current_canopy_position > 0 and canopy_warning == 0 then 
+        set_warning(WARNING_ID.CANOPY,1) 
+        canopy_warning = 1
+    elseif current_canopy_position <= 0 and canopy_warning == 1 then 
+        set_warning(WARNING_ID.CANOPY,0) 
+        canopy_warning = 0
     end
 
     stick_vis_param:set(stick_vis_state)

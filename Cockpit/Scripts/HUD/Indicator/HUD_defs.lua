@@ -2,6 +2,8 @@ dofile(LockOn_Options.common_script_path .. "elements_defs.lua")
 dofile(LockOn_Options.script_path .. "materials.lua")
 dofile(LockOn_Options.script_path .."HUD/HUD_ID_defs.lua")
 
+local page_root_name = nil
+
 stringdefs				= {}
 stroke_font			= "font_stroke_HUD"
 stroke_material		= "HUD"
@@ -34,6 +36,7 @@ HUD_IND_COLOR_B       = materials["HUD_IND_BLUE"]
 HUD_IND_COLOR_W       = materials["HUD_IND_WHITE"]
 HUD_IND_COLOR_D       = materials["HUD_IND_DARK"]
 HUD_IND_COLOR_HIDE    = materials["HUD_IND_HIDE"]
+
 
 
 HUD_MAT_DEF       = "hud_mesh_def"
@@ -207,7 +210,6 @@ stringdefs[STROKE_FNT_DFLT_75]			= {fontScaleY_75,  fontScaleX_75,  fontIntercha
 stringdefs[STROKE_FNT_DFLT_120]			= {fontScaleY_120, fontScaleX_120, fontIntercharScale_120, fontInterlineScale_120}
 
 
-
 function AddElementObject(object)
     if not object.name or string.len(object.name) < 1 then
         object.name = create_guid_string()
@@ -326,6 +328,8 @@ function setSymbolCommonProperties(symbol, name, pos, parent, controllers, mater
 
 	if parent ~= nil then
 		symbol.parent_element = parent
+	else 
+		symbol.parent_element = page_root_name
 	end
 
 	if controllers ~= nil then
@@ -333,6 +337,8 @@ function setSymbolCommonProperties(symbol, name, pos, parent, controllers, mater
 			-- symbol.controllers = controllers
 		end
 	end
+	symbol.element_params = {"HUD_BRIGHT"}
+	symbol.controllers = {{"opacity_using_parameter", 0}}
 
 	pos							= pos or {0, 0}
 	symbol.init_pos				= {pos[1], pos[2], pos[3] or 0}
@@ -407,16 +413,6 @@ function addStrokeLine(name, length, pos, rot, parent, controllers, dashed, stro
 	return line
 end
 
--- function addStrokeLineInitFinal(name, init, final, parent, controllers, material)
--- 	local line		= CreateElement "ceSMultiLine"
--- 	setSymbolCommonProperties(line, name, init, parent, controllers, material)
--- 	setStrokeSymbolProperties(line)
--- 	line.vertices	= {{0,0}, {final[1]-init[1], final[2]-init[2]}}
--- 	line.indices	= {0,1}
--- 	Add(line)
--- 	return line
--- end
-
 local function setSymbolAlignment(symbol, align)
 	if align ~= nil then
 		symbol.alignment = align
@@ -447,7 +443,9 @@ function setPlaceholderCommonProperties(placeholder, name, pos, parent, controll
 
 	if parent ~= nil then
 		placeholder.parent_element	= parent
-	end	
+	else
+		placeholder.parent_element	= page_root_name
+	end
 
 	if controllers ~= nil then
 		-- placeholder.controllers		= controllers
@@ -477,7 +475,6 @@ function addRollIndicator(radius, longLine, delta, parent)
 		end
 	end
 	addStrokeCircle("HUD_Roll_Indicator_Arc", radius-longLine, {0,0}, parent, nill, { math.rad(-45), math.rad(-135)})
-	-- (name, radius, pos, parent, controllers, arc, segment, gap, dashed, material)
 end
 
 -- Pitch Ladder (PL) line
@@ -684,3 +681,14 @@ function addStrokeCircle(name, radius, pos, parent, controllers, arc, segment, g
 	Add(circle)
 	return circle
 end
+
+
+function create_page_root()
+    local page_root = addPlaceholder("HUD_PageRoot", {0,0})
+    page_root_name = page_root.name
+	page_root.element_params = {"HUD_ON", "HUD_BRIGHT"}
+	page_root.controllers = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter", 1}}
+    return page_root
+end
+
+

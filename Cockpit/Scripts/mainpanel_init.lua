@@ -48,7 +48,7 @@ HideStick.output                	= {0.0, 1.0}
 StickPitch							= CreateGauge()
 StickPitch.arg_number				= 2
 StickPitch.input					= {-100, 100}
-StickPitch.output					= {-1, 1}
+StickPitch.output					= {1, -1}
 StickPitch.controller				= controllers.base_gauge_StickPitchPosition
 
 StickBank							= CreateGauge()
@@ -150,6 +150,30 @@ Stormlight.arg_number      	= 204
 Stormlight.input           	= {0,1}
 Stormlight.output          	= {0,1}
 Stormlight.parameter_name		= "STORM_LIGHT"
+
+WarningLight	                 = CreateGauge("parameter")
+WarningLight.arg_number      	= 205
+WarningLight.input           	= {0,1}
+WarningLight.output          	= {0,1}
+WarningLight.parameter_name		= "WARNING_LIGHT"
+
+CautionLight	                 = CreateGauge("parameter")
+CautionLight.arg_number      	= 206
+CautionLight.input           	= {0,1}
+CautionLight.output          	= {0,1}
+CautionLight.parameter_name		= "CAUTION_LIGHT"
+
+FireLight	               		= CreateGauge("parameter")
+FireLight.arg_number     	 	= 207
+FireLight.input          	 	= {0,1}
+FireLight.output         	 	= {0,1}
+FireLight.parameter_name		= "FIRE_LIGHT"
+
+PBrakeLight	               		= CreateGauge("parameter")
+PBrakeLight.arg_number     	 	= 208
+PBrakeLight.input          	 	= {0,1}
+PBrakeLight.output         	 	= {0,1}
+PBrakeLight.parameter_name		= "PBRAKE_LIGHT"
 
 
 need_to_be_closed = true -- close lua state after initialization

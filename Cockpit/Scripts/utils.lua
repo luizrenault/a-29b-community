@@ -9,9 +9,9 @@ function basic_dump (o)
 end
 
 
-function dump (name, value, saved, result)
-  seen = seen or {}       -- initial value
-  result = result or ""
+function dump (name, value, seen, result)
+  local seen = seen or {}       -- initial value
+  local result = result or ""
   result=result..name.." = "
   if type(value) ~= "table" then
     result=result..basic_dump(value).."\n"
@@ -34,35 +34,35 @@ function dump (name, value, saved, result)
 end
 
 
-function dump (name, value, saved, result)
-  seen = seen or {}       -- initial value
-  result = result or ""
-  result=result..name.." = "
-  if type(value) ~= "table" then
-    result=result..basic_dump(value).."\n"
-    log.info(result)
-    result = ""
-  elseif type(value) == "table" then
-    if seen[value] then    -- value already saved?
-      result=result.."->"..seen[value].."\n"  -- use its previous name
-      log.info(result)
-      result = ""
-      else
-      seen[value] = name   -- save name for next time
-      result=result.."{}\n"     -- create a new table
-      log.info(result)
-      result = ""
-        for k,v in pairs(value) do      -- save its fields
-        local fieldname = string.format("%s[%s]", name,
-                                        basic_dump(k))
-        if fieldname~="_G[\"seen\"]" then
-          result=dump(fieldname, v, seen, result)
-        end
-      end
-    end
-  end
-  return result
-end
+-- function dump (name, value, saved, result)
+--   seen = seen or {}       -- initial value
+--   result = result or ""
+--   result=result..name.." = "
+--   if type(value) ~= "table" then
+--     result=result..basic_dump(value).."\n"
+--     log.info(result)
+--     result = ""
+--   elseif type(value) == "table" then
+--     if seen[value] then    -- value already saved?
+--       result=result.."->"..seen[value].."\n"  -- use its previous name
+--       log.info(result)
+--       result = ""
+--       else
+--       seen[value] = name   -- save name for next time
+--       result=result.."{}\n"     -- create a new table
+--       log.info(result)
+--       result = ""
+--         for k,v in pairs(value) do      -- save its fields
+--         local fieldname = string.format("%s[%s]", name,
+--                                         basic_dump(k))
+--         if fieldname~="_G[\"seen\"]" then
+--           result=dump(fieldname, v, seen, result)
+--         end
+--       end
+--     end
+--   end
+--   return result
+-- end
 
 -- log.info("=====================================================")
 -- param = list_cockpit_params()

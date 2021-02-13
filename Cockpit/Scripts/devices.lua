@@ -26,3 +26,4 @@ devices["INTERCOM"]			=counter()
 devices["UFCP"]			=counter()
 
 devices["TEST"]             = counter()
+devices["ALARM"]             = counter()

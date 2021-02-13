@@ -1,47 +1,50 @@
--- function basic_dump (o)
--- 	if type(o) == "number" then
--- 	  return tostring(o)
--- 	elseif type(o) == "string" then
--- 	  return string.format("%q", o)
--- 	else -- nil, boolean, function, userdata, thread; assume it can be converted to a string
--- 	  return tostring(o)
--- 	end
--- end
--- function dump (name, value, saved, result)
--- 	seen = seen or {}       -- initial value
--- 	result = result or ""
--- 	result=result..name.." = "
--- 	if type(value) ~= "table" then
--- 	  result=result..basic_dump(value).."\n"
--- 	  log.info(result)
--- 	  result = ""
--- 	elseif type(value) == "table" then
--- 	  if seen[value] then    -- value already saved?
--- 		result=result.."->"..seen[value].."\n"  -- use its previous name
--- 		log.info(result)
--- 		result = ""
--- 		else
--- 		seen[value] = name   -- save name for next time
--- 		result=result.."{}\n"     -- create a new table
--- 		log.info(result)
--- 		result = ""
--- 		  for k,v in pairs(value) do      -- save its fields
--- 		  local fieldname = string.format("%s[%s]", name,
--- 										  basic_dump(k))
--- 		  if fieldname~="_G[\"seen\"]" then
--- 			result=dump(fieldname, v, seen, result)
--- 		  end
--- 		end
--- 	  end
--- 	end
--- 	return result
---   end
+function basic_dump (o)
+	if type(o) == "number" then
+	  return tostring(o)
+	elseif type(o) == "string" then
+	  return string.format("%q", o)
+	else -- nil, boolean, function, userdata, thread; assume it can be converted to a string
+	  return tostring(o)
+	end
+end
+function dump (name, value, saved, result)
+	seen = seen or {}       -- initial value
+	result = result or ""
+	result=result..name.." = "
+	if type(value) ~= "table" then
+	  result=result..basic_dump(value).."\n"
+	  log.info(result)
+	  result = ""
+	elseif type(value) == "table" then
+	  if seen[value] then    -- value already saved?
+		result=result.."->"..seen[value].."\n"  -- use its previous name
+		log.info(result)
+		result = ""
+		else
+		seen[value] = name   -- save name for next time
+		result=result.."{}\n"     -- create a new table
+		log.info(result)
+		result = ""
+		  for k,v in pairs(value) do      -- save its fields
+		  local fieldname = string.format("%s[%s]", name,
+										  basic_dump(k))
+		  if fieldname~="_G[\"seen\"]" then
+			result=dump(fieldname, v, seen, result)
+		  end
+		end
+	  end
+	end
+	return result
+  end
 
 -- dump("_G", _G)
 -- dump("_G", getmetatable(_G))
 
 -- dump("GetSelf", GetSelf())
 -- dump("GetSelf", getmetatable(GetSelf()))
+
+-- dump("controller", ccIndicator)
+-- dump("controller", getmetatable(ccIndicator))
 
 -- dump("DCS", DCS)
 -- dump("DCS", getmetatable(DCS))
@@ -64,6 +67,8 @@ dofile(LockOn_Options.script_path .. "HUD/HUD_ID_defs.lua")
 -- base.isvisible            = true
 -- base.scale=0.5
 -- AddElementObject(base)
+
+create_page_root()
 
 local grid
 grid                      = CreateElement "ceMeshPoly"
@@ -110,21 +115,22 @@ local HUD_BoresightRoot = addStrokeSymbol("HUD_Boresight_Cross", {"stroke_symbol
 
 -- Flight Path Marker - FPM
 local HUD_FPM_origin = addPlaceholder("HUD_FPM_origin", {0, 0}, nil, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_FPM_Pos"}})
-HUD_FPM_origin.element_params = {"HUD_DCLT"}
-HUD_FPM_origin.controllers = {{"parameter_compare_with_number",0,0}}
+HUD_FPM_origin.element_params = {"HUD_DCLT", "HUD_BRIGHT"}
+HUD_FPM_origin.controllers = {{"parameter_compare_with_number",0,0}, {"opacity_using_parameter", 1}}
+
 
 object = addStrokeSymbol("HUD_FPM", {"stroke_symbols_HUD", "2-flightpath-marker"}, "FromSet", {0, 0}, HUD_FPM_origin.name, {{"HUD_FPM_Flash"}})
-object.element_params = {"HUD_FPM_SLIDE", "HUD_FPM_VERT", "HUD_DRIFT_CO"}
-object.controllers = {{"move_left_right_using_parameter", 0, 0.75}, {"move_up_down_using_parameter", 1, 0.75}, {"parameter_compare_with_number",2,0}}
+object.element_params = {"HUD_FPM_SLIDE", "HUD_FPM_VERT", "HUD_DRIFT_CO", "HUD_BRIGHT"}
+object.controllers = {{"move_left_right_using_parameter", 0, 0.75}, {"move_up_down_using_parameter", 1, 0.75}, {"parameter_compare_with_number",2,0}, {"opacity_using_parameter", 3}}
 
 object = addStrokeSymbol("HUD_FPM_CO", {"stroke_symbols_HUD", "2-flightpath-marker-co"}, "FromSet", {0, 0}, HUD_FPM_origin.name, {{"HUD_FPM_Flash"}})
-object.element_params = {"HUD_FPM_VERT", "HUD_DRIFT_CO"}
-object.controllers = {{"move_up_down_using_parameter", 0, 0.75}, {"parameter_compare_with_number",1,1}}
+object.element_params = {"HUD_FPM_VERT", "HUD_DRIFT_CO", "HUD_BRIGHT"}
+object.controllers = {{"move_up_down_using_parameter", 0, 0.75}, {"parameter_compare_with_number",1,1}, {"opacity_using_parameter", 2}}
 
 -- FPM cross
 object = addStrokeSymbol("HUD_FPM_Cross", {"stroke_symbols_HUD", "fpm-cross"}, "FromSet", {0, 0}, "HUD_FPM", {{"HUD_FPM_Cross"}})
-object.element_params = {"HUD_FPM_CROSS"}
-object.controllers = {{"parameter_compare_with_number",0,1}}
+object.element_params = {"HUD_FPM_CROSS", "HUD_BRIGHT"}
+object.controllers = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter", 1}}
 
 -- -- AoA bracket
 -- addStrokeSymbol("HUD_AoA_bracket", {"stroke_symbols_HUD", "aoa-bracket"}, "FromSet", {0, 0}, HUD_FPM_origin.name, {{"HUD_AoA_bracket"}})
@@ -165,8 +171,8 @@ end
 
 -- Roll Indicator
 local HUD_RI_origin	= addPlaceholder("HUD_RI_origin", {0, -60}, nil, {{"HUD_RI_Pos"}})
-HUD_RI_origin.element_params = {"HUD_MODE"}
-HUD_RI_origin.controllers = {{"parameter_compare_with_number", 0, HUD_MODE_ID.LANDING}}
+HUD_RI_origin.element_params = {"HUD_MODE", "HUD_BRIGHT"}
+HUD_RI_origin.controllers = {{"parameter_compare_with_number", 0, HUD_MODE_ID.LANDING}, {"opacity_using_parameter", 1}}
 
 local HUD_RI_origin_rot	= addPlaceholder("HUD_RI_origin_rot", {0, 0}, HUD_RI_origin.name)
 HUD_RI_origin_rot.element_params = {"HUD_RI_ROLL"}
@@ -185,8 +191,8 @@ HUD_Vel_num_origin.element_params = {"HUD_VAH"}
 HUD_Vel_num_origin.controllers = {{"parameter_compare_with_number",0,0}}
 
 object = addStrokeText("HUD_Velocity_num", "520", STROKE_FNT_DFLT_100_NARROW, "RightCenter", {0, 0}, HUD_Vel_num_origin.name, {{"HUD_Velocity_Num"}}, {"%3.0f"})
-object.element_params = {"HUD_IAS"}
-object.controllers = {{"text_using_parameter",0,0}}
+object.element_params = {"HUD_IAS", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter",0,0}, {"opacity_using_parameter", 1}}
 
 addStrokeSymbol("HUD_Velocity_box", {"stroke_symbols_HUD", "9-velocity-box"}, "FromSet", {-9, 0}, HUD_Vel_num_origin.name)
 addStrokeLine("HUD_VelScaleLine", 10, {13, 0}, 90, HUD_Vel_num_origin.name)
@@ -200,8 +206,8 @@ local Mil_PerOneKnots			= velScale50KnotsStep / 50
 
 
 local HUD_VelScale_origin = addPlaceholder("HUD_VelScale_origin", {-87.5 + velScaleLongTickLen, 0}, HUD_Indication_bias.name, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_VelScaleOrigin"}})
-HUD_VelScale_origin.element_params = {"HUD_VAH"}
-HUD_VelScale_origin.controllers = {{"parameter_compare_with_number",0,1}}
+HUD_VelScale_origin.element_params = {"HUD_VAH", "HUD_BRIGHT"}
+HUD_VelScale_origin.controllers = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter", 1}}
 
 
 local HUD_VelScale_originLong  = addPlaceholder("HUD_VelScale_originLong", {0, 0}, HUD_VelScale_origin.name, {{"HUD_VelScaleVerPos", 0, Mil_PerOneKnots}})
@@ -224,18 +230,18 @@ addStrokeLine("HUD_Window2_VelScaleLine", 10, {velScaleLongTickLen + 4.5, 0}, 90
 
 -- Altitude numerics
 local HUD_Alt_num_origin	= addPlaceholder("HUD_Alt_num_origin", {115, 0}, HUD_Indication_bias.name)
-HUD_Alt_num_origin.element_params = {"HUD_VAH"}
-HUD_Alt_num_origin.controllers = {{"parameter_compare_with_number",0,0}}
+HUD_Alt_num_origin.element_params = {"HUD_VAH", "HUD_BRIGHT"}
+HUD_Alt_num_origin.controllers = {{"parameter_compare_with_number",0,0}, {"opacity_using_parameter", 1}}
 
 object = addStrokeText("HUD_Altitude_num_k", "10", STROKE_FNT_DFLT_100_NARROW, "RightCenter", {-20, 0}, HUD_Alt_num_origin.name, {{"HUD_Altitude_Num", 0}}, {"%1.0f"})
-object.element_params = {"HUD_ALT_K"}
-object.controllers = {{"text_using_parameter",0,0}}
+object.element_params = {"HUD_ALT_K", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter",0,0}, {"opacity_using_parameter", 1}}
 
 addStrokeText("HUD_Altitude_num_comma", ".", STROKE_FNT_DFLT_100_NARROW, "CenterCenter", {-19.5, 0}, HUD_Alt_num_origin.name)
 
 object = addStrokeText("HUD_Altitude_num", "20", STROKE_FNT_DFLT_100_NARROW, "RightCenter", {-3, 0}, HUD_Alt_num_origin.name, {{"HUD_Altitude_Num", 1}}, {"%03.0f"})
-object.element_params = {"HUD_ALT_N"}
-object.controllers = {{"text_using_parameter",0,0}}
+object.element_params = {"HUD_ALT_N", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter",0,0}, {"opacity_using_parameter", 1}}
 
 addStrokeSymbol("HUD_Altitude_box", {"stroke_symbols_HUD", "10-altitude-box"}, "FromSet", {-15, 0}, HUD_Alt_num_origin.name)
 addStrokeLine("HUD_AltScaleLine", 10, {-41, 0}, -90, HUD_Alt_num_origin.name)
@@ -271,12 +277,12 @@ addStrokeLine("HUD_AltScaleLine", 10, {-velScaleLongTickLen - 4.5, 0}, -90, HUD_
 
 -- Heading numerics
 local HUD_Hdg_origin	= addPlaceholder("HUD_Hdg_origin", {0, 95}, nil, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_Heading_Bias"}})
-HUD_Hdg_origin.element_params = {"HUD_VAH"}
-HUD_Hdg_origin.controllers = {{"parameter_compare_with_number",0,0}}
+HUD_Hdg_origin.element_params = {"HUD_VAH", "HUD_BRIGHT"}
+HUD_Hdg_origin.controllers = {{"parameter_compare_with_number",0,0}, {"opacity_using_parameter", 1}}
 
 object = addStrokeText("HUD_Heading_num", "360", STROKE_FNT_DFLT_100_NARROW, "CenterCenter", {0, -12.5}, HUD_Hdg_origin.name, {{"HUD_Heading_Num"}}, {"%03.0f"})
-object.element_params = {"HUD_HDG"}
-object.controllers = {{"text_using_parameter",0,0}}
+object.element_params = {"HUD_HDG", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter",0,0}, {"opacity_using_parameter", 1}}
 
 addStrokeBox("HUD_Heading_box", 17, 11, "CenterCenter", {0, -12.5}, HUD_Hdg_origin.name)
 
@@ -288,8 +294,8 @@ local hdgScaleTextShiftY		= 2
 local Mil_PerOneDegree			= hdgScaleTenDegreesStep / 10
 
 local HUD_HdgScale_origin = addPlaceholder("HUD_HdgScale_origin", {0, 0}, HUD_Hdg_origin.name, {{"HUD_HdgScaleOrigin"}})		--  -53
-HUD_HdgScale_origin.element_params = {"HUD_VAH"}
-HUD_HdgScale_origin.controllers = {{"parameter_compare_with_number",0,1}}
+HUD_HdgScale_origin.element_params = {"HUD_VAH", "HUD_BRIGHT"}
+HUD_HdgScale_origin.controllers = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter", 1}}
 
 local HUD_HdgScale_originLong  = addPlaceholder("HUD_HdgScale_originLong", {0, 0}, HUD_HdgScale_origin.name, {{"HUD_HdgScaleHorPos", 0, Mil_PerOneDegree}})
 local HUD_HdgScale_originShort = addPlaceholder("HUD_HdgScale_originShort", {0, 0}, HUD_HdgScale_origin.name, {{"HUD_HdgScaleHorPos", -5, Mil_PerOneDegree}})
@@ -298,9 +304,7 @@ for i = 1, 3 do
 	local posX = hdgScaleTenDegreesStep * (i - 2) - hdgScaleTenDegreesStep / 2
 	addStrokeLine("HUD_HeadingTickLong_"..i, -hdgScaleLongTickLen, {posX, 0}, 0, HUD_HdgScale_originLong.name, {{"HUD_HdgScaleHide", (i - 2), 0}})
 	addStrokeLine("HUD_HeadingTickShort_"..i, -hdgScaleLongTickLen * 0.5, {posX, 0}, 0, HUD_HdgScale_originShort.name, {{"HUD_HdgScaleHide", (i - 2), 1}})
-
-	addStrokeText("HUD_HeadingNumerics_"..i, tostring(i), STROKE_FNT_DFLT_100_NARROW, "CenterTop", {posX, - (hdgScaleLongTickLen + hdgScaleTextShiftY)},
-		HUD_HdgScale_originLong.name, {{"HUD_HeadingScaleText", (i - 2)}})
+	addStrokeText("HUD_HeadingNumerics_"..i, tostring(i), STROKE_FNT_DFLT_100_NARROW, "CenterTop", {posX, - (hdgScaleLongTickLen + hdgScaleTextShiftY)}, HUD_HdgScale_originLong.name, {{"HUD_HeadingScaleText", (i - 2)}})
 end
 
 -- heading index
@@ -308,94 +312,94 @@ addStrokeLine("HUD_HeadingScaleIndex", 2 * hdgScaleLongTickLen, {0, 2}, 0, HUD_H
 
 -- Normal Acceleration
 object = addStrokeText("HUD_NormalAccel", "1.0", STROKE_FNT_DFLT_120, "CenterCenter", {-72.5, 65}, nil, nil, {"%1.1f"})
-object.element_params = {"HUD_NORMAL_ACCEL"}
-object.controllers = {{"text_using_parameter",0,0}}
+object.element_params = {"HUD_NORMAL_ACCEL", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter",0,0}, {"opacity_using_parameter", 1}}
 
 -- Max Acceleration
 object = addStrokeText("HUD_MaxAccel", "1.0", STROKE_FNT_DFLT_120, "RightCenter", {-65, -71}, nil, nil, {"%1.1f"})
-object.element_params = {"HUD_MAX_ACCEL"}
-object.controllers = {{"text_using_parameter",0,0}, {"parameter_in_range", 0, -0.05, 100}}
+object.element_params = {"HUD_MAX_ACCEL", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter",0,0}, {"parameter_in_range", 0, -0.05, 100}, {"opacity_using_parameter", 1}}
 
 
 -- Weapon Ready
 object = addStrokeText("HUD_Rdy", "RDY", STROKE_FNT_DFLT_120, "CenterCenter", {-85, 75})
-object.element_params = {"HUD_RDY"}
-object.controllers = {{"parameter_compare_with_number",0,1}}
+object.element_params = {"HUD_RDY", "HUD_BRIGHT"}
+object.controllers = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter", 1}}
 
 object = addStrokeText("HUD_Rdy", "S", STROKE_FNT_DFLT_120, "CenterCenter", {-70, 75})
-object.element_params = {"HUD_RDY_S"}
-object.controllers = {{"parameter_compare_with_number",0,1}}
+object.element_params = {"HUD_RDY_S", "HUD_BRIGHT"}
+object.controllers = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter", 1}}
 
 
 -- DOI
 object = addStrokeSymbol("HUD_Doi", {"stroke_symbols_HUD", "hud-doi"}, "FromSet", {94, 45})
-object.element_params = {"HUD_DOI"}
-object.controllers = {{"parameter_compare_with_number",0,1}}
+object.element_params = {"HUD_DOI", "HUD_BRIGHT"}
+object.controllers = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter", 1}}
 
 -- Radar Altimeter
 addStrokeText("HUD_Radar_Alt_R", "R", STROKE_FNT_DFLT_120, "CenterCenter", {60, -60})
 addStrokeBox("HUD_Radar_Alt_Box", 27.5, 11, "CenterCenter", {85, -60})
 object = addStrokeText("HUD_Radar_Alt", "5000", STROKE_FNT_DFLT_120, "RightCenter", {97.5, -60}, nil, nil, {"%03.0f"})
-object.element_params = {"HUD_RADAR_ALT"}
-object.controllers = {{"text_using_parameter",0,0}, {"parameter_in_range",0,-0.05,5005}}
+object.element_params = {"HUD_RADAR_ALT", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter",0,0}, {"parameter_in_range",0,-0.05,5005}, {"opacity_using_parameter", 1}}
 
 object = addStrokeText("HUD_Radar_Alt_XXXX", "XXXX", STROKE_FNT_DFLT_120, "RightCenter", {97.5, -60})
-object.element_params = {"HUD_RADAR_ALT"}
-object.controllers = {{"parameter_compare_with_number",0,-1}}
+object.element_params = {"HUD_RADAR_ALT", "HUD_BRIGHT"}
+object.controllers = {{"parameter_compare_with_number",0,-1}, {"opacity_using_parameter", 1}}
 
 -- Range indicator
 object = addStrokeText("HUD_Range", "324", STROKE_FNT_DFLT_120, "CenterCenter", {75, -77}, nil, nil, {"%.0f"})
-object.element_params = {"HUD_RANGE"}
-object.controllers = {{"text_using_parameter", 0, 0}, {"parameter_in_range",0,-0.05, 9999}}
+object.element_params = {"HUD_RANGE", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"parameter_in_range",0,-0.05, 9999}, {"opacity_using_parameter", 1}}
 
 -- Time indicator
 object = addStrokeText("HUD_Time", "00:00", STROKE_FNT_DFLT_120, "CenterCenter", {74, -88}, nil, nil, {"%02.0f:","%02.0f"})
-object.element_params = {"HUD_TIME_MIN", "HUD_TIME_SEC"}
-object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",1,-0.05, 60}}
+object.element_params = {"HUD_TIME_MIN", "HUD_TIME_SEC", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",1,-0.05, 60}, {"opacity_using_parameter", 2}}
 
 
 -- FTY distance indicator
 object = addStrokeText("HUD_FTI_Dist", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"%02.1f>","%02.0f"})
-object.element_params = {"HUD_FTI_DIST", "HUD_FTI_NUM"}
-object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0,-0.05, 99.94}}
+object.element_params = {"HUD_FTI_DIST", "HUD_FTI_NUM", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0,-0.05, 99.94}, {"opacity_using_parameter", 2}}
 
 object = addStrokeText("HUD_FTI_Dist_100", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"%3.0f>","%02.0f"})
-object.element_params = {"HUD_FTI_DIST", "HUD_FTI_NUM"}
-object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0, 99.95, 999.5}}
+object.element_params = {"HUD_FTI_DIST", "HUD_FTI_NUM", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0, 99.95, 999.5}, {"opacity_using_parameter", 2}}
 
 object = addStrokeText("HUD_FTI_Dist_XXX", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"XXX>%02.0f"})
-object.element_params = {"HUD_FTI_DIST", "HUD_FTI_NUM"}
-object.controllers = {{"text_using_parameter", 1, 0}, {"parameter_compare_with_number",0,-1}}
+object.element_params = {"HUD_FTI_DIST", "HUD_FTI_NUM", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter", 1, 0}, {"parameter_compare_with_number",0,-1}, {"opacity_using_parameter", 2}}
 
 -- VOR
 object = addStrokeText("HUD_VOR", "101V090", STROKE_FNT_DFLT_120, "CenterCenter", {80, -110}, nil, nil, {"%2.1fV","%03.0f"})
-object.element_params = {"HUD_VOR_DIST", "HUD_VOR_MAG"}
-object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0,-0.05, 99.94}}
+object.element_params = {"HUD_VOR_DIST", "HUD_VOR_MAG", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0,-0.05, 99.94}, {"opacity_using_parameter", 2}}
 
 object = addStrokeText("HUD_VOR_100", "101V090", STROKE_FNT_DFLT_120, "CenterCenter", {80, -110}, nil, nil, {"%3.0fV","%03.0f"})
-object.element_params = {"HUD_VOR_DIST", "HUD_VOR_MAG"}
-object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0,99.95, 999.5}}
+object.element_params = {"HUD_VOR_DIST", "HUD_VOR_MAG", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0,99.95, 999.5}, {"opacity_using_parameter", 2}}
 
 -- MACH
 object = addStrokeText("HUD_Mach", "5000", STROKE_FNT_DFLT_120, "RightCenter", {-65, -60}, nil, nil, {"%01.2f"})
-object.element_params = {"HUD_MACH"}
-object.controllers = {{"text_using_parameter",0,0}, {"parameter_in_range",0,-0.05,2}}
+object.element_params = {"HUD_MACH", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter",0,0}, {"parameter_in_range",0,-0.05,2}, {"opacity_using_parameter", 1}}
 
 -- Mode
 object = addStrokeText("HUD_Mode", "", STROKE_FNT_DFLT_120, "RightCenter", {-65, -82}, nil, nil, {"%s"})
-object.element_params = {"HUD_MODE_TXT"}
-object.controllers = {{"text_using_parameter",0,0}}
+object.element_params = {"HUD_MODE_TXT", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter",0,0}, {"opacity_using_parameter", 1}}
 
 -- AoA
 object = addStrokeText("HUD_AoA", "", STROKE_FNT_DFLT_120, "RightCenter", {-100, -71}, nil, nil, {"%.1f"})
-object.element_params = {"HUD_AOA"}
-object.controllers = {{"text_using_parameter",0,0}, {"parameter_in_range", 0, -9.1, 40.1}}
+object.element_params = {"HUD_AOA", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter",0,0}, {"parameter_in_range", 0, -9.1, 40.1}, {"opacity_using_parameter", 1}}
 
 -- EGIR
 object = addStrokeText("HUD_EGIR_OFF", "OFF", STROKE_FNT_DFLT_120, "RightCenter", {-65, -93})
-object.element_params = {"HUD_EGIR"}
-object.controllers = {{"parameter_compare_with_number", 0, 0}}
+object.element_params = {"HUD_EGIR", "HUD_BRIGHT"}
+object.controllers = {{"parameter_compare_with_number", 0, 0}, {"opacity_using_parameter", 1}}
 
 object = addStrokeText("HUD_EGIR_ALIGN", "ALIGN", STROKE_FNT_DFLT_120, "RightCenter", {-65, -93})
-object.element_params = {"HUD_EGIR"}
-object.controllers = {{"parameter_compare_with_number", 0, 1}}
+object.element_params = {"HUD_EGIR", "HUD_BRIGHT"}
+object.controllers = {{"parameter_compare_with_number", 0, 1}, {"opacity_using_parameter", 1}}

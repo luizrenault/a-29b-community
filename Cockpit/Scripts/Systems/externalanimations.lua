@@ -11,9 +11,6 @@ make_default_activity(update_time_step) -- enables call to update
 
 local sensor_data = get_base_data()
 
-function post_initialize()
-end
-
 local BFI_ROLL_param = get_param_handle("BFI_ROLL")
 local BFI_PITCH_param = get_param_handle("BFI_PITCH")
 local IAS_param = get_param_handle("IAS")

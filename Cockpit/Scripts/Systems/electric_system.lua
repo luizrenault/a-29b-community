@@ -1,7 +1,9 @@
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
+dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
+dofile(LockOn_Options.script_path.."Systems/engine_api.lua")
+dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
 
---dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 --dofile(LockOn_Options.script_path.."utils.lua")
 
 -- 50%ng GCU abre o CPM (contactor de partida do motor)
@@ -169,18 +171,45 @@ local bar_avi_mst_emer_dc_res = 0
 -- controls
 local ctl_sw_ext_pwr_on = false
 
-
-local elec_power_ok = get_param_handle("ELEC_POWER_OK")
-local elec_avionics_ok = get_param_handle("ELEC_AVIONICS_OK")
+local battery_caution = 0
+local gen_caution = 0
 
 function update()
-    if (get_cockpit_draw_argument_value(961) == 0) or --Battery On
-    ((get_cockpit_draw_argument_value(962) == 1) and (sensor_data.getEngineLeftRPM()>=50))  then -- Generator On and Engine On
-        elec_power_ok:set(1)
-        elec_avionics_ok:set(get_cockpit_draw_argument_value(843))
+    if get_batt_on() or
+    (get_generator_on() and get_engine_on())  then -- Generator On and Engine On
+        elec_main_bar_ok:set(1)
+        if elec_emergency_ok:get() == 0 then set_caution(CAUTION_ID.EMER_BUS,0) end
+        elec_emergency_ok:set(1)
+        elec_emergency_reserve_ok:set(1)
+
+        elec_avionics_ok:set(get_avionics_on() and get_elec_main_bar_ok() and 1 or 0)
+        elec_avionics_emergency_ok:set(get_avionics_on() and get_elec_emergency_ok() and 1 or 0)
     else
-        elec_power_ok:set(0)
+        elec_main_bar_ok:set(0)
         elec_avionics_ok:set(0)
+        elec_avionics_emergency_ok:set(0)
+        if elec_emergency_ok:get() == 1 then set_caution(CAUTION_ID.EMER_BUS,1) end
+        elec_emergency_ok:set(0)
+        if sensor_data.getWOW_LeftMainLandingGear() > 0 then  elec_emergency_reserve_ok:set(0) end
+    end
+    if sensor_data.getWOW_LeftMainLandingGear == 0 then
+        elec_emergency_reserve_ok:set(1)
+    end
+
+    if not get_batt_on() and battery_caution == 0 then
+        set_caution(CAUTION_ID.BATTERY, 1)
+        battery_caution = 1
+    elseif get_batt_on() and battery_caution == 1 then
+        set_caution(CAUTION_ID.BATTERY, 0)
+        battery_caution = 0
+    end
+
+    if not (get_generator_on() and get_engine_on()) and gen_caution == 0 then
+        set_caution(CAUTION_ID.GEN, 1)
+        gen_caution = 1
+    elseif (get_generator_on() and get_engine_on()) and gen_caution == 1 then
+        set_caution(CAUTION_ID.GEN, 0)
+        gen_caution = 0
     end
 
     -- update_electrical()
@@ -272,9 +301,17 @@ function SetCommand(command,value)
             electric_system:AC_Generator_1_on(false)
         end
     elseif command == Keys.PowerGeneratorLeft then
-        electric_system:AC_Generator_1_on(value > 0)
+        if value==1 then
+            electric_system:AC_Generator_1_on(true)
+        else
+            electric_system:AC_Generator_1_on(false)
+        end
     elseif command == Keys.BatteryPower then
-        electric_system:DC_Battery_on(value > 0)
+        if value==0 then
+            dev:DC_Battery_on(true)
+        elseif value == -1 then 
+            dev:DC_Battery_on(false)
+        end
     end
 end
 

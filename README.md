@@ -8,6 +8,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Version 0.0.5a - 13 February 2021
+
+### Added
+- Warning, Caution, Fire and Parking Brakes lights
+- Warning, Caution and Advice messages on EICAS.
+- Alarm API for warning, caution and advice status update.
+- HUD brightness ajdust knob working.
+- Windshield Deice working
+
+### Changed
+- Electric system API better implemented.
+- Default texture.
+
+### Fixed
+- Some night lights were incorrectly displayed.
+- Pitot Pri and Sec heat switches electric behavior.
+
 ## Version 0.0.4a - 10 February 2021
 
 ### Added

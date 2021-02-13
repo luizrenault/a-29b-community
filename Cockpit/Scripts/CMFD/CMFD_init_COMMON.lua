@@ -103,6 +103,7 @@ mat_tbl = {
 -- MFCD Colors
 brightness_sensitive_materials = mat_tbl
 opacity_sensitive_materials    = mat_tbl
+
 color_sensitive_materials      = {
     "cmfd_tex_ind1",
     "cmfd_tex_ind1_g",

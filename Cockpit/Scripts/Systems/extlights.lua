@@ -1,5 +1,6 @@
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
+dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 
 startup_print("extlights: load")
 
@@ -89,20 +90,22 @@ function SetCommand(command,value)
     end
 end
 
-local elec_power_ok = get_param_handle("ELEC_POWER_OK")
+
 
 function update()
-    local electric_power = elec_power_ok:get()
-
-    set_aircraft_draw_argument_value(802, beaconlight * electric_power) -- beacon light
-    set_aircraft_draw_argument_value(83, formationlight * electric_power) -- formation light
-    set_aircraft_draw_argument_value(49, navlight * electric_power) -- nav light
-    
-    if searchlight==1 or landlight == 1 or taxilight == 1 or (taxilight == 0 and sensor_data:getWOW_LeftMainLandingGear() >0) then
-        set_aircraft_draw_argument_value(51, 1 * electric_power) -- taxi light
+    if get_elec_main_bar_ok() then 
+        set_aircraft_draw_argument_value(802, beaconlight) -- beacon light
+        set_aircraft_draw_argument_value(83, formationlight) -- formation light
+        set_aircraft_draw_argument_value(49, navlight) -- nav light
+        if searchlight==1 or landlight == 1 or taxilight == 1 or (taxilight == 0 and sensor_data:getWOW_LeftMainLandingGear() >0) then
+            set_aircraft_draw_argument_value(51, 1) -- taxi light
+        end
     else 
+        set_aircraft_draw_argument_value(802, 0) -- beacon light
+        set_aircraft_draw_argument_value(83, 0) -- formation light
+        set_aircraft_draw_argument_value(49, 0) -- nav light
         set_aircraft_draw_argument_value(51, 0) -- taxi light
-    end
+    end        
 end
 
 

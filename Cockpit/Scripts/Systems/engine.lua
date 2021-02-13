@@ -1,7 +1,7 @@
--- - SE A NP ≥ 106% POR MAIS DE 3 SEGUNDOS NO MODO AUTOMÁTICO, A PMU REVERTE PARA O MODO MANUAL.
 
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
+dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
 
 startup_print("engine: load")
 
@@ -60,6 +60,7 @@ function SetCommand(command,value)
     elseif command == device_commands.FuelHydBleed and value == 1 then
         engine_stop()
     elseif command == device_commands.EngineIgnition and value == -1 then 
+    elseif command == device_commands.EngineInnSep then set_advice(ADVICE_ID.INERT_SEP,value)
     end
 end
 
@@ -98,3 +99,4 @@ need_to_be_closed = false -- close lua state after initialization
 -- iCommandLeftEngineStop
 -- iCommandRightEngineStart
 -- iCommandRightEngineStop
+-- - SE A NP ≥ 106% POR MAIS DE 3 SEGUNDOS NO MODO AUTOMÁTICO, A PMU REVERTE PARA O MODO MANUAL.

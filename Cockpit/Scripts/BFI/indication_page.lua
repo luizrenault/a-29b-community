@@ -109,8 +109,8 @@ BFI_origin.level			= DISPLAY_DEFAULT_LEVEL
 BFI_origin.isvisible      	= false -- IMPORTANT: do not show this MeshPoly, used as mask poly
 BFI_origin.vertices 		= {{-GetHalfWidth(), GetHalfHeight()}, { GetHalfWidth(), GetHalfHeight()}, { GetHalfWidth(),-GetHalfHeight()}, {-GetHalfWidth(),-GetHalfHeight()}}
 BFI_origin.indices			= default_box_indices	
-BFI_origin.element_params  = {"ELEC_POWER_OK", "CSL_BACKLIGHT"} 
-BFI_origin.controllers 	 = {{"parameter_in_range",0,0.95,1.05}, {"opacity_using_parameter",1},}
+BFI_origin.element_params  = {"ELEC_EMERGENCY_RESERVE_OK", "CSL_BACKLIGHT"} 
+BFI_origin.controllers 	 = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter",1},}
 Add(BFI_origin)
 
 

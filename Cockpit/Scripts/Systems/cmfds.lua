@@ -1,54 +1,9 @@
-function basic_dump (o)
-    if type(o) == "number" then
-      return tostring(o)
-    elseif type(o) == "string" then
-      return string.format("%q", o)
-    else -- nil, boolean, function, userdata, thread; assume it can be converted to a string
-      return tostring(o)
-    end
-  end
-  
-  
-  function dump (name, value, saved, result)
-    seen = seen or {}       -- initial value
-    result = result or ""
-    result=result..name.." = "
-    if type(value) ~= "table" then
-      result=result..basic_dump(value).."\n"
-      log.info(result)
-      result = ""
-    elseif type(value) == "table" then
-      if seen[value] then    -- value already saved?
-        result=result.."->"..seen[value].."\n"  -- use its previous name
-      else
-        seen[value] = name   -- save name for next time
-        result=result.."{}\n"     -- create a new table
-        for k,v in pairs(value) do      -- save its fields
-          local fieldname = string.format("%s[%s]", name,
-                                          basic_dump(k))
-          if fieldname~="_G[\"seen\"]" then
-            result=dump(fieldname, v, seen, result)
-          end
-        end
-      end
-    end
-    return result
-  end
-
- log.info("=====================================================")
--- param = list_cockpit_params()
--- dump("_G", _G)
--- dump("_G", getmetatable(_G))
-
--- dump("GetSelf", GetSelf())
--- dump("GetSelf", getmetatable(GetSelf()))
-
--- print_message_to_user("Page: " .. check_page())
-
-
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."CMFD/CMFD_pageID_defs.lua")
+dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
+dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
+
 
 startup_print("cmfd_right: load")
 
@@ -196,6 +151,9 @@ local torque_tempo = -1
 local np_tempo = -1
 local oat_base = 25
 
+local engine_limits_warning = 0
+local fuel_imbalance_caution = 0
+
 function update()
     update_cmfd_on()
 
@@ -278,11 +236,21 @@ function update()
 
     -- cor do ponteiro e valor digital da pressão de óleo
     -- TODO: - Se os dados não estiverem disponíveis, a janela apresenta “XXX”.
-    if oil_press < 40 then oil_press_cor = 2
-    elseif oil_press < 90 then oil_press_cor = 1
-    elseif oil_press < 121 then oil_press_cor = 0
-    elseif oil_press < 130 then oil_press_cor = 1
-    else oil_press_cor = 2
+    if oil_press < 40 then 
+        if oil_press_cor ~= 2 then set_warning(WARNING_ID.OIL_PRESS, 1) end
+        oil_press_cor = 2
+    elseif oil_press < 90 then 
+        if oil_press_cor ~= 1 then set_warning(WARNING_ID.OIL_PRESS, 0) end
+        oil_press_cor = 1
+    elseif oil_press < 121 then 
+        if oil_press_cor ~= 0 then set_warning(WARNING_ID.OIL_PRESS, 0) end
+        oil_press_cor = 0
+    elseif oil_press < 130 then 
+        if oil_press_cor ~= 1 then set_warning(WARNING_ID.OIL_PRESS, 0) end
+        oil_press_cor = 1
+    else 
+        if oil_press_cor ~= 2 then set_warning(WARNING_ID.OIL_PRESS, 1) end
+        oil_press_cor = 2
     end
 
     ------------------- temperatura do óleo
@@ -293,11 +261,21 @@ function update()
 
     -- cor do ponteiro e valor digital da temperatura do óleo
     -- TODO: - Se os dados não estiverem disponíveis, a janela apresenta “XXX”.
-    if oil_temp < -40 then oil_temp_cor = 2
-    elseif oil_temp < 10 then oil_temp_cor = 1
-    elseif oil_temp < 106 then oil_temp_cor = 0
-    elseif oil_temp < 110 then oil_temp_cor = 1
-    else oil_temp_cor = 2
+    if oil_temp < -40 then 
+        if oil_temp_cor ~= 2 then set_warning(WARNING_ID.OIL_TEMP, 1) end
+        oil_temp_cor = 2
+    elseif oil_temp < 10 then 
+        if oil_temp_cor ~= 1 then set_warning(WARNING_ID.OIL_TEMP, 0) end
+        oil_temp_cor = 1
+    elseif oil_temp < 106 then 
+        if oil_temp_cor ~= 0 then set_warning(WARNING_ID.OIL_TEMP, 0) end
+        oil_temp_cor = 0
+    elseif oil_temp < 110 then 
+        if oil_temp_cor ~= 1 then set_warning(WARNING_ID.OIL_TEMP, 0) end
+        oil_temp_cor = 1
+    else 
+        if oil_temp_cor ~= 2 then set_warning(WARNING_ID.OIL_TEMP, 1) end
+        oil_temp_cor = 2
     end
     
     ------------------- rotação da hélice %
@@ -367,9 +345,15 @@ function update()
     hyd = round_to(hyd, 100)
     -- cor do valor digital da da pressão hidráulica
     -- TODO: - Se os dados não estiverem disponíveis, a janela apresenta “XXX”.
-    if hyd < 2700 then hyd_cor = 1
-    elseif hyd < 3300 then hyd_cor = 0
-    else hyd_cor = 1
+    if hyd < 2700 then 
+        if hyd_cor ~=1 then set_caution(CAUTION_ID.HYD_RESS,1) end 
+        hyd_cor = 1
+    elseif hyd < 3300 then 
+        if hyd_cor ~=0 then set_caution(CAUTION_ID.HYD_RESS,0) end 
+        hyd_cor = 0
+    else 
+        if hyd_cor ~=1 then set_caution(CAUTION_ID.HYD_RESS,1) end 
+        hyd_cor = 1
     end
 
     ------------------- indicador digital de pressão cabine
@@ -379,9 +363,18 @@ function update()
     cabin_press = round_to(cabin_press, 500)
     -- cor do valor digital da da pressão cabine
     local cabin_press_cor=0
-    if cabin_press < 16000 then cabin_press_cor = 0
-    elseif cabin_press < 25000 then cabin_press_cor = 1
-    else cabin_press_cor = 2
+    if cabin_press < 16000 then 
+        if cabin_press_cor == 1 then set_caution(CAUTION_ID.CAB_ALT, 0) end
+        if cabin_press_cor == 2 then set_warning(WARNING_ID.CAB_ALT, 0) end
+        cabin_press_cor = 0
+    elseif cabin_press < 25000 then 
+        if cabin_press_cor == 2 then set_warning(WARNING_ID.CAB_ALT, 0) end
+        if cabin_press_cor ~= 1 then set_caution(CAUTION_ID.CAB_ALT, 1) end
+        cabin_press_cor = 1
+    else 
+        if cabin_press_cor == 1 then set_caution(CAUTION_ID.CAB_ALT, 0) end
+        if cabin_press_cor ~= 2 then set_warning(WARNING_ID.CAB_ALT, 1) end
+        cabin_press_cor = 2
     end
 
     ------------------- indicador digital de bateria
@@ -403,8 +396,13 @@ function update()
     bat_temp = round_to(bat_temp,1)
     if bat_temp < -30 then bat_temp = -30 end
     if bat_temp > 100 then bat_temp = 100 end
-    if bat_temp <= 76 then bat_temp_cor = 0 
-    else bat_temp_cor = 2 end
+    if bat_temp <= 76 then 
+        if bat_temp_cor == 2 then set_warning(WARNING_ID.BAT_TEMP,0) end
+        bat_temp_cor = 0 
+    else 
+        if bat_temp_cor == 0 then set_warning(WARNING_ID.BAT_TEMP,1) end
+        bat_temp_cor = 2 
+    end
 
 
     ------------------- indicador compensador
@@ -452,6 +450,17 @@ function update()
     fuel = round_to(fuel, 5)
     fuel_left = round_to(fuel_left, 5)
     fuel_right = round_to(fuel_right, 5)
+    if math.abs(fuel_left - fuel_right) >= 60 then 
+        if fuel_imbalance_caution == 0 then 
+            set_caution(CAUTION_ID.FUEL_IMB, 1)
+            fuel_imbalance_caution = 1
+        end
+    else
+        if fuel_imbalance_caution == 1 then 
+            set_caution(CAUTION_ID.FUEL_IMB, 0)
+            fuel_imbalance_caution = 0
+        end
+    end
 
     local fuel_tot_rot = 0
     if fuel_init <= 300 then
@@ -468,13 +477,25 @@ function update()
     end
 
     -- cores dos indicadores de combustível
-    if fuel <= 125 then fuel_cor = 2
-    else fuel_cor = 0 end
+    if fuel <= 125 then 
+        if fuel_cor ~= 2 then set_warning(WARNING_ID.FUEL_LVL,1) end
+        fuel_cor = 2
+    else 
+        if fuel_cor ~= 0 then set_warning(WARNING_ID.FUEL_LVL,0) end
+        fuel_cor = 0 
+    end
     if fuel_left <= 60 then fuel_left_cor = 2
     else fuel_left_cor = 0 end
     if fuel_right <= 60 then fuel_right_cor = 2
     else fuel_right_cor = 0 end
 
+    if (torque_cor == 2 or t5_cor == 2 or ng_cor == 2 or np_cor == 2) and engine_limits_warning == 0 then
+        set_warning(WARNING_ID.ENG_LMTS,1)
+        engine_limits_warning = 1
+    elseif (torque_cor ~= 2 and t5_cor ~= 2 and ng_cor ~= 2 and np_cor ~= 2) and engine_limits_warning ~= 0 then 
+        set_warning(WARNING_ID.ENG_LMTS,0)
+        engine_limits_warning = 0
+    end
 
     EICAS_TQ:set(torque)
     EICAS_TQ_ROT:set(torque_rot)
@@ -689,20 +710,16 @@ local CMFD2On=get_param_handle("CMFD2On")
 local CMFD1SwOn=get_param_handle("CMFD1SwOn")
 local CMFD2SwOn=get_param_handle("CMFD2SwOn")
 
-local cmfd1on=get_param_handle("ELEC_AVIONICS_OK")
-local cmfd2on=get_param_handle("ELEC_POWER_OK")
 
-ELEC_POWER_OK=get_param_handle("ELEC_POWER_OK")
 
 function update_cmfd_on()
-    if sensor_data.getWOW_LeftMainLandingGear()==0 then EICAS_INIT:set(0) 
-    elseif ELEC_POWER_OK:get() == 0 then EICAS_INIT:set(1) end
-    CMFD1On:set(cmfd1on:get())
-    CMFD2On:set(cmfd2on:get())
+    if sensor_data.getWOW_LeftMainLandingGear()==0 then EICAS_INIT:set(0)   -- INIT -> DETOT
+    elseif get_elec_main_bar_ok() then EICAS_INIT:set(1) end                    -- DETOT -> INIT
+
+    CMFD1On:set(get_elec_avionics_ok() and 1 or 0)
+    CMFD2On:set(get_elec_emergency_ok() and 1 or 0)
 
 end
-
-
 
 function post_initialize()
     startup_print("cmfd_right: postinit start")
@@ -834,8 +851,6 @@ CMFD[2]["SwOn"]            = CMFD2SwOn
 
 function SetCommand(command,value)
     local cmfdnumber = 0
-    local formatselected = 0
-
     if command >= device_commands.CMFD1OSS1 and command <= device_commands.CMFD1ButtonBright then 
         cmfdnumber=1
     elseif command >= device_commands.CMFD2OSS1 and command <= device_commands.CMFD2ButtonBright then 
@@ -944,7 +959,6 @@ function SetCommand(command,value)
     end
 
 end
-
 
 startup_print("CMFD2: load end")
 need_to_be_closed = false -- close lua state after initialization

@@ -678,13 +678,27 @@ device_commands =
     UFCP_HUD_TEST                      = __counter(),
     UFCP_SBS_ON                      = __counter(),
     UFCP_HUD_BRIGHT                      = __counter(),
-    UFCP_SBS_BRIGHT                      = __counter(),
+    UFCP_SBS_ADJUST                      = __counter(),
     UFCP_JOY_RIGHT                      = __counter(),
     UFCP_JOY_LEFT                      = __counter(),
     UFCP_JOY_UP                      = __counter(),
     UFCP_JOY_DOWN                      = __counter(),
 
+    ALERTS_SET_WARNING                      = __counter(),
+    ALERTS_RESET_WARNING                      = __counter(),
+    ALERTS_ACK_WARNING                      = __counter(),
+    ALERTS_ACK_WARNINGS                      = __counter(),
+    
+    ALERTS_SET_CAUTION                      = __counter(),
+    ALERTS_RESET_CAUTION                      = __counter(),
+    ALERTS_ACK_CAUTION                      = __counter(),
+    ALERTS_ACK_CAUTIONS                      = __counter(),
 
+    ALERTS_SET_ADVICE                      = __counter(),
+    ALERTS_RESET_ADVICE                      = __counter(),
+    
+    WARNING_PRESS                      = __counter(),
+    CAUTION_PRESS                      = __counter(),
 
 
 }

@@ -40,6 +40,7 @@ function SetCommand(command,value)
     elseif command == iCommandEnginesStop then
         -- dev:performClickableAction(device_commands.EngineStart, 0, true)
     end
+    -- Quando o desbalanceamento entre os tanques atinge 35 kg, a bomba auxiliar do tanque que estiver com mais combustível começa a funcionar, permanecendo ligada até que a diferença fique abaixo de 20 kg, quando é desligada. Esse ciclo volta a ser ativado toda vez que o desbalanceamento atingir 35 kg.
 end
 
 

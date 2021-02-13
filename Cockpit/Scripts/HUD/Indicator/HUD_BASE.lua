@@ -74,6 +74,11 @@ clipPoly.h_clip_relation     = h_clip_relations.INCREASE_IF_LEVEL
 clipPoly.level               = HUD_NOCLIP_LEVEL
 clipPoly.collimated          = false
 clipPoly.isvisible           = false
+clipPoly.change_opacity      = true
+clipPoly.element_params = {"HUD_ON"}
+clipPoly.controllers = {{"parameter_compare_with_number",0,1}}
+
+
 Add(clipPoly)
 
 -- 伪双眼效果
@@ -91,5 +96,5 @@ fake_double_eye_view.collimated      = true
 fake_double_eye_view.isvisible       = true
 fake_double_eye_view.additive_alpha  = true
 fake_double_eye_view.use_mipfilter   = true
-Add(fake_double_eye_view)
+-- Add(fake_double_eye_view)
 

@@ -43,7 +43,7 @@ elements["PNT_953"] = default_axis("BARO",                                      
 
 -- ICE PROTECTION
 elements["PNT_991"] = default_2_position_tumb("Propeller (On/Off)",                             devices.ICEPROT, device_commands.IcePropeller,   991,TOGGLECLICK_MID_FWD)
-elements["PNT_992"] = default_3_position_tumb("Windshield (Start/Set/Off)",                     devices.ICEPROT, device_commands.IceWindshield,  992,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_992"] = default_3_1_position_tumb("Windshield (Start/Set/Off)",                   devices.ICEPROT, device_commands.IceWindshield,  992,nil,true,TOGGLECLICK_MID_FWD)
 elements["PNT_993"] = default_2_position_tumb("Pitot / Stat - Pri/Tat (On/Off)",                devices.ICEPROT, device_commands.IcePitotPri,    993,TOGGLECLICK_MID_FWD)
 elements["PNT_994"] = default_2_position_tumb("Pitot / Stat - Sec (On/Off)",                    devices.ICEPROT, device_commands.IcePitotSec,    994,TOGGLECLICK_MID_FWD)
 
@@ -260,17 +260,19 @@ elements["PNT_476"] = default_3_position_tumb("Day/Night/Auto",                 
 elements["PNT_477"] = default_2_position_tumb("Radar Altimeter Transmit / Off",       		devices.UFCP, device_commands.UFCP_RALT,          	477)
 elements["PNT_478"] = default_3_position_tumb("DVR Rec/Standby/Off",                		devices.UFCP, device_commands.UFCP_DVR,          	478, false, true)
 elements["PNT_479"] = multiposition_switch_limited("EGI Nav/Align/Storage Heading/Off/Test",devices.UFCP, device_commands.UFCP_EGI,          	479,5,0.25)
-elements["PNT_480"] = default_axis_limited("UFC BRT/OFF",									devices.UFCP, device_commands.UFCP_UFC,          	480, 0, 0.15)
+elements["PNT_480"] = default_axis_limited("UFC BRT/OFF",									devices.UFCP , device_commands.UFCP_UFC,          	480, 0, 0.15)
 elements["PNT_481"] = default_2_position_tumb("HUD Test",									devices.UFCP, device_commands.UFCP_HUD_TEST,      	481)
 elements["PNT_482"] = default_2_position_tumb("SBS On",										devices.UFCP, device_commands.UFCP_SBS_ON,      	482)
-elements["PNT_483"] = default_axis_limited("HUD Britghness",								devices.UFCP, device_commands.UFCP_HUD_BRIGHT,     	483)
-elements["PNT_484"] = default_axis_limited("SBS Adjust",	   								devices.UFCP, device_commands.UFCP_SBS_BRIGHT,   	484)
+elements["PNT_483"] = default_axis_limited("HUD Britghness",								devices.HUD, device_commands.UFCP_HUD_BRIGHT,     	483)
+elements["PNT_484"] = default_axis_limited("SBS Adjust",	   								devices.UFCP, device_commands.UFCP_SBS_ADJUST,   	484)
 
 elements["PNT_485"] = default_button("Right",												devices.UFCP, device_commands.UFCP_JOY_RIGHT,   	485)
 elements["PNT_486"] = default_button("Left",												devices.UFCP, device_commands.UFCP_JOY_LEFT,  	 	486)
 elements["PNT_487"] = default_button("Up",													devices.UFCP, device_commands.UFCP_JOY_UP,   		487)
 elements["PNT_488"] = default_button("Down",												devices.UFCP, device_commands.UFCP_JOY_DOWN,  	 	488)
 
+elements["PNT_441"] = default_button("Warning",												devices.ALARM, device_commands.WARNING_PRESS,  		441)
+elements["PNT_442"] = default_button("Caution",												devices.ALARM, device_commands.CAUTION_PRESS,  	 	442)
 
 
 

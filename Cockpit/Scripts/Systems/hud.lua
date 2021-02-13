@@ -2,6 +2,8 @@ dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."HUD/HUD_ID_defs.lua")
 
+dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
+
 startup_print("hud: load")
 
 local dev = GetSelf()
@@ -58,6 +60,10 @@ local HUD_MODE_TXT = get_param_handle("HUD_MODE_TXT")
 
 local HUD_AOA = get_param_handle("HUD_AOA")
 
+local HUD_ON = get_param_handle("HUD_ON")
+
+local HUD_BRIGHT = get_param_handle("HUD_BRIGHT")
+
 local CMFDDoi = get_param_handle("CMFDDoi")
 
 
@@ -72,10 +78,16 @@ local hud_mode = HUD_MODE_ID.NAV
 
 local max_accel = 0
 
+
+
 function update()
     if hud_mode == HUD_MODE_ID.NAV and sensor_data.getLeftMainLandingGearDown() == 1 then hud_mode = HUD_MODE_ID.LANDING end
     if hud_mode == HUD_MODE_ID.LANDING and sensor_data.getLeftMainLandingGearDown() == 0 then hud_mode = HUD_MODE_ID.NAV end
 
+    local hud_on = get_elec_avionics_ok() and 1 or 0
+    local hud_bright = get_cockpit_draw_argument_value(483)
+
+    
     local hud_mode_txt = HUD_MODE_STR[hud_mode]
 
     local pitch = sensor_data.getPitch()
@@ -210,6 +222,10 @@ function update()
     HUD_MODE_TXT:set(hud_mode_txt)
 
     HUD_AOA:set(aoa)
+
+    HUD_ON:set(hud_on)
+
+    HUD_BRIGHT:set(hud_bright)
 
     -- Escalas de Velocidade, Altitude ou Altura e Proa – Apresentadas quando as funções VV/VAH e VAH estão ativadas no UFCP ou no CMFD, estando em qualquer modo principal. Ficam ocultas quando estas funções estiverem desativadas;
     -- Escala de Velocidade Vertical – Apresentada somente quando a função VV/VAH estiver ativada no UFCP ou no CMFD e o modo principal NAV estiver em operação;
@@ -356,6 +372,7 @@ function post_initialize()
     elseif birth=="AIR_HOT" then
     elseif birth=="GROUND_COLD" then
     end
+    dev:performClickableAction(device_commands.UFCP_HUD_BRIGHT,1,true)
     startup_print("hud: postinit end")
 end
 
