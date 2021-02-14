@@ -52,7 +52,7 @@ creators[devices.FLAPS]           = {"avLuaDevice"           ,LockOn_Options.scr
 creators[devices.EXTANIM]         = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/externalanimations.lua"}
 creators[devices.WEAPON_SYSTEM]   = {"avSimpleWeaponSystem"  ,LockOn_Options.script_path.."Systems/weapon_system.lua", {devices.CMFD}}
 creators[devices.INTERCOM]        = {"avIntercom"            ,LockOn_Options.script_path.."Systems/radio.lua"}--,{devices.UHF_RADIO} }
-creators[devices.UFCP]            = {"avLuaDevice"           ,nil}--LockOn_Options.script_path.."Systems/hud.lua"}
+creators[devices.UFCP]            = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/ufcp.lua", {devices.ALARM}}
 
 
 creators[devices.ALARM]           = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/alarm.lua"}--, {devices.CMFD}}

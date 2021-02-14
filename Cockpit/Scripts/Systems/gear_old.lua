@@ -1,6 +1,8 @@
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
--- dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
+dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
+dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
+
 -- dofile(LockOn_Options.script_path.."Systems/hydraulic_system_api.lua")
 
 startup_print("gear: load")
@@ -70,11 +72,11 @@ local function get_elec_primary_ac_ok()
 end
 
 local function get_elec_retraction_release_ground()
-    return false
+    return sensor_data.getWOW_LeftMainLandingGear() > 0
 end
 
 local function get_elec_retraction_release_airborne()
-    return true
+    return sensor_data.getWOW_LeftMainLandingGear() == 0
 end
 
 local function get_hyd_utility_ok()
@@ -166,10 +168,12 @@ local gear_nose_retract_increment = update_time_step / GearNoseRetractTimeSec
 local gear_nose_extend_increment = update_time_step / GearNoseExtendTimeSec
 local gear_main_increment = update_time_step / GearMainTimeSec
 local prev_retraction_release_airborne=get_elec_retraction_release_airborne()
-local gear_light_param = get_param_handle("GEAR_LIGHT")
-local dev_gear_nose = get_param_handle("GEAR_NOSE")
-local dev_gear_left = get_param_handle("GEAR_LEFT")
-local dev_gear_right = get_param_handle("GEAR_RIGHT")
+
+
+local gear_light_param = get_param_handle("GEAR_HANDLE_LIGHT")
+local dev_gear_nose = get_param_handle("GEAR_NOSE_LIGHT")
+local dev_gear_left = get_param_handle("GEAR_LEFT_LIGHT")
+local dev_gear_right = get_param_handle("GEAR_RIGHT_LIGHT")
 
 
 function update_gear()
@@ -200,10 +204,10 @@ function update_gear()
     ias_knots = sensor_data.getIndicatedAirSpeed() * 3.6 * rate_met2knot
     if ias_knots > 150 then 
         if GEAR_ERR==0 and (GEAR_LEFT_STATE > 0.2 or GEAR_RIGHT_STATE > 0.2  or GEAR_NOSE_STATE > 0.2) then
-            GEAR_ERR = 1
+            -- GEAR_ERR = 1
             -- TODO: maybe some aircraft animation showing gear panels damaged or gear landing light ripped away etc.
             -- TODO: maybe play a metallic "clunk" noise to notify the player that this has happened
-            print_message_to_user("Landing gear overspeed damage!") -- delete me once we have a sound effect or other notification
+            -- print_message_to_user("Landing gear overspeed damage!") -- delete me once we have a sound effect or other notification
         end
     end
 	
@@ -288,33 +292,31 @@ function update_gear()
     set_aircraft_draw_argument_value(3,GEAR_RIGHT_STATE) -- right gear draw angle
     set_aircraft_draw_argument_value(5,GEAR_LEFT_STATE) -- left gear draw angle
 
+    
+
     -- reflect gear state on gear-flaps indicator panel
     
 
 	
 
     if get_elec_primary_dc_ok() then
-        --[[if GEAR_NOSE_STATE == 0 or GEAR_NOSE_STATE == 1 then
-            dev_gear_nose:set(GEAR_NOSE_STATE)
+        if GEAR_NOSE_STATE == 1 and get_elec_emergency_ok() then
+            dev_gear_nose:set(1)
         else
-            dev_gear_nose:set(0.5)
+            dev_gear_nose:set(0)
         end
 
-        if GEAR_LEFT_STATE == 0 or GEAR_LEFT_STATE == 1 then
-            dev_gear_left:set(GEAR_LEFT_STATE)
+        if GEAR_LEFT_STATE == 1 and get_elec_emergency_ok() then
+            dev_gear_left:set(1)
         else
-            dev_gear_left:set(0.5)
+            dev_gear_left:set(0)
         end
 
-        if GEAR_RIGHT_STATE == 0 or GEAR_RIGHT_STATE == 1 then
-            dev_gear_right:set(GEAR_RIGHT_STATE)
+        if GEAR_RIGHT_STATE == 1 and get_elec_emergency_ok() then
+            dev_gear_right:set(1)
         else
-            dev_gear_right:set(0.5)
+            dev_gear_right:set(0)
         end
-        --]]
-        dev_gear_nose:set(GEAR_NOSE_STATE)
-        dev_gear_left:set(GEAR_LEFT_STATE)
-        dev_gear_right:set(GEAR_RIGHT_STATE)
     end
     if emergency_gear_countdown > 0 then
         emergency_gear_countdown = emergency_gear_countdown - update_time_step
@@ -324,7 +326,7 @@ function update_gear()
         end
     end
 
-    if ( ((GEAR_NOSE_STATE+GEAR_LEFT_STATE+GEAR_RIGHT_STATE)/3) ~= gear_handle_pos) and get_elec_primary_ac_ok() then
+    if ( ((GEAR_NOSE_STATE+GEAR_LEFT_STATE+GEAR_RIGHT_STATE)/3) ~= gear_handle_pos) and get_elec_emergency_ok() then
         gear_light_param:set(1.0)
     else
         gear_light_param:set(0.0)
@@ -337,9 +339,23 @@ function update_gear()
     end
 end
 
-
+local gear_warning = 0
 function update()
     update_gear()
+
+    ---- LDG_GEAR Warning
+    local throttle_pos = sensor_data.getThrottleLeftPosition()*100
+    local ralt = sensor_data.getRadarAltitude() * 3.2808399
+    local ias = sensor_data.getIndicatedAirSpeed() * 1.94384
+    if gear_warning == 0 and throttle_pos < 50 and ralt < 1000 and ias < 135 and GEAR_NOSE_STATE < 1 and  GEAR_LEFT_STATE < 1 and GEAR_RIGHT_STATE < 1 then 
+        gear_warning = 1
+        set_warning(WARNING_ID.LDG_GEAR,1)
+    elseif gear_warning == 1 and (throttle_pos >= 50 or ralt >= 1000 or ias >= 135 or (GEAR_NOSE_STATE >= 1 and  GEAR_LEFT_STATE >= 1 and GEAR_RIGHT_STATE >= 1) ) then
+        gear_warning = 0
+        set_warning(WARNING_ID.LDG_GEAR,0)
+    end
+
+
 end
 
 function post_initialize()

@@ -55,12 +55,14 @@ local function set_alert(alerttable, id, state, text)
 
 end
 
+local hud_warning_supress=0
 
 local function set_warning(id, state)
     state = state or 1
     for index, value in pairs(WARNING_ID) do
         if value == id then
             set_alert(warnings, id, state, index:gsub("_"," "))
+            if state == 1 then hud_warning_supress = 0 end
         end
     end
 end
@@ -95,6 +97,10 @@ end
 
 dev:listen_command(74)
 
+
+dev:listen_command(device_commands.UFCP_WARNRST)
+
+
 function SetCommand(command,value)
     debug_message_to_user("alarm: " .. tostring(command) .. "=" .. value)
     if command == device_commands.ALERTS_SET_WARNING then  set_warning(value, 1)
@@ -109,6 +115,7 @@ function SetCommand(command,value)
     elseif command == device_commands.ALERTS_RESET_ADVICE then set_advice(value, 0)
     elseif command == device_commands.WARNING_PRESS then acknowledge_warnings()
     elseif command == device_commands.CAUTION_PRESS then acknowledge_cautions()
+    elseif command == device_commands.UFCP_WARNRST and value == 1 then hud_warning_supress = 1
     end
 end
 
@@ -140,6 +147,8 @@ function update_alerts()
       end
       i = i + 1
   end
+
+  set_hud_warning(warning_flash * (1-hud_warning_supress))
 
   flash_elapsed = flash_elapsed + update_time_step
   if warning_flash == 1 then

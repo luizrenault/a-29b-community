@@ -126,8 +126,8 @@ elements["PNT_803"] = default_3_position_tumb("Fuel Transfer (U-Wing/Ventral-Aut
 elements["PNT_791"] = default_3_position_tumb("Emergency/Parking Brakes",                       devices.BRAKES, device_commands.EmerParkBrake, 791, nil, true)
 
 -- LATE ARM
-elements["PNT_781"] = default_3_position_tumb("Mass (Sim/Save/Live)",                           devices.EXTANIM, device_commands.LateArmMass,   781,nil,true,TOGGLECLICK_MID_FWD)
-elements["PNT_782"] = default_3_position_tumb("Late Arm (On/Safe)",                             devices.EXTANIM, device_commands.LateArm,       782,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_781"] = default_3_position_tumb("Mass (Sim/Save/Live)",                           devices.WEAPON_SYSTEM, device_commands.LateArmMass,   781,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_782"] = default_3_position_tumb("Late Arm (On/Safe)",                             devices.WEAPON_SYSTEM, device_commands.LateArm,       782,nil,true,TOGGLECLICK_MID_FWD)
 
 -- ELT
 elements["PNT_771"] = default_3_position_tumb("ELT (On/Arm-Reset)",                             devices.EXTANIM, device_commands.EltOn,        771,nil,true,TOGGLECLICK_MID_FWD)

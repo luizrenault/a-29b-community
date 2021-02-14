@@ -315,7 +315,7 @@ A_29B =  {
 			kjz = 0.00125,  -- Unknown pitch constant. All planes use 0.00125 -- -- Inertia parametre Z - Dimension (clean) airframe drag coefficient at Z (Front) Simply the wing area in square meters (as that is a major factor in drag calculations)
 			Czbe = -0.016, -- Directional stability coefficient  -- coefficient, along Z axis (perpendicular), affects yaw, negative value means force orientation in FC coordinate system
 			cx_gear = 0.0277, -- Additional coefficient of drag for gear extended
-			cx_flap = 0.095, -- Additional coefficient of drag for flap extended
+			cx_flap = 0.20, -- Additional coefficient of drag for flap extended
 			cy_flap = 0.31, -- Additional coefficient of lift for flap extended
 			cx_brk = 0.06, -- Additional coefficient of drag for air brakes
 			
@@ -334,7 +334,30 @@ A_29B =  {
 			-- Aldop - Visual effects settings for stability / controlability
 			-- Cymax - Maximum coefficient of lift, corresponding to αstall
 			-- 
-			--      M	 Cx0		 Cya		 B		 B4	      Omxmax	Aldop	Cymax
+
+			-- The variables "B" and "B4" in the SFM of DCS are "modifiers" of the variable "drag at zero Lift" aka Cx0 to make those values fit the Lift/Drag (or Drag/Lift)-Polars, 
+			-- where at the same mach-speed different values of drag (CD) are possible due to different angles of attack "AoA" (see above chart in post at 15h18 07.02.2021). 
+			-- This is necessary, since the SFM does not differentiate between different angles of attack, but has to take into account, that a plane at 15° AoA has a lot more drag than 
+			-- one at 1°AoA. The basic formula is CD = Cx0 + B * CL^2 + B4 * CL^4. CD is the "total" Drag at the given Speed, in NASA-Papers CD. Cx0 is drag at zero lift, in NASA-Papers 
+			-- CDmin. CL is Lift at given speeds, in NASA-Papers CL, which is once squared and once put to the 4th power for the formula. B on the other hand is also known as K which is 
+			-- 1 / (pi * AR * e). pi needs no explanation, since it is the number pi. AR is the aspect-ratio of the wing which is AR = S^2 / A where S is the Wingspan and A is the wing area. 
+			-- So if you have a NASA-Report or something like that, the only unknown might be B4. If you solve the equation for B4 it looks like this:
+			-- B4 = (-Cx0 - B * CL^2 + CD) / CL^4
+			-- in other words B4 = (-CDmin - (1 / pi * AR * e) * CL^2 + CD) / CL^4
+			-- Before I forget it, e is the "Oswald Factor" or "wing-efficiency-factor" which is somewhere between 0.7 and 1.0. If you take 0.7 for landing speeds and take-off speeds, 
+			-- where flaps and gear is extended, you will be approx. right, for everything else 0.85 or 0.9 is a good guess.
+			-- Just thought about B and B4 a bit more and forgot that you have to add wave-drag for those speeds, where the wing is supersonic. 
+			-- Wave-Drag = CDwave = a * ((Mach / Mach-crit) - 1)^b. Now comes the problem what is "a" and "b"? 
+			-- From this: https://www.fzt.haw-hamburg.de/pers/Scholz/HOOU/AircraftDesign_13_Drag.pdf you could see, that a and b are given (or already calculated) for a few aircrafts. 
+			-- You can calculate it yourself, and have fun with this: https://www.fzt.haw-hamburg.de/pers/Scholz/materialFM1/DragEstimation.pdf or you can go the easy way and "simplify" 
+			-- it a bit more by saying that a fighter-jet as an "a" of 0.8 and a "b" of 2.6. A piston-driven aircraft has a = 0.02 and b = 2.20 and a jet driven cargo-plane has a = 1.2 
+			-- and b = 3.9. Than you need Mach-crit (Mcrit) which can, again be calculated (see above) or, for simplicity for a fighter-jet Mcrit = 0.9, Piston-plane Mcrit = 0.5 and 
+			-- Cargo-Plane Mcrit = 0.625. Now you just have to ad CDwave to the equation for B. It will look like this: B = (CDwave + 1) / (pi * A * e). Of course, you "ad" CDwave 
+			-- only at speeds above Mcrit, because at Mcrit it will be 0.
+			-- And on another thought, e (the wing-efficiency-factor) is more likely something between 0.75 and 0.85 for fighter Planes, where 0.75 is not so efficient and 0.85 is 
+			-- more efficient. The shorter, thicker the wing, the more unefficient (I would say/guess or whatever)...or you can calculate it (see above) which looks like a 
+			-- nicely spent weekend to me
+			--      M	    Cx0		 Cya		    B		 B4	     Omxmax	    Aldop	    Cymax
 					{-0.1,	0.0187,	0.0746*2,		0.052,	0.012,	0.79,		22.0,		1.45*2,	},
 					{0.0,	0.0187,	0.0746*2,		0.052,	0.012,	0.79,		22.0,		1.45*2,	},
 					{0.2,	0.0187,	0.0746*2,		0.052,	0.012,	0.796144,	22.0,		1.45*2,   },

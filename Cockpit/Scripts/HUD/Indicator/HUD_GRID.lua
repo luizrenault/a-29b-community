@@ -403,3 +403,8 @@ object.controllers = {{"parameter_compare_with_number", 0, 0}, {"opacity_using_p
 object = addStrokeText("HUD_EGIR_ALIGN", "ALIGN", STROKE_FNT_DFLT_120, "RightCenter", {-65, -93})
 object.element_params = {"HUD_EGIR", "HUD_BRIGHT"}
 object.controllers = {{"parameter_compare_with_number", 0, 1}, {"opacity_using_parameter", 1}}
+
+-- WARNING
+object = addStrokeText("HUD_WARN", "WARN", STROKE_FNT_DFLT_120, "CenterCenter", {0, 0})
+object.element_params = {"HUD_WARNING", "HUD_BRIGHT"}
+object.controllers = {{"parameter_compare_with_number", 0, 1}, {"opacity_using_parameter", 1}}

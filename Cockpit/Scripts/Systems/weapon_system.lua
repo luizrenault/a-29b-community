@@ -20,12 +20,51 @@ function post_initialize()
     if birth=="GROUND_HOT" then
     elseif birth=="AIR_HOT" then
     elseif birth=="GROUND_COLD" then
-        -- dev:performClickableAction(device_commands.EnvRecFan, 0, true)
     end
+    dev:performClickableAction(device_commands.LateArmMass, 0, true)
+    dev:performClickableAction(device_commands.LateArm, -1, true)
     startup_print("weapon: postinit end")
 end
 
--- dev:listen_command(device_commands.IcePitotSec)
+
+PlaneModeNAV                    = 105
+PlaneModeBVR                    = 106
+PlaneModeVS                     = 107
+PlaneModeBore                   = 108
+PlaneModeGround                 = 111
+
+local iCommandPlaneWingtipSmokeOnOff = 78
+local iCommandPlaneJettisonWeapons = 82
+local iCommandPlaneFire = 84
+local iCommandPlaneFireOff = 85
+local iCommandPlaneChangeWeapon = 101
+local iCommandActiveJamming = 136
+local iCommandPlaneJettisonFuelTanks = 178
+local iCommandPlanePickleOn = 350
+local iCommandPlanePickleOff = 351
+local iCommandPlaneDropFlareOnce = 357
+local iCommandPlaneDropChaffOnce = 358
+local iCommandPlaneChangeTarget = 102
+
+
+dev:listen_command(PlaneModeNAV)
+dev:listen_command(PlaneModeBVR)
+dev:listen_command(PlaneModeVS)
+dev:listen_command(PlaneModeBore)
+dev:listen_command(PlaneModeGround)
+
+dev:listen_command(iCommandPlaneChangeTarget)
+dev:listen_command(iCommandPlaneWingtipSmokeOnOff)
+dev:listen_command(iCommandPlaneJettisonWeapons)
+dev:listen_command(iCommandPlaneFire)
+dev:listen_command(iCommandPlaneFireOff)
+dev:listen_command(iCommandPlaneChangeWeapon)
+dev:listen_command(iCommandActiveJamming)
+dev:listen_command(iCommandPlaneJettisonFuelTanks)
+dev:listen_command(iCommandPlanePickleOn)
+dev:listen_command(iCommandPlanePickleOff)
+dev:listen_command(iCommandPlaneDropFlareOnce)
+dev:listen_command(iCommandPlaneDropChaffOnce)
 
 function SetCommand(command,value)
     print_message_to_user("weapon: command "..tostring(command).." = "..tostring(value))

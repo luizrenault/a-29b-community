@@ -87,6 +87,10 @@ function SetCommand(command,value)
         end
     elseif command==device_commands.ExtLightNav then
         navlight = value
+    elseif command==device_commands.ExtLightTaxi then
+        taxilight = value
+    elseif command==device_commands.ExtLightLng then
+        landlight = value
     end
 end
 
@@ -99,6 +103,8 @@ function update()
         set_aircraft_draw_argument_value(49, navlight) -- nav light
         if searchlight==1 or landlight == 1 or taxilight == 1 or (taxilight == 0 and sensor_data:getWOW_LeftMainLandingGear() >0) then
             set_aircraft_draw_argument_value(51, 1) -- taxi light
+        else 
+            set_aircraft_draw_argument_value(51, 0) -- taxi light
         end
     else 
         set_aircraft_draw_argument_value(802, 0) -- beacon light

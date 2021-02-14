@@ -1,8 +1,8 @@
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."HUD/HUD_ID_defs.lua")
-
 dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
+dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
 
 startup_print("hud: load")
 
@@ -79,6 +79,9 @@ local hud_mode = HUD_MODE_ID.NAV
 local max_accel = 0
 
 
+local hud_warn_period = 0.1
+local hud_warn_elapsed = 0
+local hud_warning = get_param_handle("HUD_WARNING")
 
 function update()
     if hud_mode == HUD_MODE_ID.NAV and sensor_data.getLeftMainLandingGearDown() == 1 then hud_mode = HUD_MODE_ID.LANDING end
@@ -87,6 +90,22 @@ function update()
     local hud_on = get_elec_avionics_ok() and 1 or 0
     local hud_bright = get_cockpit_draw_argument_value(483)
 
+
+    local hud_warn = get_hud_warning()
+    hud_warn_elapsed = hud_warn_elapsed + update_time_step
+    if hud_warn == 1 then
+        if hud_warn_elapsed > 2* hud_warn_period then
+            hud_warning:set(1)
+        elseif hud_warn_elapsed > hud_warn_period then 
+            hud_warning:set(0)
+        end
+    else 
+        hud_warning:set(0)
+    end
+    if hud_warn_elapsed > 2* hud_warn_period then
+        hud_warn_elapsed = 0
+    end
+    
     
     local hud_mode_txt = HUD_MODE_STR[hud_mode]
 
@@ -136,8 +155,11 @@ function update()
     end
 
     local pl_slide = angleh + (anglev-pitch) * math.tan(roll)
-
-    local ias = math.sqrt(iasx * iasx + iasz * iasz ) * 1.94384
+    
+    -- iasx, iasy, iasz = sensor_data.getTrueAirSpeed()
+    -- local ias = math.sqrt(iasx * iasx + iasy * iasy + iasz * iasz )  * 1.94384
+    local ias = sensor_data.getIndicatedAirSpeed() * 1.94384
+    if ias == 0 then ias = math.sqrt(iasx * iasx + iasy * iasy + iasz * iasz )  * 1.94384 end
 
     if ias < 30 then
         ias = 0
@@ -383,7 +405,10 @@ end
 
 function SetCommand(command,value)
     debug_message_to_user("environ: command "..tostring(command).." = "..tostring(value))
-    if command==device_commands.EngineStart then
+    if command==device_commands.UFCP_WARNRST then
+        if get_hud_warning() == 0 and value == 1 then 
+            max_accel = 0
+        end        
     elseif command == iCommandEnginesStart then
     elseif command == iCommandEnginesStop then
         -- dev:performClickableAction(device_commands.EngineStart, 0, true)

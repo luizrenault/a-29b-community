@@ -25,7 +25,7 @@ WARNING_ID = {
     OIL_PRESS        = counter(),
     OIL_TEMP        = counter(),
     OXYGEN          = counter(),
-    LND_GEAR        = counter(),
+    LDG_GEAR        = counter(),
 }
 
 CAUTION_ID = {
@@ -125,4 +125,13 @@ end
 function acknowledge_cautions()
     local alarm = GetDevice(devices.ALARM)
     alarm:SetCommand(device_commands.ALERTS_ACK_CAUTIONS, 0)
+end
+
+local hud_warn_on = get_param_handle("HUD_WARN_ON")
+function get_hud_warning()
+    return hud_warn_on:get()
+end
+
+function set_hud_warning(value)
+    return hud_warn_on:set(value)
 end

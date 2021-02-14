@@ -48,13 +48,13 @@ HideStick.output                	= {0.0, 1.0}
 StickPitch							= CreateGauge()
 StickPitch.arg_number				= 2
 StickPitch.input					= {-100, 100}
-StickPitch.output					= {1, -1}
+StickPitch.output					= {-1, 1}
 StickPitch.controller				= controllers.base_gauge_StickPitchPosition
 
 StickBank							= CreateGauge()
 StickBank.arg_number				= 3
 StickBank.input						= {-100, 100}
-StickBank.output					= {-1, 1}
+StickBank.output					= {1, -1}
 StickBank.controller				= controllers.base_gauge_StickRollPosition
 
 Throttle							= CreateGauge()
@@ -175,6 +175,29 @@ PBrakeLight.input          	 	= {0,1}
 PBrakeLight.output         	 	= {0,1}
 PBrakeLight.parameter_name		= "PBRAKE_LIGHT"
 
+GearNoseLight	            	= CreateGauge("parameter")
+GearNoseLight.arg_number     	= 209
+GearNoseLight.input          	= {0,1}
+GearNoseLight.output         	= {0,1}
+GearNoseLight.parameter_name	= "GEAR_NOSE_LIGHT"
+
+GearLeftLight	            	= CreateGauge("parameter")
+GearLeftLight.arg_number     	= 210
+GearLeftLight.input          	= {0,1}
+GearLeftLight.output         	= {0,1}
+GearLeftLight.parameter_name	= "GEAR_LEFT_LIGHT"
+
+GearRightLight	            	= CreateGauge("parameter")
+GearRightLight.arg_number     	= 211
+GearRightLight.input          	= {0,1}
+GearRightLight.output         	= {0,1}
+GearRightLight.parameter_name	= "GEAR_RIGHT_LIGHT"
+
+GearHandleLight	           		= CreateGauge("parameter")
+GearHandleLight.arg_number 	 	= 212
+GearHandleLight.input      	 	= {0,1}
+GearHandleLight.output     	 	= {0,1}
+GearHandleLight.parameter_name	= "GEAR_HANDLE_LIGHT"
 
 need_to_be_closed = true -- close lua state after initialization
 

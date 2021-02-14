@@ -8,6 +8,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Version 0.0.6a - 13 February 2021
+
+### Added
+- Landing gear warning.
+- Landing gear handle and indication lights.
+- HUD WARN message and UFCP WARN RST behavior.
+
+### Changed
+- 
+
+### Fixed
+- External lights behavior.
+
 ## Version 0.0.5a - 13 February 2021
 
 ### Added
