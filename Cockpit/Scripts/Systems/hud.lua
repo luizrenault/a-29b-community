@@ -3,6 +3,7 @@ dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."HUD/HUD_ID_defs.lua")
 dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
+dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
 
 startup_print("hud: load")
 
@@ -111,9 +112,7 @@ function update()
 
     local pitch = sensor_data.getPitch()
     local roll = sensor_data.getRoll()
-    local hdg = math.floor(math.deg(-sensor_data.getHeading()))
-    if hdg < 0 then hdg = 360 + hdg end
-    hdg = hdg % 360
+    local hdg = round_to(get_avionics_hdg(),1)
 
     local altitude = round_to(sensor_data.getBarometricAltitude()*3.2808399,10)
     local alt_k = math.floor(altitude/1000)
@@ -135,7 +134,6 @@ function update()
     angleh = math.atan2(iasz, iasx) - math.atan2(speedz, speedx)
     angleh = math.rad(sensor_data.getAngleOfSlide())-angleh
 
-
     if HUD_DRIFT_CO:get() == 0 then 
     else 
         angleh = 0
@@ -156,18 +154,11 @@ function update()
 
     local pl_slide = angleh + (anglev-pitch) * math.tan(roll)
     
-    -- iasx, iasy, iasz = sensor_data.getTrueAirSpeed()
-    -- local ias = math.sqrt(iasx * iasx + iasy * iasy + iasz * iasz )  * 1.94384
-    local ias = sensor_data.getIndicatedAirSpeed() * 1.94384
-    if ias == 0 then ias = math.sqrt(iasx * iasx + iasy * iasy + iasz * iasz )  * 1.94384 end
-
-    if ias < 30 then
-        ias = 0
-        if sensor_data.getWOW_LeftMainLandingGear() > 0 then 
+    local ias = get_avionics_ias()
+    if ias == 0 and sensor_data.getWOW_LeftMainLandingGear() > 0 then 
             angleh = 0
             anglev = 0
             pl_slide = 0
-        end
     end
 
     ri_roll = roll
@@ -183,8 +174,7 @@ function update()
 
     if CMFDDoi:get() == 0 then hud_doi = 1 else hud_doi = 0 end
 
-    local radar_alt = sensor_data.getRadarAltitude() * 3.2808399
-    if radar_alt > 0 and radar_alt < 5000 then radar_alt = round_to(radar_alt, 10) else radar_alt = -1 end
+    local radar_alt = get_avionics_ralt()
     
     local range = -1
 

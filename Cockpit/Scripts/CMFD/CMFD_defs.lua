@@ -60,10 +60,13 @@ CMFD_FONT_G      = "cmfd_font_g"
 CMFD_FONT_DG     = "cmfd_font_dg"
 CMFD_FONT_B      = "cmfd_font_b"
 CMFD_FONT_CYAN   = "cmfd_font_cyan"
+CMFD_FONT_MAGENTA   = "cmfd_font_magenta"
 
 CMFD_FONT_W      = "cmfd_font_w"
 CMFD_FONT_WY     = "cmfd_font_wy"
+CMFD_FONT_Y     = "cmfd_font_y"
 CMFD_FONT_D      = "cmfd_font_d"
+CMFD_FONT_K      = "cmfd_font_k"
 
 
 CMFD_WPN_FONT_DEF    = "cmfd_wpn_font_def"
@@ -420,67 +423,6 @@ function SetCircleMesh(obj, radius_outer, radius_inner, iarc, iclipped)
     obj.indices  = inds
 end
 
-function SetCircleMeshStartEnd(obj, radius_outer, radius_inner, istart, iarc, iclipped)
-    local verts    = {}
-    local inds     = {}
-    local solid    = radius_inner == nil or radius_inner == 0
-    local arc      = iarc or 360
-    local count    = 36
-    local delta    = math.rad(arc/count)
-    local start    = math.rad(istart or 0)
-    local clipped  = iclipped or false
-    
-    if arc > 360 or arc < -360 then
-        arc = 360
-    end
-
-    local min_i    = 1
-    local max_i    = count + 1
-    verts[1] = {0,0}
-    for i=min_i,max_i do
-        k = i
-        
-        ---- for ADI clipped ball shape
-        -- clip nodes are 3 from each side
-        if clipped then
-            if i < 4 or i > 34 then -- equal to 3, 33
-                k = 4
-            elseif i > 16 and i < 22 then -- equal to 15, 21
-                k = 16
-            end
-        end
-        
-        if solid then
-            verts[1 + i]      = { radius_outer * math.cos(start+delta *(k-1)), radius_outer * math.sin(start+delta *(k-1)), }
-            inds[3*(i-1) + 1] = 0
-            inds[3*(i-1) + 2] = i - 1 
-            inds[3*(i-1) + 3] = i 
-        else
-            verts[2*(i - 1) + 1] = { radius_outer * math.cos(start+delta *(k-1)), radius_outer * math.sin(start+delta *(k-1)), }
-            verts[2*(i - 1) + 2] = { radius_inner * math.cos(start+delta *(k-1)), radius_inner * math.sin(start+delta *(k-1)), }
-            
-            if i == max_i  then
-              if arc == 360 then  
-                inds[6*(i-1) + 1] = 2*(i     - 1)
-                inds[6*(i-1) + 2] = 2*(min_i - 1)
-                inds[6*(i-1) + 3] = 2*(i     - 1) + 1 
-                inds[6*(i-1) + 4] = 2*(i     - 1) + 1
-                inds[6*(i-1) + 5] = 2*(min_i - 1)
-                inds[6*(i-1) + 6] = 2*(min_i - 1) + 1 
-              end        
-            else 
-                inds[6*(i-1) + 1] = 2*(i - 1)
-                inds[6*(i-1) + 2] = 2*(i) 
-                inds[6*(i-1) + 3] = 2*(i - 1) + 1 
-                inds[6*(i-1) + 4] = 2*(i - 1) + 1
-                inds[6*(i-1) + 5] = 2*(i) 
-                inds[6*(i-1) + 6] = 2*(i)     + 1  
-            end
-        end
-    end
-    obj.vertices = verts              
-    obj.indices  = inds
-end
 
 
 function CMFD_tex_coord (UL_X,UL_Y,W,H,SZX,SZY)

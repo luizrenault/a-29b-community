@@ -1,91 +1,6 @@
 
 IND_TEX_PATH = LockOn_Options.script_path .. "CMFD/Resources/"
 	-- CMFDs
-CMFD_X_PIXEL =  88
-CMFD_Y_PIXEL =  144
-
-fontdescription["font_CMFD"] = {
-    texture     = IND_TEX_PATH .. "font_CMFD.dds",
-    size        = {10, 10},
-    resolution  = {1440, 1440},
-    default     = {CMFD_X_PIXEL, CMFD_Y_PIXEL},
-    chars       = {
-        {32, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- space
-        {48, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 0
-        {49, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 1
-        {50, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 2
-        {51, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 3
-        {52, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 4
-        {53, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 5
-        {54, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 6
-        {55, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 7
-        {56, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 8
-        {57, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 9
-
-        {64, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- Alpha -> @
-
-        {65, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- A
-        {66, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- B
-        {67, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- C
-        {68, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- D
-        {69, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- E
-        {70, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- F
-        {71, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- G
-        {72, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- H
-        {73, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- I
-        {74, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- J
-        {75, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- K
-        {76, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- L
-        {77, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- M
-        {78, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- N
-        {79, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- O
-        {80, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- P
-        {81, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- Q
-        {82, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- R
-        {83, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- S
-        {84, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- T
-        {85, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- U
-        {86, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- V
-        {87, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- W
-        {88, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- X
-        {89, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- Y
-        {90, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- Z
-         
-        {42, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- *
-        {43, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- +
-        {45, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- -
-        {47, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- /
-        {92, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- \
-        {40, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- (
-        {41, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- )
-        {91, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- [
-        {93, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- ]
-        {123, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- {
-        {125, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- }
-        {60, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- <
-        {62, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- >
-        {61, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- =
-        {63, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- ?
-        {124, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- |
-        {33, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- !
-        {35, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- #
-        {37, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- %
-        {94, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- ^
-        {38, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- &
-        {96, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- o -- degree, change its ascii code to 96 ', original 248 (out of index)
-        {46, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- .
-        {58, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- :
-        {44, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- ,
-        {126, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- cursor -> ~
-        {95, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- _
-        
-        {39, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- '
-        {34, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- "
-        --{32, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- [space]
-        
-        {127, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- delta, use last ascii code
-    }
-}
 -- -- COMMON
 -- materials["IND_COMMON_RED"]      = {255,   0,   0, 255}
 -- materials["DBG_GREY"]            = { 25,  25,  25, 255}
@@ -118,14 +33,15 @@ materials["CMFD_IND_DGREEN"]     = {  3,  67,  40, 240}
 materials["CMFD_IND_BLUE"]       = {  0,   0, 255, 240}
 materials["CMFD_IND_CYAN"]       = {  0,   178, 255, 255}
 materials["CMFD_IND_BLUE_L"]     = { 70, 130, 180, 255}
-materials["CMFD_IND_BLACK"]      = {  0,   0,   0, 240}
+materials["CMFD_IND_BLACK"]      = {  0,   0,   0, 255}
 materials["CMFD_IND_DARK"]       = {  0,   0,   0, 128}
 materials["CMFD_IND_WHITE"]      = {255, 255, 255, 255}
 materials["CMFD_IND_WHITE_Y"]    = {255, 255, 240, 240}
 materials["CMFD_IND_PINK"]       = {160,  32, 240, 240}
+materials["CMFD_IND_MAGENTA"]    = {255,  0, 255, 255}
 materials["CMFD_IND_YELLOW"]     = {255, 255,   0, 240}
 materials["CMFD_IND_SKY"]        = { 47, 135, 255, 255}
-materials["CMFD_IND_GRND"]       = { 49,   5,   1, 255}
+materials["CMFD_IND_GRND"]       = { 204,   91,   35, 255}
 materials["CMFD_IND_BOXBASE"]    = {255, 255, 255,   0}
 materials["CMFD_IND_W_BASE"]     = {255, 255, 255, 255}
 
@@ -264,10 +180,13 @@ fonts["cmfd_font_g"]    = {fontdescription["font_CMFD"], 10, materials["CMFD_IND
 fonts["cmfd_font_dg"]   = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_DGREEN"]}
 fonts["cmfd_font_b"]    = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_BLUE"]}
 fonts["cmfd_font_cyan"] = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_CYAN"]}
+fonts["cmfd_font_magenta"] = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_MAGENTA"]}
 fonts["cmfd_font_w"]    = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_WHITE"]}
+fonts["cmfd_font_k"]    = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_BLACK"]}
 fonts["cmfd_font_wy"]   = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_WHITE_Y"]}
 fonts["cmfd_font_d"]    = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_DARK"]}
 fonts["cmfd_font_r"]    = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_RED"]}
+fonts["cmfd_font_y"]    = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_YELLOW"]}
 
 -- fonts["cmfd_font_stroke_def"]  = {fontdescription["font_CMFD_stroke"], 10, materials["CMFD_IND_DEF"]}
 -- fonts["cmfd_font_stroke_g"]    = {fontdescription["font_CMFD_stroke"], 10, materials["CMFD_IND_GREEN"]}

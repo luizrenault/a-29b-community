@@ -7,11 +7,9 @@ dofile(LockOn_Options.script_path.."HUD/indicator/Units.lua")
 -- Scale
 SetScale(MILLYRADIANS)
 
-additive_alpha		= true
-collimated			= true
 
-stroke_font			= "font_stroke_HUD"
-stroke_material		= "HUD"
+-- stroke_font			= "font_stroke_HUD"
+-- stroke_material		= "HUD"
 
 if override_materials == true then
 	default_material	= override_material

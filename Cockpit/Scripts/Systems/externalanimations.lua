@@ -72,6 +72,7 @@ function post_initialize()
     BFI_brightness_param:set(1.0)
 
 	BFI_BARO_param:set(ALT_PRESSURE_STD)
+
 end
 
 
@@ -105,8 +106,10 @@ function update()
 	if propRPM < 50 then
 		set_aircraft_draw_argument_value(DRAW_FAN,1-propState)
 	else
-		set_aircraft_draw_argument_value(DRAW_FAN,20)
+		set_aircraft_draw_argument_value(DRAW_FAN,100)
 	end
+
+
 
 	local ROLL_STATE = sensor_data:getStickPitchPosition() / 100
 	set_aircraft_draw_argument_value(11, ROLL_STATE) -- right aileron

@@ -1,4 +1,5 @@
 dofile(LockOn_Options.script_path .. "CMFD/CMFD_defs.lua")
+dofile(LockOn_Options.script_path .. "Indicator/Indicator_defs.lua")
 dofile(LockOn_Options.script_path .. "CMFD/CMFD_pageID_defs.lua")
 
 local CMFDNumber=get_param_handle("CMFDNumber")

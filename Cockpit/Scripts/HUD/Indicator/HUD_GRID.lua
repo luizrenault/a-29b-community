@@ -1,61 +1,70 @@
-function basic_dump (o)
-	if type(o) == "number" then
-	  return tostring(o)
-	elseif type(o) == "string" then
-	  return string.format("%q", o)
-	else -- nil, boolean, function, userdata, thread; assume it can be converted to a string
-	  return tostring(o)
-	end
-end
-function dump (name, value, saved, result)
-	seen = seen or {}       -- initial value
-	result = result or ""
-	result=result..name.." = "
-	if type(value) ~= "table" then
-	  result=result..basic_dump(value).."\n"
-	  log.info(result)
-	  result = ""
-	elseif type(value) == "table" then
-	  if seen[value] then    -- value already saved?
-		result=result.."->"..seen[value].."\n"  -- use its previous name
-		log.info(result)
-		result = ""
-		else
-		seen[value] = name   -- save name for next time
-		result=result.."{}\n"     -- create a new table
-		log.info(result)
-		result = ""
-		  for k,v in pairs(value) do      -- save its fields
-		  local fieldname = string.format("%s[%s]", name,
-										  basic_dump(k))
-		  if fieldname~="_G[\"seen\"]" then
-			result=dump(fieldname, v, seen, result)
-		  end
-		end
-	  end
-	end
-	return result
-  end
-
--- dump("_G", _G)
--- dump("_G", getmetatable(_G))
-
--- dump("GetSelf", GetSelf())
--- dump("GetSelf", getmetatable(GetSelf()))
-
--- dump("controller", ccIndicator)
--- dump("controller", getmetatable(ccIndicator))
-
--- dump("DCS", DCS)
--- dump("DCS", getmetatable(DCS))
-
--- local sensor_data = get_base_data()
-
--- dump("sensor_data", sensor_data)
--- dump("sensor_data", sensor_data)
-
 dofile(LockOn_Options.script_path .. "HUD/Indicator/HUD_defs.lua")
+dofile(LockOn_Options.script_path .. "Indicator/Indicator_defs.lua")
 dofile(LockOn_Options.script_path .. "HUD/HUD_ID_defs.lua")
+
+DEFAULT_LEVEL = 9
+default_material = HUD_TEX_IND2
+default_parent = page_root_name
+additive_alpha		= true
+collimated			= true
+default_element_params={"HUD_BRIGHT"}
+default_controllers={{"opacity_using_parameter", 0}}
+
+stroke_font			= "font_stroke_HUD"
+stroke_material		= default_material
+stroke_thickness  = 1 --0.25
+stroke_fuzziness  = 0.6
+
+
+local lclScale = GetScale()
+
+glyphHeight_100			= 7.0
+glyphWidth_100			= 4.0
+fontScaleY_100			= glyphHeight_100 * lclScale
+fontScaleX_100			= glyphWidth_100 * lclScale
+fontIntercharDflt_100	= 2.0
+fontInterlineDflt_100	= 2.0
+fontIntercharScale_100	= fontIntercharDflt_100 * lclScale
+fontInterlineScale_100	= fontInterlineDflt_100 * lclScale
+
+glyphHeight_75			= 6.0
+glyphWidth_75			= 3.0
+fontScaleY_75			= glyphHeight_75 * lclScale
+fontScaleX_75			= glyphWidth_75 * lclScale
+fontIntercharDflt_75	= 1.5
+fontInterlineDflt_75	= 2.0
+fontIntercharScale_75	= fontIntercharDflt_75 * lclScale
+fontInterlineScale_75	= fontInterlineDflt_75 * lclScale
+
+glyphHeight_120			= 8.0
+glyphWidth_120			= 4.0
+fontScaleY_120			= glyphHeight_120 * lclScale
+fontScaleX_120			= glyphWidth_120 * lclScale
+fontIntercharDflt_120	= 2.0
+fontInterlineDflt_120	= 2.0
+fontIntercharScale_120	= fontIntercharDflt_120 * lclScale
+fontInterlineScale_120	= fontInterlineDflt_120 * lclScale
+
+glyphHeight_60			= 5.0
+glyphWidth_60			= 3.0
+fontScaleY_60			= glyphHeight_60 * lclScale
+fontScaleX_60			= glyphWidth_60 * lclScale
+fontIntercharDflt_60	= 1.5
+fontInterlineDflt_60	= 2.0
+fontIntercharScale_60	= fontIntercharDflt_60 * lclScale
+fontInterlineScale_60	= fontInterlineDflt_60 * lclScale
+
+
+STROKE_FNT_DFLT_100			= #stringdefs+1
+STROKE_FNT_DFLT_100_NARROW	= #stringdefs+2
+STROKE_FNT_DFLT_75			= #stringdefs+3
+STROKE_FNT_DFLT_120			= #stringdefs+4
+
+stringdefs[STROKE_FNT_DFLT_100]			= {fontScaleY_100, fontScaleX_100, fontIntercharScale_100, fontInterlineScale_100}
+stringdefs[STROKE_FNT_DFLT_100_NARROW]	= {fontScaleY_100, fontScaleX_100, fontIntercharScale_75,  fontInterlineScale_100}
+stringdefs[STROKE_FNT_DFLT_75]			= {fontScaleY_75,  fontScaleX_75,  fontIntercharScale_75,  fontInterlineScale_75}
+stringdefs[STROKE_FNT_DFLT_120]			= {fontScaleY_120, fontScaleX_120, fontIntercharScale_120, fontInterlineScale_120}
+
 
 -- base                      = CreateElement "ceMeshPoly"
 -- base.name                 = "HUD_Center"

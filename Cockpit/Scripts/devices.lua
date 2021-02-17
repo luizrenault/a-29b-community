@@ -16,7 +16,9 @@ devices["GEAR"]             = counter()
 devices["BRAKES"]           = counter()
 devices["CMFD"]           = counter()
 devices["HUD"]           = counter()
-
+devices["AVIONICS"]           = counter()
+devices["UHF_RADIO"]          = counter()
+devices["RADIO"]          = counter()
 
 devices["CANOPY"]           = counter()
 devices["FLAPS"]            = counter()

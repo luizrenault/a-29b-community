@@ -3,6 +3,7 @@ dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."CMFD/CMFD_pageID_defs.lua")
 dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
+dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
 
 
 startup_print("cmfd_right: load")
@@ -142,11 +143,6 @@ local fuel_init = 300;
 
 local fuel_joker = 200;
 
-local function round_to(value, roundto)
-    value = value + roundto/2
-    return value - value % roundto
-end
-
 local torque_tempo = -1
 local np_tempo = -1
 local oat_base = 25
@@ -154,7 +150,167 @@ local oat_base = 25
 local engine_limits_warning = 0
 local fuel_imbalance_caution = 0
 
+
 function update()
+    update_eicas()
+    update_adhsi()
+end
+
+local adhsi_vv = 1
+
+local adhsi_ap_flash = 0
+local adhsi_ap_status_old = 0
+local adhsi_ap_status = 0
+local adhsi_ap_ovrd = 0
+local adhsi_ap_elapsed = 0
+local adhsi_ap_period = 0.4
+
+local adhsi_turnrate_elapsed = 0
+local adhsi_turnrate_period = 0.4
+local adhsi_turnrate_on = 0
+local adhsi_rad_sel = 20
+local adhsi_hdg_sel = 0
+local adhsi_cdi = 0
+local adhsi_cdi_show = 0
+local adhsi_dtk = 0
+local adhsi_dtk_hdg = -1
+local adhsi_dtk_dist = 0
+local adhsi_fyt_dtk_hdg = -1
+local adhsi_fyt_dtk_dist = 0
+local adhsi_ans_mode = 0
+local adhsi_vor_hdg = -1
+local adhsi_adf_hdg = -1
+local adhsi_gps_hdg = -1
+
+
+local ADHSI_VV_LIM = get_param_handle("ADHSI_VV_LIM")
+local ADHSI_VV = get_param_handle("ADHSI_VV")
+local ADHSI_AP = get_param_handle("ADHSI_AP")
+local ADHSI_ROLL = get_param_handle("ADHSI_ROLL")
+local ADHSI_PITCH = get_param_handle("ADHSI_PITCH")
+local ADHSI_TURN_RATE = get_param_handle("ADHSI_TURN_RATE")
+local ADHSI_TURN_RATE_ON = get_param_handle("ADHSI_TURN_RATE_ON")
+local ADHSI_RAD_SEL = get_param_handle("ADHSI_RAD_SEL")
+local ADHSI_HDG_SEL = get_param_handle("ADHSI_HDG_SEL")
+local ADHSI_VOR_HDG = get_param_handle("ADHSI_VOR_HDG")
+local ADHSI_GPS_HDG = get_param_handle("ADHSI_GPS_HDG")
+local ADHSI_COURSE = get_param_handle("ADHSI_COURSE")
+local ADHSI_CDI = get_param_handle("ADHSI_CDI")
+local ADHSI_CDI_SHOW = get_param_handle("ADHSI_CDI_SHOW")
+local ADHSI_FYT_DTK_HDG = get_param_handle("ADHSI_FYT_DTK_HDG")
+local ADHSI_FYT_DTK_DIST = get_param_handle("ADHSI_FYT_DTK_DIST")
+
+local ADHSI_DTK_HDG = get_param_handle("ADHSI_DTK_HDG")
+local ADHSI_DTK_DIST = get_param_handle("ADHSI_DTK_DIST")
+local ADHSI_DTK = get_param_handle("ADHSI_DTK")
+
+local ADHSI_ADF_HDG = get_param_handle("ADHSI_ADF_HDG")
+
+local ADHSI_GPS_NAME = get_param_handle("ADHSI_GPS_NAME")
+
+ADHSI_COURSE:set(0)
+ADHSI_CDI_SHOW:set(1)
+ADHSI_GPS_NAME:set("")
+
+
+function update_adhsi()
+    adhsi_ap_elapsed = adhsi_ap_elapsed + update_time_step
+    
+    if adhsi_ap_status == 1 and adhsi_ap_ovrd == 0 then
+        adhsi_ap = 1
+    elseif adhsi_ap_status == 0 and adhsi_ap_status_old == 1 then
+        adhsi_ap_flash = 4
+        adhsi_ap_elapsed = 0
+    elseif adhsi_ap_status == 0 and adhsi_ap_flash > 0 then
+        if adhsi_ap_elapsed > adhsi_ap_period then
+            adhsi_ap = 0
+        elseif adhsi_ap_elapsed > adhsi_ap_period / 2 then 
+            adhsi_ap = 1
+        end
+        if adhsi_ap_elapsed > adhsi_ap_period then adhsi_ap_flash = adhsi_ap_flash - 1 end
+    elseif adhsi_ap_status == 1 and adhsi_ap_ovrd == 1 then
+        if adhsi_ap_elapsed > adhsi_ap_period then
+            adhsi_ap = 1
+        elseif adhsi_ap_elapsed > adhsi_ap_period / 2 then 
+            adhsi_ap = 0
+        end
+    end
+    if adhsi_ap_elapsed > adhsi_ap_period then adhsi_ap_elapsed = 0 end
+    adhsi_ap_status_old = adhsi_ap_status
+
+    local adhsi_vv_lim = get_avionics_vv();
+    if adhsi_vv_lim > 2000 then adhsi_vv_lim = 2000 end
+    if adhsi_vv_lim < -2000 then adhsi_vv_lim = -2000 end
+
+    -- Roll
+    local adhsi_roll = sensor_data.getRoll()
+    local adhsi_pitch = sensor_data.getPitch()
+
+    local adhsi_turnrate = get_avionics_turn_rate()
+    local adhsi_turnrate_blink = 0
+    if adhsi_turnrate > 450 then
+        adhsi_turnrate = 450
+        adhsi_turnrate_blink = 1
+    elseif adhsi_turnrate < -450 then
+        adhsi_turnrate = -450
+        adhsi_turnrate_blink = 1
+    end
+    if adhsi_turnrate_blink == 1 then
+        adhsi_turnrate_elapsed = adhsi_turnrate_elapsed + update_time_step
+        if adhsi_turnrate_elapsed > adhsi_turnrate_period then 
+            adhsi_turnrate_on = 1
+            adhsi_turnrate_elapsed = 0
+        elseif adhsi_turnrate_elapsed > adhsi_turnrate_period / 2 then 
+            adhsi_turnrate_on = 0
+        end
+    else 
+        adhsi_turnrate_on = 1
+    end 
+    adhsi_turnrate = math.rad(adhsi_turnrate * 25 / 450)
+
+
+    if adhsi_ans_mode ~= ANS_MODE_IDS.EGI then 
+        adhsi_dtk = 0
+    end
+    if adhsi_dtk == 1 then 
+        adhsi_fyt_dtk_hdg = adhsi_dtk_hdg
+        adhsi_fyt_dtk_dist = adhsi_dtk_dist
+    end
+
+    local adhsi_cdi_show_ovrd = adhsi_cdi_show
+    if adhsi_ans_mode == ANS_MODE_IDS.ILS then adhsi_cdi_show_ovrd = 1 end
+
+    if adhsi_vor_hdg == -1 then 
+        adhsi_cdi_show_ovrd = 0
+    end
+
+    ADHSI_VV_LIM:set(adhsi_vv_lim)
+    ADHSI_VV:set(adhsi_vv)
+    ADHSI_AP:set(adhsi_ap)
+    ADHSI_ROLL:set(adhsi_roll)
+    ADHSI_PITCH:set(adhsi_pitch)
+    ADHSI_TURN_RATE:set(adhsi_turnrate)
+    ADHSI_TURN_RATE_ON:set(adhsi_turnrate_on)
+    ADHSI_RAD_SEL:set(adhsi_rad_sel)
+    ADHSI_HDG_SEL:set(adhsi_hdg_sel)
+    ADHSI_CDI:set(adhsi_cdi)
+    ADHSI_CDI_SHOW:set(adhsi_cdi_show_ovrd)
+    ADHSI_DTK_HDG:set(adhsi_dtk_hdg)
+    ADHSI_DTK_DIST:set(adhsi_dtk_dist)
+    ADHSI_DTK:set(adhsi_dtk)
+    ADHSI_FYT_DTK_HDG:set(adhsi_fyt_dtk_hdg)
+    ADHSI_FYT_DTK_DIST:set(adhsi_fyt_dtk_dist)
+    ADHSI_VOR_HDG:set(adhsi_vor_hdg)
+    ADHSI_ADF_HDG:set(adhsi_adf_hdg)
+    ADHSI_GPS_HDG:set(adhsi_gps_hdg)
+
+    ANS_MODE:set(adhsi_ans_mode)
+
+end
+
+local cabin_press_cor=0
+
+function update_eicas()
     update_cmfd_on()
 
     ----------------- temperatura do ar externo
@@ -362,7 +518,6 @@ function update()
     if cabin_press > 40000 then cabin_press = 40000 end
     cabin_press = round_to(cabin_press, 500)
     -- cor do valor digital da da pressão cabine
-    local cabin_press_cor=0
     if cabin_press < 16000 then 
         if cabin_press_cor == 1 then set_caution(CAUTION_ID.CAB_ALT, 0) end
         if cabin_press_cor == 2 then set_warning(WARNING_ID.CAB_ALT, 0) end
@@ -693,7 +848,7 @@ local CMFD2SelLeftName=get_param_handle("CMFD2SelLeftName")
 CMFD2SelLeftName:set(SUB_PAGE_NAME[CMFD2SelLeft:get()])
 
 local CMFD1SelRight=get_param_handle("CMFD1SelRight")
-CMFD1SelRight:set(SUB_PAGE_ID.BLANK)
+CMFD1SelRight:set(SUB_PAGE_ID.SMS)
 
 local CMFD2SelRight=get_param_handle("CMFD2SelRight")
 CMFD2SelRight:set(SUB_PAGE_ID.BLANK)
@@ -709,6 +864,13 @@ local CMFD2On=get_param_handle("CMFD2On")
 
 local CMFD1SwOn=get_param_handle("CMFD1SwOn")
 local CMFD2SwOn=get_param_handle("CMFD2SwOn")
+
+local CMFD1_BRIGHT=get_param_handle("CMFD1_BRIGHT")
+local CMFD2_BRIGHT=get_param_handle("CMFD2_BRIGHT")
+
+CMFD1_BRIGHT:set(1)
+CMFD2_BRIGHT:set(1)
+
 
 
 
@@ -817,7 +979,45 @@ function SetCommandEicas(command,value, CMFD)
         elseif (command==device_commands.CMFD1OSS12 or command==device_commands.CMFD2OSS12) and EICAS_INIT:get() == 1 then fuel_init = fuel_init - 5
         elseif command==device_commands.CMFD1OSS25 or command==device_commands.CMFD2OSS25 then oat_base = oat_base - 1
         elseif command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26 then oat_base = oat_base + 1
-        elseif command==device_commands.CMFD2OSS28 then EICAS_ERROR1_COLOR:set((EICAS_ERROR1_COLOR:get()+1)%6)
+        end
+    end
+end
+
+function SetCommandAdhsi(command,value, CMFD)
+    if value == 1 then 
+        if command==device_commands.CMFD1OSS8 or command==device_commands.CMFD2OSS8 then 
+            if adhsi_vv == 0 then 
+                adhsi_vv = 1
+            else 
+                adhsi_vv = 0
+            end
+        elseif command==device_commands.CMFD1OSS12 or command==device_commands.CMFD2OSS12 then 
+            adhsi_hdg_sel = (adhsi_hdg_sel + 1) % 360
+        elseif command==device_commands.CMFD1OSS13 or command==device_commands.CMFD2OSS13 then 
+            if adhsi_hdg_sel == 0 then adhsi_hdg_sel = 359
+            else 
+                adhsi_hdg_sel = adhsi_hdg_sel - 1
+            end
+        elseif command==device_commands.CMFD1OSS14 or command==device_commands.CMFD2OSS14 then 
+            if adhsi_ans_mode == ANS_MODE_IDS.EGI then
+                if adhsi_dtk == 0 then adhsi_dtk = 1 else adhsi_dtk = 0 end
+            end
+        elseif command==device_commands.CMFD1OSS21 or command==device_commands.CMFD2OSS21 then 
+            if adhsi_vor_hdg ~= -1 then
+                if adhsi_cdi_show == 0 then adhsi_cdi_show = 1 else adhsi_cdi_show = 0 end
+            end
+        elseif command==device_commands.CMFD1OSS22 or command==device_commands.CMFD2OSS22 then 
+            if adhsi_rad_sel == 20 then adhsi_rad_sel = 10
+            elseif adhsi_rad_sel == 40 then adhsi_rad_sel = 20
+            elseif adhsi_rad_sel == 80 then adhsi_rad_sel = 40
+            end
+        elseif command==device_commands.CMFD1OSS23 or command==device_commands.CMFD2OSS23 then 
+            if adhsi_rad_sel == 10 then adhsi_rad_sel = 20
+            elseif adhsi_rad_sel == 20 then adhsi_rad_sel = 40
+            elseif adhsi_rad_sel == 40 then adhsi_rad_sel = 80
+            end
+        elseif command==device_commands.CMFD1OSS24 or command==device_commands.CMFD2OSS24 then 
+            adhsi_ans_mode = (adhsi_ans_mode + 1) % 4
         end
     end
 end
@@ -867,6 +1067,7 @@ function SetCommand(command,value)
     if CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.MENU1 then SetCommandMenu1(command,value, CMFD[cmfdnumber]) 
     elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.MENU2 then SetCommandMenu2(command,value, CMFD[cmfdnumber]) 
     elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.EICAS then SetCommandEicas(command,value, CMFD[cmfdnumber]) 
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.ADHSI then SetCommandAdhsi(command,value, CMFD[cmfdnumber]) 
     end
 
     if value == 1 then

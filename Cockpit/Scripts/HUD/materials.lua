@@ -135,6 +135,7 @@ local ResourcesPath = LockOn_Options.script_path.."HUD/Resources/"
 -------FONTS----------
 
 fonts["font_stroke_HUD"]			= {fontdescription["font_stroke_HUD"], 10, materials["HUD"]}
+fonts["font_stroke_HUD_R"]			= {fontdescription["font_stroke_HUD"], 10, {255, 0, 0, 255}}
 
 fonts["font_DED"]					= {fontdescription["font_DED"], 10, materials["FONT_DED"]}
 fonts["font_DED_inv"]				= {fontdescription["font_DED_inv"], 10, materials["FONT_DED"]}

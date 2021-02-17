@@ -7,6 +7,93 @@ fontdescription = {}
 
 ---------------------------------------------------------------Hercules
 
+CMFD_X_PIXEL =  88
+CMFD_Y_PIXEL =  144
+
+fontdescription["font_CMFD"] = {
+    texture     = LockOn_Options.script_path .. "CMFD/Resources/font_CMFD.dds",
+    size        = {10, 10},
+    resolution  = {1440, 1440},
+    default     = {CMFD_X_PIXEL, CMFD_Y_PIXEL},
+    chars       = {
+        {32, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- space
+        {48, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 0
+        {49, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 1
+        {50, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 2
+        {51, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 3
+        {52, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 4
+        {53, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 5
+        {54, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 6
+        {55, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 7
+        {56, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 8
+        {57, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- 9
+
+        {64, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- Alpha -> @
+
+        {65, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- A
+        {66, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- B
+        {67, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- C
+        {68, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- D
+        {69, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- E
+        {70, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- F
+        {71, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- G
+        {72, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- H
+        {73, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- I
+        {74, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- J
+        {75, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- K
+        {76, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- L
+        {77, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- M
+        {78, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- N
+        {79, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- O
+        {80, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- P
+        {81, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- Q
+        {82, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- R
+        {83, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- S
+        {84, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- T
+        {85, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- U
+        {86, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- V
+        {87, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- W
+        {88, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- X
+        {89, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- Y
+        {90, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- Z
+         
+        {42, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- *
+        {43, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- +
+        {45, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- -
+        {47, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- /
+        {92, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- \
+        {40, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- (
+        {41, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- )
+        {91, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- [
+        {93, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- ]
+        {123, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- {
+        {125, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- }
+        {60, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- <
+        {62, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- >
+        {61, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- =
+        {63, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- ?
+        {124, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- |
+        {33, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- !
+        {35, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- #
+        {37, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- %
+        {94, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- ^
+        {38, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- &
+        {96, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- o -- degree, change its ascii code to 96 ', original 248 (out of index)
+        {46, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- .
+        {58, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- :
+        {44, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- ,
+        {126, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- cursor -> ~
+        {95, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- _
+        
+        {39, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- '
+        {34, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- "
+        --{32, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- [space]
+        
+        {127, CMFD_X_PIXEL, CMFD_Y_PIXEL}, -- delta, use last ascii code
+    }
+}
+
+
 HUD_xsize = 44 * 2
 HUD_ysize = 72.0 * 2 --73.143 * 2
 fontdescription["font_HUD"] = {

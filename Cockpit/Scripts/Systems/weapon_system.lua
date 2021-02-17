@@ -67,7 +67,7 @@ dev:listen_command(iCommandPlaneDropFlareOnce)
 dev:listen_command(iCommandPlaneDropChaffOnce)
 
 function SetCommand(command,value)
-    print_message_to_user("weapon: command "..tostring(command).." = "..tostring(value))
+    -- print_message_to_user("weapon: command "..tostring(command).." = "..tostring(value))
     if command==device_commands.EngineStart then
     elseif command == iCommandEnginesStart then
     elseif command == iCommandEnginesStop then

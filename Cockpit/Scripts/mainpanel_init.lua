@@ -94,12 +94,6 @@ RightBrakePedal.output				= {0,1}
 RightBrakePedal.parameter_name		= "RIGHT_BRAKE_PEDAL"
 
 
--- Propeller							= CreateGauge()
--- Propeller.arg_number				= 324
--- Propeller.input						= {0, 100}
--- Propeller.output					= {0, 1}
--- Propeller.controller				= controllers.base_gauge_EngineLeftRPM
-
 VerticalVelocity					= CreateGauge()
 VerticalVelocity.arg_number			= 662
 VerticalVelocity.input				= {-6000*ft_to_meter/60, -4000*ft_to_meter/60, -2000*ft_to_meter/60, -1000*ft_to_meter/60, -500*ft_to_meter/60, 0, 500*ft_to_meter/60, 1000*ft_to_meter/60, 2000*ft_to_meter/60, 4000*ft_to_meter/60, 6000*ft_to_meter/60} --1000ft/min => m/s
