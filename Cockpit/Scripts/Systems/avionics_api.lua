@@ -12,6 +12,7 @@ AVIONICS_VV = get_param_handle("AVIONICS_VV")
 AVIONICS_HDG = get_param_handle("AVIONICS_HDG")
 AVIONICS_RALT = get_param_handle("AVIONICS_RALT")
 AVIONICS_TURN_RATE = get_param_handle("AVIONICS_TURN_RATE")
+AVIONICS_ONGROUND = get_param_handle("BASE_SENSOR_WOW_LEFT_GEAR")
 
 ANS_MODE = get_param_handle("ANS_MODE")
 
@@ -38,4 +39,8 @@ end
 
 function get_avionics_turn_rate()
     return AVIONICS_TURN_RATE:get()
+end
+
+function get_avionics_onground()
+    return AVIONICS_ONGROUND:get()
 end

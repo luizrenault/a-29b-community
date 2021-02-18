@@ -566,7 +566,7 @@ device_commands =
     PicNavMan                   = __counter(),
     PicNavSlave               = __counter(),
 
-    LateArmMass               = __counter(),
+    Mass               = __counter(),
     LateArm                    = __counter(),
     
 

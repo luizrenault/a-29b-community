@@ -1,9 +1,12 @@
+dofile(LockOn_Options.script_path.."devices.lua")
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."CMFD/CMFD_pageID_defs.lua")
 dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
 dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
+dofile(LockOn_Options.script_path.."Systems/weapon_system_api.lua")
+
 
 
 startup_print("cmfd_right: load")
@@ -14,6 +17,9 @@ local update_time_step = 0.02 --update will be called 50 times per second
 make_default_activity(update_time_step)
 
 local sensor_data = get_base_data()
+
+dofile(LockOn_Options.script_path.."Systems/cmfd_sms.lua")
+
 
 -- getAngleOfAttack
 -- getAngleOfSlide
@@ -154,6 +160,7 @@ local fuel_imbalance_caution = 0
 function update()
     update_eicas()
     update_adhsi()
+    update_sms()
 end
 
 local adhsi_vv = 1
@@ -809,7 +816,7 @@ local CMFDNumber=get_param_handle("CMFDNumber")
 CMFDNumber:set(0)
 
 local CMFD1Format=get_param_handle("CMFD1Format")
-CMFD1Format:set(SUB_PAGE_ID.ADHSI)
+CMFD1Format:set(SUB_PAGE_ID.SMS)
 
 local CMFD2Format=get_param_handle("CMFD2Format")
 CMFD2Format:set(SUB_PAGE_ID.EICAS)
@@ -900,6 +907,9 @@ function post_initialize()
     end
     fuel_init=round_to(sensor_data.getTotalFuelWeight(),5)
     fuel_joker=round_to(fuel_init/2,5)
+
+    post_initialize_sms()
+
     startup_print("environ: postinit end")
 end
 
@@ -1057,6 +1067,16 @@ function SetCommand(command,value)
         cmfdnumber=2
     end
 
+    if command == device_commands.CMFD1OSS1 and value == -100 then -- Salvo Pressed
+        CMFD1Format:set(SUB_PAGE_ID.SMS)
+        SetCommandSms(command, value, CMFD[cmfdnumber])
+        return 0
+    elseif command == device_commands.CMFD1OSS1 and value == -200 then -- E-J Finished
+        SetCommandSms(command, value, CMFD[cmfdnumber])
+        CMFD1Format:set(CMFD1Sel:get())
+        return 0
+    end
+
     if command == device_commands.CMFD1ButtonOn or command == device_commands.CMFD2ButtonOn then
         -- Quando se liga o CMFD, as imagens tornam-se visíveis depois de aproximadamente 30 segundos e o seu desempenho é total depois de 5 minutos.
         CMFD[cmfdnumber]["SwOn"]:set(value)
@@ -1068,6 +1088,7 @@ function SetCommand(command,value)
     elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.MENU2 then SetCommandMenu2(command,value, CMFD[cmfdnumber]) 
     elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.EICAS then SetCommandEicas(command,value, CMFD[cmfdnumber]) 
     elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.ADHSI then SetCommandAdhsi(command,value, CMFD[cmfdnumber]) 
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.SMS   then SetCommandSms(command,value, CMFD[cmfdnumber]) 
     end
 
     if value == 1 then
@@ -1083,6 +1104,7 @@ function SetCommand(command,value)
             if CMFD[cmfdnumber]["Primary"]:get()==1 then
                 if (CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.MENU1) or (CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.MENU2) then
                     CMFD[cmfdnumber]["Format"]:set(CMFD[cmfdnumber]["SelRight"]:get())
+                    CMFD[cmfdnumber]["Sel"]:set(CMFD[cmfdnumber]["SelRight"]:get())
                 else 
                     CMFD[cmfdnumber]["Sel"]:set(CMFD[cmfdnumber]["SelRight"]:get())
                     CMFD[cmfdnumber]["Format"]:set(SUB_PAGE_ID.MENU1)
@@ -1090,11 +1112,13 @@ function SetCommand(command,value)
             else 
                 CMFD[cmfdnumber]["Primary"]:set(1)
                 CMFD[cmfdnumber]["Format"]:set(CMFD[cmfdnumber]["SelRight"]:get())
+                CMFD[cmfdnumber]["Sel"]:set(CMFD[cmfdnumber]["SelRight"]:get())
             end
         elseif command == device_commands.CMFD1OSS19 or command == device_commands.CMFD2OSS19 then
             if CMFD[cmfdnumber]["Primary"]:get()==0 then
                 if (CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.MENU1) or (CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.MENU2) then
                     CMFD[cmfdnumber]["Format"]:set(CMFD[cmfdnumber]["SelLeft"]:get())
+                    CMFD[cmfdnumber]["Sel"]:set(CMFD[cmfdnumber]["SelLeft"]:get())
                 else 
                     CMFD[cmfdnumber]["Sel"]:set(CMFD[cmfdnumber]["SelLeft"]:get())
                     CMFD[cmfdnumber]["Format"]:set(SUB_PAGE_ID.MENU1)
@@ -1102,6 +1126,7 @@ function SetCommand(command,value)
             else 
                 CMFD[cmfdnumber]["Primary"]:set(0)
                 CMFD[cmfdnumber]["Format"]:set(CMFD[cmfdnumber]["SelLeft"]:get())
+                CMFD[cmfdnumber]["Sel"]:set(CMFD[cmfdnumber]["SelLeft"]:get())
             end
             -- OSS 16 e 19 (Formatos Primário e Secundário) – Têm a função de selecionar o formato primário de apresentação.
             -- As legendas adjacentes aos OSS 16 e 19 representam os formatos primário e secundário selecionados e podem ser qualquer uma daquelas que representam os formatos possíveis de serem selecionados, quais sejam: HSD, SMS, UFCP, DVR, EW, ADHSI, EICAS, FLIR, EMERG, PFL, BIT, HUD, DTE e NAV.

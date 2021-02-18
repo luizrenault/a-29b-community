@@ -15,6 +15,7 @@ A_29B =  {
 	Picture 			= "A-29B.png",
 	Rate 				= 40, -- RewardPoint in Multiplayer
 	Shape 				= "A-29B",
+    propellorShapeType  = '3ARG',
 
 	shape_table_data 	= 
 	{
@@ -22,21 +23,51 @@ A_29B =  {
 			file  	 	= 'A-29B';
 			life  	 	= 20; -- lifebar
 			vis   	 	= 3; -- visibility gain.
-			desrt    	= 'A-29B-collision'; -- Name of destroyed object file name
+			desrt    	= 'Fighter-2-crush'; -- Name of destroyed object file name
 			fire  	 	= { 300, 2}; -- Fire on the ground after destoyed: 300sec 2m
 			username	= 'A-29B';
-			--index    	=  WSTYPE_PLACEHOLDER;---------------------------------------------------------------------------------------
-			--index    	=  A-29B;---------------------------------------------------------------------------------------
+			index    	=  WSTYPE_PLACEHOLDER;---------------------------------------------------------------------------------------
+            classname   = "lLandPlane";
+			positioning = "BYNORMAL";
 		},
-		{
-			name  = "A-29B-collision";
-			file  = "A-29B-collision";
-			fire  = { 240, 2};
-		},
+		-- no need for this as we are using a built in destroyed model
+		-- {
+		-- 	name  = "A-29B-collision";
+		-- 	file  = "A-29B-collision";
+		-- 	fire  = { 240, 2};
+		-- },
 
 	},
+	    -------------------------
+    -- add model draw args for network transmitting to this draw_args table (32 limit)
+    net_animation ={
+        0, -- front gear
+        1, -- front gear suspension
+		2, -- nose wheel steering
+		3, -- main gear
+        4, -- main gear suspension
+        9, -- right flap
+        10, -- left flap
+        11, -- right aileron
+        12, -- left aileron
+        15, -- right elevator
+        16, -- left elevator
+        17, -- rudder
+        38, -- canopy
+		39, -- pilots heads
+		49, -- nav lights
+		50, -- pilots
+		51, -- landing lights
+		77, -- wheel rollAngle
+		83, -- strobe lights
+		324, -- proppellerer
+		350, -- Guns
+		802, -- other lights
+		407,
+		475,
+    },
+
 	mapclasskey 		= "P0091000024",
-	
 	
 --WorldID      = 54,
 --index          =  A_29B;
@@ -167,13 +198,45 @@ A_29B =  {
 		},
 
 		HumanRadio = {
-			frequency = 127.5,  -- Radio Freq
+			frequency = 254.0, -- Maykop (Caucasus) or Nellis (NTTR)
 			editable = true,
-			minFrequency = 100.000,
-			maxFrequency = 156.000,
+			minFrequency = 225.000,
+			maxFrequency = 399.900,
 			modulation = MODULATION_AM
 		},
+
+		panelRadio = {
+			[1] = {
+				name = _("AN/ARC-51A"),
+				range = {
+					{min = 225.0, max = 399.9}
+				},
+				channels = {  -- matches L-39C except for channel 8, which was changed to a Georgian airport and #20 which is NTTR only (for now).  This radio goes 1-20 not 0-19.
+					[1] = { name = _("Channel 1"),		default = 264.0, modulation = _("AM"), connect = true}, -- mineralnye-vody (URMM) : 264.0
+					[2] = { name = _("Channel 2"),		default = 265.0, modulation = _("AM")},	-- nalchik (URMN) : 265.0
+					[3] = { name = _("Channel 3"),		default = 256.0, modulation = _("AM")},	-- sochi-adler (URSS) : 256.0
+					[4] = { name = _("Channel 4"),		default = 254.0, modulation = _("AM")},	-- maykop-khanskaya (URKH), nellis (KLSV) : 254.0
+					[5] = { name = _("Channel 5"),		default = 250.0, modulation = _("AM")},	-- anapa (URKA) : 250.0
+					[6] = { name = _("Channel 6"),		default = 270.0, modulation = _("AM")},	-- beslan (URMO) : 270.0
+					[7] = { name = _("Channel 7"),		default = 257.0, modulation = _("AM")},	-- krasnodar-pashkovsky (URKK) : 257.0
+					[8] = { name = _("Channel 8"),		default = 258.0, modulation = _("AM")},	-- sukhumi-babushara (UGSS) : 255.0
+					[9] = { name = _("Channel 9"),		default = 262.0, modulation = _("AM")},	-- kobuleti (UG5X) : 262.0
+					[10] = { name = _("Channel 10"),	default = 259.0, modulation = _("AM")},	-- gudauta (UG23) : 259.0
+					[11] = { name = _("Channel 11"),	default = 268.0, modulation = _("AM")},	-- tbilisi-soganlug (UG24) : 268.0
+					[12] = { name = _("Channel 12"),	default = 269.0, modulation = _("AM")},	-- tbilisi-vaziani (UG27) : 269.0
+					[13] = { name = _("Channel 13"),	default = 260.0, modulation = _("AM")},	-- batumi (UGSB) : 260.0
+					[14] = { name = _("Channel 14"),	default = 263.0, modulation = _("AM")},	-- kutaisi-kopitnari (UGKO) : 263.0
+					[15] = { name = _("Channel 15"),	default = 261.0, modulation = _("AM")},	-- senaki-kolkhi (UGKS) :  261.0
+					[16] = { name = _("Channel 16"),	default = 267.0, modulation = _("AM")},	-- tbilisi-lochini (UGTB) : 267.0
+					[17] = { name = _("Channel 17"),	default = 251.0, modulation = _("AM")},	-- krasnodar-center (URKI), creech (KINS) : 251.0
+					[18] = { name = _("Channel 18"),	default = 253.0, modulation = _("AM")},	-- krymsk (URKW), mccarran (KLAS) : 253.0
+					[19] = { name = _("Channel 19"),	default = 266.0, modulation = _("AM")},	-- mozdok (XRMF) : 266.0
+					[20] = { name = _("Channel 20"),	default = 252.0, modulation = _("AM")}, -- N/A, groom lake/homey (KXTA) : 252.0
+				}
+			},
+		},
 	
+		
 		-- Countermeasures
 		SingleChargeTotal = 60,
 		CMDS_Incrementation = 15,
@@ -285,6 +348,21 @@ A_29B =  {
 									
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
 					{ CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+				}
+			),
+			pylon(6, 0.1, 2.0, -0.5, 0.88,
+				{
+					use_full_connector_position = true,
+					connector 		= "SmokeWhite",
+				    DisplayName 	= "Smoke",
+				 },
+				{
+				    {CLSID = "{SMOKE-WHITE-A29B}",		    arg_value = 0.2}, -- Smoke pod
+				    {CLSID = "{SMOKE-RED-A29B}",		    arg_value = 0.2}, -- Smoke pod
+				    {CLSID = "{SMOKE-GREEN-A29B}",		    arg_value = 0.2}, -- Smoke pod
+				    {CLSID = "{SMOKE-BLACK-A29B}",		    arg_value = 0.2}, -- Smoke pod
+				    {CLSID = "{SMOKE-ORANGE-A29B}",		    arg_value = 0.2}, -- Smoke pod
+				    {CLSID = "{SMOKE-YELLOW-A29B}",		    arg_value = 0.2}, -- Smoke pod
 				}
 			),
 	},

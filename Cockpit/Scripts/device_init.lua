@@ -71,7 +71,7 @@ indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."CMFD/
 indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."BFI/init.lua" , nil,{{"CENTER_BFI_PNT","DOWN_BFI_PNT","RIGHT_BFI_PNT"}, {}}}
 indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."HUD/Indicator/HUD_page_init.lua" , devices.HUD ,	{ {"PTR-HUD-CENTER", "PTR-HUD-DOWN", "PTR-HUD-RIGHT"},{},2},2}
 -- indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."avRadar/Indicator/init.lua" , nil,		{ {},{sz_l = 0.0,sx_l = -0.50, sy_l =  -0.07 },  1}}
-
+-- indicators[#indicators + 1] = {"ccChart",LockOn_Options.common_script_path.."dbg_chart.lua"  ,nil,{{}, {sw = LockOn_Options.screen.aspect - 0.01,sh = 0.5 - 0.01}}}
 
 --attributes = {
 --	"support_for_cws",

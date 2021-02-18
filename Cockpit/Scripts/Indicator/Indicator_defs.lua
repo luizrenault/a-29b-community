@@ -20,7 +20,7 @@ end
 
 
 function setSymbolCommonProperties(symbol, name, pos, parent, controllers, material)
-	symbol.name					= name
+	symbol.name					= name or create_guid_string()
 	symbol.isdraw				= true
 	symbol.material				= material or default_material
 	symbol.additive_alpha		= additive_alpha or false
@@ -112,7 +112,7 @@ local function buildStrokeLineVerts(length, dashed, stroke, gap)
 end
 
 function setPlaceholderCommonProperties(placeholder, name, pos, parent, controllers)
-	placeholder.name			= name
+	placeholder.name			= name or create_guid_string()
 	pos							= pos or {0, 0}
 	placeholder.init_pos		= {pos[1], pos[2], 0}
 	placeholder.collimated		= collimated or false
@@ -197,7 +197,18 @@ function addStrokeBox(name, sideX, sideY, align, pos, parent, controllers, mater
 
 	local halfSideX	= sideX / 2
 	local halfSideY	= sideY / 2
-	box.vertices	= {{-halfSideX, -halfSideY}, {-halfSideX, halfSideY}, {halfSideX, halfSideY}, {halfSideX, -halfSideY}}
+
+	if align == "LeftCenter" then
+		box.vertices	= {{0, halfSideY}, {2*halfSideX, halfSideY}, {2*halfSideX, -halfSideY}, {0, -halfSideY}}
+	elseif align == "RightCenter" then
+		box.vertices	= {{-2*halfSideX, halfSideY}, {0, halfSideY}, {0, -halfSideY}, {-2*halfSideX, -halfSideY}}
+	elseif align == "CenterTop" then
+		box.vertices	= {{-halfSideX, 0}, {halfSideX, 0}, {halfSideX, -2*halfSideY}, {-halfSideX, -2*halfSideY}}
+	elseif align == "CenterBottom" then
+		box.vertices	= {{-halfSideX, 2*halfSideY}, {halfSideX, 2*halfSideY}, {halfSideX, 0}, {-halfSideX, 0}}
+	else 
+		box.vertices	= {{-halfSideX, halfSideY}, {halfSideX, halfSideY}, {halfSideX, -halfSideY}, {-halfSideX, -halfSideY}}
+	end
 	box.indices		= line_box_indices
 
 	Add(box)
@@ -498,4 +509,82 @@ function addMesh(name, vertices, indices, pos, primitives, parent, controllers, 
 	mesh.primitivetype		= primitives
 	Add(mesh)
 	return mesh
+end
+local aspect = GetAspect()
+
+local OSSPos = {
+	{-0.714285714, aspect* 0.96},
+	{-0.42, aspect* 0.96},
+	{-0.142857143, aspect* 0.96},
+	{0.142857143, aspect* 0.96},
+	{0.42, aspect* 0.96},
+	{0.714285714, aspect* 0.96},
+	{0.975, ( 5.8*1.0/8) * aspect},
+	{0.975, ( 4.1*1.0/8) * aspect},
+	{0.975, ( 2.5*1.0/8) * aspect},
+	{0.975, ( 0.9*1.0/8) * aspect},
+	{0.975, (-1.2*1.0/8) * aspect},
+	{0.975, (-2.8*1.0/8) * aspect},
+	{0.975, (-4.5*1.0/8) * aspect},
+	{0.975, (-6.1*1.0/8) * aspect},
+	{0.714285714, -aspect* 0.96},
+	{0.42, -aspect* 0.96},
+	{0.142857143, -aspect* 0.96},
+	{-0.142857143, -aspect* 0.96},
+	{-0.42, -aspect* 0.96},
+	{-0.714285714, -aspect* 0.96},
+	{-0.975, (-6.1*1.0/8) * aspect},
+	{-0.975, (-4.5*1.0/8) * aspect},
+	{-0.975, (-2.8*1.0/8) * aspect},
+	{-0.975, (-1.2*1.0/8) * aspect},
+	{-0.975, ( 0.9*1.0/8) * aspect},
+	{-0.975, ( 2.5*1.0/8) * aspect},
+	{-0.975, ( 4.1*1.0/8) * aspect},
+	{-0.975, ( 5.8*1.0/8) * aspect},
+
+
+}
+
+function addOSSText(ossnum, value, parent, parameters, controllers, formats)
+	local align
+	if ossnum <= 6 then
+		align = "CenterTop"
+	elseif ossnum <= 14  then
+		align = "RightCenter"
+	elseif ossnum <= 20  then
+		align = "CenterBottom"
+	else
+		align = "LeftCenter"
+	end
+	local object = addStrokeText(nil, value or "", CMFD_STRINGDEFS_DEF_X08, align, OSSPos[ossnum], parent, controllers, formats)
+	if parameters ~= nil then object.element_params = parameters end
+	if controllers ~= nil then	object.controllers = controllers end
+	return object
+end
+
+function addOSSStrokeBox(ossnum, lines, parent, parameters, controllers, material)
+	lines = lines or 1
+	local align
+	if ossnum <= 6 then
+		align = "CenterTop"
+	elseif ossnum <= 14  then
+		align = "RightCenter"
+	elseif ossnum <= 20  then
+		align = "CenterBottom"
+	else
+		align = "LeftCenter"
+	end
+	local object = addStrokeBox(nil, 0.3, 0.064 * lines, align, OSSPos[ossnum], parent, controllers, material)
+	if parameters ~= nil then object.element_params = parameters end
+	if controllers ~= nil then	object.controllers = controllers end
+	return object
+end
+
+function addStrokeBoxDashed(name, sideX, sideY, stroke, gap, pos, parent, controllers, material)
+	local root = addPlaceholder(name, pos, parent, controllers)
+	addStrokeLine(root.name.."_left", sideY, {-sideX / 2, -sideY / 2}, 0, root.name, nil, true, stroke, gap, material)
+	addStrokeLine(root.name.."_right", sideY, {sideX / 2, -sideY / 2}, 0, root.name, nil, true, stroke, gap, material)
+	addStrokeLine(root.name.."_top", sideX, {-sideX / 2, sideY / 2}, -90, root.name, nil, true, stroke, gap, material)
+	addStrokeLine(root.name.."_bottom", sideX, {-sideX / 2, -sideY / 2}, -90, root.name, nil, true, stroke, gap, material)
+	return root
 end

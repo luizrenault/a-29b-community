@@ -114,8 +114,6 @@ elements["PNT_822"] = default_button("Beep Supress",                            
 elements["PNT_823"] = default_button("Down Lock Override",                                      devices.GEAR,    device_commands.LndGearOvr,     823)
 elements["PNT_851"] = default_2_position_tumb("Gear Emergency Down (Emergency Down/Normal)",    devices.GEAR,    device_commands.LndGearEmer, 851,TOGGLECLICK_MID_FWD)
 
--- SALVO
-elements["PNT_811"] = default_button("Salvo",                                                   devices.EXTANIM, device_commands.Salvo,         811)
 
 -- FUEL
 elements["PNT_801"] = multiposition_switch_limited("Fuel Main Pump (Auto/Off)",                 devices.FUEL, device_commands.FuelMain,         801, 2, 1.0, false, 0, TOGGLECLICK_MID_FWD)
@@ -125,9 +123,10 @@ elements["PNT_803"] = default_3_position_tumb("Fuel Transfer (U-Wing/Ventral-Aut
 -- PARKING BRAKES
 elements["PNT_791"] = default_3_position_tumb("Emergency/Parking Brakes",                       devices.BRAKES, device_commands.EmerParkBrake, 791, nil, true)
 
--- LATE ARM
-elements["PNT_781"] = default_3_position_tumb("Mass (Sim/Save/Live)",                           devices.WEAPON_SYSTEM, device_commands.LateArmMass,   781,nil,true,TOGGLECLICK_MID_FWD)
+-- WEAPONS
+elements["PNT_781"] = default_3_position_tumb("Mass (Sim/Save/Live)",                           devices.WEAPON_SYSTEM, device_commands.Mass,   781,nil,true,TOGGLECLICK_MID_FWD)
 elements["PNT_782"] = default_3_position_tumb("Late Arm (On/Safe)",                             devices.WEAPON_SYSTEM, device_commands.LateArm,       782,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_811"] = default_button("Salvo",                                                   devices.WEAPON_SYSTEM, device_commands.Salvo,         811)
 
 -- ELT
 elements["PNT_771"] = default_3_position_tumb("ELT (On/Arm-Reset)",                             devices.EXTANIM, device_commands.EltOn,        771,nil,true,TOGGLECLICK_MID_FWD)
