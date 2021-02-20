@@ -80,9 +80,9 @@ elements["PNT_912"] = default_2_position_tumb("Flaps (Up/Stop/Down)",           
 elements["PNT_913"] = default_movable_axis("Friction",                                          devices.EXTANIM, device_commands.Friction,       913, 0.0,0.1, true, false)
 
 -- TRIMS
-elements["PNT_901"] = springloaded_3_pos_tumb("Aileron Emergency (Left/Stop/Right)",            devices.EXTANIM, device_commands.TrimEmerAil,    901,true,TOGGLECLICK_MID_FWD)
-elements["PNT_902"] = springloaded_3_pos_tumb("Elevator Emergency (Down/Stop/Up)",              devices.EXTANIM, device_commands.TrimEmerElev,   902,true,TOGGLECLICK_MID_FWD)
-elements["PNT_903"] = default_3_position_tumb("Auto Rudder (Engage/Power/Off)",                 devices.EXTANIM, device_commands.AutoRudder,     903,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_901"] = springloaded_3_pos_tumb("Aileron Emergency (Left/Stop/Right)",            devices.AVIONICS, device_commands.TrimEmerAil,    901,true,TOGGLECLICK_MID_FWD)
+elements["PNT_902"] = springloaded_3_pos_tumb("Elevator Emergency (Down/Stop/Up)",              devices.AVIONICS, device_commands.TrimEmerElev,   902,true,TOGGLECLICK_MID_FWD)
+elements["PNT_903"] = default_3_position_tumb("Auto Rudder (Engage/Power/Off)",                 devices.AVIONICS, device_commands.AutoRudder,     903,nil,true,TOGGLECLICK_MID_FWD)
 
 -- SEAT
 elements["PNT_891"] = springloaded_3_pos_tumb("Seat (Up/Stop/Down)",                            devices.EXTANIM, device_commands.SeatAdj,        891,true,TOGGLECLICK_MID_FWD)

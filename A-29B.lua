@@ -538,6 +538,28 @@ A_29B =  {
 
 	},
 
+    AddPropAircraft = {
+        {
+            id = "SoloFlight",
+            control = 'checkbox',
+            label = _('Solo Flight'),
+            defValue = false,
+            weightWhenOn = -80,
+            wCtrl = 150,
+        },
+        {
+            id = 'PropellorType',
+            control = 'comboList',
+            label ="Propellor Movement",
+            defValue = 20,
+            arg = 324,
+            values = {
+                {id = 0, dispName = "Stopped"},
+                {id = 20, dispName = "Rotating"},
+            },
+            wCtrl = 150,
+        },
+    },
 	--damage , index meaning see in  Scripts\Aircrafts\_Common\Damage.lua
 	Damage = {
 		[0]		= {critical_damage = 5, args = {146}},
@@ -693,8 +715,8 @@ A_29B =  {
 	mapclasskey = "P0091000024",
 
 	Guns = {
-		MG_20({muzzle_pos = {0.96,-0.68, 2.32},_connector =  "Point_Gun_01_R",rates = {688},effect_arg_number = 350,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 0,supply_position = {4.5,0.22, 0.3}}),-- MITRAIL AVR 1 
-		MG_20({muzzle_pos = {0.96, -0.68, -2.32},_connector =  "Point_Gun_01_L",rates = {688},effect_arg_number = 436,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 0,supply_position = {2.0, -0.25, 0.8}}),-- MITRAIL AVR 2 B
+		MG_20({muzzle_pos = {0.96,-0.68, 2.32},_connector =  "Point_Gun_01_R",rates = {688},effect_arg_number = 350,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 1,supply_position = {4.5,0.22, 0.3}}),-- MITRAIL AVR 1 
+		MG_20({muzzle_pos = {0.96, -0.68, -2.32},_connector =  "Point_Gun_01_L",rates = {688},effect_arg_number = 436,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 1,supply_position = {2.0, -0.25, 0.8}}),-- MITRAIL AVR 2 B
 	},
 }
 

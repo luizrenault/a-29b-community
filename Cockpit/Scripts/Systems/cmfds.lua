@@ -114,10 +114,6 @@ local EICAS_BAT_VOLT_COR = get_param_handle("EICAS_BAT_VOLT_COR")
 local EICAS_BAT_TEMP = get_param_handle("EICAS_BAT_TEMP")
 local EICAS_BAT_TEMP_COR = get_param_handle("EICAS_BAT_TEMP_COR")
 
-local EICAS_TRIM_ROLL = get_param_handle("EICAS_TRIM_ROLL")
-local EICAS_TRIM_PITCH = get_param_handle("EICAS_TRIM_PITCH")
-local EICAS_TRIM_YAW = get_param_handle("EICAS_TRIM_YAW")
-
 local EICAS_FUEL_FLOW = get_param_handle("EICAS_FUEL_FLOW")
 local EICAS_FUEL = get_param_handle("EICAS_FUEL")
 local EICAS_FUEL_COR = get_param_handle("EICAS_FUEL_COR")
@@ -156,12 +152,6 @@ local oat_base = 25
 local engine_limits_warning = 0
 local fuel_imbalance_caution = 0
 
-
-function update()
-    update_eicas()
-    update_adhsi()
-    update_sms()
-end
 
 local adhsi_vv = 1
 
@@ -566,20 +556,6 @@ function update_eicas()
         bat_temp_cor = 2 
     end
 
-
-    ------------------- indicador compensador
-    local trim_roll = 0
-    if trim_roll < -10 then trim_roll = -10 end
-    if trim_roll > 10 then trim_roll = 10 end
-
-    local trim_pitch = 0
-    if trim_pitch < -10 then trim_pitch = -10 end
-    if trim_pitch > 10 then trim_pitch = 10 end
-
-    local trim_yaw = 0
-    if trim_yaw < -10 then trim_yaw = -10 end
-    if trim_yaw > 10 then trim_yaw = 10 end
-
     ------------------- indicador combustível
     local fuel_flow = sensor_data.getEngineLeftFuelConsumption()*60*60;
     if fuel_flow < 0 then fuel_flow = 0 end
@@ -702,10 +678,6 @@ function update_eicas()
     EICAS_BAT_TEMP:set(bat_temp)
     EICAS_BAT_TEMP_COR:set(bat_temp_cor)
 
-    EICAS_TRIM_ROLL:set(trim_roll)
-    EICAS_TRIM_PITCH:set(trim_pitch)
-    EICAS_TRIM_YAW:set(trim_yaw)
-
     EICAS_FUEL_FLOW:set(round_to(fuel_flow,5))
     EICAS_FUEL:set(fuel)
     EICAS_FUEL_COR:set(fuel_cor)
@@ -812,6 +784,9 @@ dev:listen_command(device_commands.CMFD1ButtonGain)
 dev:listen_command(device_commands.CMFD1ButtonSymb)
 dev:listen_command(device_commands.CMFD1ButtonBright)
 
+dev:listen_command(Keys.DisplayMngt)
+
+
 local CMFDNumber=get_param_handle("CMFDNumber")
 CMFDNumber:set(0)
 
@@ -889,6 +864,27 @@ function update_cmfd_on()
     CMFD2On:set(get_elec_emergency_ok() and 1 or 0)
 
 end
+
+local DMSLeftElapsed = -1
+local DMSRightElapsed = -1
+function update()
+    update_eicas()
+    update_adhsi()
+    update_sms()
+    if DMSLeftElapsed > 0 then
+        DMSLeftElapsed = DMSLeftElapsed - update_time_step
+    elseif DMSLeftElapsed > -1 then
+        CMFDDoi:set(1)
+        DMSLeftElapsed = -1
+    end
+    if DMSRightElapsed > 0 then
+        DMSRightElapsed = DMSRightElapsed - update_time_step
+    elseif DMSRightElapsed > -1 then
+        CMFDDoi:set(2)
+        DMSRightElapsed = -1
+    end
+end
+
 
 function post_initialize()
     startup_print("cmfd_right: postinit start")
@@ -1043,7 +1039,6 @@ CMFD[1]["SelRight"]        = CMFD1SelRight
 CMFD[1]["SelLeftName"]     = CMFD1SelLeftName
 CMFD[1]["SelRightName"]    = CMFD1SelRightName
 CMFD[1]["Sel"]             = CMFD1Sel
-CMFD[1]["Selected"]        = CMFD1Format:get()
 CMFD[1]["On"]              = CMFD1On
 CMFD[1]["SwOn"]            = CMFD1SwOn
 
@@ -1076,6 +1071,35 @@ function SetCommand(command,value)
         CMFD1Format:set(CMFD1Sel:get())
         return 0
     end
+    if command == Keys.DisplayMngt then
+        if value == 1 then -- Fwd
+            CMFDDoi:set(0)
+        elseif value == 3 then -- Left
+            if DMSLeftElapsed > 0 then
+                DMSLeftElapsed = -1
+                if CMFD1Primary:get() == 1 then 
+                    dev:performClickableAction(device_commands.CMFD1OSS19, 1)
+                else
+                    dev:performClickableAction(device_commands.CMFD1OSS16, 1)
+                end
+            else
+                DMSLeftElapsed = 0.4
+            end
+        elseif value == 4 then -- Right
+            if DMSRightElapsed > 0 then
+                DMSRightElapsed = -1
+                if CMFD2Primary:get() == 1 then 
+                    dev:performClickableAction(device_commands.CMFD2OSS19, 1)
+                else
+                    dev:performClickableAction(device_commands.CMFD2OSS16, 1)
+                end
+            else
+                DMSRightElapsed = 0.4
+            end
+        end
+        return 0
+    end
+
 
     if command == device_commands.CMFD1ButtonOn or command == device_commands.CMFD2ButtonOn then
         -- Quando se liga o CMFD, as imagens tornam-se visíveis depois de aproximadamente 30 segundos e o seu desempenho é total depois de 5 minutos.
@@ -1145,6 +1169,10 @@ function SetCommand(command,value)
             --  • Nenhuma seta nos CMFD indica que o HUD é o DOI.
             -- A seleção do DOI é mantida de acordo com a última seleção feita ou modificada através da programação carregada por meio do DTC.
         elseif command == device_commands.CMFD1OSS18 or command == device_commands.CMFD2OSS18 then
+            -- OSS 18 (SWAP) – Tem a função de trocar os formatos que estiverem sendo apresentados nos CMFDs da esquerda e da direita.
+            -- Ao pressionar o OSS 18, o formato que esta sendo apresentado no CMFD esquerdo passa a ser apresentado no CMFD direito e vice-versa.
+            -- Pode-se efetuar a troca (SWAP) entre os displays primário e secundário de um mesmo CMFD através de dois movimentos para a esquerda no Interruptor de Gerenciamento dos Displays (DMS) no punho do manche para o CMFD da esquerda. Analogamente pode-se fazer a mesma troca no CMFD da direita.
+            -- A função de troca (SWAP) continua disponível mesmo que o CMFD direito não esteja instalado.
             if CMFD1Primary:get() == 0 then
                 selected1 = CMFD1SelLeft
                 name1 = CMFD1SelLeftName
@@ -1169,10 +1197,6 @@ function SetCommand(command,value)
             CMFD1Format:set(selected1:get())
             CMFD2Sel:set(selected2:get())
             CMFD2Format:set(selected2:get())
-            -- OSS 18 (SWAP) – Tem a função de trocar os formatos que estiverem sendo apresentados nos CMFDs da esquerda e da direita.
-            -- Ao pressionar o OSS 18, o formato que esta sendo apresentado no CMFD esquerdo passa a ser apresentado no CMFD direito e vice-versa.
-            -- Pode-se efetuar a troca (SWAP) entre os displays primário e secundário de um mesmo CMFD através de dois movimentos para a esquerda no Interruptor de Gerenciamento dos Displays (DMS) no punho do manche para o CMFD da esquerda. Analogamente pode-se fazer a mesma troca no CMFD da direita.
-            -- A função de troca (SWAP) continua disponível mesmo que o CMFD direito não esteja instalado.
         elseif command == device_commands.CMFD1OSS20 or command == device_commands.CMFD2OSS20 then
             -- OSS 20 (IND) – Tem a função de individualizar a seleção dos formatos dos CMFDs dianteiro e traseiro de um mesmo lado.
             -- Esta função está habilitada somente na nacele traseira e a sua ativação e desativação é feita pressionando-se o OSS 20. Entretanto, a legenda é apresentada nas duas naceles.

@@ -56,9 +56,6 @@ local HUD_VOR_DIST = get_param_handle("HUD_VOR_DIST")
 local HUD_VOR_MAG = get_param_handle("HUD_VOR_MAG")
 local HUD_MACH = get_param_handle("HUD_MACH")
 
-local HUD_MODE = get_param_handle("HUD_MODE")
-local HUD_MODE_TXT = get_param_handle("HUD_MODE_TXT")
-
 local HUD_AOA = get_param_handle("HUD_AOA")
 
 local HUD_ON = get_param_handle("HUD_ON")
@@ -75,8 +72,6 @@ HUD_VAH:set(0)
 HUD_RDY:set(0)
 HUD_RDY_S:set(0)
 
-local hud_mode = HUD_MODE_ID.NAV
-
 local max_accel = 0
 
 
@@ -85,9 +80,6 @@ local hud_warn_elapsed = 0
 local hud_warning = get_param_handle("HUD_WARNING")
 
 function update()
-    if hud_mode == HUD_MODE_ID.NAV and sensor_data.getLeftMainLandingGearDown() == 1 then hud_mode = HUD_MODE_ID.LANDING end
-    if hud_mode == HUD_MODE_ID.LANDING and sensor_data.getLeftMainLandingGearDown() == 0 then hud_mode = HUD_MODE_ID.NAV end
-
     local hud_on = get_elec_avionics_ok() and 1 or 0
     local hud_bright = get_cockpit_draw_argument_value(483)
 
@@ -108,8 +100,6 @@ function update()
     end
     
     
-    local hud_mode_txt = HUD_MODE_STR[hud_mode]
-
     local pitch = sensor_data.getPitch()
     local roll = sensor_data.getRoll()
     local hdg = round_to(get_avionics_hdg(),1)
@@ -189,7 +179,7 @@ function update()
     local vor_mag = 270
 
     local mach = round_to(sensor_data.getMachNumber(), 0.01)
-    if hud_mode == HUD_MODE_ID.LANDING and sensor_data.getWOW_LeftMainLandingGear() == 0 then 
+    if get_avionics_master_mode() == AVIONICS_MASTER_MODE_ID.LANDING and not get_avionics_onground() then 
         mach = -1 
         max_accel_val = -1
     end
@@ -230,9 +220,6 @@ function update()
 
     HUD_MACH:set(mach)
     
-    HUD_MODE:set(hud_mode)
-    HUD_MODE_TXT:set(hud_mode_txt)
-
     HUD_AOA:set(aoa)
 
     HUD_ON:set(hud_on)

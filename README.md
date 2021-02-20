@@ -8,6 +8,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## Version 0.0.7a - 20 February 2021
+
+### Added
+- Trim indication on EICAS is now working.
+- A/A INT mode with Sidewinder seek and lock tones.
+- A/A DOGFT mode with Sidewinder and guns.
+- Simplified A/G mode with bombs, missiles and rockets.
+- Selective and Emergency (Salvo) Jettison modes.
+- Axis for Wheel Brakes.
+- Joystick mapping for all Stick Buttons.
+
+### Changed
+- SMS and Weapons systems code refactory.
+- Instant Action missions minor changes.
+- Rearm/Refuel menu aircraft image.
+
+### Fixed
+- Liveries and external cockpit textures.
+- Guns pointing elevation.
+
+
 ## Version 0.0.6a - 17 February 2021
 
 ### Added
@@ -142,7 +164,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Throttle and Stick are inconsistent with the real ones;
 
 ### Contributors
-- Renault, Milaré, Athos, Malamem, Marvila, Cavanha, Risali, Eiras, PaKo, Jorge Rodrigues and many others.
+- Renault, Milaré, Athos, Malamem, Marvila, Cavanha, Risali, Eiras, PaKo, Dino, Jorge Rodrigues and many others.
 
 
 ### Changed

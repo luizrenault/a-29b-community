@@ -1,7 +1,7 @@
 -- rename it to description.lua
 livery = 
 {
-    {"a29b_01.dds", 0, "a29b_01", false};
+    {"a29b_01.bmp", 0, "a29b_01", false};
 --     {"a29b_02.bmp", 0, "a29b_02", false};
 
    --[[
@@ -27,7 +27,7 @@ livery =
 --[[ name your own skin in default language (en)
      meanwhile, you can also name the skin in more than one languages,
      replace xx by [ru, cn, cs, de, es, fr, or it] ]]
-name = ""
+name = "EDAV"
 --name_xx = ""
 --[[ assign the countries
      if you want no country limitation,

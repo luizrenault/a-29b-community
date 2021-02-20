@@ -56,13 +56,12 @@ creators[devices.RADIO]           = {"avLuaDevice"           ,LockOn_Options.scr
 creators[devices.INTERCOM]        = {"avIntercom"            ,LockOn_Options.script_path.."Systems/radio.lua"}--,{devices.UHF_RADIO} }
 creators[devices.UHF_RADIO]       = {"avUHF_ARC_164"         ,LockOn_Options.script_path.."Systems/uhf_radio.lua"                             ,{devices.INTERCOM    ,devices.ELECTRIC_SYSTEM} }
 
-
 creators[devices.UFCP]            = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/ufcp.lua", {devices.ALARM}}
 
 
 creators[devices.ALARM]           = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/alarm.lua"}--, {devices.CMFD}}
 
---creators[devices.EFM_DATA_BUS]		= {"avLuaDevice", LockOn_Options.script_path.."EFM_Data_Bus.lua"}
+-- creators[devices.TEST]		      = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/test_device.lua"}
 
 
 indicators                  = {}

@@ -1,6 +1,7 @@
 dofile(LockOn_Options.script_path .. "HUD/Indicator/HUD_defs.lua")
 dofile(LockOn_Options.script_path .. "Indicator/Indicator_defs.lua")
 dofile(LockOn_Options.script_path .. "HUD/HUD_ID_defs.lua")
+dofile(LockOn_Options.script_path .. "Systems/avionics_api.lua")
 
 DEFAULT_LEVEL = 9
 default_material = HUD_TEX_IND2
@@ -180,8 +181,8 @@ end
 
 -- Roll Indicator
 local HUD_RI_origin	= addPlaceholder("HUD_RI_origin", {0, -60}, nil, {{"HUD_RI_Pos"}})
-HUD_RI_origin.element_params = {"HUD_MODE", "HUD_BRIGHT"}
-HUD_RI_origin.controllers = {{"parameter_compare_with_number", 0, HUD_MODE_ID.LANDING}, {"opacity_using_parameter", 1}}
+HUD_RI_origin.element_params = {"AVIONICS_MASTER_MODE", "HUD_BRIGHT"}
+HUD_RI_origin.controllers = {{"parameter_compare_with_number", 0, AVIONICS_MASTER_MODE_ID.LANDING}, {"opacity_using_parameter", 1}}
 
 local HUD_RI_origin_rot	= addPlaceholder("HUD_RI_origin_rot", {0, 0}, HUD_RI_origin.name)
 HUD_RI_origin_rot.element_params = {"HUD_RI_ROLL"}
@@ -189,10 +190,8 @@ HUD_RI_origin_rot.controllers = {{"rotate_using_parameter", 0, 1}}
 addRollIndicator(90, 8, 2, HUD_RI_origin.name)
 addStrokeSymbol("HUD_Roll_Indicator_Caret", {"stroke_symbols_HUD", "11-roll-caret"}, "FromSet", {0, -94}, HUD_RI_origin_rot.name, {{"HUD_RI_Roll", -55}})
 
-
 --
 local HUD_Indication_bias = addPlaceholder("HUD_Indication_bias", {0, 0}, nil, {{"HUD_Indication_Bias"}})
-
 
 -- Velocity numerics
 local HUD_Vel_num_origin	= addPlaceholder("HUD_Vel_num_origin", {-93, 0}, HUD_Indication_bias.name)
@@ -396,7 +395,7 @@ object.controllers = {{"text_using_parameter",0,0}, {"parameter_in_range",0,-0.0
 
 -- Mode
 object = addStrokeText("HUD_Mode", "", STROKE_FNT_DFLT_120, "RightCenter", {-65, -82}, nil, nil, {"%s"})
-object.element_params = {"HUD_MODE_TXT", "HUD_BRIGHT"}
+object.element_params = {"AVIONICS_MASTER_MODE_TXT", "HUD_BRIGHT"}
 object.controllers = {{"text_using_parameter",0,0}, {"opacity_using_parameter", 1}}
 
 -- AoA

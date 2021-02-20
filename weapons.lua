@@ -3,7 +3,7 @@ local tracer_on_time = 0.01
 declare_weapon({category = CAT_SHELLS,name =   "MG_20x64_APT",
   user_name		= _("MG_20x64_APT"),
   model_name    = "tracer_bullet_green",
-  v0    		= 850.0,
+  v0    		= 890.0,
   Dv0   		= 0.0060,
   Da0    		= 0.0022,
   Da1     		= 0.0,
@@ -11,7 +11,7 @@ declare_weapon({category = CAT_SHELLS,name =   "MG_20x64_APT",
   round_mass 	= 0.086,
   explosive     = 0.60000,
   life_time     = 30,
-  caliber     	= 7.62,
+  caliber     	= 12.7,
   s         	= 0.0,
   j         	= 0.0,
   l         	= 0.0,
@@ -29,7 +29,7 @@ declare_weapon({category = CAT_SHELLS,name =   "MG_20x64_APT",
 declare_weapon({category = CAT_SHELLS,name =   "MG_20x64_HEI",
   user_name		= _("MG_20x64_HEI"),
   model_name    = "tracer_bullet_white",
-  v0    		= 850.0,
+  v0    		= 890.0,
   Dv0   		= 0.0060,
   Da0    		= 0.0022,
   Da1     		= 0.0,
@@ -37,7 +37,7 @@ declare_weapon({category = CAT_SHELLS,name =   "MG_20x64_HEI",
   round_mass 	= 0.086,
   explosive     = 0.60000,
   life_time     = 30,
-  caliber     	= 7.62,
+  caliber     	= 12.7,
   s         	= 0.0,
   j         	= 0.0,
   l         	= 0.0,
@@ -59,7 +59,7 @@ function MG_20(tbl)
 	{
 		shells = {"MG_20x64_API","MG_20x64_HEI"},
 		mixes  = {{1,2,1,1,2,1}},   
-		count  = 2000,
+		count  = 250,
 	}
 	if tbl.mixes then 
 	   tbl.supply.mixes =  tbl.mixes
@@ -67,8 +67,8 @@ function MG_20(tbl)
 	end
 	tbl.gun = 
 	{
-		max_burst_length = 267,
-		rates 			 = {900},
+		max_burst_length = 250,
+		rates 			 = {1025},
 		recoil_coeff 	 = 1,
 		barrels_count 	 = 1,
 	}
@@ -80,7 +80,7 @@ function MG_20(tbl)
 	tbl.ejector_dir 			= {0,-1,0}
 	tbl.supply_position  		= tbl.supply_position   or {0,  0.3, -0.3}
 	tbl.aft_gun_mount 			= false
-	tbl.effective_fire_distance = 1000
+	tbl.effective_fire_distance = 1500
 	tbl.drop_cartridge 			= 0
 	tbl.muzzle_pos				= tbl.muzzle_pos 		 or  {0,0,0} -- all position from connector
 	tbl.muzzle_pos_connector	= tbl.muzzle_pos_connector 		 or  "Gun_point" -- all position from connector

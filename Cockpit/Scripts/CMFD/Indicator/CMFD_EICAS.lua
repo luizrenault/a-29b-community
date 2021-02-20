@@ -515,8 +515,8 @@ mesh_poly.primitivetype     = "triangles"
 mesh_poly.vertices          =  { {0.02, 0.08}, {0.0, 0.12}, {-0.02, 0.08}} --{ {-0.2, 0.0}, {-0.205,0.005}, {-0.205,-0.005}, {-0.2, 0.0}}
 mesh_poly.indices           = { 0 , 1, 2 } --default_box_indices
 mesh_poly.isvisible         = true
-mesh_poly.element_params    = {"EICAS_TRIM_ROLL"}
-mesh_poly.controllers       = {{"rotate_using_parameter",0, 5 * math.pi / 180 }}
+mesh_poly.element_params    = {"AVIONICS_TRIM_WINGLEFTRIGHT"}
+mesh_poly.controllers       = {{"rotate_using_parameter",0, math.rad(1) }}
 AddElementObject(mesh_poly)
 mesh_poly = nil
 
@@ -525,9 +525,9 @@ Poly_Text.material          = CMFD_FONT_DEF
 Poly_Text.stringdefs        = CMFD_STRINGDEFS_DEF_X06
 Poly_Text.init_pos          = {-0.45, -0.222, 0}
 Poly_Text.alignment         = "RightCenter"
-Poly_Text.formats           = {"%-3.0f"}
+Poly_Text.formats           = {"%+3.1f"}
 Poly_Text.parent_element    = page_root.name
-Poly_Text.element_params    = {"EICAS_TRIM_PITCH"}
+Poly_Text.element_params    = {"AVIONICS_TRIM_UPDOWN"}
 Poly_Text.controllers       = {{"text_using_parameter",0,0}}
 AddToUpper(Poly_Text)
 Poly_Text = nil
@@ -540,7 +540,7 @@ mesh_poly.primitivetype     = "triangles"
 mesh_poly.vertices          =  { {0,0.0}, {0.045, 0.02}, {0.045,-0.02}} --{ {-0.2, 0.0}, {-0.205,0.005}, {-0.205,-0.005}, {-0.2, 0.0}}
 mesh_poly.indices           = { 0 , 1, 2 } --default_box_indices
 mesh_poly.isvisible         = true
-mesh_poly.element_params    = {"EICAS_TRIM_PITCH"}
+mesh_poly.element_params    = {"AVIONICS_TRIM_UPDOWN"}
 mesh_poly.controllers       = {{"move_up_down_using_parameter",0, 0.000875 }}
 AddElementObject(mesh_poly)
 mesh_poly = nil
@@ -554,7 +554,7 @@ mesh_poly.primitivetype     = "triangles"
 mesh_poly.vertices          =  { {0.02, 0.045}, {0,0.0}, {-0.02, 0.045}} --{ {-0.2, 0.0}, {-0.205,0.005}, {-0.205,-0.005}, {-0.2, 0.0}}
 mesh_poly.indices           = { 0 , 1, 2 } --default_box_indices
 mesh_poly.isvisible         = true
-mesh_poly.element_params    = {"EICAS_TRIM_YAW"}
+mesh_poly.element_params    = {"AVIONICS_TRIM_RUDDERLEFTRIGHT"}
 mesh_poly.controllers       = {{"move_left_right_using_parameter",0, 0.000775 }}
 AddElementObject(mesh_poly)
 mesh_poly = nil

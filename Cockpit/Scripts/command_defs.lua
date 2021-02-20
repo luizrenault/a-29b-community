@@ -290,6 +290,27 @@ Keys =
 	
 	nws_engage						 = __custom_counter(),
 	nws_disengage					 = __custom_counter(),
+
+
+
+    StickStep		    	 = __custom_counter(),
+    StickDesignate        	     = __custom_counter(),
+    StickUndesignate      	     = __custom_counter(),
+    MasterModeSw      	     = __custom_counter(),
+    APDisengage      	     = __custom_counter(),
+    APOvrd      	     = __custom_counter(),
+    Call      	     = __custom_counter(),
+    Trigger      	     = __custom_counter(),
+
+    WeaponRelease			    	 = __custom_counter(),
+    
+    
+    DisplayMngt        	     = __custom_counter(),
+
+
+
+
+
 }
 
 start_command   = 3000
@@ -700,5 +721,28 @@ device_commands =
     WARNING_PRESS                      = __counter(),
     CAUTION_PRESS                      = __counter(),
 
+    WPN_SELECT_STO                          = __counter(),
+    WPN_AA_STEP                          = __counter(),
+    WPN_AA_SIGHT_STEP                    = __counter(),
+    WPN_AA_RR_SRC_STEP                    = __counter(),
+    WPN_AA_SLV_SRC_STEP                    = __counter(),
+    WPN_AA_COOL_STEP                    = __counter(),
+    WPN_AA_SCAN_STEP                    = __counter(),
+    WPN_AA_LIMIT_STEP                    = __counter(),
+
+
+    STICK_WEAPON_RELEASE                    = __counter(),
+    STICK_TRIGGER_2ND_DETENT                    = __counter(),
+    STICK_PADDLE                    = __counter(),
+    AAA                    = __counter(),
+    AAA                    = __counter(),
+    AAA                    = __counter(),
+    AAA                    = __counter(),
+    AAA                    = __counter(),
+    AAA                    = __counter(),
+    AAA                    = __counter(),
+    AAA                    = __counter(),
+
+    STICK_WEAPON_RELEASE_OFF                = __counter(),
 
 }
