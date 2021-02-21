@@ -63,18 +63,6 @@ Throttle.input						= {0, 1}
 Throttle.output						= {0.2, 1}
 Throttle.controller					= controllers.base_gauge_ThrottleLeftPosition
 
--- WheelBrkLeft						= CreateGauge()
--- WheelBrkLeft.arg_number				= 5
--- WheelBrkLeft.input					= {0, 1}
--- WheelBrkLeft.output					= {0, 1}
--- WheelBrkLeft.controller				= controllers.base_gauge_RudderPosition
-
--- WheelBrkRight						= CreateGauge()
--- WheelBrkRight.arg_number			= 6
--- WheelBrkRight.input					= {0, 1}
--- WheelBrkRight.output				= {0, 1}
--- WheelBrkRight.controller			= controllers.base_gauge_RudderPosition
-
 RudderPedals						= CreateGauge()
 RudderPedals.arg_number				= 4
 RudderPedals.input					= {-100, 100}

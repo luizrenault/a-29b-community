@@ -8,6 +8,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Version 0.1.0b - 21 February 2021
+
+### Added
+- MK82.
+
+### Fixes
+- Wheel brakes
+- Firing A/A no longer fires A/G.
+- Nose wheel steering limited to 20 degrees
+- Selective Jettison Emergency Jettison now can jettison containers / racks.
+- Flaps drag reduced.
+- External fuel tank weight.
+- Fuel consumption reduced to one third.
+- .50 bullet weight.
+- .50 fire rate.
 
 ## Version 0.0.7a - 20 February 2021
 
@@ -164,7 +179,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Throttle and Stick are inconsistent with the real ones;
 
 ### Contributors
-- Renault, Milaré, Athos, Malamem, Marvila, Cavanha, Risali, Eiras, PaKo, Dino, Jorge Rodrigues and many others.
+- Renault, Milaré, Athos, Malamem, PaKo, Dino, Jorge Rodrigues, Paoladelf and many others.
 
 
 ### Changed

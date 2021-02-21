@@ -6,6 +6,7 @@ dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
 dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
 dofile(LockOn_Options.script_path.."Systems/weapon_system_api.lua")
+dofile(LockOn_Options.script_path.."utils.lua")
 
 
 
@@ -1209,6 +1210,34 @@ function SetCommand(command,value)
     end
 
 end
+
+dev:listen_event("WeaponRearmComplete")
+dev:listen_event("ReloadDone")
+dev:listen_event("RefuelDone")
+
+
+function CockpitEvent(command,val)
+    -- val seems to mostly be empty table: {}
+    -- log.alert("CockpitEvent event: "..tostring(command).."="..tostring(val))
+    -- if val then
+    --     local str=dump("event",val)
+    --     local lines=strsplit("\n",str)
+    --     for k,v in ipairs(lines) do
+    --         log.alert(v)
+    --     end
+    -- end
+    -- print_message_to_user("CockpitEvent event: "..tostring(command).."="..tostring(val))
+    -- if val then
+    --     local str=dump("event",val)
+    --     local lines=strsplit("\n",str)
+    --     for k,v in ipairs(lines) do
+    --         print_message_to_user(v)
+    --     end
+    -- end
+    fuel_init=round_to(sensor_data.getTotalFuelWeight(),5)
+    fuel_joker=round_to(fuel_init/2,5)
+end
+
 
 startup_print("CMFD2: load end")
 need_to_be_closed = false -- close lua state after initialization

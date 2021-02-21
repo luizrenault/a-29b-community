@@ -7,8 +7,8 @@ declare_weapon({category = CAT_SHELLS,name =   "MG_20x64_APT",
   Dv0   		= 0.0060,
   Da0    		= 0.0022,
   Da1     		= 0.0,
-  mass      	= 0.034,
-  round_mass 	= 0.086,
+  mass      	= 0.052,
+  round_mass 	= 0.152,
   explosive     = 0.60000,
   life_time     = 30,
   caliber     	= 12.7,
@@ -33,8 +33,8 @@ declare_weapon({category = CAT_SHELLS,name =   "MG_20x64_HEI",
   Dv0   		= 0.0060,
   Da0    		= 0.0022,
   Da1     		= 0.0,
-  mass      	= 0.034,
-  round_mass 	= 0.086,
+  mass      	= 0.052,
+  round_mass 	= 0.152,
   explosive     = 0.60000,
   life_time     = 30,
   caliber     	= 12.7,
@@ -55,10 +55,10 @@ function MG_20(tbl)
 
 	tbl.category = CAT_GUN_MOUNT 
 	tbl.name 	 = "MG_20"
-	tbl.supply 	 = 
+	tbl.supply 	 =
 	{
 		shells = {"MG_20x64_API","MG_20x64_HEI"},
-		mixes  = {{1,2,1,1,2,1}},   
+		mixes  = {{1,2,1,1,2,1}},
 		count  = 250,
 	}
 	if tbl.mixes then 

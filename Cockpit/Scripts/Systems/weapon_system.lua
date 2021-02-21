@@ -38,6 +38,7 @@ local gar8_snd_pitch_delta=(max_gar8_snd_pitch-min_gar8_snd_pitch)
 local station_count = 6
 local wpn_sto_name = {}
 local wpn_sto_count = {}
+local wpn_sto_container = {}
 local wpn_sto_total_count = {}
 local wpn_sto_type = {}
 local wpn_guns_l = 250
@@ -95,8 +96,8 @@ local function update_storages()
             wpn_sto_total_count[wname] = (wpn_sto_total_count[wname] or 0) + station_info["count"]
         end
         wpn_sto_type[i+1] = station_info.weapon.level3
-
-        if station_info["count"] > 1 then
+        wpn_sto_container[i+1] = station_info.container
+        if station_info["count"] > 1  or station_info.container then
             wname = tostring(station_info["count"]) .. wname
         elseif station_info["count"] > 0 then
         else
@@ -240,8 +241,8 @@ end
 
 
 local function update_ag()
-    if wpn_ag_sel == 0 or (wpn_ag_sel ~= 0 and (wpn_sto_count[wpn_ag_sel] == 0 or (wpn_sto_type[wpn_ag_sel] == wsType_FuelTank or wpn_sto_type[wpn_ag_sel] == wsType_AA_Missile))) then update_ag_sel_next(wpn_ag_sel ~= 0) end
-    if get_wpn_ag_ready() then 
+    if wpn_ag_sel == 0 or (wpn_ag_sel ~= 0 and (wpn_sto_count[wpn_ag_sel] == 0 or (wpn_sto_type[wpn_ag_sel] == wsType_FuelTank or wpn_sto_type[wpn_ag_sel] == wsType_AA_Missile))) then update_ag_sel_next(true) end
+    if get_wpn_ag_ready() or get_wpn_guns_ready() then 
         WPN_READY:set(1)
     else 
         WPN_READY:set(0)
@@ -323,7 +324,7 @@ end
 local function update_sj()
     for i=1,5 do
         local wpn_sj_sel = get_param_handle("WPN_SJ_STO"..tostring(i).."_SEL")
-        if wpn_sto_count[i] == 0 then wpn_sj_sel:set(0) end
+        if wpn_sto_count[i] == 0 and not wpn_sto_container[i] then wpn_sj_sel:set(0) end
     end
 end
 
@@ -426,7 +427,7 @@ function SetCommand(command,value)
             for i=1,5 do
                 local param = get_param_handle("SMS_POS_"..tostring(i).."_SEL")
                 local station = dev:get_station_info(i-1)
-                if station.weapon.level3 ~= wsType_AA_Missile and station.count > 0 then
+                if station.weapon.level3 ~= wsType_AA_Missile and (station.count > 0 or station.container) then
                     set_wpn_sto_jet(i,1)
                     param:set(1)
                 else
@@ -607,3 +608,79 @@ need_to_be_closed = false -- close lua state after initialization
 -- wpn5["weapon"]["level4"] = 681
 -- wpn5["weapon"]["level2"] = 15
 
+
+
+-- STO1["wstype"] = {}
+-- STO1["wstype"]["level3"] = 32
+-- STO1["wstype"]["level1"] = 4
+-- STO1["wstype"]["level4"] = 119
+-- STO1["wstype"]["level2"] = 4
+-- STO1["count"] = 2
+-- STO1["CLSID"] = "AGM114x2_OH_58"
+-- STO1["adapter"] = {}
+-- STO1["adapter"]["level3"] = 0
+-- STO1["adapter"]["level1"] = 0
+-- STO1["adapter"]["level4"] = 0
+-- STO1["adapter"]["level2"] = 0
+-- STO1["container"] = true
+-- STO1["weapon"] = {}
+-- STO1["weapon"]["level3"] = 8
+-- STO1["weapon"]["level1"] = 4
+-- STO1["weapon"]["level4"] = 59
+-- STO1["weapon"]["level2"] = 4
+-- STO2 = {}
+-- STO2["CLSID"] = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}" -- MK82
+-- STO2["container"] = false
+-- STO2["count"] = 1
+-- STO2["weapon"] = {}
+-- STO2["weapon"]["level3"] = 9
+-- STO2["weapon"]["level1"] = 4
+-- STO2["weapon"]["level4"] = 31
+-- STO2["weapon"]["level2"] = 5
+-- STO3 = {}
+-- STO3["CLSID"] = "{A-29B TANK}"
+-- STO3["container"] = false
+-- STO3["count"] = 1
+-- STO3["weapon"] = {}
+-- STO3["weapon"]["level3"] = 43
+-- STO3["weapon"]["level1"] = 1
+-- STO3["weapon"]["level4"] = 680
+-- STO3["weapon"]["level2"] = 3
+-- STO4 = {}
+-- STO4["wstype"] = {}
+-- STO4["wstype"]["level3"] = 32
+-- STO4["wstype"]["level1"] = 4
+-- STO4["wstype"]["level4"] = 109
+-- STO4["wstype"]["level2"] = 7
+-- STO4["count"] = 7
+-- STO4["CLSID"] = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" LAU
+-- STO4["adapter"] = {}
+-- STO4["adapter"]["level3"] = 0
+-- STO4["adapter"]["level1"] = 0
+-- STO4["adapter"]["level4"] = 0
+-- STO4["adapter"]["level2"] = 0
+-- STO4["container"] = true
+-- STO4["weapon"] = {}
+-- STO4["weapon"]["level3"] = 33
+-- STO4["weapon"]["level1"] = 4
+-- STO4["weapon"]["level4"] = 148
+-- STO4["weapon"]["level2"] = 7
+-- STO5 = {}
+-- STO5["wstype"] = {}
+-- STO5["wstype"]["level3"] = 32
+-- STO5["wstype"]["level1"] = 4
+-- STO5["wstype"]["level4"] = 9
+-- STO5["wstype"]["level2"] = 7
+-- STO5["count"] = 19
+-- STO5["CLSID"] = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}"
+-- STO5["adapter"] = {}
+-- STO5["adapter"]["level3"] = 0
+-- STO5["adapter"]["level1"] = 0
+-- STO5["adapter"]["level4"] = 0
+-- STO5["adapter"]["level2"] = 0
+-- STO5["container"] = true
+-- STO5["weapon"] = {}
+-- STO5["weapon"]["level3"] = 33
+-- STO5["weapon"]["level1"] = 4
+-- STO5["weapon"]["level4"] = 145
+-- STO5["weapon"]["level2"] = 7

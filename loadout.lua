@@ -37,8 +37,8 @@ declare_loadout({
 
 	Picture			 = "ptb2.png",
 	displayName		 = _("A-29B TANK"),
-	Weight_Empty	 = 1,
-	Weight			 = 1 +  0.00775 * 2300,
+	Weight_Empty	 = 40.8,
+	Weight			 = 40.8 +  230.3,
 	Cx_pil			 = 0.002,
 	shape_table_data = 
 	{

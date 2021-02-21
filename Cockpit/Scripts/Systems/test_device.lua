@@ -75,7 +75,7 @@ local iCommandPlaneChangeTarget = 102
 -- dev:listen_command(iCommandPlaneDropFlareOnce)
 -- dev:listen_command(iCommandPlaneDropChaffOnce)
 
-for i=1, 10000 do
+for i=1, 50000 do
     if i== 1032 or i == 1033 or i == 1034 then
     elseif i== 2001 or i == 1033 or i == 2002 or i == 350 then
     elseif i== 93 or i == 94 or i == 95 or i == 96 or i == 98 or i == 99 or i == 215 then --trim
@@ -86,6 +86,14 @@ end
 
 function SetCommand(command,value)
     print_message_to_user("test: command "..tostring(command).." = "..tostring(value))
+    if command == 74 then 
+        local wpn = GetDevice(devices.WEAPON_SYSTEM)
+        for i=1,5 do
+            local text = dump("STO"..i, wpn:get_station_info(i-1))
+            print_message_to_user(text)
+            log.info(text)
+        end
+    end
 end
 
 startup_print("test: load end")

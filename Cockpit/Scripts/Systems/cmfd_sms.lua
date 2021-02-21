@@ -213,6 +213,8 @@ function SetCommandSms(command,value, CMFD)
                 set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.SJ)
                 sms_inv = 0
             end
+        elseif command==device_commands.CMFD1OSS7 or command==device_commands.CMFD2OSS7 then 
+            if sms_inv == 1 then dispatch_action(nil, iCommandMissionResourcesManagement)  end-- Rearm and Refuel
         elseif command==device_commands.CMFD1OSS11 or command==device_commands.CMFD2OSS11 then 
         elseif command==device_commands.CMFD1OSS12 or command==device_commands.CMFD2OSS12 then 
         elseif command==device_commands.CMFD1OSS24 or command==device_commands.CMFD2OSS24 then 

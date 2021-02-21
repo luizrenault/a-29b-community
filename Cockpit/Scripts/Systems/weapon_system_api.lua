@@ -123,13 +123,14 @@ WEAPONS_NAMES["{4F977A2A-CD25-44df-90EF-164BFA2AE72F}"] = "LAU68"
 WEAPONS_NAMES["{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}"] = "GBU16"
 WEAPONS_NAMES["{GBU_49}"] = "GBU49"
 WEAPONS_NAMES["AGM114x2_OH_58"] = "AGM114"
+WEAPONS_NAMES["{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"] = "MK82"
 
 function get_wpn_weapon_name(clsid)
     return WEAPONS_NAMES[clsid] or "NONAME"
 end
 
 function get_wpn_ag_ready()
-    return (get_wpn_guns_ready() or (get_avionics_master_mode_ag() and get_wpn_mass() == WPN_MASS_IDS.LIVE and get_wpn_latearm() == WPN_LATEARM_IDS.ON and WPN_AG_SEL:get() ~= 0)) and not get_avionics_onground()
+    return get_avionics_master_mode_ag() and not get_avionics_onground() and (get_wpn_mass() == WPN_MASS_IDS.LIVE and get_wpn_latearm() == WPN_LATEARM_IDS.ON and WPN_AG_SEL:get() ~= 0)
 end
 
 

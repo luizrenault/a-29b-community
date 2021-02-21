@@ -85,7 +85,7 @@ A_29B =  {
 		M_fuel_max								=   495, -- utilizável --509 + 239 + 249*2 + 231,   -- kg Asas, Fuselage, Subalar, Ventral,
 		H_max									=	10668 , -- m
 
-		average_fuel_consumption 	= 0.05, -- this is highly relative, but good estimates are 36-40l/min = 28-31kg/min = 0.47-0.52kg/s -- 45l/min = 35kg/min = 0.583kg/s
+		average_fuel_consumption 	= 0.009042, -- this is highly relative, but good estimates are 36-40l/min = 28-31kg/min = 0.47-0.52kg/s -- 45l/min = 35kg/min = 0.583kg/s
 		CAS_min 					= 56, -- if this is not OVERAL FLIGHT TIME, but jus LOITER TIME, than it sholud be 10-15 minutes.....CAS capability in minute (for AI)
 		V_opt 						= 67,-- Cruise speed (for AI) –- Assume Mach 0.80 at 20000 ft as optimal. See -- http://www.nasa.gov/centers/dryden/pdf/87789main_H-636.pdf and		–- http://www.hochwarth.com/misc/AviationCalculator.html 		–- Mach 0.8 at 20000 = XXX kts TAS = XXX m / s
 		V_take_off 					= 28, -- Take off speed in m/s (for AI)
@@ -106,7 +106,7 @@ A_29B =  {
 
 		main_gear_pos 				= 	{-1,	-2.03,	2.},
 		nose_gear_pos 				= 	{2.808,	-2.09,	0},
-		tand_gear_max				=	3.769, -- tangent of degrees of rotation max of nose wheel steering
+		tand_gear_max				=	0.363970234, -- tangent of degrees of rotation max of nose wheel steering
 		wing_area 					= 19.4, -- wing area in m2
 		wing_span 					= 11.135, -- wing spain in m
 		wing_type 					= 0,
@@ -282,6 +282,7 @@ A_29B =  {
 				{
 					{ CLSID = "{A-29B TANK}" },
 	
+					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
 					{ CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
 					{ CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 	
@@ -304,6 +305,7 @@ A_29B =  {
 				},
 				{
 					{ CLSID = "{A-29B TANK}" },
+					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
 					{ CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
 	
@@ -316,6 +318,7 @@ A_29B =  {
 				{
 					{ CLSID = "{A-29B TANK}" },
 	
+					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
 					{ CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
 					{ CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 	
@@ -386,14 +389,14 @@ A_29B =  {
 	SFM_Data = {
 		aerodynamics = 
 		{
-			Cy0	=	0, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
+			Cy0	=	0.1, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
 			Mzalfa	=	4.355, -- Horizontal tail pitch coefficient
-			Mzalfadt	=	1,  -- Wing pitch coefficient
-			kjx = 4.25, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
+			Mzalfadt	=	0.8,  -- Wing pitch coefficient
+			kjx = 2.25, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
 			kjz = 0.00125,  -- Unknown pitch constant. All planes use 0.00125 -- -- Inertia parametre Z - Dimension (clean) airframe drag coefficient at Z (Front) Simply the wing area in square meters (as that is a major factor in drag calculations)
 			Czbe = -0.016, -- Directional stability coefficient  -- coefficient, along Z axis (perpendicular), affects yaw, negative value means force orientation in FC coordinate system
 			cx_gear = 0.0277, -- Additional coefficient of drag for gear extended
-			cx_flap = 0.20, -- Additional coefficient of drag for flap extended
+			cx_flap = 0.095, -- Additional coefficient of drag for flap extended
 			cy_flap = 0.31, -- Additional coefficient of lift for flap extended
 			cx_brk = 0.06, -- Additional coefficient of drag for air brakes
 			
@@ -463,8 +466,8 @@ A_29B =  {
 			dcx_eng	=	0.0114, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
 			cemax	=	0.13, -- kg / sec - fuel consumption for a single engine in dry configuration
 			cefor	=	0.13, -- kg / sec - fuel consumption for a single engine in afterburner configuration
-			dpdh_m	=	1000, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
-			dpdh_f	=	3000.0, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			dpdh_m	=	1800, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			dpdh_f	=	1800, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			table_data = {
 			-- Pmax - total thrust in Newtons (kN * 1000) for all engines
 			-- Pfor - total thrust in Newtons (kN * 1000) for all engines
@@ -715,8 +718,8 @@ A_29B =  {
 	mapclasskey = "P0091000024",
 
 	Guns = {
-		MG_20({muzzle_pos = {0.96,-0.68, 2.32},_connector =  "Point_Gun_01_R",rates = {688},effect_arg_number = 350,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 1,supply_position = {4.5,0.22, 0.3}}),-- MITRAIL AVR 1 
-		MG_20({muzzle_pos = {0.96, -0.68, -2.32},_connector =  "Point_Gun_01_L",rates = {688},effect_arg_number = 436,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 1,supply_position = {2.0, -0.25, 0.8}}),-- MITRAIL AVR 2 B
+		MG_20({muzzle_pos = {0.96,-0.68, 2.32},_connector =  "Point_Gun_01_R",rates = {1025},effect_arg_number = 350,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 1,supply_position = {4.5,0.22, 0.3}}),-- MITRAIL AVR 1 
+		MG_20({muzzle_pos = {0.96, -0.68, -2.32},_connector =  "Point_Gun_01_L",rates = {1025},effect_arg_number = 436,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 1,supply_position = {2.0, -0.25, 0.8}}),-- MITRAIL AVR 2 B
 	},
 }
 
