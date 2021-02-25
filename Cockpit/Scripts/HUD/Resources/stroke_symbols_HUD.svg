@@ -23,9 +23,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="11.313709"
-     inkscape:cx="64.130831"
-     inkscape:cy="37.05464"
+     inkscape:zoom="22.627418"
+     inkscape:cx="119.27838"
+     inkscape:cy="78.68704"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -175,7 +175,7 @@
        inkscape:connector-curvature="0" />
     <g
        id="1-boresight-cross"
-       transform="translate(2.6458334)">
+       transform="translate(1.8520832,1.0583365)">
       <path
          inkscape:connector-curvature="0"
          id="path892"
@@ -1139,5 +1139,72 @@
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccccc"
        inkscape:label="#hud-doi" />
+    <g
+       id="4-impact-point-2"
+       transform="translate(28.575,12.699995)">
+      <circle
+         r="1.4552083"
+         cy="169.7354"
+         cx="5.5562496"
+         id="path864-2"
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <circle
+         r="0.13229166"
+         cy="169.7354"
+         cx="5.5562501"
+         id="path866-3"
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="gun-recticle"
+       inkscape:label=""
+       transform="translate(28.574999,12.699995)">
+      <path
+         inkscape:connector-curvature="0"
+         id="path892-2-2-5"
+         d="m 8.3343736,164.92355 0.363805,-0.63013"
+         style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         sodipodi:nodetypes="cc"
+         inkscape:transform-center-y="-5.1269133"
+         inkscape:transform-center-x="-2.9600266" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path892-2-2-5-0"
+         d="m 10.368104,166.95731 0.630129,-0.36381"
+         style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         sodipodi:nodetypes="cc"
+         inkscape:transform-center-y="-2.9600232"
+         inkscape:transform-center-x="-5.1269149" />
+      <circle
+         r="5.5477729"
+         cy="169.7354"
+         cx="5.5562496"
+         id="path864-2-4"
+         style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.264583;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path892-2"
+         d="m 5.5562496,164.31144 v -1.32292"
+         style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         sodipodi:nodetypes="cc" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path892-2-6"
+         d="m 10.980206,169.7354 h 1.32292"
+         style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         sodipodi:nodetypes="cc" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path892-2-68"
+         d="m 5.5562496,176.48227 v -1.32292"
+         style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         sodipodi:nodetypes="cc" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path892-2-7"
+         d="M -1.190627,169.7354 H 0.13229299"
+         style="fill:none;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         sodipodi:nodetypes="cc" />
+    </g>
   </g>
 </svg>
