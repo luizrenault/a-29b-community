@@ -1,52 +1,54 @@
 AVIONICS_MASTER_MODE_ID = {
     NAV         = 1,
     LANDING     = 2, 
-    INT         = 3, 
-    DGFT_B      = 4,
-    DGFT_L      = 5,
-    DTOS        = 6,
-    DTOS_R      = 7,
-    CCRP        = 8,
-    CCIP        = 9,
-    CCIP_R      = 10,
-    MAN         = 11,
-    GUN         = 12,
-    GUN_R       = 13,
-    SJ          = 14,
-    EJ          = 15,
-    MARK        = 16,
-    MARK_R      = 17,
-    FIX         = 18,
-    FIX_R       = 19,
-    RALT        = 20,
-    ACAL        = 21,
+    INT_B       = 3, 
+    INT_L       = 4, 
+    DGFT_B      = 5,
+    DGFT_L      = 6,
+    GUN         = 7,
+    GUN_R       = 8,
+    DTOS        = 9,
+    DTOS_R      = 10,
+    CCRP        = 11,
+    CCIP        = 12,
+    CCIP_R      = 13,
+    MAN         = 14,
+    SJ          = 15,
+    EJ          = 16,
+    MARK        = 17,
+    MARK_R      = 18,
+    FIX         = 19,
+    FIX_R       = 20,
+    RALT        = 21,
+    ACAL        = 22,
 }
 AVIONICS_MASTER_MODE_STR={}
 
 AVIONICS_MASTER_MODE_STR[1] = "NAV"
 AVIONICS_MASTER_MODE_STR[2] = ""
-AVIONICS_MASTER_MODE_STR[3] = "INT"
-AVIONICS_MASTER_MODE_STR[4] = "DGFT B"
-AVIONICS_MASTER_MODE_STR[5] = "DGFT L"
-AVIONICS_MASTER_MODE_STR[6] = "DTOS"
-AVIONICS_MASTER_MODE_STR[7] = "DTOS R"
-AVIONICS_MASTER_MODE_STR[8] = "CCRP"
-AVIONICS_MASTER_MODE_STR[9] = "CCIP"
-AVIONICS_MASTER_MODE_STR[10] = "CCIP R"
-AVIONICS_MASTER_MODE_STR[11] = "MAN"
-AVIONICS_MASTER_MODE_STR[12] = "GUN"
-AVIONICS_MASTER_MODE_STR[13] = "GUN R"
-AVIONICS_MASTER_MODE_STR[14] = "SJ"
-AVIONICS_MASTER_MODE_STR[15] = "EJ"
-AVIONICS_MASTER_MODE_STR[16] = "MARK"
-AVIONICS_MASTER_MODE_STR[17] = "MARK R"
-AVIONICS_MASTER_MODE_STR[18] = "FIX"
-AVIONICS_MASTER_MODE_STR[19] = "FIX R"
-AVIONICS_MASTER_MODE_STR[20] = "RALT"
-AVIONICS_MASTER_MODE_STR[21] = "ACAL"
+AVIONICS_MASTER_MODE_STR[3] = "INT B"
+AVIONICS_MASTER_MODE_STR[4] = "INT L"
+AVIONICS_MASTER_MODE_STR[5] = "DGFT B"
+AVIONICS_MASTER_MODE_STR[6] = "DGFT L"
+AVIONICS_MASTER_MODE_STR[7] = "DTOS"
+AVIONICS_MASTER_MODE_STR[8] = "DTOS R"
+AVIONICS_MASTER_MODE_STR[9] = "CCRP"
+AVIONICS_MASTER_MODE_STR[10] = "CCIP"
+AVIONICS_MASTER_MODE_STR[11] = "CCIP R"
+AVIONICS_MASTER_MODE_STR[12] = "MAN"
+AVIONICS_MASTER_MODE_STR[13] = "GUN"
+AVIONICS_MASTER_MODE_STR[14] = "GUN R"
+AVIONICS_MASTER_MODE_STR[15] = "SJ"
+AVIONICS_MASTER_MODE_STR[16] = "EJ"
+AVIONICS_MASTER_MODE_STR[17] = "MARK"
+AVIONICS_MASTER_MODE_STR[18] = "MARK R"
+AVIONICS_MASTER_MODE_STR[19] = "FIX"
+AVIONICS_MASTER_MODE_STR[20] = "FIX R"
+AVIONICS_MASTER_MODE_STR[21] = "RALT"
+AVIONICS_MASTER_MODE_STR[22] = "ACAL"
 
 
-ANS_MODE_IDS = {
+AVIONICS_ANS_MODE_IDS = {
     EGI = 0,
     VOR = 1,
     GPS = 2,
@@ -120,7 +122,8 @@ function get_avionics_master_mode_aa(master_mode)
     master_mode = master_mode or get_avionics_master_mode()
     return  master_mode == AVIONICS_MASTER_MODE_ID.DGFT_B or
         master_mode == AVIONICS_MASTER_MODE_ID.DGFT_L or
-        master_mode == AVIONICS_MASTER_MODE_ID.INT
+        master_mode == AVIONICS_MASTER_MODE_ID.INT_B or 
+        master_mode == AVIONICS_MASTER_MODE_ID.INT_L
 end
 
 function get_avionics_master_mode_ag(master_mode)

@@ -80,6 +80,16 @@ join(res.keyCommands,{
 {down = Keys.DisplayMngt,           up = Keys.DisplayMngt,      name = _('DMS Depress - Autopilot'),    category = {_('Stick'), _('HOTAS')}, value_down =  5.0,		value_up = 0.0},
 
 
+{down = Keys.GunSelDist,            up = Keys.GunSelDist,        name = _('Machine Gun Selection'),     category = {_('Throttle'), _('HOTAS')}, value_down =  -1.0,		value_up = 0.0},
+{down = Keys.GunSelDist,            up = Keys.GunSelDist,        name = _('Machine Gun Distance'),      category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+{down = Keys.GunRearm,              up = Keys.GunRearm,          name = _('Machine Gun Rearm'),         category = {_('Throttle'), _('HOTAS')}, value_down =  -1.0,		value_up = 0.0},
+{down = Keys.Cage,                  up = Keys.Cage,              name = _('Cage / Uncage'),             category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+{down = Keys.TDCX,                  up = Keys.TDCX,              name = _('TDC Slew Left'),             category = {_('Throttle'), _('HOTAS')}, value_down =  -1.0,		value_up = 0.0},
+{down = Keys.TDCX,                  up = Keys.TDCX,              name = _('TDC Slew Right'),            category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+{down = Keys.TDCY,                  up = Keys.TDCY,              name = _('TDC Slew Up'),               category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+{down = Keys.TDCY,                  up = Keys.TDCY,              name = _('TDC Slew Down'),             category = {_('Throttle'), _('HOTAS')}, value_down =  -1.0,		value_up = 0.0},
+
+
 -- -- Weapons                                                                        
 -- {combos = defaultDeviceAssignmentFor("fire"),	down = iCommandPlaneFire, up = iCommandPlaneFireOff, name = _('Weapon Fire'),	category = _('Weapons')},
 -- {combos = {{key = 'JOY_BTN2'}},                 down = Keys.WeaponReleaseOn,	up = Keys.WeaponReleaseOff, name = _('Weapon Release Button (WRB)'), category = _('Weapons')},
@@ -186,7 +196,9 @@ join(res.axisCommands,{
     {                                               action = iCommandWheelBrake,		name = _('Wheel Brake'),		category = {_('Systems')}},
     {												action = iCommandLeftWheelBrake,	name = _('Wheel Brake Left'),	category = {_('Systems')}},
     {												action = iCommandRightWheelBrake,	name = _('Wheel Brake Right'),	category = {_('Systems')}},
-
+    {												action = iCommandRightWheelBrake,	name = _('Wheel Brake Right'),	category = {_('Systems')}},
+    {                                               action = Keys.TDCX,                 name = _('TDC Slew Vertical'),  category = {_('Throttle'), _('HOTAS')}},
+    {                                               action = Keys.TDCY,                 name = _('TDC Slew Horizontal'),category = {_('Throttle'), _('HOTAS')}},
 })
 
 return res

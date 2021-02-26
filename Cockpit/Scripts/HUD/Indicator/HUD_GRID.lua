@@ -2,6 +2,7 @@ dofile(LockOn_Options.script_path .. "HUD/Indicator/HUD_defs.lua")
 dofile(LockOn_Options.script_path .. "Indicator/Indicator_defs.lua")
 dofile(LockOn_Options.script_path .. "HUD/HUD_ID_defs.lua")
 dofile(LockOn_Options.script_path .. "Systems/avionics_api.lua")
+dofile(LockOn_Options.script_path .. "Systems/weapon_system_api.lua")
 
 DEFAULT_LEVEL = 9
 default_material = HUD_TEX_IND2
@@ -118,10 +119,166 @@ boresightShiftY = 98		--DegToMil(4.8)
 local object
 
 -- object = addStrokeSymbol("HUD_Base", {"a29hud", "nav-mode"}, "FromSet", {0, -34}, nil, nil, 0.85, "INDICATION_COMMON_RED")
--- object = addStrokeSymbol("HUD_Base", {"a29hud", "landing-mode"}, "FromSet", {0, 0}, nil, nil, 0.9, "INDICATION_COMMON_AMBER")
+-- object = addStrokeSymbol("HUD_Base", {"a29hud", "landing-mode"}, "FromSet", {0, -34}, nil, nil, 0.85, "INDICATION_COMMON_AMBER")
 
 
-local HUD_BoresightRoot = addStrokeSymbol("HUD_Boresight_Cross", {"stroke_symbols_HUD", "1-boresight-cross"}, "FromSet", {0, math.rad(1.2)*1000})
+
+local HUD_BoresightRoot = addStrokeSymbol("HUD_Boresight_Cross", {"stroke_symbols_HUD", "1-boresight-cross"}, "CenterCenter", {0, DegToMil(1.2)})
+
+-- INT
+local HUD_INT_origin = addPlaceholder(nil, {0,0})
+HUD_INT_origin.element_params = {"AVIONICS_MASTER_MODE", "WPN_MSL_CAGED"}
+HUD_INT_origin.controllers = {
+	{"parameter_in_range",0,AVIONICS_MASTER_MODE_ID.INT_B-0.5, AVIONICS_MASTER_MODE_ID.INT_L + 0.5},
+	{"parameter_in_range", 1, -0.05, 1.05},
+}
+
+-- IR Caged
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "aim9lm-caged"}, "CenterCenter", {0, 0}, HUD_INT_origin.name)
+object.element_params = {"HUD_BRIGHT", "WPN_MSL_CAGED"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_compare_with_number",1,1},
+}
+
+-- IR Uncaged
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "aim9lm-uncaged"}, "CenterCenter", {0, 0}, HUD_INT_origin.name)
+object.element_params = {"HUD_BRIGHT", "WPN_MSL_CAGED", "HUD_IR_MISSILE_TARGET_AZIMUTH", "HUD_IR_MISSILE_TARGET_ELEVATION"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_compare_with_number",1,0},
+	{"move_left_right_using_parameter", 2, 0.75},
+	{"move_up_down_using_parameter", 3, 0.75},
+}
+
+-- IR out of screen
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
+object.element_params = {"HUD_BRIGHT", "HUD_MSL_HIDDEN"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+
+-- MSL recticle
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "msl-recticle"}, "CenterCenter", {0, 0}, HUD_INT_origin.name)
+object.element_params = {"HUD_BRIGHT"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+}
+
+-- DGFT
+local HUD_DGFT_origin = addPlaceholder(nil, {0,0}, HUD_BoresightRoot.name)
+HUD_DGFT_origin.element_params = {"AVIONICS_MASTER_MODE"}
+HUD_DGFT_origin.controllers = {
+	{"parameter_in_range",0,AVIONICS_MASTER_MODE_ID.DGFT_B-0.5, AVIONICS_MASTER_MODE_ID.GUN_R + 0.5},
+}
+
+-- IR Caged
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "aim9lm-caged"}, "CenterCenter", {0, 0}, HUD_DGFT_origin.name)
+object.element_params = {"HUD_BRIGHT", "WPN_MSL_CAGED"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_compare_with_number",1,1},
+}
+
+-- IR Uncaged
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "aim9lm-uncaged"}, "CenterCenter", {0, -DegToMil(1.2)}, HUD_DGFT_origin.name)
+object.element_params = {"HUD_BRIGHT", "WPN_MSL_CAGED", "HUD_IR_MISSILE_TARGET_AZIMUTH", "HUD_IR_MISSILE_TARGET_ELEVATION"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_compare_with_number",1,0},
+	{"move_left_right_using_parameter", 2, 0.75},
+	{"move_up_down_using_parameter", 3, 0.75},
+}
+
+-- IR out of screen
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
+object.element_params = {"HUD_BRIGHT", "HUD_MSL_HIDDEN"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+
+-- Piper
+local HUD_Piper_origin = addPlaceholder(nil, {0,0}, HUD_DGFT_origin.name)
+HUD_Piper_origin.element_params = {"HUD_PIPER_X", "HUD_PIPER_Y"}
+HUD_Piper_origin.controllers = {
+	{"move_left_right_using_parameter", 0, 1},
+	{"move_up_down_using_parameter", 1, 1},
+}
+
+
+-- LCOS SSLC SNAP piper
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "4-impact-point"}, "CenterCenter", {0, 0}, HUD_Piper_origin.name)
+
+-- LCOS SSLC SNAP out of screen
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, HUD_Piper_origin.name)
+object.element_params = {"HUD_BRIGHT", "HUD_PIPER_HIDDEN"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+
+-- LCOS SSLC recticle
+local HUD_DGFT_LCOS_object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "gun-recticle"}, "CenterCenter", {0, 0}, HUD_Piper_origin.name)
+HUD_DGFT_LCOS_object.element_params = {"HUD_BRIGHT", "WPN_AA_SIGHT"}
+HUD_DGFT_LCOS_object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_in_range", 1, WPN_AA_SIGHT_IDS.LCOS-0.05 , WPN_AA_SIGHT_IDS.SSLC+0.05}, 
+}
+
+-- LCOS Line #2
+object = addSimpleLine(nil, 10, {0,0}, 0, HUD_DGFT_origin.name, nil, 0.5, HUD_MAT_DEF)
+object.element_params = {"HUD_BRIGHT", "WPN_AA_SIGHT", "HUD_PIPER_LINE_A_X", "HUD_PIPER_LINE_A_Y"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_compare_with_number", 1, WPN_AA_SIGHT_IDS.LCOS}, 
+	{"line_object_set_point_using_parameters", 1, 2, 3, 1, 1}, 
+}
+
+-- LCOS line #2
+object = addSimpleLine(nil, 10, {0,0}, 0, HUD_DGFT_origin.name, nil, 0.5, HUD_MAT_DEF)
+object.element_params = {"HUD_BRIGHT", "WPN_AA_SIGHT", "HUD_PIPER_LINE_B_X", "HUD_PIPER_LINE_B_Y", "HUD_PIPER_LINE_C_X", "HUD_PIPER_LINE_C_Y"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_compare_with_number", 1, WPN_AA_SIGHT_IDS.LCOS}, 
+	{"line_object_set_point_using_parameters", 0, 2, 3, 1, 1}, 
+	{"line_object_set_point_using_parameters", 1, 4, 5, 1, 1}, 
+}
+
+
+-- SNAP Line #1
+local HUD_SNAP_LINE1_Object = addSimpleLine(nil, 10, {0,0}, 0, HUD_DGFT_origin.name, nil, 0.5, HUD_MAT_DEF)
+HUD_SNAP_LINE1_Object.element_params = {"HUD_BRIGHT", "WPN_AA_SIGHT", "HUD_PIPER_LINE_A_X", "HUD_PIPER_LINE_A_Y"}
+HUD_SNAP_LINE1_Object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_in_range", 1, WPN_AA_SIGHT_IDS.SSLC - 0.5, WPN_AA_SIGHT_IDS.SNAP + 0.05}, 
+	{"line_object_set_point_using_parameters", 1, 2, 3, 1, 1}, 
+}
+
+-- SNAP Line #2
+local HUD_SNAP_LINE2_Object = addSimpleLine(nil, 10, {0,0}, 0, HUD_SNAP_LINE1_Object.name, nil, 0.5, HUD_MAT_DEF)
+HUD_SNAP_LINE2_Object.element_params = {"HUD_BRIGHT", "WPN_AA_SIGHT", "HUD_PIPER_LINE_A_X", "HUD_PIPER_LINE_A_Y", "HUD_PIPER_LINE_B_X", "HUD_PIPER_LINE_B_Y"}
+HUD_SNAP_LINE2_Object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_in_range", 1, WPN_AA_SIGHT_IDS.SSLC - 0.5, WPN_AA_SIGHT_IDS.SNAP + 0.05}, 
+	{"move_left_right_using_parameter", 2, 1},
+	{"move_up_down_using_parameter", 3, 1},
+	{"line_object_set_point_using_parameters", 1, 4, 5, 1, 1}, 
+}
+object = addStrokeLine(nil, 30, {-15, 0}, -90, HUD_SNAP_LINE2_Object.name)
+
+-- SNAP Line #3
+local HUD_SNAP_LINE3_Object = addSimpleLine(nil, 10, {0,0}, 0, HUD_SNAP_LINE2_Object.name, nil, 0.5, HUD_MAT_DEF)
+HUD_SNAP_LINE3_Object.element_params = {"HUD_BRIGHT", "WPN_AA_SIGHT", "HUD_PIPER_LINE_B_X", "HUD_PIPER_LINE_B_Y", "HUD_PIPER_LINE_C_X", "HUD_PIPER_LINE_C_Y"}
+HUD_SNAP_LINE3_Object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_in_range", 1, WPN_AA_SIGHT_IDS.SSLC - 0.5, WPN_AA_SIGHT_IDS.SNAP + 0.05}, 
+	{"move_left_right_using_parameter", 2, 1},
+	{"move_up_down_using_parameter", 3, 1},
+	{"line_object_set_point_using_parameters", 1, 4, 5, 1, 1}, 
+}
+object = addStrokeLine(nil, 15, {-7.5, 0}, -90, HUD_SNAP_LINE3_Object.name)
+object = addStrokeLine(nil, 10, {-5, 0}, -90, HUD_SNAP_LINE3_Object.name)
+object.element_params = {"HUD_BRIGHT", "WPN_AA_SIGHT", "HUD_PIPER_LINE_C_X", "HUD_PIPER_LINE_C_Y"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_in_range", 1, WPN_AA_SIGHT_IDS.SSLC - 0.5, WPN_AA_SIGHT_IDS.SNAP + 0.05}, 
+	{"move_left_right_using_parameter", 3, -1},
+	{"move_up_down_using_parameter", 2, 1},
+}
+
 
 -- Flight Path Marker - FPM
 local HUD_FPM_origin = addPlaceholder("HUD_FPM_origin", {0, 0}, nil, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_FPM_Pos"}})
@@ -142,8 +299,11 @@ object = addStrokeSymbol("HUD_FPM_Cross", {"stroke_symbols_HUD", "fpm-cross"}, "
 object.element_params = {"HUD_FPM_CROSS", "HUD_BRIGHT"}
 object.controllers = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter", 1}}
 
--- -- AoA bracket
--- addStrokeSymbol("HUD_AoA_bracket", {"stroke_symbols_HUD", "aoa-bracket"}, "FromSet", {0, 0}, HUD_FPM_origin.name, {{"HUD_AoA_bracket"}})
+-- AoA bracket
+object = addStrokeSymbol("HUD_AoA_bracket", {"stroke_symbols_HUD", "aoa-bracket"}, "FromSet", {0, 0}, "HUD_FPM", {{"HUD_AoA_bracket"}})
+object.element_params = {"HUD_BRIGHT", "AVIONICS_MASTER_MODE", "HUD_AOA_DELTA"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,AVIONICS_MASTER_MODE_ID.LANDING}, {"move_up_down_using_parameter", 2, DegToMil(1)/1000/2}}
+
 
 -- -- Great steering circle cue "tadpole"
 -- addStrokeSymbol("HUD_Tadpole", {"stroke_symbols_HUD", "3-great-steering-circle"}, "FromSet", nil, HUD_FPM_origin.name, {{"HUD_Tadpole_Pos", 50}})	-- 50 milradians for maximum offset
@@ -163,21 +323,33 @@ local PL_pitch_line_tick			= 4
 
 -- long line - horizon
 object = add_PL_line("PL_horizon_long_line", PL_long_horizon_line_width, PL_horizon_line_half_gap, 0, 0, 0, {{"HUD_PL_GhostHorizon", 0}}, PL_origin.name)
--- object.element_params = {"HUD_PL_GHOST"}
--- object.controllers = {{"parameter_compare_with_number",0,0}}
+-- object.element_params = {"HUD_PITCH"}
+-- object.controllers = {{"parameter_in_range",0,math.rad(-5), math.rad(5)}}
 
 -- object = add_PL_GhostHorizon("PL_GhostHorizon_", PL_long_horizon_line_width, PL_horizon_line_half_gap, {{"HUD_PitchLadder_Show"}, {"HUD_PL_GhostHorizon", 1}}, {0, 0})
--- object.element_params = {"HUD_PL_GHOST"}
--- object.controllers = {{"parameter_compare_with_number",0,1}}
+-- object.parent_element = PL_origin.name
+-- object.element_params = {"HUD_PITCH"}
+-- object.controllers = {{"parameter_in_range",0,-10, math.rad(-5)}}
 
--- -85 to +85 degrees
-local counterBegin = -85
+object = add_PL_line("PL_horizon_25_line", PL_pitch_line_width*0.75, PL_pitch_line_half_gap, 0, DegToMil(-2.5), 0, nil, PL_origin.name)
+object.element_params = {"AVIONICS_MASTER_MODE"}
+object.controllers = {{"parameter_compare_with_number", 0, AVIONICS_MASTER_MODE_ID.LANDING}}
+
+-- -80 to +80 degrees
+local counterBegin = -80
 local counterEnd   = -counterBegin
 for i = counterBegin, counterEnd, 5 do
-	if i ~= 0 then
+	local ang=math.abs(i)
+	if i ~= 0 and ang ~= 65 and ang~= 75 then
 		object = add_PL_line("PL_pitch_line_"..i, PL_pitch_line_width, PL_pitch_line_half_gap, PL_pitch_line_tick, DegToMil(i), i, {{"HUD_PitchLadder_Limit", DegToMil(10)}}, PL_origin.name)
+		object.element_params = {"HUD_PL"}
+		object.controllers = {{"parameter_compare_with_number", 0, 1}}
 	end
 end
+addStrokeSymbol(nil, {"stroke_symbols_HUD", "7-pup"}, "CenterCenter", {0, DegToMil(90)}, PL_origin.name)
+addStrokeSymbol(nil, {"stroke_symbols_HUD", "7-pup"}, "CenterCenter", {0, DegToMil(-90)}, PL_origin.name)
+addStrokeSymbol(nil, {"stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, DegToMil(-90)}, PL_origin.name,nil, 0.5)
+
 
 -- Roll Indicator
 local HUD_RI_origin	= addPlaceholder("HUD_RI_origin", {0, -60}, nil, {{"HUD_RI_Pos"}})
@@ -203,38 +375,70 @@ object.element_params = {"HUD_IAS", "HUD_BRIGHT"}
 object.controllers = {{"text_using_parameter",0,0}, {"opacity_using_parameter", 1}}
 
 addStrokeSymbol("HUD_Velocity_box", {"stroke_symbols_HUD", "9-velocity-box"}, "FromSet", {-9, 0}, HUD_Vel_num_origin.name)
-addStrokeLine("HUD_VelScaleLine", 10, {13, 0}, 90, HUD_Vel_num_origin.name)
+addStrokeLine("HUD_VelNumLine", 10, {13, 0}, 90, HUD_Vel_num_origin.name)
 
 -- Velocity scale
-local velScale50KnotsStep		= 25
-local velScaleLongTickLen		= 5
-local velScaleShortTickLen		= 3
-local Mil_PerOneKnots			= velScale50KnotsStep / 50
+local velScale20KnotsStep		= 25
+local velScaleLongTickLen		= 4
+local velScaleShortTickLen		= 2
+local Mil_PerOneKnots			= velScale20KnotsStep / 50
 
-
-
-local HUD_VelScale_origin = addPlaceholder("HUD_VelScale_origin", {-87.5 + velScaleLongTickLen, 0}, HUD_Indication_bias.name, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_VelScaleOrigin"}})
+local HUD_VelScale_origin = addPlaceholder("HUD_VelScale_origin", {-90, 0}, HUD_Indication_bias.name, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_VelScaleOrigin"}})
 HUD_VelScale_origin.element_params = {"HUD_VAH", "HUD_BRIGHT"}
 HUD_VelScale_origin.controllers = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter", 1}}
 
 
-local HUD_VelScale_originLong  = addPlaceholder("HUD_VelScale_originLong", {0, 0}, HUD_VelScale_origin.name, {{"HUD_VelScaleVerPos", 0, Mil_PerOneKnots}})
+local HUD_VelScale_originLong  = addPlaceholder("HUD_VelScale_originLong", {-velScaleShortTickLen, 0}, HUD_VelScale_origin.name, {{"HUD_VelScaleVerPos", 0, Mil_PerOneKnots}})
+HUD_VelScale_originLong.element_params = {"HUD_VEL_SCALE_MOVE"}
+HUD_VelScale_originLong.controllers = { {"move_up_down_using_parameter",0, -velScale20KnotsStep/20/1000*0.75}}
+
 local HUD_VelScale_originShort = {}
 for j = 1,4 do
-	HUD_VelScale_originShort[j] = addPlaceholder("HUD_VelScale_originShort"..j, {0, 0}, HUD_VelScale_origin.name, {{"HUD_VelScaleVerPos", 10 * j, Mil_PerOneKnots}})
+	HUD_VelScale_originShort[j] = addPlaceholder("HUD_VelScale_originShort"..j, {0, 0}, HUD_VelScale_originLong.name, {{"HUD_VelScaleVerPos", 10 * j, Mil_PerOneKnots}})
 end
 
 for i = 1, 4 do
-	local posY = velScale50KnotsStep * (i - 2)-- + velScale50KnotsStep / 2
-	addStrokeLine("HUD_VelScaleTickLong_"..i, velScaleLongTickLen, {0, posY}, 90, HUD_VelScale_originLong.name, {{"HUD_VelScaleHide", i, 0}})
-	for j = 1,4 do
-		addStrokeLine("HUD_VelScaleTickShort_"..j..i, velScaleShortTickLen, {0, posY}, 90, HUD_VelScale_originShort[j].name, {{"HUD_VelScaleHide", i, j}})
+	local posY = velScale20KnotsStep * (i - 2.5)
+	object = addStrokeLine("HUD_VelScaleTickLong_"..i, velScaleLongTickLen, {0, posY}, 90, HUD_VelScale_originLong.name, {{"HUD_VelScaleHide", i, 0}})
+	object.element_params = {"HUD_BRIGHT", "HUD_VEL_SCALE_MOVE", "HUD_IAS"}
+	if i == 1 then
+		object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",1, -0.05 , 0.05}, {"parameter_in_range",2, 19.95 , 999}}
+	elseif i==2 then
+		object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",2, 19.95 , 999}}
 	end
-
-	addStrokeText("HUD_VelScaleNumerics_"..i, tostring(i), STROKE_FNT_DFLT_100_NARROW, "RightCenter", {-velScaleLongTickLen - 1, posY}, HUD_VelScale_originLong.name, {{"HUD_VelScaleText", i}})
+	for j = 1,3 do
+		object = addStrokeLine("HUD_VelScaleTickShort_"..j..i, velScaleShortTickLen, {0, posY + j*velScale20KnotsStep/4}, 90, HUD_VelScale_originShort[j].name, {{"HUD_VelScaleHide", i, j}})
+		object.element_params = {"HUD_BRIGHT", "HUD_VEL_SCALE_MOVE", "HUD_IAS"}
+		if i == 1 then
+			object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",1, -0.05 , (j)*5+0.05}, {"parameter_in_range",2, 19.95 , 999}}
+		elseif i == 2 then
+			object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",2, 19.95 , 999}}
+		elseif i == 4 then
+			object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",1,j*5-0.05, 20.05}}
+		end
+	end
+	object = addStrokeText("HUD_VelScaleNumerics_"..i, tostring(i), STROKE_FNT_DFLT_100_NARROW, "RightCenter", {-velScaleLongTickLen - 1, posY}, HUD_VelScale_originLong.name, {{"HUD_VelScaleText", i}}, {"%02.0f"})
+	object.element_params = {"HUD_BRIGHT", "HUD_VEL_SCALE_MOVE", "HUD_VEL_SCALE_NUM_"..i, "HUD_IAS"}
+	if i == 1 then
+		object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",1, -0.05 , 0.05}, {"text_using_parameter",2,0}, {"parameter_in_range",3, 19.95 , 999}}
+	elseif i == 2 then
+		object.controllers = { {"opacity_using_parameter", 0}, {"text_using_parameter",2,0}, {"parameter_in_range",3, 19.95 , 999}}
+	else 
+		object.controllers = { {"opacity_using_parameter", 0}, {"text_using_parameter",2,0}}
+	end
 end
---
-addStrokeLine("HUD_Window2_VelScaleLine", 10, {velScaleLongTickLen + 4.5, 0}, 90, HUD_VelScale_origin.name)
+
+local HUD_Velocity_CueOrigin = addPlaceholder("HUD_Velocity_CueOrigin", {0,0}, HUD_VelScale_origin.name)
+HUD_Velocity_CueOrigin.element_params = {"HUD_VEL_CUE_MOVE", "HUD_VEL_CUE_VALUE"}
+HUD_Velocity_CueOrigin.controllers = {{"move_up_down_using_parameter",0, velScale20KnotsStep/20/1000*0.75}, {"parameter_in_range", 1, 0, 999}}
+object = addStrokeSymbol("HUD_Velocity_Cue", {"stroke_symbols_HUD", "AA-DLZ-range"}, "RightCenter", {0, 0}, HUD_Velocity_CueOrigin.name)
+object.init_rot = {180}
+object = addStrokeText("HUD_VelCueNumerics", 0, STROKE_FNT_DFLT_100_NARROW, "LeftCenter", {7,0}, HUD_Velocity_CueOrigin.name, nil, {"%02.0f"})
+object.element_params = {"HUD_BRIGHT", "HUD_VEL_CUE_MOVE", "HUD_VEL_CUE_VALUE"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, 27.5, 30.05}, {"text_using_parameter", 2, 0}}
+
+
+addStrokeLine("HUD_VelScaleLine", 10, {10, 0}, 90, HUD_VelScale_origin.name)
 
 -- Altitude numerics
 local HUD_Alt_num_origin	= addPlaceholder("HUD_Alt_num_origin", {115, 0}, HUD_Indication_bias.name)
@@ -252,71 +456,154 @@ object.element_params = {"HUD_ALT_N", "HUD_BRIGHT"}
 object.controllers = {{"text_using_parameter",0,0}, {"opacity_using_parameter", 1}}
 
 addStrokeSymbol("HUD_Altitude_box", {"stroke_symbols_HUD", "10-altitude-box"}, "FromSet", {-15, 0}, HUD_Alt_num_origin.name)
-addStrokeLine("HUD_AltScaleLine", 10, {-41, 0}, -90, HUD_Alt_num_origin.name)
+addStrokeLine("HUD_AltNumLine", 10, {-41, 0}, -90, HUD_Alt_num_origin.name)
 
 -- Altitude scale
 local altScale500FeetStep		= 25
-local altScaleLongTickLen		= 5
-local altScaleShortTickLen		= 3
+local altScaleLongTickLen		= 4
+local altScaleShortTickLen		= 2
 local Mil_Per100Feet			= altScale500FeetStep / 50
 
-local HUD_AltScale_origin = addPlaceholder("HUD_AltScale_origin", {86 - altScaleLongTickLen, 0}, HUD_Indication_bias.name, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_AltScaleOrigin"}})
+local HUD_AltScale_origin = addPlaceholder("HUD_AltScale_origin", {84, 0}, HUD_Indication_bias.name, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_AltScaleOrigin"}})
 HUD_AltScale_origin.element_params = {"HUD_VAH"}
 HUD_AltScale_origin.controllers = {{"parameter_compare_with_number",0,1}}
 
-local HUD_AltScale_originLong  = addPlaceholder("HUD_AltScale_originLong", {0, 0}, HUD_AltScale_origin.name, {{"HUD_AltScaleVerPos", 0, Mil_Per100Feet}})
+local HUD_AltScale_originLong  = addPlaceholder("HUD_AltScale_originLong", {altScaleShortTickLen, 0}, HUD_AltScale_origin.name, {{"HUD_AltScaleVerPos", 0, Mil_Per100Feet}})
+HUD_AltScale_originLong.element_params = {"HUD_ALT_SCALE_MOVE"}
+HUD_AltScale_originLong.controllers = { {"move_up_down_using_parameter",0, -altScale500FeetStep/500/1000*0.75}}
+
 local HUD_AltScale_originShort = {}
 for j = 1,4 do
-	HUD_AltScale_originShort[j] = addPlaceholder("HUD_AltScale_originShort"..j, {0, 0}, HUD_AltScale_origin.name, {{"HUD_AltScaleVerPos", 10 * j, Mil_Per100Feet}})
+	HUD_AltScale_originShort[j] = addPlaceholder("HUD_AltScale_originShort"..j, {0, 0}, HUD_AltScale_originLong.name, {{"HUD_AltScaleVerPos", 10 * j, Mil_Per100Feet}})
 end
 
 for i = 1, 4 do
-	local posY = altScale500FeetStep * (i - 2)-- + velScale50KnotsStep / 2
-	addStrokeLine("HUD_AltScaleTickLong_"..i, altScaleLongTickLen, {0, posY}, -90, HUD_AltScale_originLong.name, {{"HUD_AltScaleHide", i, 0}})
-	for j = 1,4 do
-		addStrokeLine("HUD_AltScaleTickShort_"..j..i, altScaleShortTickLen, {0, posY}, -90, HUD_AltScale_originShort[j].name, {{"HUD_AltScaleHide", i, j}})
+	local posY = altScale500FeetStep * (i - 2.5)-- + velScale50KnotsStep / 2
+	object = addStrokeLine("HUD_AltScaleTickLong_"..i, altScaleLongTickLen, {0, posY}, -90, HUD_AltScale_originLong.name, {{"HUD_AltScaleHide", i, 0}})
+	if i == 1 then
+		object.element_params = {"HUD_BRIGHT", "HUD_ALT_SCALE_MOVE"}
+		object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",1, -0.05 , 0.05}}
 	end
-
-	addStrokeText("HUD_AltScaleNumericsL_"..i, tostring(i), STROKE_FNT_DFLT_100_NARROW, "RightCenter", {altScaleLongTickLen + 10.5, posY}, HUD_AltScale_originLong.name, {{"HUD_AltScaleText", i, 0}})
-	addStrokeText("HUD_AltScale_comma"..i, ".", STROKE_FNT_DFLT_100_NARROW, "CenterCenter", {altScaleLongTickLen + 11.5, posY}, HUD_AltScale_originLong.name, {{"HUD_AltScaleText", i, 1}})
-	addStrokeText("HUD_AltScaleNumericsR_"..i, tostring(i), STROKE_FNT_DFLT_100_NARROW, "RightCenter", {altScaleLongTickLen + 16.5, posY}, HUD_AltScale_originLong.name, {{"HUD_AltScaleText", i, 2}})
+for j = 1,4 do
+		object = addStrokeLine("HUD_AltScaleTickShort_"..j..i, altScaleShortTickLen, {0, posY + j*altScale500FeetStep/5}, -90, HUD_AltScale_originShort[j].name, {{"HUD_AltScaleHide", i, j}})
+		object.element_params = {"HUD_BRIGHT", "HUD_ALT_SCALE_MOVE"}
+		if i == 1 then
+			object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",1, -0.05 , (j)*100+0.05}}
+		elseif i == 4 then
+			object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",1,j*100-0.05, 500.05}}
+		end
+	end
+	object = addStrokeText("HUD_AltScaleNumericsL_"..i, i, STROKE_FNT_DFLT_100_NARROW, "LeftCenter", {altScaleLongTickLen + altScaleShortTickLen, posY}, HUD_AltScale_originLong.name, {{"HUD_AltScaleText", i, 0}}, {"%04.1f"})
+	object.element_params = {"HUD_BRIGHT", "HUD_ALT_SCALE_MOVE", "HUD_ALT_SCALE_NUM_"..i}
+	if i == 1 then
+		object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",1, -0.05 , 0.05}, {"text_using_parameter",2,0}}
+	else 
+		object.controllers = { {"opacity_using_parameter", 0}, {"text_using_parameter",2,0}}
+	end
 end
-addStrokeLine("HUD_AltScaleLine", 10, {-velScaleLongTickLen - 4.5, 0}, -90, HUD_AltScale_origin.name)
+addStrokeLine("HUD_AltScaleLine", 10, {-10, 0}, -90, HUD_AltScale_origin.name)
+
+local HUD_Alt_Cue_origin = addPlaceholder(nil, {0,0}, HUD_AltScale_origin.name)
+HUD_Alt_Cue_origin.element_params = {"HUD_ALT_CUE_MOVE", "HUD_ALT_CUE_VALUE"}
+HUD_Alt_Cue_origin.controllers = {{"move_up_down_using_parameter",0, altScale500FeetStep/500/1000*0.75}, {"parameter_in_range", 1, -0.05, 50000}}
+object = addStrokeSymbol("HUD_Alt_Cue", {"stroke_symbols_HUD", "AA-DLZ-range"}, "RightCenter", {0, 0}, HUD_Alt_Cue_origin.name)
+object = addStrokeText("HUD_AltCueNumerics", 0, STROKE_FNT_DFLT_100_NARROW, "RightCenter", {-7,0}, HUD_Alt_Cue_origin.name, nil, {"%04.1f"})
+object.element_params = {"HUD_BRIGHT", "HUD_ALT_CUE_MOVE", "HUD_ALT_CUE_VALUE"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, 775, 800.05}, {"text_using_parameter", 2, 0}}
+
+
+-- Vertical Speed scale
+local VSScale1000FeetStep		= 25 * 1.4/2
+local VSScaleLongTickLen		= 4
+local VSScaleShortTickLen		= 2
+local VSMil_Per100Feet			= VSScale1000FeetStep / 50
+
+local HUD_VSScale_origin = addPlaceholder(nil, {66, 0}, HUD_Indication_bias.name, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_AltScaleOrigin"}})
+HUD_VSScale_origin.element_params = {"HUD_VV"}
+HUD_VSScale_origin.controllers = {{"parameter_compare_with_number",0,1}}
+
+local HUD_VSScale_originLong  = addPlaceholder(nil, {VSScaleShortTickLen, 0}, HUD_VSScale_origin.name, {{"HUD_AltScaleVerPos", 0, VSMil_Per100Feet}})
+local HUD_VSScale_originShort = {}
+for j = 1,4 do
+	HUD_VSScale_originShort[j] = addPlaceholder(nil, {0, 0}, HUD_VSScale_originLong.name, {{"HUD_AltScaleVerPos", 10 * j, VSMil_Per100Feet}})
+end
+
+for i = 1, 5 do
+	local posY = VSScale1000FeetStep * (i -3)
+	object = addStrokeLine(nil, VSScaleLongTickLen, {0, posY}, -90, HUD_VSScale_originLong.name, {{"HUD_AltScaleHide", j, 0}})
+	if i ~= 5 then
+		object = addStrokeLine(nil, VSScaleShortTickLen, {0, posY + VSScale1000FeetStep/2}, -90, HUD_VSScale_originShort[i].name, {{"HUD_AltScaleHide", i}})
+	end
+end
+local HUD_VS_Cue_origin = addPlaceholder(nil, {0,0}, HUD_VSScale_origin.name)
+HUD_VS_Cue_origin.element_params = {"HUD_VS_CUE_MOVE", "HUD_VS_CUE_VALUE"}
+HUD_VS_Cue_origin.controllers = {{"move_up_down_using_parameter",0, VSScale1000FeetStep/1000/1000*0.75}, {"parameter_in_range", 1, -0.05, 50000}}
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "AA-DLZ-range"}, "RightCenter", {0, 0}, HUD_VS_Cue_origin.name)
+
 
 -- Heading numerics
 local HUD_Hdg_origin	= addPlaceholder("HUD_Hdg_origin", {0, 95}, nil, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_Heading_Bias"}})
 HUD_Hdg_origin.element_params = {"HUD_VAH", "HUD_BRIGHT"}
 HUD_Hdg_origin.controllers = {{"parameter_compare_with_number",0,0}, {"opacity_using_parameter", 1}}
-
 object = addStrokeText("HUD_Heading_num", "360", STROKE_FNT_DFLT_100_NARROW, "CenterCenter", {0, -12.5}, HUD_Hdg_origin.name, {{"HUD_Heading_Num"}}, {"%03.0f"})
 object.element_params = {"HUD_HDG", "HUD_BRIGHT"}
 object.controllers = {{"text_using_parameter",0,0}, {"opacity_using_parameter", 1}}
-
 addStrokeBox("HUD_Heading_box", 17, 11, "CenterCenter", {0, -12.5}, HUD_Hdg_origin.name)
 
 -- Heading scale
--- heading scale
 local hdgScaleTenDegreesStep	= 32
-local hdgScaleLongTickLen		= 5
+local hdgScaleLongTickLen		= 4
 local hdgScaleTextShiftY		= 2
 local Mil_PerOneDegree			= hdgScaleTenDegreesStep / 10
 
-local HUD_HdgScale_origin = addPlaceholder("HUD_HdgScale_origin", {0, 0}, HUD_Hdg_origin.name, {{"HUD_HdgScaleOrigin"}})		--  -53
+local HUD_HdgScale_origin = addPlaceholder("HUD_HdgScale_origin", {0, 97}, nil, {{"HUD_HdgScaleOrigin"}})		--  -53
 HUD_HdgScale_origin.element_params = {"HUD_VAH", "HUD_BRIGHT"}
 HUD_HdgScale_origin.controllers = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter", 1}}
 
-local HUD_HdgScale_originLong  = addPlaceholder("HUD_HdgScale_originLong", {0, 0}, HUD_HdgScale_origin.name, {{"HUD_HdgScaleHorPos", 0, Mil_PerOneDegree}})
-local HUD_HdgScale_originShort = addPlaceholder("HUD_HdgScale_originShort", {0, 0}, HUD_HdgScale_origin.name, {{"HUD_HdgScaleHorPos", -5, Mil_PerOneDegree}})
+local HUD_HdgScale_originLong  = addPlaceholder("HUD_HdgScale_originLong", {0, -hdgScaleTextShiftY}, HUD_HdgScale_origin.name, {{"HUD_HdgScaleHorPos", 0, Mil_PerOneDegree}})
+HUD_HdgScale_originLong.element_params = {"HUD_HDG_SCALE_MOVE"}
+HUD_HdgScale_originLong.controllers = { {"move_left_right_using_parameter",0, -hdgScaleTenDegreesStep/10/1000*0.75}}
 
-for i = 1, 3 do
-	local posX = hdgScaleTenDegreesStep * (i - 2) - hdgScaleTenDegreesStep / 2
-	addStrokeLine("HUD_HeadingTickLong_"..i, -hdgScaleLongTickLen, {posX, 0}, 0, HUD_HdgScale_originLong.name, {{"HUD_HdgScaleHide", (i - 2), 0}})
-	addStrokeLine("HUD_HeadingTickShort_"..i, -hdgScaleLongTickLen * 0.5, {posX, 0}, 0, HUD_HdgScale_originShort.name, {{"HUD_HdgScaleHide", (i - 2), 1}})
-	addStrokeText("HUD_HeadingNumerics_"..i, tostring(i), STROKE_FNT_DFLT_100_NARROW, "CenterTop", {posX, - (hdgScaleLongTickLen + hdgScaleTextShiftY)}, HUD_HdgScale_originLong.name, {{"HUD_HeadingScaleText", (i - 2)}})
+local HUD_HdgScale_originShort = addPlaceholder("HUD_HdgScale_originShort", {0, 0}, HUD_HdgScale_originLong.name, {{"HUD_HdgScaleHorPos", -5, Mil_PerOneDegree}})
+
+for i = 1, 4 do
+	local posX = hdgScaleTenDegreesStep * (i - 2) 
+	object = addStrokeLine("HUD_HeadingTickLong_"..i, -hdgScaleLongTickLen, {posX, 0}, 0, HUD_HdgScale_originLong.name, {{"HUD_HdgScaleHide", (i - 2), 0}})
+	if i == 1 then
+		object.element_params = {"HUD_BRIGHT", "HUD_HDG_SCALE_MOVE"}
+		object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",1, -0.05 , 2.05}}
+	elseif i == 4 then
+		object.element_params = {"HUD_BRIGHT", "HUD_HDG_SCALE_MOVE"}
+		object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",1, 7.95 , 10.05}}
+	end
+	object = addStrokeLine("HUD_HeadingTickShort_"..i, -hdgScaleLongTickLen * 0.5, {posX + hdgScaleTenDegreesStep/2, 0}, 0, HUD_HdgScale_originShort.name, {{"HUD_HdgScaleHide", (i - 2), 1}})
+	object.element_params = {"HUD_BRIGHT", "HUD_HDG_SCALE_MOVE"}
+	if i == 1 then
+		object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",1, -0.05 , 7.05}}
+	elseif i == 3 then
+		object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",1, 2.95 , 10.05}}
+	elseif i == 4 then
+		object. isvisible = false
+	end
+	object = addStrokeText("HUD_HeadingNumerics_"..i, tostring(i), STROKE_FNT_DFLT_100_NARROW, "CenterTop", {posX, - (hdgScaleLongTickLen + hdgScaleTextShiftY)}, HUD_HdgScale_originLong.name, {{"HUD_HeadingScaleText", (i - 2)}}, {"%02.0f"})
+	object.element_params = {"HUD_BRIGHT", "HUD_HDG_SCALE_MOVE", "HUD_HDG_SCALE_NUM_"..i}
+	if i == 1 then
+		object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",1, -0.05 , 2.05}, {"text_using_parameter",2, 0}}
+	elseif i == 4 then
+		object.controllers = { {"opacity_using_parameter", 0}, {"parameter_in_range",1, 7.95 , 10.05}, {"text_using_parameter",2, 0}}
+	else 
+		object.controllers = { {"opacity_using_parameter", 0}, {"text_using_parameter",2, 0}}
+	end
 end
 
+local HUD_Hdg_Cue_origin = addPlaceholder(nil, {0,0}, HUD_HdgScale_origin.name)
+HUD_Hdg_Cue_origin.element_params = {"HUD_HDG_CUE_MOVE", "HUD_HDG_CUE_VALUE"}
+HUD_Hdg_Cue_origin.controllers = {{"move_left_right_using_parameter",0, hdgScaleTenDegreesStep/10/1000*0.75}, {"parameter_in_range", 1, -0.05, 360}}
+object = addStrokeSymbol("HUD_Hdg_Cue", {"stroke_symbols_HUD", "AA-DLZ-range"}, "RightCenter", {0, 0}, HUD_Hdg_Cue_origin.name)
+object.init_rot = {-90}
+
 -- heading index
-addStrokeLine("HUD_HeadingScaleIndex", 2 * hdgScaleLongTickLen, {0, 2}, 0, HUD_HdgScale_origin.name)
+addStrokeLine("HUD_HeadingScaleIndex", 10, {0, 0}, 0, HUD_HdgScale_origin.name)
 
 -- Normal Acceleration
 object = addStrokeText("HUD_NormalAccel", "1.0", STROKE_FNT_DFLT_120, "CenterCenter", {-72.5, 65}, nil, nil, {"%1.1f"})
@@ -332,11 +619,11 @@ object.controllers = {{"text_using_parameter",0,0}, {"parameter_in_range", 0, -0
 -- Weapon Ready
 object = addStrokeText("HUD_Rdy", "RDY", STROKE_FNT_DFLT_120, "CenterCenter", {-85, 75})
 object.element_params = {"HUD_RDY", "HUD_BRIGHT"}
-object.controllers = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter", 1}}
+object.controllers = {{"parameter_in_range",0,0.95, 2.05}, {"opacity_using_parameter", 1}}
 
-object = addStrokeText("HUD_Rdy", "S", STROKE_FNT_DFLT_120, "CenterCenter", {-70, 75})
-object.element_params = {"HUD_RDY_S", "HUD_BRIGHT"}
-object.controllers = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter", 1}}
+object = addStrokeText("HUD_Rdy_S", "S", STROKE_FNT_DFLT_120, "CenterCenter", {-70, 75})
+object.element_params = {"HUD_RDY", "HUD_BRIGHT"}
+object.controllers = {{"parameter_compare_with_number",0,2}, {"opacity_using_parameter", 1}}
 
 
 -- DOI
@@ -416,3 +703,12 @@ object.controllers = {{"parameter_compare_with_number", 0, 1}, {"opacity_using_p
 object = addStrokeText("HUD_WARN", "WARN", STROKE_FNT_DFLT_120, "CenterCenter", {0, 0})
 object.element_params = {"HUD_WARNING", "HUD_BRIGHT"}
 object.controllers = {{"parameter_compare_with_number", 0, 1}, {"opacity_using_parameter", 1}}
+
+-- MG
+object = addStrokeText(nil, "MG 500", STROKE_FNT_DFLT_120, "CenterCenter", {-80, -110}, nil, nil, {"MG %03.0f"})
+object.element_params = {"HUD_BRIGHT", "WPN_AA_INTRG_QTY", "AVIONICS_MASTER_MODE"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"text_using_parameter", 1, 0}, 
+	{"parameter_in_range",2,AVIONICS_MASTER_MODE_ID.DGFT_B-0.5, AVIONICS_MASTER_MODE_ID.GUN_R + 0.5},
+}

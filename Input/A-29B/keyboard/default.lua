@@ -80,6 +80,17 @@ join(res.keyCommands,{
 {                                                   down = Keys.DisplayMngt,            up = Keys.DisplayMngt,      name = _('DMS Right - CMFD #2'),        category = {_('Stick'), _('HOTAS')}, value_down =  4.0,		value_up = 0.0},
 {                                                   down = Keys.DisplayMngt,            up = Keys.DisplayMngt,      name = _('DMS Depress - Autopilot'),    category = {_('Stick'), _('HOTAS')}, value_down =  5.0,		value_up = 0.0},
 
+
+{                                                   down = Keys.GunSelDist,            up = Keys.GunSelDist,        name = _('Machine Gun Selection'),      category = {_('Throttle'), _('HOTAS')}, value_down =  -1.0,		value_up = 0.0},
+{                                                   down = Keys.GunSelDist,            up = Keys.GunSelDist,        name = _('Machine Gun Distance'),       category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+{                                                   down = Keys.GunRearm,              up = Keys.GunRearm,          name = _('Machine Gun Rearm'),          category = {_('Throttle'), _('HOTAS')}, value_down =  -1.0,		value_up = 0.0},
+{                                                   down = Keys.Cage,                  up = Keys.Cage,              name = _('Cage / Uncage'),              category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+{                                                   down = Keys.TDCX,                  up = Keys.TDCX,              name = _('TDC Slew Left'),              category = {_('Throttle'), _('HOTAS')}, value_down =  -1.0,		value_up = 0.0},
+{                                                   down = Keys.TDCX,                  up = Keys.TDCX,              name = _('TDC Slew Right'),             category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+{                                                   down = Keys.TDCY,                  up = Keys.TDCY,              name = _('TDC Slew Up'),                category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+{                                                   down = Keys.TDCY,                  up = Keys.TDCY,              name = _('TDC Slew Down'),              category = {_('Throttle'), _('HOTAS')}, value_down =  -1.0,		value_up = 0.0},
+
+
 -- {combos = {{key = 'Space'}},							down = hotas_commands.STICK_TRIGGER_2ND_DETENT,		up = hotas_commands.STICK_TRIGGER_2ND_DETENT,		cockpit_device_id = devices.HOTAS,	value_down =  1.0,		value_up = 0.0,	name = _('Gun Trigger - SECOND DETENT (Press to shoot)'),				category = {_('Stick'), _('HOTAS')}},
 -- {combos = {{key = ';',		reformers = {'RCtrl'}}},	pressed = hotas_commands.STICK_TRIMMER_DOWN,		up = hotas_commands.STICK_TRIMMER_DOWN,				cockpit_device_id = devices.HOTAS,	value_pressed =  1.0,	value_up = 0.0,	name = _('Trimmer Switch - PUSH(DESCEND)'),								category = {_('Stick'), _('Flight Control'), _('HOTAS')}},
 -- {combos = {{key = '.',		reformers = {'RCtrl'}}},	pressed = hotas_commands.STICK_TRIMMER_UP,			up = hotas_commands.STICK_TRIMMER_UP,				cockpit_device_id = devices.HOTAS,	value_pressed =  1.0,	value_up = 0.0,	name = _('Trimmer Switch - PULL(CLIMB)'),								category = {_('Stick'), _('Flight Control'), _('HOTAS')}},

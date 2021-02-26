@@ -256,8 +256,8 @@ A_29B =  {
 		Pylons =     {
 			pylon(1, 0, -0.200, -0.90, -3.230000,
 				{
-					arg = 308 ,arg_value = 0,
-					use_full_connector_position = true,
+					-- arg = 308 ,arg_value = 0,
+					use_full_connector_position = false,
 				},
 				{
 					{ CLSID = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}" }, -- AIM-9P
@@ -277,7 +277,7 @@ A_29B =  {
 			),
 			pylon(2, 0, -0.200, -1.0, -2.3900,
 				{
-					use_full_connector_position = true,
+					use_full_connector_position = false,
 				},
 				{
 					{ CLSID = "{A-29B TANK}" },
@@ -301,7 +301,7 @@ A_29B =  {
 			),
 			pylon(3, 0, -0.66, -1.2000, 0,
 				{
-					use_full_connector_position = true,
+					use_full_connector_position = false,
 				},
 				{
 					{ CLSID = "{A-29B TANK}" },
@@ -313,7 +313,7 @@ A_29B =  {
 			),
 			pylon(4, 0, -0.200, -1.0, 2.39,
 				{
-					use_full_connector_position = true,
+					use_full_connector_position = false,
 				 },
 				{
 					{ CLSID = "{A-29B TANK}" },
@@ -336,7 +336,7 @@ A_29B =  {
 			),
 			pylon(5, 0, -0.20, -0.9, 3.23,
 				{
-					use_full_connector_position = true,
+					use_full_connector_position = false,
 				 },
 				{
 					{ CLSID = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}" }, -- AIM-9P
@@ -355,7 +355,7 @@ A_29B =  {
 			),
 			pylon(6, 0.1, 2.0, -0.5, 0.88,
 				{
-					use_full_connector_position = true,
+					use_full_connector_position = false,
 					connector 		= "SmokeWhite",
 				    DisplayName 	= "Smoke",
 				 },

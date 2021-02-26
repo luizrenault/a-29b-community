@@ -19,9 +19,9 @@ WPN_LATEARM_IDS = {
 }
 
 WPN_AA_SIGHT_IDS = {
-    SNAP         = 0,
-    LCOS         = 1,
-    SSLC         = 2,
+    LCOS         = 0,
+    SSLC         = 1,
+    SNAP         = 2,
 }
 
 WPN_AA_RR_SRC_IDS = {
@@ -60,10 +60,17 @@ WPN_STO_5_JET = get_param_handle("WPN_STO_5_JET")
 WPN_AA_SEL = get_param_handle("WPN_AA_SEL")
 WPN_AG_SEL = get_param_handle("WPN_AG_SEL")
 WPN_READY = get_param_handle("WPN_READY")
+WPN_SIM_READY = get_param_handle("WPN_SIM_READY")
 WPN_GUNS_L = get_param_handle("WPN_GUNS_L")
 WPN_GUNS_R = get_param_handle("WPN_GUNS_R")
+WPN_MSL_CAGED = get_param_handle("WPN_MSL_CAGED")
 
 WPN_RELEASE = get_param_handle("WPN_RELEASE")
+WPN_AA_SIGHT = get_param_handle("WPN_AA_SIGHT")
+
+WS_IR_MISSILE_LOCK = get_param_handle("WS_IR_MISSILE_LOCK")
+WS_IR_MISSILE_TARGET_AZIMUTH = get_param_handle("WS_IR_MISSILE_TARGET_AZIMUTH")
+WS_IR_MISSILE_TARGET_ELEVATION = get_param_handle("WS_IR_MISSILE_TARGET_ELEVATION")
 
 function get_wpn_aa_sel()
     return WPN_AA_SEL:get()
@@ -129,14 +136,25 @@ function get_wpn_weapon_name(clsid)
     return WEAPONS_NAMES[clsid] or "NONAME"
 end
 
+function get_wpn_ag_sim_ready()
+    return get_avionics_master_mode_ag() and not get_avionics_onground() and (get_wpn_mass() == WPN_MASS_IDS.SIM and get_wpn_latearm() == WPN_LATEARM_IDS.ON and WPN_AG_SEL:get() ~= 0)
+end
+
 function get_wpn_ag_ready()
     return get_avionics_master_mode_ag() and not get_avionics_onground() and (get_wpn_mass() == WPN_MASS_IDS.LIVE and get_wpn_latearm() == WPN_LATEARM_IDS.ON and WPN_AG_SEL:get() ~= 0)
 end
 
 
+function get_wpn_aa_msl_sim_ready()
+    return get_avionics_master_mode_aa() and get_wpn_aa_sel() > 0 and get_wpn_mass() == WPN_MASS_IDS.SIM and get_wpn_latearm() == WPN_LATEARM_IDS.ON and not get_avionics_onground()
+end
+
 function get_wpn_aa_msl_ready()
-    return get_avionics_master_mode_aa() and get_wpn_aa_sel() > 0 and
-        get_wpn_mass() == WPN_MASS_IDS.LIVE and get_wpn_latearm() == WPN_LATEARM_IDS.ON and not get_avionics_onground()
+    return get_avionics_master_mode_aa() and get_wpn_aa_sel() > 0 and get_wpn_mass() == WPN_MASS_IDS.LIVE and get_wpn_latearm() == WPN_LATEARM_IDS.ON and not get_avionics_onground()
+end
+
+function get_wpn_msl_caged()
+    return WPN_MSL_CAGED:get()
 end
 
 function get_wpn_aa_ready()
@@ -149,5 +167,14 @@ function get_wpn_guns_ready()
     master_mode == AVIONICS_MASTER_MODE_ID.GUN or master_mode == AVIONICS_MASTER_MODE_ID.GUN_R
     or master_mode == AVIONICS_MASTER_MODE_ID.CCIP -- quick fix
     ) and
-    get_wpn_latearm() == WPN_LATEARM_IDS.ON and get_wpn_mass() == WPN_MASS_IDS.LIVE and (WPN_GUNS_L:get() + WPN_GUNS_R:get()) > 0
+    get_wpn_latearm() == WPN_LATEARM_IDS.ON and get_wpn_mass() == WPN_MASS_IDS.LIVE and (WPN_GUNS_L:get() + WPN_GUNS_R:get()) > 0 and not get_avionics_onground()
+end
+
+function get_wpn_guns_sim_ready()
+    local master_mode = get_avionics_master_mode()
+    return (master_mode == AVIONICS_MASTER_MODE_ID.DGFT_B or master_mode == AVIONICS_MASTER_MODE_ID.DGFT_L or
+    master_mode == AVIONICS_MASTER_MODE_ID.GUN or master_mode == AVIONICS_MASTER_MODE_ID.GUN_R
+    or master_mode == AVIONICS_MASTER_MODE_ID.CCIP -- quick fix
+    ) and
+    get_wpn_latearm() == WPN_LATEARM_IDS.ON and get_wpn_mass() == WPN_MASS_IDS.SIM and (WPN_GUNS_L:get() + WPN_GUNS_R:get()) > 0 and not get_avionics_onground()
 end

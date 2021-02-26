@@ -44,7 +44,6 @@ local wpn_sto_type = {}
 local wpn_guns_l = 250
 local wpn_guns_r = 250
 
-local WPN_AA_SIGHT = get_param_handle("WPN_AA_SIGHT")
 local WPN_AA_QTY = get_param_handle("WPN_AA_QTY")
 local WPN_AA_NAME = get_param_handle("WPN_AA_NAME")
 local WPN_AA_INTRG_QTY = get_param_handle("WPN_AA_INTRG_QTY")
@@ -57,20 +56,18 @@ local WPN_AA_LIMIT = get_param_handle("WPN_AA_LIMIT")
 
 local WPN_AG_QTY = get_param_handle("WPN_AG_QTY")
 local WPN_AG_NAME = get_param_handle("WPN_AG_NAME")
-
+local WS_TARGET_RANGE = get_param_handle("WS_TARGET_RANGE")
 
 local wpn_aa_sel = 0
 local wpn_aa_sight = WPN_AA_SIGHT_IDS.LCOS
 local wpn_aa_qty = 0
 local wpn_aa_name = ""
-local wpn_aa_intgr_qty = 0
 local wpn_aa_rr = 100
 local wpn_aa_rr_src = WPN_AA_RR_SRC_IDS.MAN
 local wpn_aa_slv_src = WPN_AA_SLV_SRC_IDS.BST
 local wpn_aa_cool = WPN_AA_COOL_IDS.COOL
 local wpn_aa_scan = WPN_AA_SCAN_IDS.SPOT
 local wpn_aa_limit = 0
-local wpn_aa_locked = false
 local wpn_guns_on = false
 local wpn_guns_rate = 60/1025
 local wpn_guns_elapsed = 0
@@ -84,6 +81,8 @@ local wpn_ag_name = ""
 
 local iCommandPlaneFire = 84
 local iCommandPlaneFireOff = 85
+
+WPN_MSL_CAGED:set(2)
 
 local function update_storages()
     wpn_sto_total_count = {}
@@ -112,6 +111,7 @@ local function update_storages()
     WPN_GUNS_R:set(wpn_guns_r)
 end
 
+
 local function update_aa_sel_next(byname)
     local name = ""
     if wpn_aa_sel ~= 0  then 
@@ -129,9 +129,6 @@ local function update_aa_sel_next(byname)
                 wpn_aa_name = get_wpn_weapon_name(station["CLSID"]) or "NONAME"
                 wpn_aa_qty = wpn_sto_total_count[wpn_aa_name] or 0
                 dev:select_station(wpn_aa_sel-1)
-                aim9lock:stop()
-                aim9seek:play_continue()
-                wpn_aa_locked = false
                 return 0
             end
         end
@@ -142,32 +139,39 @@ local function update_aa_sel_next(byname)
         wpn_aa_name = ""
         wpn_aa_qty = -1
         dev:select_station(wpn_aa_sel-1)
-        aim9lock:stop()
-        aim9seek:stop()
     end
 end
 
+
+local WPN_SIDEWINDER_STATUS_IDS = {
+    STOPPED = 0,
+    SEEKING = 1,
+    LOCKED = 2,
+}
+local sidewinder_status = WPN_SIDEWINDER_STATUS_IDS.STOPPED
+
 function check_sidewinder() 
     if wpn_aa_sel == 0 or (wpn_aa_sel ~= 0 and (wpn_sto_count[wpn_aa_sel] == 0 or wpn_sto_type[wpn_aa_sel] ~= wsType_AA_Missile)) then update_aa_sel_next(wpn_aa_sel ~= 0) end
-end
-
-function update_sidewinder()
-    check_sidewinder()
-    if not wpn_aa_locked then
+    if (get_wpn_aa_msl_ready() or get_wpn_aa_msl_sim_ready()) and sidewinder_status == WPN_SIDEWINDER_STATUS_IDS.STOPPED then 
+        sidewinder_status = WPN_SIDEWINDER_STATUS_IDS.SEEKING
+        aim9lock:stop()
+        aim9seek:play_continue()
+    elseif not (get_wpn_aa_msl_ready() or get_wpn_aa_msl_sim_ready()) and sidewinder_status ~= WPN_SIDEWINDER_STATUS_IDS.STOPPED then
+        sidewinder_status = WPN_SIDEWINDER_STATUS_IDS.STOPPED
+        aim9lock:stop()
+        aim9seek:stop()
+    elseif (get_wpn_aa_msl_ready() or get_wpn_aa_msl_sim_ready()) and sidewinder_status == WPN_SIDEWINDER_STATUS_IDS.SEEKING then
         if ir_missile_lock_param:get() == 1 then
             -- acquired lock
-            wpn_aa_locked = true
+            sidewinder_status = WPN_SIDEWINDER_STATUS_IDS.LOCKED
             aim9seek:stop()
             aim9lock:play_continue()
         end
-    else
+    elseif (get_wpn_aa_msl_ready() or get_wpn_aa_msl_sim_ready()) and sidewinder_status == WPN_SIDEWINDER_STATUS_IDS.LOCKED then
         if ir_missile_lock_param:get() == 0 then
             -- lost lock
-            wpn_aa_locked = false
+            sidewinder_status = WPN_SIDEWINDER_STATUS_IDS.STOPPED
             aim9lock:stop()
-            check_sidewinder() -- in case we lost lock due to having fired a missile
-            if wpn_aa_sel > 0 then aim9seek:play_continue() end
-            -- check_sidewinder(_master_arm) -- in case we lost lock due to having fired a missile
         else
             -- still locked
             local az=ir_missile_az_param:get()
@@ -185,7 +189,6 @@ function update_sidewinder()
             end
             aim9lock:update(snd_pitch, nil, nil)
         end
-        -- print_message_to_user("lock az:"..tostring(ir_missile_az_param:get())..",el:"..tostring(ir_missile_el_param:get()))
     end
 end
 
@@ -196,15 +199,13 @@ local function update_master_mode_changed()
     master_mode = get_avionics_master_mode()
     if master_mode == master_mode_last then return 0 end
     if get_avionics_master_mode_aa(master_mode_last) then
-        aim9seek:stop()
-        aim9lock:stop()
-        wpn_aa_locked = false
+        check_sidewinder()
+        -- sidewinder_status = WPN_SIDEWINDER_STATUS_IDS.STOPPED
+        -- aim9seek:stop()
+        -- aim9lock:stop()
     end
     if get_avionics_master_mode_aa(master_mode) then
         check_sidewinder()
-        if wpn_aa_sel > 0 then
-            aim9seek:play_continue()
-        end
     end
     master_mode_last = master_mode
 end
@@ -218,7 +219,7 @@ local function update_ag_sel_next(byname)
     local sequence = sms_search_sequence[wpn_ag_sel + 1]
     for k, pos in pairs(sequence) do
         station = dev:get_station_info(pos - 1)
-        if (station.weapon.level2 == wsType_Bomb or station.weapon.level2 == wsType_NURS)  and station["count"] > 0 then
+        if (station.weapon.level2 == wsType_Bomb or station.weapon.level2 == wsType_NURS or station.weapon.level3 == wsType_AS_Missile)  and station["count"] > 0 then
             -- log.info("name=".. (get_wpn_weapon_name(name) or " ") .." sms_name=" .. (get_wpn_weapon_name(station["CLSID"]) or " ") .. " "..tostring(byname).." "..tostring(not byname))
             if (not byname) or name == station["CLSID"] then
                 wpn_ag_sel = pos
@@ -242,22 +243,36 @@ end
 
 local function update_ag()
     if wpn_ag_sel == 0 or (wpn_ag_sel ~= 0 and (wpn_sto_count[wpn_ag_sel] == 0 or (wpn_sto_type[wpn_ag_sel] == wsType_FuelTank or wpn_sto_type[wpn_ag_sel] == wsType_AA_Missile))) then update_ag_sel_next(true) end
-    if get_wpn_ag_ready() or get_wpn_guns_ready() then 
-        WPN_READY:set(1)
-    else 
-        WPN_READY:set(0)
-    end
+    if get_wpn_ag_ready() or get_wpn_guns_ready() then  WPN_READY:set(1) else  WPN_READY:set(0) end
+    if get_wpn_ag_sim_ready() or get_wpn_guns_sim_ready() then WPN_SIM_READY:set(1) else WPN_SIM_READY:set(0) end
+
     WPN_AG_QTY:set(wpn_ag_qty)
     WPN_AG_NAME:set(wpn_ag_name)
 end
 
 local function update_aa()
-    update_sidewinder()
+    check_sidewinder()
 
-    if get_wpn_aa_msl_ready() or get_wpn_guns_ready() then 
-        WPN_READY:set(1)
-    else 
-        WPN_READY:set(0)
+    if get_wpn_aa_msl_ready() or get_wpn_guns_ready() then WPN_READY:set(1) else WPN_READY:set(0) end
+    if get_wpn_aa_msl_sim_ready() or get_wpn_guns_sim_ready() then WPN_SIM_READY:set(1) else WPN_SIM_READY:set(0) end
+
+
+
+    if get_avionics_master_mode() == AVIONICS_MASTER_MODE_ID.DGFT_B then
+        local range = WS_TARGET_RANGE:get()
+        if range ~= 300 and range ~= 400 and range ~= 500 then
+            dev:set_target_range(500)
+        end
+    end
+
+    if get_avionics_master_mode_aa() and get_wpn_aa_sel() > 0 and (get_wpn_mass() == WPN_MASS_IDS.LIVE or get_wpn_mass() == WPN_MASS_IDS.SIM) and not get_avionics_onground() then
+        if WS_IR_MISSILE_LOCK:get() == 1 then
+            WPN_MSL_CAGED:set(0)
+        else 
+            WPN_MSL_CAGED:set(1)
+        end
+    else
+        WPN_MSL_CAGED:set(-1)
     end
 
     WPN_AA_SIGHT:set(wpn_aa_sight)
@@ -394,11 +409,15 @@ dev:listen_command(device_commands.WPN_SELECT_STO)
 dev:listen_command(Keys.WeaponRelease)
 dev:listen_command(Keys.Trigger)
 dev:listen_command(Keys.StickStep)
+dev:listen_command(Keys.GunSelDist)
+dev:listen_command(Keys.GunRearm)
+dev:listen_command(Keys.Cage)
+dev:listen_command(Keys.TDCX)
+dev:listen_command(Keys.TDCY)
 
 dev:listen_command(74)
 
 
-local station = 0
 function SetCommand(command,value)
     debug_message_to_user("weapon: command "..tostring(command).." = "..tostring(value))
     if command == device_commands.WPN_AA_STEP then
@@ -410,7 +429,21 @@ function SetCommand(command,value)
     elseif command == device_commands.WPN_AA_RR_SRC_STEP then 
         wpn_aa_rr_src = (wpn_aa_rr_src + 1) % 2
     elseif command == device_commands.WPN_AA_SLV_SRC_STEP then 
+        local master_mode = get_avionics_master_mode()
         wpn_aa_slv_src = (wpn_aa_slv_src + 1) % 2
+        if wpn_aa_slv_src == WPN_AA_SLV_SRC_IDS.BST then
+            if master_mode == AVIONICS_MASTER_MODE_ID.DGFT_L then
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DGFT_B)
+            elseif master_mode == AVIONICS_MASTER_MODE_ID.INT_L then 
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.INT_B)
+            end
+        elseif wpn_aa_slv_src == WPN_AA_SLV_SRC_IDS.DL then
+            if master_mode == AVIONICS_MASTER_MODE_ID.DGFT_B then
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DGFT_L)
+            elseif master_mode == AVIONICS_MASTER_MODE_ID.INT_B then 
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.INT_L)
+            end
+        end
     elseif command == device_commands.WPN_AA_COOL_STEP then 
         wpn_aa_cool = (wpn_aa_cool + 1) % 2
     elseif command == device_commands.WPN_AA_SCAN_STEP then 
@@ -491,14 +524,16 @@ function SetCommand(command,value)
         if get_avionics_master_mode_ag() and value == 1 then 
             update_ag_sel_next()
         end
-
-
-
-
-
-
-
-
+    elseif command == Keys.GunSelDist and value == 1 then
+        local param = get_param_handle("WS_TARGET_RANGE")
+        local range = param:get()
+        if get_avionics_master_mode() == AVIONICS_MASTER_MODE_ID.DGFT_B then
+            if range == 300 then range = 400
+            elseif range == 400 then range = 500
+            else range = 300
+            end
+            dev:set_target_range(range)
+        end
     elseif command==74 then
 
     elseif command == 136 then

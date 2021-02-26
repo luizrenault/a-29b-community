@@ -39,3 +39,17 @@ function basic_dump (o)
     return result
   end
   
+  function dump_params(tbl)
+    if not indent then indent = 0 end
+    for k, v in pairs(tbl) do
+      formatting = string.rep("  ", indent) .. k .. ": "
+        if type(v) == "table" then
+          log.info(formatting)
+          dump_params(v, indent+1)
+        elseif type(v) == 'boolean' then
+          log.info(formatting .. tostring(v))
+        else
+          log.info(formatting .. v)
+        end
+      end
+  end

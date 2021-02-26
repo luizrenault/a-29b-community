@@ -143,7 +143,7 @@ function addStrokeText(name, value, stringdef, align, pos, parent, controllers, 
     font = font or stroke_font
     setSymbolCommonProperties(txt, name, pos, parent, controllers, font)
 	setSymbolAlignment(txt, align)
-
+	txt.reverse_video = true
 	-- custom size is noted in documents as in percents from the original one
 	if type(stringdef) == "table" then
 		txt.stringdefs = stringdef
@@ -258,6 +258,23 @@ function addStrokeLine(name, length, pos, rot, parent, controllers, dashed, stro
 	local verts, inds = buildStrokeLineVerts(length, dashed, stroke, gap)
 	line.vertices	= verts
 	line.indices	= inds
+
+	Add(line)
+	return line
+end
+
+function addSimpleLine(name, length, pos, rot, parent, controllers, width, material)
+	local line		= CreateElement "ceSimpleLineObject"
+	setSymbolCommonProperties(line, name, pos, parent, controllers, material)
+	line.width = width or 1
+
+	if rot ~= nil then
+		line.init_rot	= {rot}
+	end
+
+	local verts = buildStrokeLineVerts(length, nil, nil, nil)
+	line.vertices	= verts
+	line.tex_params     = {{0, 0.5}, {1, 0.5}, {1 / (1024 * 100 / 275), 1}}
 
 	Add(line)
 	return line
@@ -588,3 +605,4 @@ function addStrokeBoxDashed(name, sideX, sideY, stroke, gap, pos, parent, contro
 	addStrokeLine(root.name.."_bottom", sideX, {-sideX / 2, -sideY / 2}, -90, root.name, nil, true, stroke, gap, material)
 	return root
 end
+

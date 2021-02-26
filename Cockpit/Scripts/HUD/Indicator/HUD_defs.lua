@@ -334,7 +334,7 @@ function add_PL_line(name, width, half_gap, tick, shift_y, pitch, controllers, o
 			addStrokeLine(name.."_tick_"..side_name, tick, {(half_gap + length) * side, ydev}, tick_rot, lineOrigin.name)
 		end
 		
-		if shift_y ~= 0 then
+		if shift_y ~= 0 and pitch ~= 0 then
 			local text_shift_y
 			-- pitch numerics text is inverted below -90 and above 90 degrees
 			local inverted

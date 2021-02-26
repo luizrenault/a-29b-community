@@ -2,6 +2,8 @@ dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."devices.lua")
 dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
+dofile(LockOn_Options.script_path.."utils.lua")
+dofile(LockOn_Options.script_path.."dump.lua")
 
 startup_print("ufcs: load")
 
@@ -32,6 +34,8 @@ end
 
 dev:listen_command(device_commands.UFCP_WARNRST)
 
+local HUD_VAH = get_param_handle("HUD_VAH")
+HUD_VAH:set(1)
 function SetCommand(command,value)
     debug_message_to_user("ufcs: command "..tostring(command).." = "..tostring(value))
     if command==device_commands.UFCP_WARNRST and value == 1 then
@@ -43,8 +47,10 @@ function SetCommand(command,value)
         set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DGFT_B)
     elseif command == device_commands.UFCP_NAV and value == 1 then
         set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.NAV)
-    elseif command == iCommandEnginesStop then
-        -- dev:performClickableAction(device_commands.EngineStart, 0, true)
+    elseif command == device_commands.UFCP_1 and value == 1 then
+        HUD_VAH:set((HUD_VAH:get() + 1) % 2)
+        dump("PARAM:", strsplit("\n",list_cockpit_params()))
+        print_message_to_user("Dumped!")
     end
 end
 

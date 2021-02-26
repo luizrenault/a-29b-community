@@ -59,240 +59,20 @@ Keys =
 
     -- add custom commands here --
 
-
     ---- A-29B
     EngineStart                     = __custom_counter(),
     EngineStartCenter               = __custom_counter(),
     EngineStartInterrupt            = __custom_counter(),
 
-
     Engine_Stop                     = __custom_counter(),
 
-    PlaneFlapsStop                  = __custom_counter(),
-    PlaneFlapsUpHotas               = __custom_counter(),
-    PlaneFlapsDownHotas             = __custom_counter(),
-
-    SpoilersArmToggle               = __custom_counter(),
-    SpoilersArmOn                   = __custom_counter(),
-    SpoilersArmOff                  = __custom_counter(),
 	PlaneFireOn		                = __custom_counter(), -- replaces iCommandPlaneFire
 	PlaneFireOff	                = __custom_counter(), -- replaces iCommandPlaneFireOff
     PickleOn                        = __custom_counter(), -- replaces iCommandPlanePickleOn
     PickleOff                       = __custom_counter(), -- replaces iCommandPlanePickleOff
 
-    MasterArmToggle                 = __custom_counter(),
-    GunsReadyToggle                 = __custom_counter(),
 
-    Station1                        = __custom_counter(), -- these 5 must be in-order, per weapon_system.lua
-    Station2                        = __custom_counter(),
-    Station3                        = __custom_counter(),
-    Station4                        = __custom_counter(),
-    Station5                        = __custom_counter(),
-
-    ArmsFuncSelectorCCW             = __custom_counter(),
-    ArmsFuncSelectorCW              = __custom_counter(),
-	
-    GunpodLeft                      = __custom_counter(),
-    GunpodCenter                    = __custom_counter(),
-    GunpodRight                     = __custom_counter(),
-    GunpodCharge                    = __custom_counter(),
-
-    
-    --SpoilerCoverToggle = 10025,  -- available for reuse
-
-    FuelGaugeExt                    = __custom_counter(),
-    FuelGaugeInt                    = __custom_counter(),
-
-    AltPressureInc                  = __custom_counter(),
-    AltPressureDec                  = __custom_counter(),
-
-    RadarAltWarningDown             = __custom_counter(),
-    RadarAltWarningUp               = __custom_counter(),
-    
-    --iCommandPlaneHook = 69        -- DO NOT USE.  Tied to SFM!
-    PlaneHook                       = __custom_counter(),
-    PlaneHookUp                     = __custom_counter(),
-    PlaneHookDown                   = __custom_counter(),
-    JettisonWeapons                 = __custom_counter(),  -- normal iCommandPlaneJettisonWeapons = 82 invokes SFM functionality
-    JettisonWeaponsUp               = __custom_counter(),
-    JettisonFC3                     = __custom_counter(),    
-            
-    NavReset                        = __custom_counter(),
-    --NavTCNNext = 10101,
-    --NavTCNPrev = 10102,
-    NavNDBNext                      = __custom_counter(),
-    NavNDBPrev                      = __custom_counter(),
-    NavILSNext                      = __custom_counter(),
-    NavILSPrev                      = __custom_counter(),
-
-    NavPPosLatInc                   = __custom_counter(),  -- increment present position latitude (north)
-    NavPPosLatDec                   = __custom_counter(),
-    NavPPosLonInc                   = __custom_counter(),  -- increment present position longitude (east)
-    NavPPosLonDec                   = __custom_counter(),
-    NavDestLatInc                   = __custom_counter(),  -- increment destination latitude (north)
-    NavDestLatDec                   = __custom_counter(),
-    NavDestLonInc                   = __custom_counter(),  -- increment destination longitude (east)
-    NavDestLonDec                   = __custom_counter(),
-
-    NavDopplerOff                   = __custom_counter(),
-    NavDopplerStandby               = __custom_counter(),
-    NavDopplerLand                  = __custom_counter(),
-    NavDopplerSea                   = __custom_counter(),
-    NavDopplerTest                  = __custom_counter(),
-
-    NavDopplerCW                    = __custom_counter(),
-    NavDopplerCCW                   = __custom_counter(),
-
-    NavSelectTest                   = __custom_counter(),
-    NavSelectOff                    = __custom_counter(),
-    NavSelectStandby                = __custom_counter(),
-    NavSelectD1                     = __custom_counter(),
-    NavSelectD2                     = __custom_counter(),
-
-    NavSelectCW                     = __custom_counter(),
-    NavSelectCCW                    = __custom_counter(),
-
-    BdhiModeNavComputer             = __custom_counter(),
-    BdhiModeTacan                   = __custom_counter(),
-    BdhiModeNavPac                  = __custom_counter(),
-
-    -- APG-53A Radar
-    RadarModeOFF                    = __custom_counter(),
-    RadarModeSTBY                   = __custom_counter(),
-    RadarModeSearch                 = __custom_counter(),
-    RadarModeTC                     = __custom_counter(),
-    RadarModeA2G                    = __custom_counter(),
-    RadarMode                       = __custom_counter(),  -- cycles between "on" radar modes
-    RadarModeCW                     = __custom_counter(),  -- cycles mode button clockwise
-    RadarModeCCW                    = __custom_counter(),  -- cycles mode button counter clockwise
-    RadarTCPlanProfile              = __custom_counter(),  -- 1 Plan, 0 Profile, -1 Toggle
-    RadarRangeLongShort             = __custom_counter(),  -- 1 Long, 0 Short, -1 Toggle
-    RadarVolume                     = __custom_counter(),  -- 1 Inc, 0 Dec
-    RadarAntennaAngle               = __custom_counter(),  -- 1 Inc, 0 Dec
-    RadarAoAComp                    = __custom_counter(),  -- 1 Enable, 0 Disable
-
-    -- ARN-52V TACAN
-    TacanModeOFF                    = __custom_counter(),
-    TacanModeREC                    = __custom_counter(),
-    TacanModeTR                     = __custom_counter(),
-    TacanModeAA                     = __custom_counter(),
-    TacanModeInc                    = __custom_counter(),
-    TacanModeDec                    = __custom_counter(),
-    TacanChMajorInc                 = __custom_counter(),
-    TacanChMajorDec                 = __custom_counter(),
-    TacanChMinorInc                 = __custom_counter(),
-    TacanChMinorDec                 = __custom_counter(),
-    TacanVolumeInc                  = __custom_counter(),
-    TacanVolumeDec                  = __custom_counter(),
-
-    ExtLightMaster                  = __custom_counter(),
-    ExtLightProbe                   = __custom_counter(),
-    ExtLightTaxi                    = __custom_counter(),
-    ExtLightAnticollision           = __custom_counter(),
-    ExtLightNav                     = __custom_counter(),
-    ExtLightTail                    = __custom_counter(),
-    ExtLightFuselage                = __custom_counter(),
-    ExtLightFlashSteady             = __custom_counter(),
-
-    ExtLightMasterToggle            = __custom_counter(),
-    ExtLightProbeCycle              = __custom_counter(),
-    ExtLightTaxiToggle              = __custom_counter(),
-    ExtLightAnticollisionToggle     = __custom_counter(),
-    ExtLightNavCycle                = __custom_counter(),
-    ExtLightTailCycle               = __custom_counter(),
-    ExtLightFuselageCycle           = __custom_counter(),
-    ExtLightFlashSteadyToggle       = __custom_counter(),
-
-    IntLightWhiteFlood              = __custom_counter(),
-    IntLightInstruments             = __custom_counter(),
-    IntLightConsole                 = __custom_counter(),
-    IntLightBrightness              = __custom_counter(),
-
-    TrimUp                          = __custom_counter(),
-    TrimDown                        = __custom_counter(),
-    TrimLeft                        = __custom_counter(),
-    TrimRight                       = __custom_counter(),
-    TrimLeftRudder                  = __custom_counter(),
-    TrimRightRudder                 = __custom_counter(),
-    TrimStop                        = __custom_counter(),
-    TrimCancel                      = __custom_counter(),
-
-    APCEngageStbyOff                = __custom_counter(),
-    APCHotStdCold                   = __custom_counter(),
-
-    AFCSOverride                    = __custom_counter(),
-    AFCSStandbyToggle               = __custom_counter(),
-    AFCSEngageToggle                = __custom_counter(),
-    AFCSAltitudeToggle              = __custom_counter(),
-    AFCSHeadingToggle               = __custom_counter(),
-    AFCSHeadingInc                  = __custom_counter(),
-    AFCSHeadingDec                  = __custom_counter(),
-    AFCSHotasMode                   = __custom_counter(),
-    AFCSHotasPath                   = __custom_counter(),  -- for warthog hotas
-    AFCSHotasAltHdg                 = __custom_counter(),  -- for warthog hotas
-    AFCSHotasAlt                    = __custom_counter(),  -- for warthog hotas
-    AFCSHotasEngage                 = __custom_counter(),  -- for warthog hotas
-
-    BrakesOn                        = __custom_counter(),
-    BrakesOff                       = __custom_counter(),
-
-    Tune1                           = __custom_counter(),
-    Tune2                           = __custom_counter(),
-    Tune3                           = __custom_counter(),
-
-    ToggleStick                     = __custom_counter(),
-
-    JATOFiringButton                = __custom_counter(),
-    CmBankSelectRotate              = __custom_counter(),
-    CmBankSelect                    = __custom_counter(),
-    CmAutoButton                    = __custom_counter(),
-    CmBank1AdjUp                    = __custom_counter(),
-    CmBank1AdjDown                  = __custom_counter(),
-    CmBank2AdjUp                    = __custom_counter(),
-    CmBank2AdjDown                  = __custom_counter(),
-    CmPowerToggle                   = __custom_counter(),
-
-    AccelReset                      = __custom_counter(),
-
-    RadarHoldToggle                 = __custom_counter(),
-    RadarHoldInc                    = __custom_counter(),
-    RadarHoldDec                    = __custom_counter(),
-    SpeedHoldToggle                 = __custom_counter(),
-    SpeedHoldInc                    = __custom_counter(),
-    SpeedHoldDec                    = __custom_counter(),
-	
-	catapult_ready                  = __custom_counter(),
-	catapult_shoot                  = __custom_counter(),
-    catapult_abort                  = __custom_counter(),
-    
-    ChangeCBU2AQuantity             = __custom_counter(),
-    ChangeCBU2BAQuantity            = __custom_counter(),
-	
-	ecm_apr25_off	                = __custom_counter(),
-	ecm_apr25_audio	                = __custom_counter(),
-	ecm_apr27_off	                = __custom_counter(),
-	
-	ecm_systest_upper	            = __custom_counter(),
-	ecm_systest_lower	            = __custom_counter(),
-		
-    ecm_selector_knob               = __custom_counter(),
-    
-    ChangeCmsBursts                 = __custom_counter(),
-    ChangeCmsBurstInterval          = __custom_counter(),
-    ChangeCmsSalvos                 = __custom_counter(),
-    ChangeSalvoInterval             = __custom_counter(),
-
-    AWRSMultiplierToggle            = __custom_counter(),
-    AWRSQtySelIncrease              = __custom_counter(),
-    AWRSQtySelDecrease              = __custom_counter(),
-    AWRSModeSelCCW                  = __custom_counter(),
-    AWRSModeSelCW                   = __custom_counter(),
-	
-	nws_engage						 = __custom_counter(),
-	nws_disengage					 = __custom_counter(),
-
-
-
+    -- Stick
     StickStep		    	 = __custom_counter(),
     StickDesignate        	     = __custom_counter(),
     StickUndesignate      	     = __custom_counter(),
@@ -301,16 +81,15 @@ Keys =
     APOvrd      	     = __custom_counter(),
     Call      	     = __custom_counter(),
     Trigger      	     = __custom_counter(),
-
     WeaponRelease			    	 = __custom_counter(),
-    
-    
     DisplayMngt        	     = __custom_counter(),
 
-
-
-
-
+    -- Throttle
+    GunSelDist        	     = __custom_counter(),
+    GunRearm        	     = __custom_counter(),
+    Cage        	     = __custom_counter(),
+    TDCX        	     = __custom_counter(),
+    TDCY        	     = __custom_counter(),
 }
 
 start_command   = 3000

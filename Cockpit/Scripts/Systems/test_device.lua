@@ -2,8 +2,8 @@
 -- dofile ("scripts/Database/db_scan.lua")
 
 dofile(LockOn_Options.script_path.."dump.lua")
-dump("_G",db)
-dump("_G",getmetatable(db))
+-- dump("_G",_G)
+-- dump("_G",getmetatable(_G))
 
 dofile(LockOn_Options.common_script_path.."devices_defs.lua")
 dofile(LockOn_Options.script_path.."devices.lua")
@@ -17,13 +17,30 @@ startup_print("test: load")
 
 local dev = GetSelf()
 
+log.alert("----------------------------------")
+dump1("dev",dev)
+dump1("_dev", getmetatable(dev))
+
 local update_time_step = 0.02 --update will be called 50 times per second
-make_default_activity(update_time_step)
+if make_default_activity ~= nil then make_default_activity(update_time_step) end
 
 
 local sensor_data = get_base_data()
 
+local elapsed = 5
+
 function update()
+    if elapsed > 0 then
+        elapsed = elapsed - update_time_step
+    elseif elapsed > -1 then
+        log.alert("----------------------------------")
+        dump1("dev",dev)
+        dump1("_dev", getmetatable(dev))
+        print_message_to_user("Dumped!")
+        dump1("Params\n", list_cockpit_params())
+        elapsed = -1
+    end
+
 end
 
 
@@ -34,6 +51,9 @@ function post_initialize()
     elseif birth=="AIR_HOT" then
     elseif birth=="GROUND_COLD" then
     end
+    -- print_message_to_user("Dumped!")
+    -- dump1("Params\n", list_cockpit_params())
+
     startup_print("test: postinit end")
 end
 
@@ -74,6 +94,8 @@ local iCommandPlaneChangeTarget = 102
 -- dev:listen_command(iCommandPlanePickleOff)
 -- dev:listen_command(iCommandPlaneDropFlareOnce)
 -- dev:listen_command(iCommandPlaneDropChaffOnce)
+local iPlaneAirBrakeOn = 147
+local iPlaneAirBrakeOff = 148
 
 for i=1, 50000 do
     if i== 1032 or i == 1033 or i == 1034 then
@@ -83,7 +105,7 @@ for i=1, 50000 do
         dev:listen_command(i)
     end
 end
-
+dev:listen_command(74)
 function SetCommand(command,value)
     print_message_to_user("test: command "..tostring(command).." = "..tostring(value))
     if command == 74 then 
@@ -93,6 +115,13 @@ function SetCommand(command,value)
             print_message_to_user(text)
             log.info(text)
         end
+        print_message_to_user("Dumped!")
+        local text = dump("Params\n", list_cockpit_params())
+        text = strsplit("\n", text)
+        for key, value in pairs(text) do
+            log.info(value)
+        end
+        -- dispatch_action(nil,iPlaneAirBrakeOn)
     end
 end
 
@@ -685,7 +714,7 @@ GetSelf meta["__index"]["listen_command"] = function: 00000000CE44AC90
 GetSelf meta["__index"]["performClickableAction"] = function: 00000000CE44AC40
 GetSelf meta["__index"]["SetCommand"] = function: 00000000CE44AB50
 
-avADF
+avADF fails
 
 avADI
 GetSelf meta["__index"]["get_sideslip"] = function: 00000000CE41A760
@@ -716,9 +745,9 @@ avAirDrivenTurnIndicator
 
 avArcadeRadar
 
-avArtificialHorizon
+avArtificialHorizon Fails
 
-avArtificialHorizont_AN5736
+avArtificialHorizont_AN5736 Nothing Special
 
 avAutostartDevice
 
@@ -790,6 +819,15 @@ avDevice
 avDevice_BasicTimer
 
 avDirectionalGyro_AN5735
+dev = {}
+dev["link"] = userdata: 0000026A86447BC0
+_dev = {}
+_dev["__index"] = {}
+_dev["__index"]["listen_event"] = function: 0000026AAB554C60
+_dev["__index"]["listen_command"] = function: 0000026AAB555050
+_dev["__index"]["performClickableAction"] = function: 0000026AAB555470
+_dev["__index"]["SetCommand"] = function: 0000026AAB5555F0
+
 
 avDispenseProgram
 
@@ -803,11 +841,11 @@ avElectroMagneticDetector
 
 avFMProxyBase fails
 
-avHSI
+avHSI Failed to create instance of avHSI by unknown reason
 
-avHUD
+avHUD Failed to create instance of avHud by unknown reason
 
-avHUD_SEI31
+avHUD_SEI31 Failed to create instance of avHUD_SEI31 by unknown reason
 
 avHelmet
 
@@ -816,8 +854,24 @@ avIFF_APX_72
 avIFF_FuG25
 
 avILS
+dev = {}
+dev["link"] = userdata: 0000026B08677440
+_dev = {}
+_dev["__index"] = {}
+_dev["__index"]["listen_event"] = function: 0000026A3953B310
+_dev["__index"]["listen_command"] = function: 0000026A3953B220
+_dev["__index"]["performClickableAction"] = function: 0000026A3953B2E0
+_dev["__index"]["SetCommand"] = function: 0000026A3953B700
 
 avILS_AN_ARN108
+dev = {}
+dev["link"] = userdata: 0000026B08677440
+_dev = {}
+_dev["__index"] = {}
+_dev["__index"]["listen_event"] = function: 0000026B9C029F40
+_dev["__index"]["listen_command"] = function: 0000026B9C0299A0
+_dev["__index"]["performClickableAction"] = function: 0000026B9C029AF0
+_dev["__index"]["SetCommand"] = function: 0000026B9C02A120
 
 avINS
 
@@ -1040,6 +1094,10 @@ avVMS fails
 avVMS_ALMAZ_UP
 
 avWeap_ReleaseTimer_Activity
+
+
+
+
 
 
 --]]

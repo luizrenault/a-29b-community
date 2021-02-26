@@ -2,6 +2,7 @@ dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
 dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
+dofile(LockOn_Options.script_path.."Systems/weapon_system_api.lua")
 
 startup_print("avionics: load")
 
@@ -143,8 +144,22 @@ function SetCommand(command,value)
     if command==Keys.MasterModeSw then
         if value == 1 then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.NAV)
         elseif value == 2 then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
-        elseif value == 3 then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.INT)
-        elseif value == 4 then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DGFT_B)
+        elseif value == 3 then 
+            local param = get_param_handle("WPN_AA_SLV_SRC")
+            local slv_src = param:get()
+            if slv_src == WPN_AA_SLV_SRC_IDS.BST then 
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.INT_B)
+            else
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.INT_L)
+            end
+        elseif value == 4 then
+            local param = get_param_handle("WPN_AA_SLV_SRC")
+            local slv_src = param:get()
+            if slv_src == WPN_AA_SLV_SRC_IDS.BST then 
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DGFT_B)
+            else 
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DGFT_L)
+            end
         end
     elseif command==iCommandPlaneTrimUp then
         if avionics_trim_updown < 10 then 

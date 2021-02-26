@@ -327,8 +327,8 @@ object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_MASS", "SMS_I
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_MASS_IDS.SIM}, {"parameter_compare_with_number", 2, 0}, {"parameter_in_range", 3, WPN_LATEARM_IDS.GUARD-0.05, WPN_LATEARM_IDS.SAFE+0.05}}
 
 object = addStrokeText(nil, "SIM-RDY", CMFD_STRINGDEFS_DEF_X2, "CenterCenter", {0, -0.65}, SMS_mode_aa.name, nil, nil)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_MASS", "SMS_INV", "WPN_LATEARM"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_MASS_IDS.SIM}, {"parameter_compare_with_number", 2, 0}, {"parameter_compare_with_number", 3, WPN_LATEARM_IDS.ON}}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_INV", "WPN_SIM_READY"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 0}, {"parameter_compare_with_number", 2, 1}}
 
 
 -- AA

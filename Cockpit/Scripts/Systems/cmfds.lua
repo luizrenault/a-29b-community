@@ -267,7 +267,7 @@ function update_adhsi()
     adhsi_turnrate = math.rad(adhsi_turnrate * 25 / 450)
 
 
-    if adhsi_ans_mode ~= ANS_MODE_IDS.EGI then 
+    if adhsi_ans_mode ~= AVIONICS_ANS_MODE_IDS.EGI then 
         adhsi_dtk = 0
     end
     if adhsi_dtk == 1 then 
@@ -276,7 +276,7 @@ function update_adhsi()
     end
 
     local adhsi_cdi_show_ovrd = adhsi_cdi_show
-    if adhsi_ans_mode == ANS_MODE_IDS.ILS then adhsi_cdi_show_ovrd = 1 end
+    if adhsi_ans_mode == AVIONICS_ANS_MODE_IDS.ILS then adhsi_cdi_show_ovrd = 1 end
 
     if adhsi_vor_hdg == -1 then 
         adhsi_cdi_show_ovrd = 0
@@ -792,7 +792,7 @@ local CMFDNumber=get_param_handle("CMFDNumber")
 CMFDNumber:set(0)
 
 local CMFD1Format=get_param_handle("CMFD1Format")
-CMFD1Format:set(SUB_PAGE_ID.SMS)
+CMFD1Format:set(SUB_PAGE_ID.ADHSI)
 
 local CMFD2Format=get_param_handle("CMFD2Format")
 CMFD2Format:set(SUB_PAGE_ID.EICAS)
@@ -1006,7 +1006,7 @@ function SetCommandAdhsi(command,value, CMFD)
                 adhsi_hdg_sel = adhsi_hdg_sel - 1
             end
         elseif command==device_commands.CMFD1OSS14 or command==device_commands.CMFD2OSS14 then 
-            if adhsi_ans_mode == ANS_MODE_IDS.EGI then
+            if adhsi_ans_mode == AVIONICS_ANS_MODE_IDS.EGI then
                 if adhsi_dtk == 0 then adhsi_dtk = 1 else adhsi_dtk = 0 end
             end
         elseif command==device_commands.CMFD1OSS21 or command==device_commands.CMFD2OSS21 then 

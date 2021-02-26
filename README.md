@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Version 0.1.1b - 25 February 2021
+
+### Added
+- HUD DGFT modes.
+- HUD VV/VAH modes.
+- HUD INT modes.
+- Weapon related throttle handle buttons and axis.
+
 ## Version 0.1.0b - 21 February 2021
 
 ### Added

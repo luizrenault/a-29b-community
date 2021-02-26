@@ -72,6 +72,7 @@ function post_initialize()
     BFI_brightness_param:set(1.0)
 
 	BFI_BARO_param:set(ALT_PRESSURE_STD)
+	set_aircraft_draw_argument_value(DRAW_FAN,-1)
 
 end
 
@@ -100,11 +101,11 @@ function update()
 
 	local propRPM = sensor_data.getEngineLeftRPM()
 	--sensor is from 0 to 100 so it is divided by 100 and multiplied by the prop max RPM.
-	propStep = 3*propRPM*update_time_step/60
+	local propStep = 3*propRPM*update_time_step/60
 	--keeps prop animation between 0 and 1
 	propState = (propState + propStep)%1
 	if propRPM < 50 then
-		set_aircraft_draw_argument_value(DRAW_FAN,1-propState)
+		set_aircraft_draw_argument_value(DRAW_FAN,-propState)
 	else
 		set_aircraft_draw_argument_value(DRAW_FAN,100)
 	end

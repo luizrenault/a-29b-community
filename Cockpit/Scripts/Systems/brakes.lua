@@ -37,8 +37,8 @@ end
 local left_brake_pedal_param = get_param_handle("LEFT_BRAKE_PEDAL")
 local right_brake_pedal_param = get_param_handle("RIGHT_BRAKE_PEDAL")
 local brake_now = 0
-local brakes_on_last = brakes_on
 local brakes_on = false
+local brakes_on_last = brakes_on
 local brake_eff = get_param_handle("BRAKE_EFF")
 local single_wheelbrake_axis_value = -1
 local left_wheelbrake_AXIS_value = -1
@@ -65,7 +65,6 @@ function update()
         else
             brakes_on = false
         end
-
         if wheelbrake_toggle_state == true then
             wheelbrake_axis_value = 1
         end
@@ -114,6 +113,9 @@ function post_initialize()
     elseif birth=="GROUND_COLD" then
         dev:performClickableAction(device_commands.EmerParkBrake, 1, true)
     end
+    dev:performClickableAction(iCommandWheelBrake, -1, true)
+    dev:performClickableAction(iCommandLeftWheelBrake, -1, true)
+    dev:performClickableAction(iCommandRightWheelBrake, -1, true)
     startup_print("brakes: postinit end")
 end
 
@@ -136,7 +138,6 @@ function SetCommand(command,value)
             dispatch_action(nil,iCommandPlaneWheelBrakeOn)
             pbrake_light:set(1)
         end
-
     elseif command == iCommandPlaneWheelBrakeOff then
         dev:performClickableAction(device_commands.EmerParkBrake, -1, true)
     elseif command == iCommandPlaneWheelBrakeOn then
