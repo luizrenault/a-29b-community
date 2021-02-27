@@ -37,7 +37,7 @@ elements["PNT_966"] = default_3_position_tumb("Aircraft Interconnect (On/Off/Off
 
 
 -- BASIC FLIGHT INSTRUMENT
-elements["PNT_951"] = default_button("Bright",                                                  devices.EXTANIM,         device_commands.FuelGaugeExtButton, 951)
+elements["PNT_951"] = default_button("Bright",                                                  devices.EXTANIM,         device_commands.BFI_BRIGHT, 951)
 elements["PNT_952"] = default_button("STD",                                                     devices.EXTANIM,         device_commands.AltPressureStd, 952)
 elements["PNT_953"] = default_axis("BARO",                                                      devices.EXTANIM,         device_commands.AltPressureKnob, 953, 0.0, 0.2, false, true)
 

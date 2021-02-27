@@ -42,22 +42,6 @@ local ALT_PRESSURE_STD = 29.92 -- in Hg
 local ALT_PRESSURE_MAX = 30.99 -- in Hg
 local ALT_PRESSURE_MIN = 29.10 -- in Hg
 
-function SetCommand(command,value)
-	if command==device_commands.AltPressureKnob then
-		local baro=BFI_BARO_param:get()
-		
-		if value>0 then
-			baro=baro+0.01
-		else
-			baro=baro-0.01
-		end
-		if baro>ALT_PRESSURE_MAX then baro=ALT_PRESSURE_MAX end
-		if baro<ALT_PRESSURE_MIN then baro=ALT_PRESSURE_MIN end
-		BFI_BARO_param:set(baro)
-	elseif command==device_commands.AltPressureStd then
-		BFI_BARO_param:set(ALT_PRESSURE_STD)
-	end
-end
 
 
 function post_initialize()
@@ -85,13 +69,13 @@ local DRAW_FAN			 = 	324
 local PropStepLim		 =  0.0833
 local propState         =   -1
 local propMaxRPM		= 250
-
+local bfi_bright = 1
 function update()
 	--Test set anim argument
 	IAS_param:set(sensor_data.getIndicatedAirSpeed()*MPS_TO_KNOTS)
 	BFI_ROLL_param:set(sensor_data.getRoll())
 	BFI_PITCH_param:set(sensor_data.getPitch())
-
+	BFI_brightness_param:set(bfi_bright)
 
 
 	BFI_MB_param:set(BFI_BARO_param:get()*33.8639)
@@ -124,6 +108,27 @@ function update()
 	local RUDDER_STATE = sensor_data:getRudderPosition() / 100
 	set_aircraft_draw_argument_value(17, -RUDDER_STATE)
 	set_aircraft_draw_argument_value(2, -RUDDER_STATE)
+end
+
+function SetCommand(command,value)
+	if command==device_commands.AltPressureKnob then
+		local baro=BFI_BARO_param:get()
+		
+		if value>0 then
+			baro=baro+0.01
+		else
+			baro=baro-0.01
+		end
+		if baro>ALT_PRESSURE_MAX then baro=ALT_PRESSURE_MAX end
+		if baro<ALT_PRESSURE_MIN then baro=ALT_PRESSURE_MIN end
+		BFI_BARO_param:set(baro)
+	elseif command==device_commands.AltPressureStd then
+		BFI_BARO_param:set(ALT_PRESSURE_STD)
+	elseif command==device_commands.BFI_BRIGHT then
+		if value == 1 then 
+			bfi_bright = (bfi_bright + 0.1) % 1.0
+		end
+	end
 end
 
 need_to_be_closed = false -- close lua state after initialization

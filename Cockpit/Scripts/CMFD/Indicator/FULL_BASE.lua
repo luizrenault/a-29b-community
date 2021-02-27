@@ -57,8 +57,8 @@ Add(CMFD_base)
 -- -- OSB
 
 local osb_txt = {
-    {value="SWAP",          init_pos={CMFD_FONT_UD3_X, -H2W_SCALE+HH},                      align="CenterBottom",   formats={"%s"}, controller={}},
-    {value="IND",           init_pos={CMFD_FONT_UD1_X, -H2W_SCALE+HH},                      align="CenterBottom",   formats={"%s"}, controller={}},
+    {value="SWAP",          init_pos={CMFD_FONT_UD3_X, -H2W_SCALE+HH},                      align="CenterBottom",   formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
+    {value="IND",           init_pos={CMFD_FONT_UD1_X, -H2W_SCALE+HH},                      align="CenterBottom",   formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
 }
 
 local HW = 0.15
@@ -74,8 +74,8 @@ text_strpoly.stringdefs     = CMFD_STRINGDEFS_DEF_X08
 text_strpoly.init_pos       = {CMFD_FONT_UD6_X, -H2W_SCALE+HH}
 text_strpoly.alignment      = "CenterBottom"
 text_strpoly.formats        = "%s"
-text_strpoly.element_params = {"CMFD"..CMFDNu.."DCLT"}
-text_strpoly.controllers    = {{"change_color_when_parameter_equal_to_number",0,1, -1,-1,-1}}
+text_strpoly.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD"..CMFDNu.."DCLT"}
+text_strpoly.controllers    = {{"opacity_using_parameter", 0}, {"change_color_when_parameter_equal_to_number",1,1, -1,-1,-1}}
 text_strpoly.name           = "osb_txt_dclt"
 text_strpoly.value          = "DCLT"
 text_strpoly.parent_element    = page_root.name
@@ -90,8 +90,8 @@ mesh_poly.primitivetype     = "triangles"
 mesh_poly.vertices          = { {HW, HH}, {HW,-HH}, {-HW,-HH}, {-HW, HH }}
 mesh_poly.indices           = default_box_indices
 mesh_poly.isvisible         = true
-mesh_poly.element_params    = {"CMFD"..CMFDNu.."DCLT"}
-mesh_poly.controllers       = {{"parameter_in_range", 0, 0.95, 1.05}}
+mesh_poly.element_params    = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD"..CMFDNu.."DCLT"}
+mesh_poly.controllers       = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, 0.95, 1.05}}
 AddElementObject(mesh_poly)
 mesh_poly = nil
 
@@ -104,9 +104,9 @@ mesh_poly.primitivetype     = "lines"
 mesh_poly.vertices          = { {-HH/6, 0}, {HH/6,0}, {HH/6,HH}, {HH/3, HH }, {0, 1.75*HH}, {-HH/3, HH }, {-HH/6, HH}}
 mesh_poly.indices           = {0,1, 1,2, 2,3, 3,4,  4,5, 5,6, 6,0}
 mesh_poly.isvisible         = true
-mesh_poly.element_params    = {"CMFDDoi"}
+mesh_poly.element_params    = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFDDoi"}
 -- mesh_poly.controllers       = {{"parameter_compare_with_number", 0, 1}}
-mesh_poly.controllers       = {{"parameter_compare_with_number", 0, CMFDNu}}
+mesh_poly.controllers       = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, CMFDNu}}
 
 AddElementObject(mesh_poly)
 mesh_poly = nil
@@ -119,8 +119,8 @@ mesh_poly.primitivetype     = "triangles"
 mesh_poly.vertices          = { {HW, HH}, {HW,-HH}, {-HW,-HH}, {-HW, HH }}
 mesh_poly.indices           = default_box_indices
 mesh_poly.isvisible         = true
-mesh_poly.element_params    = {"CMFD"..CMFDNu.."Primary"}
-mesh_poly.controllers       = {{"parameter_compare_with_number", 0, 0}}
+mesh_poly.element_params    = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD"..CMFDNu.."Primary"}
+mesh_poly.controllers       = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 0}}
 AddElementObject(mesh_poly)
 mesh_poly = nil
 
@@ -130,8 +130,8 @@ text_strpoly.stringdefs     = CMFD_STRINGDEFS_DEF_X08
 text_strpoly.init_pos       = {CMFD_FONT_UD2_X, -H2W_SCALE+HH}
 text_strpoly.alignment      = "CenterBottom"
 text_strpoly.formats        = {"%s"}
-text_strpoly.element_params = {"CMFD"..CMFDNu.."SelLeftName", "CMFD"..CMFDNu.."Primary"}
-text_strpoly.controllers    = {{"text_using_parameter",0,0}, {"change_color_when_parameter_equal_to_number", 1, 0, -1, -1, -1}}
+text_strpoly.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD"..CMFDNu.."SelLeftName", "CMFD"..CMFDNu.."Primary"}
+text_strpoly.controllers    = {{"opacity_using_parameter", 0}, {"text_using_parameter",1,0}, {"change_color_when_parameter_equal_to_number", 2, 0, -1, -1, -1}}
 text_strpoly.name           = "osb_txt_sel_left"
 text_strpoly.value          = ""
 text_strpoly.parent_element    = page_root.name
@@ -146,8 +146,8 @@ mesh_poly.primitivetype     = "triangles"
 mesh_poly.vertices          = { {HW, HH}, {HW,-HH}, {-HW,-HH}, {-HW, HH }}
 mesh_poly.indices           = default_box_indices
 mesh_poly.isvisible         = true
-mesh_poly.element_params    = {"CMFD"..CMFDNu.."Primary"}
-mesh_poly.controllers       = {{"parameter_compare_with_number", 0 ,1}}
+mesh_poly.element_params    = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD"..CMFDNu.."Primary"}
+mesh_poly.controllers       = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1 ,1}}
 AddElementObject(mesh_poly)
 mesh_poly = nil
 
@@ -157,8 +157,8 @@ text_strpoly.stringdefs     = CMFD_STRINGDEFS_DEF_X08
 text_strpoly.init_pos       = {CMFD_FONT_UD5_X, -H2W_SCALE+HH}
 text_strpoly.alignment      = "CenterBottom"
 text_strpoly.formats        = {"%s"}
-text_strpoly.element_params = {"CMFD"..CMFDNu.."SelRightName", "CMFD"..CMFDNu.."Primary"}
-text_strpoly.controllers    = {{"text_using_parameter",0,0}, {"change_color_when_parameter_equal_to_number", 1, 1, -1, -1, -1}}
+text_strpoly.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD"..CMFDNu.."SelRightName", "CMFD"..CMFDNu.."Primary"}
+text_strpoly.controllers    = {{"opacity_using_parameter", 0}, {"text_using_parameter",1,0}, {"change_color_when_parameter_equal_to_number", 2, 1, -1, -1, -1}}
 text_strpoly.name           = "osb_txt_sel_right"
 text_strpoly.value          = ""
 text_strpoly.parent_element    = page_root.name

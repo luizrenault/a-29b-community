@@ -33,11 +33,11 @@ function update()
     if elapsed > 0 then
         elapsed = elapsed - update_time_step
     elseif elapsed > -1 then
-        log.alert("----------------------------------")
-        dump1("dev",dev)
-        dump1("_dev", getmetatable(dev))
-        print_message_to_user("Dumped!")
-        dump1("Params\n", list_cockpit_params())
+        -- log.alert("----------------------------------")
+        -- dump1("dev",dev)
+        -- dump1("_dev", getmetatable(dev))
+        -- print_message_to_user("Dumped!")
+        -- dump1("Params\n", list_cockpit_params())
         elapsed = -1
     end
 
@@ -109,18 +109,25 @@ dev:listen_command(74)
 function SetCommand(command,value)
     print_message_to_user("test: command "..tostring(command).." = "..tostring(value))
     if command == 74 then 
-        local wpn = GetDevice(devices.WEAPON_SYSTEM)
-        for i=1,5 do
-            local text = dump("STO"..i, wpn:get_station_info(i-1))
-            print_message_to_user(text)
-            log.info(text)
-        end
-        print_message_to_user("Dumped!")
-        local text = dump("Params\n", list_cockpit_params())
-        text = strsplit("\n", text)
-        for key, value in pairs(text) do
-            log.info(value)
-        end
+        -- local wpn = GetDevice(devices.WEAPON_SYSTEM)
+        -- local WS_DLZ_MAX = get_param_handle("WS_DLZ_MAX")
+        -- local WS_DLZ_MIN = get_param_handle("WS_DLZ_MIN")
+        -- WS_DLZ_MAX:set(1500)
+        -- WS_DLZ_MIN:set(1100)
+        -- print_message_to_user("Ralt: " .. sensor_data.getRadarAltitude())
+         print_message_to_user("WS_DLZ_MIN:" .. WS_DLZ_MIN:get().. "\t WS_DLZ_MAX:"..WS_DLZ_MAX:get())
+
+        -- for i=1,5 do
+        --     local text = dump("STO"..i, wpn:get_station_info(i-1))
+        --     -- print_message_to_user(text)
+        --     log.info(text)
+        -- end
+        -- -- print_message_to_user("Dumped!")
+        -- local text = dump("Params\n", list_cockpit_params())
+        -- text = strsplit("\n", text)
+        -- for key, value in pairs(text) do
+        --     log.info(value)
+        -- end
         -- dispatch_action(nil,iPlaneAirBrakeOn)
     end
 end

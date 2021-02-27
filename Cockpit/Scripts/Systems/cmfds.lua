@@ -868,10 +868,18 @@ end
 
 local DMSLeftElapsed = -1
 local DMSRightElapsed = -1
+local cmfd_bright = {}
+cmfd_bright[1] = 1
+cmfd_bright[2] = 1
+
 function update()
     update_eicas()
     update_adhsi()
     update_sms()
+
+    CMFD1_BRIGHT:set(cmfd_bright[1])
+    CMFD2_BRIGHT:set(cmfd_bright[2])
+    
     if DMSLeftElapsed > 0 then
         DMSLeftElapsed = DMSLeftElapsed - update_time_step
     elseif DMSLeftElapsed > -1 then
@@ -1114,6 +1122,16 @@ function SetCommand(command,value)
     elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.EICAS then SetCommandEicas(command,value, CMFD[cmfdnumber]) 
     elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.ADHSI then SetCommandAdhsi(command,value, CMFD[cmfdnumber]) 
     elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.SMS   then SetCommandSms(command,value, CMFD[cmfdnumber]) 
+    end
+
+    if command == device_commands.CMFD1ButtonBright or command == device_commands.CMFD2ButtonBright then
+        if value == -1 then
+            cmfd_bright[cmfdnumber] = cmfd_bright[cmfdnumber] - 0.1
+            if cmfd_bright[cmfdnumber] < 0 then cmfd_bright[cmfdnumber] = 0 end
+        elseif value == 1 then
+            cmfd_bright[cmfdnumber] = cmfd_bright[cmfdnumber] + 0.1
+            if cmfd_bright[cmfdnumber] > 1 then cmfd_bright[cmfdnumber] = 1 end
+        end
     end
 
     if value == 1 then

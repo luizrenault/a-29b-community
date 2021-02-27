@@ -125,6 +125,69 @@ local object
 
 local HUD_BoresightRoot = addStrokeSymbol("HUD_Boresight_Cross", {"stroke_symbols_HUD", "1-boresight-cross"}, "CenterCenter", {0, DegToMil(1.2)})
 
+-- CCIP
+local HUD_CCIP_origin = addPlaceholder(nil, {0,0})
+HUD_CCIP_origin.element_params = {"AVIONICS_MASTER_MODE", "WPN_MASS", "WPN_SELECTED_WEAPON_TYPE"}
+HUD_CCIP_origin.controllers = {
+	{"parameter_in_range",0,AVIONICS_MASTER_MODE_ID.CCIP-0.5, AVIONICS_MASTER_MODE_ID.CCIP_R + 0.5},
+	{"parameter_compare_with_number", 1, WPN_MASS_IDS.LIVE},
+	{"parameter_in_range",2, WPN_WEAPON_TYPE_IDS.AG_WEAPON_BEG, WPN_WEAPON_TYPE_IDS.AG_WEAPON_END},
+}
+
+
+local HUD_CCIP_ROCKET_origin = addPlaceholder(nil, {0,0}, HUD_CCIP_origin.name)
+HUD_CCIP_ROCKET_origin.element_params = {"WPN_SELECTED_WEAPON_TYPE"}
+HUD_CCIP_ROCKET_origin.controllers = {
+	{"parameter_compare_with_number",0,WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET},
+}
+
+-- CCIP Rocket cue
+object = addStrokeCircle(nil, 16, {0,0}, HUD_CCIP_ROCKET_origin.name)
+object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_AZIMUTH", "HUD_CCIP_PIPER_ELEVATION"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"move_left_right_using_parameter", 1, 0.75},
+	{"move_up_down_using_parameter", 2, 0.75},
+}
+object = addStrokeCircle(nil, 1, {0,0}, object.name)
+
+-- CCIP out of screen
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
+object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_HIDDEN"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+
+
+local HUD_CCIP_BOMB_origin = addPlaceholder(nil, {0,0}, HUD_CCIP_origin.name)
+HUD_CCIP_BOMB_origin.element_params = {"WPN_SELECTED_WEAPON_TYPE"}
+HUD_CCIP_BOMB_origin.controllers = {
+	{"parameter_compare_with_number",0,WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB},
+}
+
+-- CCIP Bomb cue
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "4-impact-point"}, "CenterCenter", {0, 0}, HUD_CCIP_BOMB_origin.name)
+object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_AZIMUTH", "HUD_CCIP_PIPER_ELEVATION"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"move_left_right_using_parameter", 1, 0.75},
+	{"move_up_down_using_parameter", 2, 0.75},
+}
+
+-- CCIP out of screen
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
+object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_HIDDEN"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+
+-- CCIP Bomb Line
+object = addSimpleLine(nil, 10, {0,0}, 0, HUD_CCIP_BOMB_origin.name, nil, 0.5, HUD_MAT_DEF)
+object.element_params = {"HUD_BRIGHT", "HUD_PIPER_LINE_A_X", "HUD_PIPER_LINE_A_Y", "HUD_PIPER_LINE_B_X", "HUD_PIPER_LINE_B_Y"}
+object.controllers = {
+	{"opacity_using_parameter", 0},
+	{"line_object_set_point_using_parameters", 0, 1, 2, 0.75, 0.75},
+	{"line_object_set_point_using_parameters", 1, 3, 4, 0.75, 0.75},
+}
+
+
+
 -- INT
 local HUD_INT_origin = addPlaceholder(nil, {0,0})
 HUD_INT_origin.element_params = {"AVIONICS_MASTER_MODE", "WPN_MSL_CAGED"}

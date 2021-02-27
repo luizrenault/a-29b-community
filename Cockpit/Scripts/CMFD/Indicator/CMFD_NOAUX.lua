@@ -16,6 +16,9 @@ Poly_Text.init_pos    = {0, 0, 0}
 Poly_Text.alignment    = "CenterCenter"
 Poly_Text.value        = "AVAILABLE IN\nTWO WEEKS"
 Poly_Text.parent_element    = page_root.name
+Poly_Text.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
+Poly_Text.controllers = {{"opacity_using_parameter", 0}}
+
 AddToUpper(Poly_Text)
 Poly_Text = nil
 

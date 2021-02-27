@@ -371,6 +371,8 @@ device_commands =
     
 
     AudioNormal               = __counter(),
+
+    BFI_BRIGHT      = __counter(),
     
     ASICage                     = __counter(),
     ASIAdjust                   = __counter(),

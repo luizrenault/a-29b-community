@@ -15,7 +15,6 @@ make_default_activity(update_time_step)
 
 local sensor_data = get_base_data()
 
-
 local function round_to(value, roundto)
     value = value + roundto/2
     return value - value % roundto
@@ -79,7 +78,6 @@ local CMFDDoi = get_param_handle("CMFDDoi")
 
 local ADHSI_VV = get_param_handle("ADHSI_VV")
 
-
 local hud_piper_diameter = math.rad(1.8)
 local hud_limit_x = math.rad(6)
 local hud_limit_y = math.rad(6)
@@ -96,6 +94,10 @@ local HUD_PIPER_HIDDEN = get_param_handle("HUD_PIPER_HIDDEN")
 local HUD_IR_MISSILE_TARGET_AZIMUTH = get_param_handle("HUD_IR_MISSILE_TARGET_AZIMUTH")
 local HUD_IR_MISSILE_TARGET_ELEVATION = get_param_handle("HUD_IR_MISSILE_TARGET_ELEVATION")
 local HUD_MSL_HIDDEN = get_param_handle("HUD_MSL_HIDDEN")
+
+local HUD_CCIP_PIPER_AZIMUTH = get_param_handle("HUD_CCIP_PIPER_AZIMUTH")
+local HUD_CCIP_PIPER_ELEVATION = get_param_handle("HUD_CCIP_PIPER_ELEVATION")
+local HUD_CCIP_PIPER_HIDDEN = get_param_handle("HUD_CCIP_PIPER_HIDDEN")
 
 local WS_GUN_PIPER_AZIMUTH = get_param_handle("WS_GUN_PIPER_AZIMUTH")
 local WS_GUN_PIPER_ELEVATION = get_param_handle("WS_GUN_PIPER_ELEVATION")
@@ -122,6 +124,26 @@ function limit_xy(x, y, limit_x, limit_y)
         limited = true
     end
     return x, y, limited and 1 or 0, limited
+end
+
+function update_piper_ccip()
+    local slide = HUD_FPM_SLIDE:get()
+    local vert = HUD_FPM_VERT:get()
+
+    local az, el, limited
+    az, el, limited = limit_xy(WPN_CCIP_PIPER_AZIMUTH:get(), WPN_CCIP_PIPER_ELEVATION:get(), hud_limit_x, hud_limit_y)
+
+    HUD_CCIP_PIPER_AZIMUTH:set(az)
+    HUD_CCIP_PIPER_ELEVATION:set(el)
+    HUD_CCIP_PIPER_HIDDEN:set(limited)
+
+    local roll = math.atan((slide-az) / (vert-el))
+
+    HUD_PIPER_LINE_A_X:set(slide - 0.004 * math.sin(roll))
+    HUD_PIPER_LINE_A_Y:set(vert  - 0.004 * math.cos(roll))
+
+    HUD_PIPER_LINE_B_X:set(az + 0.005 * math.sin(roll))
+    HUD_PIPER_LINE_B_Y:set(el + 0.005 * math.cos(roll))
 end
 
 function update_piper_lcos()
@@ -235,6 +257,11 @@ function update_aa()
     
 end
 
+function update_ag()
+    local master_mode = get_avionics_master_mode()
+    if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R then update_piper_ccip() end
+end
+
 
 HUD_DCLT:set(0)
 HUD_DRIFT_CO:set(0)
@@ -247,11 +274,12 @@ local hud_warn_period = 0.1
 local hud_warn_elapsed = 0
 local hud_warning = get_param_handle("HUD_WARNING")
 function update()
-
-    if get_avionics_master_mode_aa() then update_aa() end
-
     local hud_on = get_elec_avionics_ok() and 1 or 0
     local hud_bright = get_cockpit_draw_argument_value(483)
+    if get_cockpit_draw_argument_value(476) == 0 then hud_bright = hud_bright * 0.5 
+    end
+
+
     local master_mode = get_avionics_master_mode()
 
     if (get_avionics_master_mode_ag() or get_avionics_master_mode_aa()) and WPN_READY:get() == 1 then HUD_RDY:set(1) 
@@ -471,6 +499,9 @@ function update()
     HUD_ON:set(hud_on)
 
     HUD_BRIGHT:set(hud_bright)
+
+    if get_avionics_master_mode_aa() then update_aa() end
+    if get_avionics_master_mode_ag() then update_ag() end
 
     -- Escalas de Velocidade, Altitude ou Altura e Proa – Apresentadas quando as funções VV/VAH e VAH estão ativadas no UFCP ou no CMFD, estando em qualquer modo principal. Ficam ocultas quando estas funções estiverem desativadas;
     -- Escala de Velocidade Vertical – Apresentada somente quando a função VV/VAH estiver ativada no UFCP ou no CMFD e o modo principal NAV estiver em operação;

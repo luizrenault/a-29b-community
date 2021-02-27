@@ -560,5 +560,7 @@ mesh_poly.vertices          = { {-1, aspect}, {1,aspect}, {1,-aspect}, {-1, -asp
 mesh_poly.indices           = default_box_indices
 mesh_poly.isvisible         = true
 mesh_poly.tex_coords 		= {{600/2048,0}, {1200/2048,0},{1200/2048,800/2048},{600/2048,800/2048}}
+mesh_poly.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
+mesh_poly.controllers = {{"opacity_using_parameter", 0}}
 AddElementObject2(mesh_poly)
 mesh_poly = nil
