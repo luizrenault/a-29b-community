@@ -49,8 +49,6 @@ function SetCommand(command,value)
         set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.NAV)
     elseif command == device_commands.UFCP_1 and value == 1 then
         HUD_VAH:set((HUD_VAH:get() + 1) % 2)
-        dump("PARAM:", strsplit("\n",list_cockpit_params()))
-        print_message_to_user("Dumped!")
     end
 end
 

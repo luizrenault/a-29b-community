@@ -18,6 +18,7 @@ page_subsets = {
     [SUB_PAGE_ID.EICAS       ] = cmfd_page_path .. "CMFD_EICAS.lua",
     [SUB_PAGE_ID.ADHSI       ] = cmfd_page_path .. "CMFD_ADHSI.lua",
     [SUB_PAGE_ID.SMS         ] = cmfd_page_path .. "CMFD_SMS.lua",
+    [SUB_PAGE_ID.NAV         ] = cmfd_page_path .. "CMFD_NAV.lua",
 }
 
 pages = {
@@ -30,6 +31,7 @@ pages = {
         SUB_PAGE_ID.EICAS,
         SUB_PAGE_ID.ADHSI,
         SUB_PAGE_ID.SMS,
+        SUB_PAGE_ID.NAV,
     },
 }
 

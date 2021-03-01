@@ -453,28 +453,58 @@ object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_CDI_SHOW"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
 
 
--- FYT DTK Arrow
+-- FYT Arrow
 stroke_thickness  = 1.5 --0.25
 stroke_fuzziness  = 0.6
-local HSI_FYT_DTK_Origin = addPlaceholder("HSI_FYT_DTK_Origin", {0,0}, HSI_Origin_Rot.name)
-HSI_FYT_DTK_Origin.element_params = {"ADHSI_FYT_DTK_HDG", "ANS_MODE"}
-HSI_FYT_DTK_Origin.controllers = {{"rotate_using_parameter", 0, -math.rad(1)}, {"parameter_in_range", 0, -0.05, 360,05}, {"parameter_in_range", 1, AVIONICS_ANS_MODE_IDS.EGI-0.05, AVIONICS_ANS_MODE_IDS.GPS + 0.05}}
-object = addStrokeBox("HSI_FYT_DTK_box", 0.03, 0.05, "CenterCenter", {0,-HSI_radius - 2.3* HSI_tick_lenght}, HSI_FYT_DTK_Origin.name, nil, "CMFD_IND_MAGENTA")
+local HSI_FYT_Origin = addPlaceholder(nil, {0,0}, HSI_Origin_Rot.name)
+HSI_FYT_Origin.element_params = {"CMFD_NAV_FYT_VALID", "CMFD_NAV_FYT_OAP_BRG", "ANS_MODE", "ADHSI_DTK"}
+HSI_FYT_Origin.controllers = {{"rotate_using_parameter", 1, -math.rad(1)}, {"parameter_compare_with_number", 0, 1}, {"parameter_compare_with_number", 3, 0}, {"parameter_in_range", 2, AVIONICS_ANS_MODE_IDS.EGI-0.05, AVIONICS_ANS_MODE_IDS.GPS + 0.05}}
+object = addStrokeBox(nil, 0.03, 0.05, "CenterCenter", {0,-HSI_radius - 2.3* HSI_tick_lenght}, HSI_FYT_Origin.name, nil, "CMFD_IND_MAGENTA")
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
 object.controllers = {{"opacity_using_parameter", 0}}
-object = addStrokeBox("HSI_FYT_DT_box_1", 0.02, 0.12, "CenterCenter", {0,HSI_radius + 2.3* HSI_tick_lenght}, HSI_FYT_DTK_Origin.name, nil, "CMFD_IND_MAGENTA")
+object = addStrokeBox(nil, 0.02, 0.12, "CenterCenter", {0,HSI_radius + 2.3* HSI_tick_lenght}, HSI_FYT_Origin.name, nil, "CMFD_IND_MAGENTA")
 object.vertices = {{0,0.07}, {0.035, 0.02}, {0.015, 0.02}, {0.015,0}, {-0.015, 0}, {-0.015, 0.02}, {-0.035, 0.02}}
 object.indices = {0,1, 1,2, 2,3, 3,4, 4,5, 5,6, 6,0}
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
 object.controllers = {{"opacity_using_parameter", 0}}
 
--- FTY DATA
+-- FYT Point
+object = addMesh(nil, nil, nil, {0,0}, "triangles", HSI_FYT_Origin.name, nil, "CMFD_IND_MAGENTA")
+object = SetMeshCircle(object, 0.02, 10)
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_FYT_DTK_DIST"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, -0.05, 1.299999}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}}
+
+object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {0,0}, HSI_FYT_Origin.name, nil, {" %02.0f"}, CMFD_FONT_MAGENTA)
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT", "CMFD_NAV_FYT_OAP_BRG", "AVIONICS_HDG", "ADHSI_FYT_DTK_DIST"}
+object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}, {"move_up_down_using_parameter", 4, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)}, }
+
+object = addStrokeCircle(nil, 0.02, {0, 1.3 * HSI_radius}, HSI_FYT_Origin.name, nil, nil, 0.5, 0.5, true, "CMFD_IND_MAGENTA")
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_FYT_DTK_DIST"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, 1.299999, 10}}
+object.thickness = 0.05
+
+-- FYT DATA
 object = addStrokeText("HSI_FYT_DTK_text", "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {0.412,-0.086}, nil, nil, {"FT %02.0f\n", "%03.0f`\n", "%2.1f\n", "%02.0f:", "%02.0f"}, CMFD_FONT_MAGENTA)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_FYT_DTK_NUMBER", "ADHSI_FYT_DTK_HDG", "ADHSI_FYT_DTK_DIST", "ADHSI_FYT_DTK_MIN", "ADHSI_FYT_DTK_SEC", "ADHSI_DTK"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 2, -0.05, 360.5}, {"parameter_compare_with_number", 6, 0}, {"text_using_parameter", 1, 0}, {"text_using_parameter", 2, 1}, {"text_using_parameter", 3, 2}, {"text_using_parameter", 4, 3}, {"text_using_parameter", 5, 4}}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT_VALID", "CMFD_NAV_FYT", "CMFD_NAV_FYT_OAP_BRG_TEXT", "CMFD_NAV_FYT_OAP_DIST", "CMFD_NAV_FYT_OAP_MINS", "CMFD_NAV_FYT_OAP_SECS", "ADHSI_DTK"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}, {"parameter_compare_with_number", 7, 0}, {"text_using_parameter", 2, 0}, {"text_using_parameter", 3, 1}, {"text_using_parameter", 4, 2}, {"text_using_parameter", 5, 3}, {"text_using_parameter", 6, 4}}
 object = addStrokeText("HSI_NO_FYT_DTK_text", "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {0.412,-0.086}, nil, nil, {"FT %02.0f\nXXX`\nX.X\nXX:XX"}, CMFD_FONT_MAGENTA)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_FYT_DTK_NUMBER", "ADHSI_FYT_DTK_HDG", "ADHSI_DTK"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 2, -1}, {"parameter_compare_with_number", 3, 0}, {"text_using_parameter", 1, 0}}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT_VALID", "CMFD_NAV_FYT", "ADHSI_DTK"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, -0}, {"parameter_compare_with_number", 3, 0}, {"text_using_parameter", 2, 0}}
+
+-- DTK Arrow
+stroke_thickness  = 1.5 --0.25
+stroke_fuzziness  = 0.6
+local HSI_DTK_Origin = addPlaceholder("HSI_FYT_DTK_Origin", {0,0}, HSI_Origin_Rot.name)
+HSI_DTK_Origin.element_params = {"ADHSI_FYT_DTK_HDG", "ANS_MODE"}
+HSI_DTK_Origin.controllers = {{"rotate_using_parameter", 0, -math.rad(1)}, {"parameter_in_range", 0, -0.05, 360,05}, {"parameter_in_range", 1, AVIONICS_ANS_MODE_IDS.EGI-0.05, AVIONICS_ANS_MODE_IDS.GPS + 0.05}}
+object = addStrokeBox("HSI_FYT_DTK_box", 0.03, 0.05, "CenterCenter", {0,-HSI_radius - 2.3* HSI_tick_lenght}, HSI_DTK_Origin.name, nil, "CMFD_IND_MAGENTA")
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
+object.controllers = {{"opacity_using_parameter", 0}}
+object = addStrokeBox("HSI_FYT_DT_box_1", 0.02, 0.12, "CenterCenter", {0,HSI_radius + 2.3* HSI_tick_lenght}, HSI_DTK_Origin.name, nil, "CMFD_IND_MAGENTA")
+object.vertices = {{0,0.07}, {0.035, 0.02}, {0.015, 0.02}, {0.015,0}, {-0.015, 0}, {-0.015, 0.02}, {-0.035, 0.02}}
+object.indices = {0,1, 1,2, 2,3, 3,4, 4,5, 5,6, 6,0}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
+object.controllers = {{"opacity_using_parameter", 0}}
 
 -- DTK DATA
 object = addStrokeText("HSI_FYT_DTK_text1", "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {0.412,-0.086}, nil, nil, {"D-\n%03.0f`\n", "%2.1f\n", "%02.0f:", "%02.0f"}, CMFD_FONT_MAGENTA)

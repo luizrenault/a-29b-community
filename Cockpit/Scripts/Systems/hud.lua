@@ -44,6 +44,10 @@ local HUD_FPM_VERT = get_param_handle("HUD_FPM_VERT")
 local HUD_FPM_OOR = get_param_handle("HUD_FPM_OOR")
 local HUD_PL_SLIDE = get_param_handle("HUD_PL_SLIDE")
 local HUD_RI_ROLL = get_param_handle("HUD_RI_ROLL")
+local HUD_FYT_AZIMUTH = get_param_handle("HUD_FYT_AZIMUTH")
+local HUD_FYT_ELEVATION = get_param_handle("HUD_FYT_ELEVATION")
+local HUD_FYT_OS = get_param_handle("HUD_FYT_OS")
+
 
 -- Visuals
 local HUD_DRIFT_CO = get_param_handle("HUD_DRIFT_CO")
@@ -103,24 +107,33 @@ local WS_GUN_PIPER_AZIMUTH = get_param_handle("WS_GUN_PIPER_AZIMUTH")
 local WS_GUN_PIPER_ELEVATION = get_param_handle("WS_GUN_PIPER_ELEVATION")
 local WS_GUN_PIPER_SPAN = get_param_handle("WS_GUN_PIPER_SPAN")
 local WS_TARGET_RANGE = get_param_handle("WS_TARGET_RANGE")
+local CMFD_NAV_FYT_OAP_BRG = get_param_handle("CMFD_NAV_FYT_OAP_BRG")
+local CMFD_NAV_FYT_OAP_AZIMUTH = get_param_handle("CMFD_NAV_FYT_OAP_AZIMUTH")
+local CMFD_NAV_FYT_OAP_ELEVATION = get_param_handle("CMFD_NAV_FYT_OAP_ELEVATION")
 
+function limit_xy(x, y, limit_x, limit_y, limit_x_down, limit_y_down) 
+    limit_x_down = limit_x_down or -limit_x
+    limit_y_down = limit_y_down or -limit_y
 
-function limit_xy(x, y, limit_x, limit_y) 
     local limited = false
     if x > limit_x then 
+        y = y * limit_x / x
         x = limit_x
         limited = true
     end
-    if x < -limit_x then 
-        x = -limit_x 
+    if x < limit_x_down then 
+        y = y * limit_x_down / x
+        x = limit_x_down 
         limited = true
     end
     if y > limit_y then 
+        x = x * limit_y / y
         y = limit_y 
         limited = true
     end
-    if y < -limit_y then 
-        y = -limit_y 
+    if y < limit_y_down then 
+        x = x * limit_y_down / y
+        y = limit_y_down 
         limited = true
     end
     return x, y, limited and 1 or 0, limited
@@ -131,7 +144,7 @@ function update_piper_ccip()
     local vert = HUD_FPM_VERT:get()
 
     local az, el, limited
-    az, el, limited = limit_xy(WPN_CCIP_PIPER_AZIMUTH:get(), WPN_CCIP_PIPER_ELEVATION:get(), hud_limit_x, hud_limit_y)
+    az, el, limited = limit_xy(WPN_CCIP_PIPER_AZIMUTH:get(), WPN_CCIP_PIPER_ELEVATION:get(), hud_limit_x, hud_limit_y, -hud_limit_x, -hud_limit_y * 1.3)
 
     HUD_CCIP_PIPER_AZIMUTH:set(az)
     HUD_CCIP_PIPER_ELEVATION:set(el)
@@ -287,6 +300,12 @@ function update()
     else HUD_RDY:set(0) end
 
 
+    local hud_fyt_azimuth, hud_fyt_elevation, hud_fyt_os = limit_xy(CMFD_NAV_FYT_OAP_AZIMUTH:get(), CMFD_NAV_FYT_OAP_ELEVATION:get(), hud_limit_x, hud_limit_y, -hud_limit_x, -hud_limit_y * 1.3)
+    HUD_FYT_AZIMUTH:set(hud_fyt_azimuth)
+    HUD_FYT_ELEVATION:set(hud_fyt_elevation)
+    HUD_FYT_OS:set(hud_fyt_os)
+
+
     local hud_warn = get_hud_warning()
     hud_warn_elapsed = hud_warn_elapsed + update_time_step
     if hud_warn == 1 then
@@ -307,7 +326,7 @@ function update()
     local roll = sensor_data.getRoll()
     local hdg = get_avionics_hdg()
 
-    local hdg_des = -1
+    local hdg_des = CMFD_NAV_FYT_OAP_BRG:get()
 
     if get_avionics_master_mode_aa() then hdg_des = -1 end
     local hdg_dif = (hdg_des - hdg)
@@ -315,6 +334,7 @@ function update()
     if hdg_dif < -180 then hdg_dif = 360 + hdg_dif end 
     if hdg_dif > 15 then hdg_dif = 15 end
     if hdg_dif < -15 then hdg_dif = -15 end
+    
     HUD_HDG_CUE_MOVE:set(hdg_dif)
     HUD_HDG_CUE_VALUE:set(round_to(hdg_des, 1))
     HUD_HDG_SCALE_MOVE:set(hdg % 10)

@@ -1,3 +1,4 @@
+dofile(LockOn_Options.common_script_path.."mission_prepare.lua")
 
 -- dofile ("scripts/Database/db_scan.lua")
 
@@ -53,7 +54,7 @@ function post_initialize()
     end
     -- print_message_to_user("Dumped!")
     -- dump1("Params\n", list_cockpit_params())
-
+    dump1("get_mission_route", get_mission_route())
     startup_print("test: postinit end")
 end
 
@@ -1108,3 +1109,53 @@ avWeap_ReleaseTimer_Activity
 
 
 --]]
+
+
+-- getAngleOfAttack
+-- getAngleOfSlide
+-- getBarometricAltitude
+-- getCanopyPos
+-- getCanopyState
+-- getEngineLeftFuelConsumption
+-- getEngineLeftRPM
+-- getEngineLeftTemperatureBeforeTurbine
+-- getEngineRightFuelConsumption
+-- getEngineRightRPM
+-- getEngineRightTemperatureBeforeTurbine
+-- getFlapsPos
+-- getFlapsRetracted
+-- getHeading
+-- getHorizontalAcceleration
+-- getIndicatedAirSpeed
+-- getLandingGearHandlePos
+-- getLateralAcceleration
+-- getLeftMainLandingGearDown
+-- getLeftMainLandingGearUp
+-- getMachNumber
+-- getMagneticHeading
+-- getNoseLandingGearDown
+-- getNoseLandingGearUp
+-- getPitch
+-- getRadarAltitude
+-- getRateOfPitch
+-- getRateOfRoll
+-- getRateOfYaw
+-- getRightMainLandingGearDown
+-- getRightMainLandingGearUp
+-- getRoll
+-- getRudderPosition
+-- getSpeedBrakePos
+-- getSelfAirspeed
+-- getSelfCoordinates
+-- getSelfVelocity
+-- getStickPitchPosition
+-- getStickRollPosition
+-- getThrottleLeftPosition
+-- getThrottleRightPosition
+-- getTotalFuelWeight
+-- getTrueAirSpeed
+-- getVerticalAcceleration
+-- getVerticalVelocity
+-- getWOW_LeftMainLandingGear
+-- getWOW_NoseLandingGear
+-- getWOW_RightMainLandingGear

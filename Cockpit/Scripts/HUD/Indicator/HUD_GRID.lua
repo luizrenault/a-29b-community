@@ -125,6 +125,37 @@ local object
 
 local HUD_BoresightRoot = addStrokeSymbol("HUD_Boresight_Cross", {"stroke_symbols_HUD", "1-boresight-cross"}, "CenterCenter", {0, DegToMil(1.2)})
 
+-- PL_origin.element_params            = {"HUD_PITCH", "HUD_ROLL", "HUD_PL_SLIDE"}
+-- PL_origin.controllers 		        = {{"move_left_right_using_parameter", 2, 0.75}, {"rotate_using_parameter",1, 1 }, {"move_up_down_using_parameter",0,-0.75}, }
+
+-- FYT
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "aim9lm-caged"}, "CenterCenter", {0, 0})
+object.element_params = {"HUD_BRIGHT", "AVIONICS_MASTER_MODE", "CMFD_NAV_FYT_VALID", "HUD_FYT_AZIMUTH", "HUD_FYT_ELEVATION"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_in_range", 1, AVIONICS_MASTER_MODE_ID.NAV - 0.05, AVIONICS_MASTER_MODE_ID.LANDING + 0.05},
+	{"parameter_compare_with_number",2,1},
+	{"move_left_right_using_parameter", 3, 0.75},
+	{"move_up_down_using_parameter", 4, 0.75},
+}
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
+object.element_params = {"HUD_BRIGHT", "HUD_FYT_OS"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "aim9lm-caged"}, "CenterCenter", {0, 0})
+object.element_params = {"HUD_BRIGHT", "AVIONICS_MASTER_MODE", "CMFD_NAV_FYT_VALID", "HUD_FYT_AZIMUTH", "HUD_FYT_ELEVATION"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_in_range", 1, AVIONICS_MASTER_MODE_ID.GUN - 0.05, AVIONICS_MASTER_MODE_ID.MAN + 0.05},
+	{"parameter_compare_with_number",2,1},
+	{"move_left_right_using_parameter", 3, 0.75},
+	{"move_up_down_using_parameter", 4, 0.75},
+}
+object = addStrokeSymbol(nil, {"stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
+object.element_params = {"HUD_BRIGHT", "HUD_FYT_OS"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+
+
 -- CCIP
 local HUD_CCIP_origin = addPlaceholder(nil, {0,0})
 HUD_CCIP_origin.element_params = {"AVIONICS_MASTER_MODE", "WPN_MASS", "WPN_SELECTED_WEAPON_TYPE"}
@@ -133,7 +164,6 @@ HUD_CCIP_origin.controllers = {
 	{"parameter_compare_with_number", 1, WPN_MASS_IDS.LIVE},
 	{"parameter_in_range",2, WPN_WEAPON_TYPE_IDS.AG_WEAPON_BEG, WPN_WEAPON_TYPE_IDS.AG_WEAPON_END},
 }
-
 
 local HUD_CCIP_ROCKET_origin = addPlaceholder(nil, {0,0}, HUD_CCIP_origin.name)
 HUD_CCIP_ROCKET_origin.element_params = {"WPN_SELECTED_WEAPON_TYPE"}
@@ -185,8 +215,6 @@ object.controllers = {
 	{"line_object_set_point_using_parameters", 0, 1, 2, 0.75, 0.75},
 	{"line_object_set_point_using_parameters", 1, 3, 4, 0.75, 0.75},
 }
-
-
 
 -- INT
 local HUD_INT_origin = addPlaceholder(nil, {0,0})
@@ -718,15 +746,15 @@ object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1
 
 -- FTY distance indicator
 object = addStrokeText("HUD_FTI_Dist", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"%02.1f>","%02.0f"})
-object.element_params = {"HUD_FTI_DIST", "HUD_FTI_NUM", "HUD_BRIGHT"}
+object.element_params = {"CMFD_NAV_FYT_OAP_DIST", "CMFD_NAV_FYT", "HUD_BRIGHT"}
 object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0,-0.05, 99.94}, {"opacity_using_parameter", 2}}
 
 object = addStrokeText("HUD_FTI_Dist_100", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"%3.0f>","%02.0f"})
-object.element_params = {"HUD_FTI_DIST", "HUD_FTI_NUM", "HUD_BRIGHT"}
+object.element_params = {"CMFD_NAV_FYT_OAP_DIST", "CMFD_NAV_FYT", "HUD_BRIGHT"}
 object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0, 99.95, 999.5}, {"opacity_using_parameter", 2}}
 
 object = addStrokeText("HUD_FTI_Dist_XXX", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"XXX>%02.0f"})
-object.element_params = {"HUD_FTI_DIST", "HUD_FTI_NUM", "HUD_BRIGHT"}
+object.element_params = {"CMFD_NAV_FYT_OAP_DIST", "CMFD_NAV_FYT", "HUD_BRIGHT"}
 object.controllers = {{"text_using_parameter", 1, 0}, {"parameter_compare_with_number",0,-1}, {"opacity_using_parameter", 2}}
 
 -- VOR

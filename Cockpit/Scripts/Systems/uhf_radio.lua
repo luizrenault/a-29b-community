@@ -41,6 +41,8 @@ local update_time_step = 1 --update will be called once per second
 device_timer_dt = update_time_step
 
 function post_initialize()
+
+  
   -- efm_data_bus.fm_setAvionicsAlive(1.0)
   dev:set_frequency(256E6) -- Sochi
   -- print_message_to_user(tostring(dev:get_frequency()))
@@ -61,8 +63,12 @@ function post_initialize()
 
   local intercom = GetDevice(devices.INTERCOM)
   intercom:set_communicator(devices.UHF_RADIO)
-  intercom:make_setup_for_communicator()
+  intercom:make_setup_for_communicator(dev)
   
+  dump1("is_on", dev:is_on())
+  dump1("get_frequency", dev:get_frequency())
+  dump1("get_modulation", dev:get_modulation())
+
   --print_message_to_user(string.sub(dev["link"],10))
 	--print_message_to_user(GetDevice(devices.RADIO))
 	

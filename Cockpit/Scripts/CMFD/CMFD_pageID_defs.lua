@@ -19,6 +19,7 @@ SUB_PAGE_ID = {
     EICAS        = counter(),
     ADHSI        = counter(),
     SMS        = counter(),
+    NAV        = counter(),
     BLANK        = counter(), -- not implemented from here
     NOAUX        = counter(), -- no signal from device
     HSD        = counter(),
@@ -31,7 +32,6 @@ SUB_PAGE_ID = {
     BIT          = counter(),
     HUD        = counter(),
     DTE        = counter(),
-    NAV        = counter(),
     OFF          = counter(), -- no power
     END          = counter(),
 }

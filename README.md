@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Version 0.1.3b - 01 March 2021
+
+### Added
+- EGI waypoint navigation.
+- CMFD NAV FYT and ROUT formats.
 
 ## Version 0.1.2b - 27 February 2021
 

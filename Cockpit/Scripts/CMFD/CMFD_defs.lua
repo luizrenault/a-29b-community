@@ -249,29 +249,6 @@ function AddToLOWER(elem)
 end
 
 -------------------------------------------------
-function SetMeshCircle(object, radius, numpts)
-
-    local verts = {}
-    local inds = {}
-
-    step = math.rad(360.0/numpts)
-    for i = 1, numpts do
-        verts[i] = {radius * math.cos(i * step), radius * math.sin(i * step)}
-    end
-    j = 0
-    for i = 0, numpts-3 do
-        j = j + 1
-        inds[j] = 0
-        j = j + 1
-        inds[j] = i + 1
-        j = j + 1
-        inds[j] = i + 2
-    end
-
-    object.vertices = verts
-    object.indices  = inds
-
-end
 
 function SetLineCircle(object, radius, numpts)
 

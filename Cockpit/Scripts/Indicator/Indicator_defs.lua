@@ -536,9 +536,9 @@ local OSSPos = {
 	{0.142857143, aspect* 0.96},
 	{0.42, aspect* 0.96},
 	{0.714285714, aspect* 0.96},
-	{0.975, ( 5.8*1.0/8) * aspect},
-	{0.975, ( 4.1*1.0/8) * aspect},
-	{0.975, ( 2.5*1.0/8) * aspect},
+	{0.975, ( 5.85*1.0/8) * aspect},
+	{0.975, ( 4.35*1.0/8) * aspect},
+	{0.975, ( 2.55*1.0/8) * aspect},
 	{0.975, ( 0.9*1.0/8) * aspect},
 	{0.975, (-1.2*1.0/8) * aspect},
 	{0.975, (-2.8*1.0/8) * aspect},
@@ -555,9 +555,9 @@ local OSSPos = {
 	{-0.975, (-2.8*1.0/8) * aspect},
 	{-0.975, (-1.2*1.0/8) * aspect},
 	{-0.975, ( 0.9*1.0/8) * aspect},
-	{-0.975, ( 2.5*1.0/8) * aspect},
-	{-0.975, ( 4.1*1.0/8) * aspect},
-	{-0.975, ( 5.8*1.0/8) * aspect},
+	{-0.975, ( 2.55*1.0/8) * aspect},
+	{-0.975, ( 4.35*1.0/8) * aspect},
+	{-0.975, ( 5.85*1.0/8) * aspect},
 
 
 }
@@ -606,3 +606,50 @@ function addStrokeBoxDashed(name, sideX, sideY, stroke, gap, pos, parent, contro
 	return root
 end
 
+function addOSSArrow(ossnum, up_direction, parent, parameters, controllers, material)
+	local origin = OSSPos[ossnum]
+	if ossnum <= 6 then
+	elseif ossnum <= 14  then
+		origin[1] = origin[1] - 0.085
+	elseif ossnum <= 20  then
+	else
+		origin[1] = origin[1] + 0.085
+	end
+	local object = addStrokeLine(nil, 0.0, origin, 0, parent, controllers, nil, nil, nil, material)
+	object.vertices = {{0,0.03}, {0.06, -0.03}, {-0.06, -0.03}}
+	object.indices = {0,1, 1,2, 2,0}
+
+	if up_direction == 0 then
+		object.init_rot = {180}
+	else 
+		object.init_rot = {0}
+	end
+
+	if parameters ~= nil then object.element_params = parameters end
+	if controllers ~= nil then	object.controllers = controllers end
+	return object
+end
+
+function SetMeshCircle(object, radius, numpts)
+
+    local verts = {}
+    local inds = {}
+
+    step = math.rad(360.0/numpts)
+    for i = 1, numpts do
+        verts[i] = {radius * math.cos(i * step), radius * math.sin(i * step)}
+    end
+    j = 0
+    for i = 0, numpts-3 do
+        j = j + 1
+        inds[j] = 0
+        j = j + 1
+        inds[j] = i + 1
+        j = j + 1
+        inds[j] = i + 2
+    end
+
+    object.vertices = verts
+    object.indices  = inds
+    return object
+end

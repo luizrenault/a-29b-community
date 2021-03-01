@@ -1,5 +1,6 @@
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
+dofile(LockOn_Options.script_path.."utils.lua")
 
 startup_print("radio: load")
 
@@ -22,6 +23,12 @@ function post_initialize()
     elseif birth=="GROUND_COLD" then
         -- dev:performClickableAction(device_commands.EnvRecFan, 0, true)
     end
+    -- dump1("make_setup_for_communicator", dev:make_setup_for_communicator())
+    -- dump1("is_communicator_available", dev:is_communicator_available())
+    -- dump1("easy_comm_override", dev:easy_comm_override())
+    -- dump1("get_noise_level", dev:get_noise_level())
+    -- dump1("get_signal_level", dev:get_signal_level())
+
     startup_print("radio: postinit end")
 end
 

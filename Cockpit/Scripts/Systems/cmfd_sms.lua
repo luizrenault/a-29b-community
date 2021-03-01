@@ -1,8 +1,6 @@
 
 dofile(LockOn_Options.script_path.."CMFD/CMFD_SMS_ID_defs.lua")
 
-
-
 local SMS_MODE = get_param_handle("SMS_MODE")
 local SMS_CARGOTYPE = get_param_handle("SMS_CARGOTYPE")
 local SMS_INV = get_param_handle("SMS_INV")
