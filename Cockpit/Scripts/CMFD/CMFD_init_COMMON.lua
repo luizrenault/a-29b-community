@@ -102,6 +102,7 @@ mat_tbl = {
     "cmfd_font_wy",
     "cmfd_font_d",
     "cmfd_font_r",
+    "ufcp_font_def",
 }
 
 -- MFCD Colors
@@ -134,6 +135,7 @@ color_sensitive_materials      = {
     "cmfd_wpn_font_def",
     "cmfd_wpn_font_g",
     --"cmfd_wpn_svg_font_def",
+    "ufcp_font_def",
 }
 
 is_colored         = true

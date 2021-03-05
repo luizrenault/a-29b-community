@@ -53,7 +53,7 @@ HUD_TEX_IND2_Y    = "hud_tex_ind2_y"
 HUD_LINE_DEF      = "hud_line_dashed_def"
 
 --[[
-local font_desc = fontdescription["font_HUD"]
+local font_desc = fontdescription["a29b_font_hud"]
 HUD_IND_FONT    = MakeFont(font_desc, HUD_IND_COLOR,   "HUD_IND_FONT")
 HUD_IND_FONT_R  = MakeFont(font_desc, HUD_IND_COLOR_R, "HUD_IND_FONT_R")
 HUD_IND_FONT_G  = MakeFont(font_desc, HUD_IND_COLOR_G, "HUD_IND_FONT_G")
@@ -412,8 +412,6 @@ function add_PL_GhostHorizon(name, length, half_gap, controllers, pos)
 	end
 	return lineOrigin
 end
-
-
 
 function create_page_root()
     local page_root = addPlaceholder("HUD_PageRoot", {0,0})

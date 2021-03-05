@@ -468,15 +468,14 @@ A_29B =  {
 			typeng	=	3, -- E_TURBOJET = 0, E_TURBOJET_AB = 1, E_PISTON = 2, E_TURBOPROP = 3,	E_TURBOFAN    = 4,	E_TURBOSHAFT = 5
 			hMaxEng	=	19.5, -- maximum operating altitude for the engine in km -- typically higher than service ceiling of the aircraft
 			dcx_eng	=	0.0114, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
-			cemax	=	0.13, -- kg / sec - fuel consumption for a single engine in dry configuration
-			cefor	=	0.13, -- kg / sec - fuel consumption for a single engine in afterburner configuration
+			cemax	=	0.097, -- kg / sec - fuel consumption for a single engine in dry configuration
+			cefor	=	0.097, -- kg / sec - fuel consumption for a single engine in afterburner configuration
 			dpdh_m	=	1800, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			dpdh_f	=	1800, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			table_data = {
 			-- Pmax - total thrust in Newtons (kN * 1000) for all engines
 			-- Pfor - total thrust in Newtons (kN * 1000) for all engines
 			--   M		Pmax		 Pfor
-				{-0.1,		16620.0},
 				{0.0,		16620.0},
 				{0.1,		15600.0},
 				{0.2,		14340.0},
@@ -554,18 +553,20 @@ A_29B =  {
             weightWhenOn = -80,
             wCtrl = 150,
         },
-        {
-            id = 'PropellorType',
-            control = 'comboList',
-            label ="Propellor Movement",
-            defValue = 20,
-            arg = 324,
-            values = {
-                {id = 0, dispName = "Stopped"},
-                {id = 20, dispName = "Rotating"},
-            },
-            wCtrl = 150,
-        },
+        -- {
+        --     id = 'PropellorType',
+        --     control = 'comboList',
+        --     label ="Propellor Movement",
+        --     defValue = 20,
+        --     arg = 324,
+        --     values = {
+        --         {id = 0, dispName = "Stopped"},
+        --         {id = 1, dispName = "Rotating"},
+        --     },
+        --     wCtrl = 150,
+        -- },
+		{ id = "RotatingProp" , control = 'checkbox', label = 'Rotating propellor', defValue = true, weight = 0, arg = 324},
+
     },
 	--damage , index meaning see in  Scripts\Aircrafts\_Common\Damage.lua
 	Damage = {

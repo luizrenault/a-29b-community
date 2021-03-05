@@ -1,16 +1,7 @@
---devices["CANOPY"]           = counter()
---creators[devices.CANOPY]            = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/canopy.lua"}
---elements["PNT_129"] = default_2_position_tumb("Canopy", devices.CANOPY, Keys.Canopy, 0)
-
-
 dofile(LockOn_Options.common_script_path.."devices_defs.lua")
 dofile(LockOn_Options.script_path.."devices.lua")
 dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
--- dofile(LockOn_Options.script_path.."Systems/stores_config.lua")
 dofile(LockOn_Options.script_path.."command_defs.lua")
--- dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
--- dofile(LockOn_Options.script_path.."utils.lua")
-
 
 local dev = GetSelf()
 
@@ -62,6 +53,7 @@ local prev_canopy_val = -1
 local canopy_warning = 0
 function update()
 	local current_canopy_position = get_aircraft_draw_argument_value(canopy_ext_anim_arg)
+
     if current_canopy_position > 0.95 then
         CANOPY_COMMAND = 2 -- canopy was jettisoned
     end
@@ -73,6 +65,8 @@ function update()
         -- raise canopy in increment of 0.01 (50x per second)
 		current_canopy_position = current_canopy_position + 0.01
         set_aircraft_draw_argument_value(canopy_ext_anim_arg, current_canopy_position)
+    elseif current_canopy_position < 0 then current_canopy_position = 0
+    elseif current_canopy_position >= 0.89 and current_canopy_position < 0.95 then current_canopy_position = 0.9
 	end
     local cockpit_lever = get_cockpit_draw_argument_value(canopy_int_anim_arg)
     if prev_canopy_val ~= cockpit_lever then

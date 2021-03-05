@@ -236,9 +236,9 @@ default_triangle_indices = {0, 1, 2}
 
 
 -- Stroke text with glyphs described in a .svg file
-function addStrokeText(name, value, stringdef, align, pos, parent, controllers, formats)
+function addStrokeText(name, value, stringdef, align, pos, parent, controllers, formats, font)
 	local txt = CreateElement "ceStringSLine"
-	setSymbolCommonProperties(txt, name, pos, parent, controllers, stroke_font)
+	setSymbolCommonProperties(txt, name, pos, parent, controllers, font or stroke_font)
 	setSymbolAlignment(txt, align)
 
 	-- custom size is noted in documents as in percents from the original one

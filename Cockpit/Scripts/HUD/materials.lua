@@ -48,7 +48,7 @@ textures["hud_mesh_def"]         = {nil, materials["HUD_IND_DEF"]}
 textures["hud_mesh_base1"]       = {nil, materials["HUD_IND_BASE1"]}
 textures["hud_mesh_base2"]       = {nil, materials["HUD_IND_BASE2"]}
 
-textures["hud_line_dashed_def"]  = {IND_TEX_PATH .. "Indication_Line_Dashed.dds", materials["HUD_IND_DEF"]}
+textures["hud_line_dashed_def"]  = {IND_TEX_PATH .. "a29b_Indication_line_Dashed.dds", materials["HUD_IND_DEF"]}
 
 
 -- ------- FONTS ----------
@@ -59,11 +59,11 @@ textures["hud_line_dashed_def"]  = {IND_TEX_PATH .. "Indication_Line_Dashed.dds"
 -- --fonts["font_hints_kneeboard"]    = {fontdescription["font_general_loc"], 10, {100,0,100,255}}
 
 -- HUD
-fonts["hud_font_def"]   = {fontdescription["font_HUD"], 10, materials["HUD_IND_DEF"]}
-fonts["hud_font_g"]     = {fontdescription["font_HUD"], 10, materials["HUD_IND_GREEN"]}
-fonts["hud_font_b"]     = {fontdescription["font_HUD"], 10, materials["HUD_IND_BLUE"]}
-fonts["hud_font_w"]     = {fontdescription["font_HUD"], 10, materials["HUD_IND_WHITE"]}
-fonts["hud_font_r"]     = {fontdescription["font_HUD"], 10, materials["HUD_IND_RED"]}
+fonts["hud_font_def"]   = {fontdescription["a29b_font_hud"], 10, materials["HUD_IND_DEF"]}
+fonts["hud_font_g"]     = {fontdescription["a29b_font_hud"], 10, materials["HUD_IND_GREEN"]}
+fonts["hud_font_b"]     = {fontdescription["a29b_font_hud"], 10, materials["HUD_IND_BLUE"]}
+fonts["hud_font_w"]     = {fontdescription["a29b_font_hud"], 10, materials["HUD_IND_WHITE"]}
+fonts["hud_font_r"]     = {fontdescription["a29b_font_hud"], 10, materials["HUD_IND_RED"]}
 
 
 dbg_drawStrokesAsWire = false

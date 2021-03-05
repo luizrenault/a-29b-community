@@ -82,13 +82,13 @@ object = addStrokeText(nil, "TOFT 00:00:00", CMFD_STRINGDEFS_DEF_X1, "LeftCenter
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT_HOURS", "CMFD_NAV_FYT_MINS", "CMFD_NAV_FYT_SECS"}
 object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}, {"text_using_parameter", 2, 1}, {"text_using_parameter", 3, 2}}
 
-object = addStrokeText(nil, "N   41`52.20'", CMFD_STRINGDEFS_DEF_X1, "LeftCenter", {-0.41, 0.305}, CMFD_NAV_FYT_origin.name, nil, {"N   %02.0f`", "%05.2f'"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT_LAT_DEG", "CMFD_NAV_FYT_LAT_MIN"}
-object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}, {"text_using_parameter", 2, 1}}
+object = addStrokeText(nil, "N   41`52.20'", CMFD_STRINGDEFS_DEF_X1, "LeftCenter", {-0.41, 0.305}, CMFD_NAV_FYT_origin.name, nil, {"%s", "   %02.0f`", "%05.2f'"})
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT_LAT_HEMIS", "CMFD_NAV_FYT_LAT_DEG", "CMFD_NAV_FYT_LAT_MIN"}
+object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}, {"text_using_parameter", 2, 1}, {"text_using_parameter", 3, 2}}
 
-object = addStrokeText(nil, "N  047`39.51'", CMFD_STRINGDEFS_DEF_X1, "LeftCenter", {-0.41, 0.206}, CMFD_NAV_FYT_origin.name, nil, {"E  %03.0f`", "%05.2f'"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT_LON_DEG", "CMFD_NAV_FYT_LON_MIN"}
-object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}, {"text_using_parameter", 2, 1}}
+object = addStrokeText(nil, "N  047`39.51'", CMFD_STRINGDEFS_DEF_X1, "LeftCenter", {-0.41, 0.206}, CMFD_NAV_FYT_origin.name, nil, {"%s", "  %03.0f`", "%05.2f'"})
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT_LON_HEMIS", "CMFD_NAV_FYT_LON_DEG", "CMFD_NAV_FYT_LON_MIN"}
+object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}, {"text_using_parameter", 2, 1}, {"text_using_parameter", 3, 2}}
 
 object = addStrokeText(nil, "ELV    120 FT", CMFD_STRINGDEFS_DEF_X1, "LeftCenter", {-0.41, 0.02}, CMFD_NAV_FYT_origin.name, nil, {"ELV %5.0f FT"})
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT_ELV"}
@@ -115,15 +115,55 @@ object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1
 object = addOSSArrow(27, 1, CMFD_NAV_FYT_origin.name)
 object = addOSSArrow(26, 0, CMFD_NAV_FYT_origin.name)
 
+object = addOSSArrow(2, 0, nil)
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_PG_NEXT"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
+
+object = addOSSArrow(3, 1, nil)
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_PG_PREV"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
+
 
 local CMFD_NAV_ROUT_origin = addPlaceholder(nil, {0,0}, page_root.name)
 CMFD_NAV_ROUT_origin.element_params = {"CMFD_NAV_FORMAT"}
 CMFD_NAV_ROUT_origin.controllers = {{"parameter_compare_with_number", 0, CMFD_NAV_FORMAT_IDS.ROUT}}
 
-object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0, -0.1}, CMFD_NAV_ROUT_origin.name, nil, {"%s"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_ROUT_TEXT"}
-object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}}
+object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0, -0.1}, CMFD_NAV_ROUT_origin.name, nil, {"%s", "%s", "%s"})
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_ROUT_TEXT", "CMFD_NAV_ROUT_TEXT1", "CMFD_NAV_ROUT_TEXT2"}
+object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}, {"text_using_parameter", 2, 1}, {"text_using_parameter", 3, 2}}
 
+local CMFD_NAV_AC_origin = addPlaceholder(nil, {0,0}, page_root.name)
+CMFD_NAV_AC_origin.element_params = {"CMFD_NAV_FORMAT"}
+CMFD_NAV_AC_origin.controllers = {{"parameter_compare_with_number", 0, CMFD_NAV_FORMAT_IDS.AC}}
+
+object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0, -0.1}, CMFD_NAV_AC_origin.name, nil, {"%s", "%s", "%s"})
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_AC_TEXT", "CMFD_NAV_AC_TEXT1", "CMFD_NAV_AC_TEXT2"}
+object.controllers = {
+                        {"opacity_using_parameter", 0},
+                        {"text_using_parameter", 1, 0},
+                    }
+
+local CMFD_NAV_AFLD_origin = addPlaceholder(nil, {0,0}, page_root.name)
+CMFD_NAV_AFLD_origin.element_params = {"CMFD_NAV_FORMAT"}
+CMFD_NAV_AFLD_origin.controllers = {{"parameter_compare_with_number", 0, CMFD_NAV_FORMAT_IDS.AFLD}}
+
+object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0, -0.1}, CMFD_NAV_AFLD_origin.name, nil, {"%s"})
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_AFLD_TEXT"}
+object.controllers = {
+                        {"opacity_using_parameter", 0},
+                        {"text_using_parameter", 1, 0},
+                    }
+
+local CMFD_NAV_MARK_origin = addPlaceholder(nil, {0,0}, page_root.name)
+CMFD_NAV_MARK_origin.element_params = {"CMFD_NAV_FORMAT"}
+CMFD_NAV_MARK_origin.controllers = {{"parameter_compare_with_number", 0, CMFD_NAV_FORMAT_IDS.MARK}}
+
+object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0, -0.1}, CMFD_NAV_MARK_origin.name, nil, {"%s"})
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_MARK_TEXT"}
+object.controllers = {
+                        {"opacity_using_parameter", 0},
+                        {"text_using_parameter", 1, 0},
+                    }
 
 -- object = addStrokeText("SMS_GUNS_L", "100", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {-0.134, 0.85}, nil, nil,{"%03.0f"})
 -- object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_L"}

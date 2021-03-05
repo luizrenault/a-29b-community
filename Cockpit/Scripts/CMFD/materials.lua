@@ -83,7 +83,7 @@ textures["hud_tex_ind2_y"]       = {IND_TEX_PATH .. "Indication_HUD_2.dds", mate
 -- textures["hud_mesh_base1"]       = {nil, materials["HUD_IND_BASE1"]}
 -- textures["hud_mesh_base2"]       = {nil, materials["HUD_IND_BASE2"]}
 
--- textures["hud_line_dashed_def"]  = {IND_TEX_PATH .. "Indication_Line_Dashed.dds", materials["HUD_IND_DEF"]}
+-- textures["hud_line_dashed_def"]  = {IND_TEX_PATH .. "a29b_Indication_line_Dashed.dds", materials["HUD_IND_DEF"]}
 
 -- -- UFCP
 -- textures["ufcd_mesh_def"]        = {nil, materials["UFCP_IND_DEF"]}
@@ -137,10 +137,10 @@ textures["cmfd_tex_eicas"]        = {IND_TEX_PATH .. "a29b_cmfd.png", materials[
 -- textures["cmfd_tex_ind5_y"]      = {IND_TEX_PATH .. "Indication_CMFD_5.dds", materials["CMFD_IND_YELLOW"]}
 -- textures["cmfd_tex_ind5_r"]      = {IND_TEX_PATH .. "Indication_CMFD_5.dds", materials["CMFD_IND_RED"]}
 
--- textures["cmfd_line_dashed_def"] = {IND_TEX_PATH .. "Indication_Line_Dashed.dds", materials["CMFD_IND_DEF"]}
--- textures["cmfd_line_dashed_r"]   = {IND_TEX_PATH .. "Indication_Line_Dashed.dds", materials["CMFD_IND_RED"]}
--- textures["cmfd_line_dashed_w"]   = {IND_TEX_PATH .. "Indication_Line_Dashed.dds", materials["CMFD_IND_WHITE"]}
--- textures["cmfd_line_dashed_y"]   = {IND_TEX_PATH .. "Indication_Line_Dashed.dds", materials["CMFD_IND_YELLOW"]}
+-- textures["cmfd_line_dashed_def"] = {IND_TEX_PATH .. "a29b_Indication_line_Dashed.dds", materials["CMFD_IND_DEF"]}
+-- textures["cmfd_line_dashed_r"]   = {IND_TEX_PATH .. "a29b_Indication_line_Dashed.dds", materials["CMFD_IND_RED"]}
+-- textures["cmfd_line_dashed_w"]   = {IND_TEX_PATH .. "a29b_Indication_line_Dashed.dds", materials["CMFD_IND_WHITE"]}
+-- textures["cmfd_line_dashed_y"]   = {IND_TEX_PATH .. "a29b_Indication_line_Dashed.dds", materials["CMFD_IND_YELLOW"]}
 
 
 textures["cmfd_mesh_def"]        = {nil, materials["CMFD_IND_DEF"]}
@@ -168,11 +168,11 @@ textures["cmfd_mesh_whitebase"]  = {nil, materials["CMFD_IND_W_BASE"]}
 -- --fonts["font_hints_kneeboard"]    = {fontdescription["font_general_loc"], 10, {100,0,100,255}}
 
 -- -- HUD
--- fonts["hud_font_def"]   = {fontdescription["font_HUD"], 10, materials["HUD_IND_DEF"]}
--- fonts["hud_font_g"]     = {fontdescription["font_HUD"], 10, materials["HUD_IND_GREEN"]}
--- fonts["hud_font_b"]     = {fontdescription["font_HUD"], 10, materials["HUD_IND_BLUE"]}
--- fonts["hud_font_w"]     = {fontdescription["font_HUD"], 10, materials["HUD_IND_WHITE"]}
--- fonts["hud_font_r"]     = {fontdescription["font_HUD"], 10, materials["HUD_IND_RED"]}
+-- fonts["hud_font_def"]   = {fontdescription["a29b_font_hud"], 10, materials["HUD_IND_DEF"]}
+-- fonts["hud_font_g"]     = {fontdescription["a29b_font_hud"], 10, materials["HUD_IND_GREEN"]}
+-- fonts["hud_font_b"]     = {fontdescription["a29b_font_hud"], 10, materials["HUD_IND_BLUE"]}
+-- fonts["hud_font_w"]     = {fontdescription["a29b_font_hud"], 10, materials["HUD_IND_WHITE"]}
+-- fonts["hud_font_r"]     = {fontdescription["a29b_font_hud"], 10, materials["HUD_IND_RED"]}
 
 -- CMPDs
 fonts["cmfd_font_def"]  = {fontdescription["font_CMFD"], 10, materials["CMFD_IND_DEF"]}

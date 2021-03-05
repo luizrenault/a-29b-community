@@ -152,7 +152,7 @@ function update_adhsi()
     ADHSI_ADF_HDG:set(adhsi_adf_hdg)
     ADHSI_GPS_HDG:set(adhsi_gps_hdg)
 
-    ANS_MODE:set(adhsi_ans_mode)
+    AVIONICS_ANS_MODE:set(adhsi_ans_mode)
 
 end
 

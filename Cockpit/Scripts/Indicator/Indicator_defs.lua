@@ -1,7 +1,7 @@
 dofile(LockOn_Options.common_script_path .. "elements_defs.lua")
 dofile(LockOn_Options.script_path .. "materials.lua")
 
-stringdefs				= {}
+if stringdefs == nil then stringdefs				= {} end
 
 
 function setSymbolAlignment(symbol, align)
@@ -162,9 +162,9 @@ function addStrokeText(name, value, stringdef, align, pos, parent, controllers, 
 end
 
 
-function addText(name, value, stringdef, align, pos, parent, controllers, formats)
+function addText(name, value, stringdef, align, pos, parent, controllers, formats, font)
 	local txt = CreateElement "ceStringPoly"
-	setSymbolCommonProperties(txt, name, pos, parent, controllers, stroke_font)
+	setSymbolCommonProperties(txt, name, pos, parent, controllers, font or stroke_font)
 	setSymbolAlignment(txt, align)
 
 	-- custom size is noted in documents as in percents from the original one

@@ -28,16 +28,16 @@ local object
 
 -- MODE
 object = addStrokeText("ADHSI_MODE_EGI", "EGI", CMFD_STRINGDEFS_DEF_X1, "CenterCenter", {-0.87, 0.63}, nil, nil,nil, CMFD_FONT_MAGENTA)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.EGI}}
 object = addStrokeText("ADHSI_MODE_VOR", "VOR", CMFD_STRINGDEFS_DEF_X1, "CenterCenter", {-0.87, 0.63})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.VOR}}
 object = addStrokeText("ADHSI_MODE_GPS", "GPS", CMFD_STRINGDEFS_DEF_X1, "CenterCenter", {-0.87, 0.63}, nil, nil,nil, CMFD_FONT_B)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.GPS}}
 object = addStrokeText("ADHSI_MODE_ILS", "ILS", CMFD_STRINGDEFS_DEF_X1, "CenterCenter", {-0.87, 0.63}, nil, nil,nil, CMFD_FONT_W)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.ILS}}
 
 -- Digital Speed
@@ -358,7 +358,7 @@ object.controllers = {{"opacity_using_parameter", 0}}
 stroke_thickness  = 1.5 --0.25
 stroke_fuzziness  = 0.6
 local HSI_VOR_Origin = addPlaceholder("HSI_VOR_Origin", {0,0}, HSI_Origin_Rot.name)
-HSI_VOR_Origin.element_params = {"ADHSI_VOR_HDG", "ANS_MODE"}
+HSI_VOR_Origin.element_params = {"ADHSI_VOR_HDG", "AVIONICS_ANS_MODE"}
 HSI_VOR_Origin.controllers = {{"rotate_using_parameter", 0, -math.rad(1)}, {"parameter_in_range",0,-0.05, 360.05}, {"parameter_in_range", 1, AVIONICS_ANS_MODE_IDS.EGI - 0.05, AVIONICS_ANS_MODE_IDS.GPS + 0.05}}
 object = addStrokeBox("HSI_VOR_box", 0.02, 0.04, "CenterCenter", {0,-HSI_radius + 2* HSI_tick_lenght}, HSI_VOR_Origin.name)
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
@@ -370,7 +370,7 @@ object.controllers = {{"opacity_using_parameter", 0}}
 
 -- VOR No Signal
 local HSI_VOR_RED_Origin = addPlaceholder("HSI_VOR_RED_Origin", {0,0}, HSI_Origin.name)
-HSI_VOR_RED_Origin.element_params = {"ADHSI_VOR_HDG", "ANS_MODE"}
+HSI_VOR_RED_Origin.element_params = {"ADHSI_VOR_HDG", "AVIONICS_ANS_MODE"}
 HSI_VOR_RED_Origin.controllers = {{"parameter_compare_with_number",0, -1}, {"parameter_in_range", 1, AVIONICS_ANS_MODE_IDS.EGI - 0.05, AVIONICS_ANS_MODE_IDS.GPS + 0.05}}
 HSI_VOR_RED_Origin.init_rot = {-90}
 object = addStrokeBox("HSI_VOR_RED_box", 0.02, 0.04, "CenterCenter", {0,-HSI_radius + 2* HSI_tick_lenght}, HSI_VOR_RED_Origin.name, nil, "CMFD_IND_RED")
@@ -380,18 +380,18 @@ object.init_rot = {45}
 
 -- VOR DATA Indicator
 object = addStrokeText("HSI_VOR_DATA_text", "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {-0.6, -0.086}, nil, nil, {"VOR\n", "%03.0f`\n", "%2.1f\n", "%02.0f:", "%02.0f"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT",  "ADHSI_VOR_HDG", "ADHSI_VOR_DIST", "ADHSI_VOR_MIN", "ADHSI_VOR_SEC", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT",  "ADHSI_VOR_HDG", "ADHSI_VOR_DIST", "ADHSI_VOR_MIN", "ADHSI_VOR_SEC", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, -0.05, 360.05}, {"text_using_parameter", 1, 0}, {"text_using_parameter", 1, 1}, {"text_using_parameter", 2, 2}, {"text_using_parameter", 3, 3}, {"text_using_parameter", 4, 4}, {"parameter_in_range", 5, AVIONICS_ANS_MODE_IDS.EGI - 0.05, AVIONICS_ANS_MODE_IDS.VOR + 0.05}}
 
 object = addStrokeText("HSI_VOR_NODATA_text", "VOR\nXXX`\nX.X\nXX:XX", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {-0.6, -0.086})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT",  "ADHSI_VOR_HDG", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT",  "ADHSI_VOR_HDG", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, -1},  {"parameter_in_range", 2, AVIONICS_ANS_MODE_IDS.EGI - 0.05, AVIONICS_ANS_MODE_IDS.VOR + 0.05}}
 
 -- GPS Arrow
 stroke_thickness  = 1.5 --0.25
 stroke_fuzziness  = 0.6
 local HSI_GPS_Origin = addPlaceholder("HSI_GPS_Origin", {0,0}, HSI_Origin_Rot.name)
-HSI_GPS_Origin.element_params = {"ADHSI_GPS_HDG", "ANS_MODE"}
+HSI_GPS_Origin.element_params = {"ADHSI_GPS_HDG", "AVIONICS_ANS_MODE"}
 HSI_GPS_Origin.controllers = {{"rotate_using_parameter", 0, -math.rad(1)}, {"parameter_in_range",0 , -0.05, 360.05}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.GPS}}
 object = addStrokeBox("HSI_GPS_box", 0.02, 0.04, "CenterCenter", {0,-HSI_radius + 2* HSI_tick_lenght}, HSI_GPS_Origin.name, nil, "CMFD_IND_BLUE")
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
@@ -403,10 +403,10 @@ object.controllers = {{"opacity_using_parameter", 0}}
 
 -- GPS DATA Indicator
 object = addStrokeText("HSI_GPS_DATA_text", "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {-0.6, -0.086}, nil, nil, {"GPS\n", "%03.0f`\n", "%2.1f\n", "%02.0f:", "%02.0f"}, CMFD_FONT_B)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT",  "ADHSI_GPS_HDG", "ADHSI_GPS_DIST", "ADHSI_GPS_MIN", "ADHSI_GPS_SEC", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT",  "ADHSI_GPS_HDG", "ADHSI_GPS_DIST", "ADHSI_GPS_MIN", "ADHSI_GPS_SEC", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, -0.05, 360.05}, {"text_using_parameter", 1, 0}, {"text_using_parameter", 1, 1}, {"text_using_parameter", 2, 2}, {"text_using_parameter", 3, 3}, {"text_using_parameter", 4, 4}, {"parameter_compare_with_number", 5, AVIONICS_ANS_MODE_IDS.GPS}}
 object = addStrokeText("HSI_GPS_NOATA_text", "GPS\nXXX`\nX.XX\nXX:XX", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {-0.6, -0.086}, nil, nil, nil, CMFD_FONT_B)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT",  "ADHSI_GPS_HDG", "ADHSI_GPS_DIST", "ADHSI_GPS_MIN", "ADHSI_GPS_SEC", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT",  "ADHSI_GPS_HDG", "ADHSI_GPS_DIST", "ADHSI_GPS_MIN", "ADHSI_GPS_SEC", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, -1}, {"text_using_parameter", 1, 0}, {"text_using_parameter", 1, 1}, {"text_using_parameter", 2, 2}, {"text_using_parameter", 3, 3}, {"text_using_parameter", 4, 4}, {"parameter_compare_with_number", 5, AVIONICS_ANS_MODE_IDS.GPS}}
 
 
@@ -437,7 +437,7 @@ object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_COURSE_TO"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, -1}}
 -- CDI
 object = addFillBox("HSI_CDI_box", 0.02, 0.6, "CenterCenter", {0,0}, HSI_COURSE_Origin.name, nil, "CMFD_IND_WHITE")
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_CDI_SHOW", "ADHSI_CDI", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_CDI_SHOW", "ADHSI_CDI", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}, {"move_left_right_using_parameter", 2, 1},
                         {"change_color_when_parameter_equal_to_number", 3, AVIONICS_ANS_MODE_IDS.EGI, 1,0,1},
                         {"change_color_when_parameter_equal_to_number", 3, AVIONICS_ANS_MODE_IDS.VOR, 0,1,0},
@@ -457,7 +457,7 @@ object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_n
 stroke_thickness  = 1.5 --0.25
 stroke_fuzziness  = 0.6
 local HSI_FYT_Origin = addPlaceholder(nil, {0,0}, HSI_Origin_Rot.name)
-HSI_FYT_Origin.element_params = {"CMFD_NAV_FYT_VALID", "CMFD_NAV_FYT_OAP_BRG", "ANS_MODE", "ADHSI_DTK"}
+HSI_FYT_Origin.element_params = {"CMFD_NAV_FYT_VALID", "CMFD_NAV_FYT_OAP_BRG", "AVIONICS_ANS_MODE", "ADHSI_DTK"}
 HSI_FYT_Origin.controllers = {{"rotate_using_parameter", 1, -math.rad(1)}, {"parameter_compare_with_number", 0, 1}, {"parameter_compare_with_number", 3, 0}, {"parameter_in_range", 2, AVIONICS_ANS_MODE_IDS.EGI-0.05, AVIONICS_ANS_MODE_IDS.GPS + 0.05}}
 object = addStrokeBox(nil, 0.03, 0.05, "CenterCenter", {0,-HSI_radius - 2.3* HSI_tick_lenght}, HSI_FYT_Origin.name, nil, "CMFD_IND_MAGENTA")
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
@@ -495,7 +495,7 @@ object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_n
 stroke_thickness  = 1.5 --0.25
 stroke_fuzziness  = 0.6
 local HSI_DTK_Origin = addPlaceholder("HSI_FYT_DTK_Origin", {0,0}, HSI_Origin_Rot.name)
-HSI_DTK_Origin.element_params = {"ADHSI_FYT_DTK_HDG", "ANS_MODE"}
+HSI_DTK_Origin.element_params = {"ADHSI_FYT_DTK_HDG", "AVIONICS_ANS_MODE"}
 HSI_DTK_Origin.controllers = {{"rotate_using_parameter", 0, -math.rad(1)}, {"parameter_in_range", 0, -0.05, 360,05}, {"parameter_in_range", 1, AVIONICS_ANS_MODE_IDS.EGI-0.05, AVIONICS_ANS_MODE_IDS.GPS + 0.05}}
 object = addStrokeBox("HSI_FYT_DTK_box", 0.03, 0.05, "CenterCenter", {0,-HSI_radius - 2.3* HSI_tick_lenght}, HSI_DTK_Origin.name, nil, "CMFD_IND_MAGENTA")
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
@@ -522,19 +522,19 @@ local HSI_ADF_Origin = addPlaceholder("HSI_ADF_Origin", {0,0}, HSI_Origin_Rot.na
 HSI_ADF_Origin.element_params = {"ADHSI_ADF_HDG"}
 HSI_ADF_Origin.controllers = {{"rotate_using_parameter", 0, -math.rad(1)}, {"parameter_in_range",0 , -0.05, 360.05}}
 object = addStrokeBox("HSI_ADF_box", 0.025, 0.045, "CenterCenter", {0,-HSI_radius - 2.3* HSI_tick_lenght}, HSI_ADF_Origin.name, nil, "CMFD_IND_YELLOW")
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.VOR}}
 object = addStrokeText("HSI_ADF_box_1", "A", CMFD_STRINGDEFS_DEF_X1 , "CenterCenter", {0,HSI_radius + 2.3* HSI_tick_lenght}, HSI_ADF_Origin.name, nil, nil, CMFD_FONT_Y)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.VOR}}
 object = addStrokeBox("HSI_ADF_box1", 0.025, 0.045, "CenterCenter", {0,-HSI_radius - 2.3* HSI_tick_lenght}, HSI_ADF_Origin.name, nil, "CMFD_IND_YELLOW")
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.ILS}}
 object = addStrokeText("HSI_ADF_box1_1", "A", CMFD_STRINGDEFS_DEF_X1 , "CenterCenter", {0,HSI_radius + 2.3* HSI_tick_lenght}, HSI_ADF_Origin.name, nil, nil, CMFD_FONT_Y)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.ILS}}
 -- object = addStrokeText("HSI_ADF_text", "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {-0.25, -0.086}, nil, nil, {"ADF\n%03.0f`\n\n"}, CMFD_FONT_Y)
--- object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_ADF_HDG", "ANS_MODE"}
+-- object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_ADF_HDG", "AVIONICS_ANS_MODE"}
 -- object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}, {"parameter_in_range",1 , -0.05, 360.05}, {"change_color_when_parameter_equal_to_number", 2, AVIONICS_ANS_MODE_IDS.GPS, 0, 0, 0, 0}, {"parameter_in_range", 2, AVIONICS_ANS_MODE_IDS.VOR-0.05, AVIONICS_ANS_MODE_IDS.ILS+0.05}}
 
 -- ADF No Signal
@@ -543,39 +543,39 @@ HSI_ADF_RED_Origin.element_params = {"ADHSI_ADF_HDG"}
 HSI_ADF_RED_Origin.controllers = {{"parameter_compare_with_number",0, -1}}
 HSI_ADF_RED_Origin.init_rot = {-90}
 object = addStrokeBox("HSI_ADF_RED_box", 0.025, 0.045, "CenterCenter", {0,-HSI_radius - 2.3* HSI_tick_lenght}, HSI_ADF_RED_Origin.name, nil, "CMFD_IND_RED")
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.VOR}}
 object = addStrokeText("HSI_ADF_RED_box_1", "A", CMFD_STRINGDEFS_DEF_X1 , "CenterCenter", {0,HSI_radius + 2.3* HSI_tick_lenght}, HSI_ADF_RED_Origin.name, nil, nil, CMFD_FONT_R)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.VOR}}
 object = addStrokeBox("HSI_ADF_RED_box1", 0.025, 0.045, "CenterCenter", {0,-HSI_radius - 2.3* HSI_tick_lenght}, HSI_ADF_RED_Origin.name, nil, "CMFD_IND_RED")
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.ILS}}
 object = addStrokeText("HSI_ADF_RED_box1_1", "A", CMFD_STRINGDEFS_DEF_X1 , "CenterCenter", {0,HSI_radius + 2.3* HSI_tick_lenght}, HSI_ADF_RED_Origin.name, nil, nil, CMFD_FONT_R)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.ILS}}
 
 
 -- MODE
 object = addStrokeText("ADHSI_MODE_EGI_HSI", "EGI", CMFD_STRINGDEFS_DEF_X07, "LeftCenter", {-0.965, -0.155}, nil, nil,{"EGI\n%02.0f"}, CMFD_FONT_MAGENTA)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE", "ADHSI_FYT_DTK_NUMBER"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE", "ADHSI_FYT_DTK_NUMBER"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.EGI}, {"text_using_parameter", 2,0}}
 object = addStrokeText("ADHSI_MODE_VOR_HSI", "VOR", CMFD_STRINGDEFS_DEF_X07, "LeftCenter", {-0.965, -0.155}, nil, nil, {"VOR\n%06.2f"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE", "ADHSI_VOR_FREQ"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE", "ADHSI_VOR_FREQ"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.VOR}, {"text_using_parameter", 2,0}}
 object = addStrokeText("ADHSI_MODE_GPS_HSI", "GPS", CMFD_STRINGDEFS_DEF_X07, "LeftCenter", {-0.965, -0.155}, nil, nil,{"GPS\n%s"}, CMFD_FONT_B)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE", "ADHSI_GPS_NAME"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE", "ADHSI_GPS_NAME"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.GPS}, {"text_using_parameter", 2,0}}
 object = addStrokeText("ADHSI_MODE_ILS_HSI", "ILS", CMFD_STRINGDEFS_DEF_X07, "LeftCenter", {-0.965, -0.155}, nil, nil,{"ILS\n%06.2f"}, CMFD_FONT_W)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ANS_MODE", "ADHSI_ILS_FREQ"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_ANS_MODE", "ADHSI_ILS_FREQ"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_ANS_MODE_IDS.ILS}, {"text_using_parameter", 2,0}}
 
 -- DME DATA Indicator
 object = addStrokeText("HSI_DME_DATA_text", "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {-0.6, -0.086}, nil, nil, {"DME\n%2.1f\n", "%02.0f:", "%02.0f\n"}, CMFD_FONT_W)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT",  "ADHSI_VOR_HDG", "ADHSI_VOR_DIST", "ADHSI_VOR_MIN", "ADHSI_VOR_SEC", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT",  "ADHSI_VOR_HDG", "ADHSI_VOR_DIST", "ADHSI_VOR_MIN", "ADHSI_VOR_SEC", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, -0.05, 360.05}, {"parameter_compare_with_number", 5, AVIONICS_ANS_MODE_IDS.ILS}, {"text_using_parameter", 2, 0}, {"text_using_parameter", 3, 1}, {"text_using_parameter", 4, 2}}
 object = addStrokeText("HSI_DME_NODATA_text", "DME\nX.X\nXX:XX\n", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {-0.6, -0.086}, nil, nil, nil, CMFD_FONT_W)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT",  "ADHSI_VOR_HDG", "ANS_MODE"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT",  "ADHSI_VOR_HDG", "AVIONICS_ANS_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, -1},  {"parameter_compare_with_number", 2, AVIONICS_ANS_MODE_IDS.ILS}}
 
 

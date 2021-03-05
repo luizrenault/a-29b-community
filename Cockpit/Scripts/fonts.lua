@@ -11,7 +11,7 @@ CMFD_X_PIXEL =  88
 CMFD_Y_PIXEL =  144
 
 fontdescription["font_CMFD"] = {
-    texture     = LockOn_Options.script_path .. "CMFD/Resources/font_CMFD.dds",
+    texture     = LockOn_Options.script_path .. "CMFD/Resources/a29b_font_CMFD.dds",
     size        = {10, 10},
     resolution  = {1440, 1440},
     default     = {CMFD_X_PIXEL, CMFD_Y_PIXEL},
@@ -96,8 +96,8 @@ fontdescription["font_CMFD"] = {
 
 HUD_xsize = 44 * 2
 HUD_ysize = 72.0 * 2 --73.143 * 2
-fontdescription["font_HUD"] = {
-	texture    = LockOn_Options.script_path.."Resources/Fonts/Herc_font_HUD.tga",
+fontdescription["a29b_font_hud"] = {
+	texture    = LockOn_Options.script_path.."Resources/Fonts/a29b_font_HUD.tga",
 	size      = {7, 7},
 	resolution = {1024, 1024},
 	default    = {HUD_xsize, HUD_ysize},
@@ -156,7 +156,7 @@ fontdescription["font_HUD"] = {
 local xsizep=51.2
 local ysizep=51.2
 fontdescription["font_Arial"] = {
-	texture    = LockOn_Options.script_path.."Resources/Fonts/Herc_font_arial.dds",
+	texture    = LockOn_Options.script_path.."Resources/Fonts/a29b_font_arial.dds",
 	size      = {10, 10},
 	resolution = {512, 512},
 	default    = {xsizep, ysizep},
@@ -273,7 +273,7 @@ fontdescription["font_Arial"] = {
 
 fontdescription["font_stroke_HUD"] = {
 	class     = "ceSLineFont",
-	symb_storage = "stroke_font",
+	symb_storage = "a29b_stroke_font",
 	thickness  = 0.25,
 	fuzziness  = 0.6,
 	draw_as_wire = dbg_drawStrokesAsWire,

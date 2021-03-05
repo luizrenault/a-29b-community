@@ -8,6 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Version 0.1.4b - 05 March 2021
+
+### Added
+- UFCP Main format.
+- UFCP FYT/WPT format.
+- Now is possible to insert and edit waypoints and use them for navigation.
+- CMFD NAV MARK, A/C and AFLD formats, which completes CMFD NAV format.
+
+### Fixes
+- EDA livery name.
+- Texture names to avoid integrity check fail.
+
 ## Version 0.1.3b - 01 March 2021
 
 ### Added
