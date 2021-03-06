@@ -58,6 +58,8 @@ local WPN_AG_QTY = get_param_handle("WPN_AG_QTY")
 local WPN_AG_NAME = get_param_handle("WPN_AG_NAME")
 local WS_TARGET_RANGE = get_param_handle("WS_TARGET_RANGE")
 
+local CMFD_NAV_FYT_OAP_ELV = get_param_handle("CMFD_NAV_FYT_OAP_ELV")
+
 local wpn_aa_sel = 0
 local wpn_aa_sight = WPN_AA_SIGHT_IDS.LCOS
 local wpn_aa_qty = 0
@@ -271,6 +273,9 @@ local function  update_ccip()
         else
         end
         Ralt = Ralt_last + Balt - Balt_last
+        if master_mode == AVIONICS_MASTER_MODE_ID.CCIP then
+            Ralt = CMFD_NAV_FYT_OAP_ELV:get() / 3.28084
+        end
         h0 = Ralt * math.cos(math.abs(sensor_data.getPitch()))
         Vx0, Vy0, Vz0 = sensor_data.getSelfVelocity()
 

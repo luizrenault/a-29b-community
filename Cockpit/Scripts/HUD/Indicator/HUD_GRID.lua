@@ -739,10 +739,9 @@ object.element_params = {"HUD_RANGE", "HUD_BRIGHT"}
 object.controllers = {{"text_using_parameter", 0, 0}, {"parameter_in_range",0,-0.05, 9999}, {"opacity_using_parameter", 1}}
 
 -- Time indicator
-object = addStrokeText("HUD_Time", "00:00", STROKE_FNT_DFLT_120, "CenterCenter", {74, -88}, nil, nil, {"%02.0f:","%02.0f"})
-object.element_params = {"HUD_TIME_MIN", "HUD_TIME_SEC", "HUD_BRIGHT"}
-object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",1,-0.05, 60}, {"opacity_using_parameter", 2}}
-
+object = addStrokeText("HUD_Time", "00:00", STROKE_FNT_DFLT_120, "CenterCenter", {74, -88}, nil, nil, {"%s"})
+object.element_params = {"HUD_TIME", "HUD_BRIGHT"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"opacity_using_parameter", 2}}
 
 -- FTY distance indicator
 object = addStrokeText("HUD_FTI_Dist", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"%02.1f>","%02.0f"})

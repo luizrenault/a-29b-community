@@ -5,6 +5,7 @@ dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
 dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
 dofile(LockOn_Options.script_path.."Systems/weapon_system_api.lua")
+dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
 
 startup_print("hud: load")
 
@@ -62,8 +63,7 @@ local HUD_RDY = get_param_handle("HUD_RDY")
 local HUD_DOI = get_param_handle("HUD_DOI")
 local HUD_RADAR_ALT = get_param_handle("HUD_RADAR_ALT")
 local HUD_RANGE = get_param_handle("HUD_RANGE")
-local HUD_TIME_MIN = get_param_handle("HUD_TIME_MIN")
-local HUD_TIME_SEC = get_param_handle("HUD_TIME_SEC")
+local HUD_TIME = get_param_handle("HUD_TIME")
 local HUD_FTI_DIST = get_param_handle("HUD_FTI_DIST")
 local HUD_FTI_NUM = get_param_handle("HUD_FTI_NUM")
 local HUD_VOR_DIST = get_param_handle("HUD_VOR_DIST")
@@ -110,6 +110,9 @@ local WS_TARGET_RANGE = get_param_handle("WS_TARGET_RANGE")
 local CMFD_NAV_FYT_OAP_BRG = get_param_handle("CMFD_NAV_FYT_OAP_BRG")
 local CMFD_NAV_FYT_OAP_AZIMUTH = get_param_handle("CMFD_NAV_FYT_OAP_AZIMUTH")
 local CMFD_NAV_FYT_OAP_ELEVATION = get_param_handle("CMFD_NAV_FYT_OAP_ELEVATION")
+local CMFD_NAV_FYT_OAP_STT = get_param_handle("CMFD_NAV_FYT_OAP_STT")
+local CMFD_NAV_FYT_OAP_TTD = get_param_handle("CMFD_NAV_FYT_OAP_TTD")
+local CMFD_NAV_FYT_OAP_DT = get_param_handle("CMFD_NAV_FYT_OAP_DT")
 
 function limit_xy(x, y, limit_x, limit_y, limit_x_down, limit_y_down) 
     limit_x_down = limit_x_down or -limit_x
@@ -410,9 +413,16 @@ function update()
     local angleh = math.atan2(iasz, iasx) - math.atan2(speedz, speedx)
     angleh = math.rad(sensor_data.getAngleOfSlide())-angleh
 
-    if HUD_DRIFT_CO:get() == 0 then 
-    else 
+
+    if get_avionics_master_mode_ag() then
+        HUD_DRIFT_CO:set(1)
+    else
+        HUD_DRIFT_CO:set(0)
+    end
+
+    if HUD_DRIFT_CO:get() == 1 then 
         angleh = 0
+    else 
     end
 
     local fpm_cross = 0        
@@ -429,7 +439,9 @@ function update()
     end
 
     local ias_des = -1
-
+    local nav_time = UFCP_NAV_TIME:get()
+    if nav_time == UFCP_NAV_TIME_IDS.DT or nav_time == UFCP_NAV_TIME_IDS.ETA then ias_des = CMFD_NAV_FYT_OAP_STT:get() end
+    if ias_des > 990 then ias_des = 990 end
 
     if master_mode == AVIONICS_MASTER_MODE_ID.LANDING then ias_des = -1 end
 
@@ -460,10 +472,21 @@ function update()
     if CMFDDoi:get() == 0 then hud_doi = 1 else hud_doi = 0 end
 
     local radar_alt = get_avionics_ralt()
-    
-    local time_min = 5
-    local time_sec = -1
+    local time_text = ""
+    local ttd = CMFD_NAV_FYT_OAP_TTD:get()
+    local dt = CMFD_NAV_FYT_OAP_DT:get()
 
+    if nav_time == UFCP_NAV_TIME_IDS.DT then
+        if dt >= 0 then time_text = "A" else time_text = "D" end
+        dt = math.abs(dt)
+        time_text = time_text .. string.format("%02.0f:%02.0f ", math.floor(dt / 60), dt % 60 )
+    elseif nav_time == UFCP_NAV_TIME_IDS.TTD then
+        time_text = string.format("%02.0f:%02.0f", math.floor(ttd / 60), ttd % 60 )
+    elseif nav_time == UFCP_NAV_TIME_IDS.ETA then
+        local tot = get_absolute_model_time() + ttd
+        time_text = string.format("%02.0f:%02.0f:%02.0f", math.floor(tot / 3600), math.floor((tot % 3600) / 60), math.floor(tot % 60) )
+    end
+    
     local fti_dist = -1
     local fti_num = 0
     fti_dist = round_to(fti_dist, 0.1)
@@ -502,9 +525,8 @@ function update()
 
     HUD_RADAR_ALT:set(radar_alt) 
     
-    HUD_TIME_MIN:set(time_min) 
-    HUD_TIME_SEC:set(time_sec) 
-
+    HUD_TIME:set(time_text) 
+    
     HUD_FTI_DIST:set(fti_dist) 
     HUD_FTI_NUM:set(fti_num) 
 

@@ -1,4 +1,5 @@
 dofile(LockOn_Options.script_path.."CMFD/CMFD_NAV_ID_defs.lua")
+dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
 
 
 local CMFD_NAV_FYT_VALID = get_param_handle("CMFD_NAV_FYT_VALID")
@@ -22,6 +23,9 @@ local CMFD_NAV_FYT_OAP_MINS = get_param_handle("CMFD_NAV_FYT_OAP_MINS")
 local CMFD_NAV_FYT_OAP_SECS = get_param_handle("CMFD_NAV_FYT_OAP_SECS")
 local CMFD_NAV_FYT_OAP_AZIMUTH = get_param_handle("CMFD_NAV_FYT_OAP_AZIMUTH")
 local CMFD_NAV_FYT_OAP_ELEVATION = get_param_handle("CMFD_NAV_FYT_OAP_ELEVATION")
+local CMFD_NAV_FYT_OAP_STT = get_param_handle("CMFD_NAV_FYT_OAP_STT")
+local CMFD_NAV_FYT_OAP_TTD = get_param_handle("CMFD_NAV_FYT_OAP_TTD")
+local CMFD_NAV_FYT_OAP_DT = get_param_handle("CMFD_NAV_FYT_OAP_DT")
 local CMFD_NAV_ROUT_TEXT = get_param_handle("CMFD_NAV_ROUT_TEXT")
 local CMFD_NAV_ROUT_TEXT1 = get_param_handle("CMFD_NAV_ROUT_TEXT1")
 local CMFD_NAV_ROUT_TEXT2 = get_param_handle("CMFD_NAV_ROUT_TEXT2")
@@ -33,6 +37,7 @@ local CMFD_NAV_MARK_TEXT = get_param_handle("CMFD_NAV_MARK_TEXT")
 
 local nav_format = CMFD_NAV_FORMAT_IDS.AC
 local nav_fyt = 1
+local nav_fyt_last = -1
 local route
 local nav_fyt_list = {}
 
@@ -81,6 +86,33 @@ local function get_heading(x1, y1, x2, y2)
     hdg = hdg % 360
     return hdg
 end
+local function cmfd_nav_sel_next_wpt()
+    local nav_fyt_next = (nav_fyt + 1) % 100
+    local limit = 0
+    while nav_fyt_list[nav_fyt_next+1]==nil do
+        nav_fyt_next = (nav_fyt_next + 1) % 100
+        limit = limit + 1
+        if limit > 100 then 
+            nav_fyt_next = 0
+            break 
+        end
+    end
+    return nav_fyt_next
+end
+
+local function cmfd_nav_sel_prev_wpt()
+    local nav_fyt_prev = (nav_fyt - 1) % 100
+    local limit = 0
+    while nav_fyt_list[nav_fyt_prev+1]==nil do
+        nav_fyt_prev = (nav_fyt_prev - 1) % 100
+        limit = limit + 1
+        if limit > 100 then 
+            nav_fyt_prev = 0
+            break 
+        end
+    end
+    return nav_fyt_prev
+end
 
 local function update_wpt_list(wpt_list)
     if wpt_list == nil then return wpt_list end
@@ -123,6 +155,8 @@ local function get_valid_wpt_list()
 end
 
 local wpt_index = get_valid_wpt_list()
+
+local distance_last = -1
 
 function update_nav()
     count = count + 1
@@ -198,6 +232,12 @@ function update_nav()
         z = z - nav_fyt_list[nav_fyt+1].lon_m
         local distance = math.sqrt(x*x + z*z) * 0.000539957
         local elev = y * 3.28084
+        if distance < 2 and distance > distance_last and nav_fyt_last == nav_fyt and UFCP_NAV_MODE:get() == UFCP_NAV_MODE_IDS.AUTO then
+            local nav_fyt_next = cmfd_nav_sel_next_wpt()
+            if nav_fyt_next > nav_fyt  and nav_fyt_next < 79 then nav_fyt = nav_fyt_next end
+        end
+        distance_last = distance
+        nav_fyt_last = nav_fyt
 
         local hdg
         if x ~= 0 then 
@@ -232,6 +272,18 @@ function update_nav()
             time_mins = 99
             time_secs = 59
         end
+
+        local speed_to_target = 0
+        local tot =  nav_fyt_list[nav_fyt+1].time or 0
+        local diff_tot = tot - get_absolute_model_time()
+
+        if diff_tot > 0 then 
+            speed_to_target = distance / diff_tot * 3600
+            if speed_to_target > 999 then speed_to_target = 999 end
+        else 
+            speed_to_target = -1
+        end
+        local dt = diff_tot - time
         
         local plane_hdg = math.deg(-sensor_data.getHeading())
         if plane_hdg < 0 then plane_hdg = 360 + plane_hdg end
@@ -256,6 +308,9 @@ function update_nav()
 
         CMFD_NAV_FYT_OAP_MINS:set(time_mins)
         CMFD_NAV_FYT_OAP_SECS:set(time_secs)
+        CMFD_NAV_FYT_OAP_STT:set(speed_to_target)
+        CMFD_NAV_FYT_OAP_TTD:set(time)
+        CMFD_NAV_FYT_OAP_DT:set(dt)
 
         if nav_fyt_list[nav_fyt+1].lat >= 0 then CMFD_NAV_FYT_LAT_HEMIS:set("N") else CMFD_NAV_FYT_LAT_HEMIS:set("S") end
         CMFD_NAV_FYT_LAT_DEG:set(math.floor(math.abs(nav_fyt_list[nav_fyt+1].lat)))
@@ -410,31 +465,6 @@ end
 dev:listen_command(device_commands.NAV_INC_FYT)
 dev:listen_command(device_commands.NAV_DEC_FYT)
 
-local function cmfd_nav_sel_next_wpt()
-    nav_fyt = (nav_fyt + 1) % 100
-    local limit = 0
-    while nav_fyt_list[nav_fyt+1]==nil do
-        nav_fyt = (nav_fyt + 1) % 100
-        limit = limit + 1
-        if limit > 100 then 
-            nav_fyt = 0
-            break 
-        end
-    end
-end
-
-local function cmfd_nav_sel_prev_wpt()
-    nav_fyt = (nav_fyt - 1) % 100
-    local limit = 0
-    while nav_fyt_list[nav_fyt+1]==nil do
-        nav_fyt = (nav_fyt - 1) % 100
-        limit = limit + 1
-        if limit > 100 then 
-            nav_fyt = 0
-            break 
-        end
-    end
-end
 
 function SetCommandNav(command,value, CMFD)
     if value == 1 then
@@ -451,15 +481,15 @@ function SetCommandNav(command,value, CMFD)
         elseif command==device_commands.CMFD1OSS7 or command==device_commands.CMFD2OSS7 then
             nav_format = CMFD_NAV_FORMAT_IDS.AC
         elseif (command==device_commands.CMFD1OSS27 or command==device_commands.CMFD2OSS27) and nav_format == CMFD_NAV_FORMAT_IDS.FYT then
-            cmfd_nav_sel_next_wpt()
+            nav_fyt = cmfd_nav_sel_next_wpt()
         elseif (command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26) and nav_format == CMFD_NAV_FORMAT_IDS.FYT then
-            cmfd_nav_sel_prev_wpt()
+            nav_fyt = cmfd_nav_sel_prev_wpt()
         elseif command==device_commands.CMFD1OSS28 or command==device_commands.CMFD2OSS28 then 
             nav_format = CMFD_NAV_FORMAT_IDS.AFLD
         elseif command==device_commands.NAV_INC_FYT and value == 1 then 
-            cmfd_nav_sel_next_wpt()
+            nav_fyt = cmfd_nav_sel_next_wpt()
         elseif command==device_commands.NAV_DEC_FYT and value == 1 then
-            cmfd_nav_sel_prev_wpt()
+            nav_fyt = cmfd_nav_sel_prev_wpt()
         end
     end
 end

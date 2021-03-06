@@ -8,6 +8,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Version 0.1.5b - 06 March 2021
+
+### Added
+- UFCP MENU and NAV formats. Now can set NAV MODE and time to destination display mode.
+- HUD speed cue for ETA and DT time to destination modes and time to dastination for ETA, DT or TTD modes.
+- NAV MODE AUTO.
+
+### Fixes
+- A/G mode now selects DRIFT C/O.
+- A/G CCIP and CCIP R are working as expected.
+
 ## Version 0.1.4b - 05 March 2021
 
 ### Added

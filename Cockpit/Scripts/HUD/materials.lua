@@ -38,9 +38,9 @@ textures["hud_tex_ind1"]         = {IND_TEX_PATH .. "Indication_HUD_1.dds", mate
 textures["hud_tex_ind1_r"]       = {IND_TEX_PATH .. "Indication_HUD_1.dds", materials["HUD_IND_RED"]}
 textures["hud_tex_ind1_y"]       = {IND_TEX_PATH .. "Indication_HUD_1.dds", materials["HUD_IND_YELLOW"]}
 
-textures["hud_tex_ind2"]         = {IND_TEX_PATH .. "Indication_HUD_2.dds", materials["HUD_IND_DEF"]}
-textures["hud_tex_ind2_r"]       = {IND_TEX_PATH .. "Indication_HUD_2.dds", materials["HUD_IND_RED"]}
-textures["hud_tex_ind2_y"]       = {IND_TEX_PATH .. "Indication_HUD_2.dds", materials["HUD_IND_YELLOW"]}
+textures["hud_tex_ind2"]         = {nil, materials["HUD_IND_DEF"]}
+textures["hud_tex_ind2_r"]       = {nil, materials["HUD_IND_RED"]}
+textures["hud_tex_ind2_y"]       = {nil, materials["HUD_IND_YELLOW"]}
 
 textures["hud_tex_clip"]         = {IND_TEX_PATH .. "Indication_HUD_clip.dds", materials["HUD_IND_CLIP"]}
 

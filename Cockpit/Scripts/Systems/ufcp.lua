@@ -4,6 +4,7 @@ dofile(LockOn_Options.script_path.."devices.lua")
 dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
 dofile(LockOn_Options.script_path.."utils.lua")
 dofile(LockOn_Options.script_path.."dump.lua")
+dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
 
 startup_print("ufcs: load")
 
@@ -20,46 +21,11 @@ local UFCP_BRIGHT = get_param_handle("UFCP_BRIGHT")
 local UFCP_TEXT = get_param_handle("UFCP_TEXT")
 local CMFD_NAV_FYT = get_param_handle("CMFD_NAV_FYT")
 local EICAS_FUEL_INIT = get_param_handle("EICAS_FUEL_INIT")
-
-
-UFCP_FORMAT_IDS = {
-    MAIN = 0,
-    WPT = 1,
-}
-
-UFCP_MAIN_SEL_IDS = {
-    FYT = 0,
-}
-
-
-UFCP_NAV_MODE_IDS = {
-    MAN = 0,
-    AUTO = 1,
-}
-
-UFCP_NAV_SOLUTION_IDS = {
-    NAV_EGI = 0,
-    NAV_INS = 1,
-    NAV_GPS = 2,
-    NAV_BU  = 3,
-}
-UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_EGI] = "NAV-EGI"
-UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_INS] = "NAV-INS"
-UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_GPS] = "NAV-GPS"
-UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_BU] = "NAV-B/U"
-
-UFCP_TIME_TYPE_IDS = {
-    LC = 0,
-    RT = 1,
-    SW = 2.
-}
-UFCP_TIME_TYPE_IDS[UFCP_TIME_TYPE_IDS.LC] = "LC"
-UFCP_TIME_TYPE_IDS[UFCP_TIME_TYPE_IDS.RT] = "RT"
-UFCP_TIME_TYPE_IDS[UFCP_TIME_TYPE_IDS.SW] = "SW"
-
+local CMFD_NAV_FYT_OAP_STT = get_param_handle("CMFD_NAV_FYT_OAP_STT")
 
 
 local ufcp_nav_mode = UFCP_NAV_MODE_IDS.AUTO
+local ufcp_nav_time = UFCP_NAV_TIME_IDS.TTD
 local ufcp_nav_solution = UFCP_NAV_SOLUTION_IDS.NAV_EGI
 local ufcp_nav_egi_error = 35 -- meters
 
@@ -430,12 +396,67 @@ function update_wpt()
     UFCP_TEXT:set(text)
 end
 
+local ufcp_menu_sel = 0
+local function update_menu()
+    local text = ""
+    text = text .. "MENU\n"
+    text = text .. "1LMT 2DTK  3BAL C ACAL\n"
+    text = text .. "4NAV 5WS   6EGI E FUEL\n"
+    text = text .. "7TAC 8MODE 9OAP O MISC\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_nav()
+    local text = ""
+    if ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE then 
+        if ufcp_menu_sel > 2 then ufcp_menu_sel = 0 elseif ufcp_menu_sel < 0 then ufcp_menu_sel = 2 end
+
+        if ufcp_menu_sel == 0 then text = text .. "*" else text = text .. " " end
+        text = text .. "NAV MODE"
+        if ufcp_menu_sel == 0 then text = text .. "*" else text = text .. " " end
+        text = text .. "\n"
+        text = text .. "   "
+        if ufcp_menu_sel == 1 then text = text .. "*" else text = text .. " " end
+        if ufcp_nav_mode == UFCP_NAV_MODE_IDS.AUTO then text = text .. "AUTO" else text = text .. "MAN " end
+        if ufcp_menu_sel == 1 then text = text .. "*" else text = text .. " " end
+        text = text .. "  "
+        if ufcp_menu_sel == 2 then text = text .. "*" else text = text .. " " end
+        if ufcp_nav_time == UFCP_NAV_TIME_IDS.ETA then text = text .. "ETA"
+        elseif ufcp_nav_time == UFCP_NAV_TIME_IDS.TTD then text = text .. "TTG"
+        else text = text .. "DT " end
+        if ufcp_menu_sel == 2 then text = text .. "*" else text = text .. " " end
+        text = text .. "        \n"
+        if ufcp_nav_time == UFCP_NAV_TIME_IDS.ETA or ufcp_nav_time == UFCP_NAV_TIME_IDS.DT then
+            text = text .. "           FLY  "
+            local stt = CMFD_NAV_FYT_OAP_STT:get()
+            if stt > 0 then text = text .. string.format("%03.0f", stt) else text = text .. "XXX" end
+            text = text .. " GS"
+        end
+        text = text .. "\n\n"
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MISC then
+        if ufcp_menu_sel > 0 then ufcp_menu_sel = 0 elseif ufcp_menu_sel < 0 then ufcp_menu_sel = 0 end
+        if ufcp_menu_sel == 0 then text = text .. "*" else text = text .. " " end
+        text = text .. "NAV MISC"
+        if ufcp_menu_sel == 0 then text = text .. "*" else text = text .. " " end
+        text = text .. "\n"
+        text = text .. "MAGV     AUTO  X  XX.X\n"
+        text = text .. "GEO ZONE MAN          \n"
+        text = text .. "\n"
+        text = text .. "DELTA ZONE +  1.5 HR  "
+    end
+    UFCP_TEXT:set(text)
+end
+
 function update()
     local ufcp_bright = get_cockpit_draw_argument_value(480)
     UFCP_BRIGHT:set(ufcp_bright)
     if ufcp_sel_format == UFCP_FORMAT_IDS.MAIN then update_main()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT then update_wpt()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.MENU then update_menu()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE or ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MISC then update_nav()
     end
+    UFCP_NAV_MODE:set(ufcp_nav_mode)
+    UFCP_NAV_TIME:set(ufcp_nav_time)
 end
 
 local cmfd
@@ -460,6 +481,7 @@ end
 
 dev:listen_command(device_commands.UFCP_WARNRST)
 dev:listen_command(device_commands.UFCP_4)
+dev:listen_command(device_commands.UFCP_BARO_RALT)
 
 
 
@@ -510,12 +532,64 @@ function SetCommandMain(command,value)
     if command == device_commands.UFCP_1 and value == 1 then
         HUD_VAH:set((HUD_VAH:get() + 1) % 2)
     elseif command == device_commands.UFCP_4 and value == 1 then
-        if ufcp_sel_format == UFCP_FORMAT_IDS.MAIN then ufcp_sel_format = UFCP_FORMAT_IDS.WPT end
+        ufcp_wpt_sel = UFCP_WPT_SEL_IDS.FYT_WP
+        ufcp_sel_format = UFCP_FORMAT_IDS.WPT
+    elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.MENU
     elseif command == device_commands.UFCP_UP and value == 1 then
         if ufcp_main_sel == UFCP_MAIN_SEL_IDS.FYT and AVIONICS_ANS_MODE:get() ~= AVIONICS_ANS_MODE_IDS.GPS and cmfd ~= nil then cmfd:performClickableAction(device_commands.NAV_INC_FYT, 1, true) end
     elseif command == device_commands.UFCP_DOWN and value == 1 then
         if ufcp_main_sel == UFCP_MAIN_SEL_IDS.FYT and AVIONICS_ANS_MODE:get() ~= AVIONICS_ANS_MODE_IDS.GPS and cmfd ~= nil then cmfd:performClickableAction(device_commands.NAV_DEC_FYT, 1, true) end
     end
+end
+
+function SetCommandMenu(command,value)
+    if command == device_commands.UFCP_1 and value == 1 then
+    elseif command == device_commands.UFCP_4 and value == 1 then
+        ufcp_menu_sel = 0
+        ufcp_sel_format = UFCP_FORMAT_IDS.NAV_MODE
+    elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+    elseif command == device_commands.UFCP_UP and value == 1 then
+    elseif command == device_commands.UFCP_DOWN and value == 1 then
+    end
+end
+
+
+function SetCommandCommon(command, value)
+    if command == device_commands.UFCP_JOY_DOWN and value == 1 then
+        ufcp_menu_sel = ufcp_menu_sel + 1
+    elseif command == device_commands.UFCP_JOY_UP and value == 1 then
+        ufcp_menu_sel = ufcp_menu_sel - 1
+    end
+end
+function SetCommandNav(command,value)
+    if ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE then 
+        if command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 0 then
+            ufcp_menu_sel = 0
+            ufcp_sel_format = UFCP_FORMAT_IDS.NAV_MISC
+        elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 1 then
+            ufcp_nav_mode = (ufcp_nav_mode + 1) % (UFCP_NAV_MODE_IDS.END)
+        elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 2 then
+            ufcp_nav_time = (ufcp_nav_time + 1) % (UFCP_NAV_TIME_IDS.END)
+        end
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MISC then
+        if command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 0 then
+            ufcp_menu_sel = 0
+            ufcp_sel_format = UFCP_FORMAT_IDS.NAV_MODE
+        elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 1 then
+            ufcp_nav_mode = (ufcp_nav_mode + 1) % #UFCP_NAV_MODE_IDS
+        elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 2 then
+            ufcp_nav_time = (ufcp_nav_time + 1) % #UFCP_NAV_TIME_IDS
+        end
+    end
+
+    if command == device_commands.UFCP_1 and value == 1 then
+    elseif command == device_commands.UFCP_4 and value == 1 then
+    elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+    elseif command == device_commands.UFCP_UP and value == 1 then
+    elseif command == device_commands.UFCP_DOWN and value == 1 then
+    end
+    SetCommandCommon(command, value)
 end
 
 function SetCommand(command,value)
@@ -532,10 +606,29 @@ function SetCommand(command,value)
     elseif command == device_commands.UFCP_UFC then
     elseif command == device_commands.UFCP_JOY_LEFT and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+    elseif command == device_commands.UFCP_BARO_RALT and value == 1 then
+        local master_mode = get_avionics_master_mode()
+        local master_mode_last = master_mode
+        if master_mode == AVIONICS_MASTER_MODE_ID.GUN then master_mode = AVIONICS_MASTER_MODE_ID.GUN_R 
+        elseif master_mode == AVIONICS_MASTER_MODE_ID.GUN_R then master_mode = AVIONICS_MASTER_MODE_ID.GUN 
+        elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP then master_mode = AVIONICS_MASTER_MODE_ID.CCIP_R
+        elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R then master_mode = AVIONICS_MASTER_MODE_ID.CCIP
+        elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS then master_mode = AVIONICS_MASTER_MODE_ID.DTOS_R
+        elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then master_mode = AVIONICS_MASTER_MODE_ID.DTOS
+        elseif master_mode == AVIONICS_MASTER_MODE_ID.FIX then master_mode = AVIONICS_MASTER_MODE_ID.FIX_R
+        elseif master_mode == AVIONICS_MASTER_MODE_ID.FIX_R then master_mode = AVIONICS_MASTER_MODE_ID.FIX
+        elseif master_mode == AVIONICS_MASTER_MODE_ID.MARK then master_mode = AVIONICS_MASTER_MODE_ID.MARK_R
+        elseif master_mode == AVIONICS_MASTER_MODE_ID.MARK_R then master_mode = AVIONICS_MASTER_MODE_ID.MARK
+        end
+        if master_mode ~= master_mode_last then
+            set_avionics_master_mode(master_mode)
+        end
     end
 
     if ufcp_sel_format == UFCP_FORMAT_IDS.MAIN then SetCommandMain(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT then SetCommandWpt(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.MENU then SetCommandMenu(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE or ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MISC then SetCommandNav(command, value)
     end
 end
 
