@@ -1,12 +1,45 @@
+# DCS World A-29B Super Tucano
+
+This is a free, opensource, SFM, A-29B independent module for DCS World. By independent it is meant that it does not require any other modules to work.
+
+The development is in a very early stage, but the author has decided on releasing it in hopes it will help others on the implementation of modern aircraft systems using SFM.
+
+All aircraft systems are implemented in Lua and can be freely used in other non-paid DCS World Modules.
+
+
+# Download
+
+[Latest Release](https://github.com/luizrenault/a-29b-community/releases/latest)
+
+# Tutorial videos 
+
+(Pt-BR by [Lucas Orsi](https://www.youtube.com/user/lucaoorsi))
+- [Startup](https://www.youtube.com/watch?v=9XkSzbTcajE&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=1)
+- [Taxi, takeoff and navigation](https://www.youtube.com/watch?v=zL0vY9_0fGU&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=3)
+- [Visual landing](https://www.youtube.com/watch?v=0UId68gH33M&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=4)
+- [Cutoff](https://www.youtube.com/watch?v=RPF_G8d9tMI&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=2)
+
 
 # Changelog
  
-
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## Version 0.1.6b - 07 March 2021
+
+### Added
+- CMFD SMS A/G format partially implemented.
+- A/G lauch options SGL, PAIR and SALVO.
+- HUD A/G Gun piper.
+
+### Fixes
+- TTD is now limited to 99:59.
+- GEN, MDP 1, MDP 2, AVIONICS MASTER, SMS, BKP, PMU and IGN switches initial positions on cold start.
+- Roll rate increased.
+- UFCP Up/Down connector size.
 
 ## Version 0.1.5b - 06 March 2021
 

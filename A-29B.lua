@@ -262,6 +262,7 @@ A_29B =  {
 				{
 					{ CLSID = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}" }, -- AIM-9P
 								
+					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
 					{ CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
 					{ CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 					{ CLSID = "{5335D97A-35A5-4643-9D9B-026C75961E52}" }, -- CBU-97
@@ -344,6 +345,7 @@ A_29B =  {
 				{
 					{ CLSID = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}" }, -- AIM-9P
 	
+					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
 					{ CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
 					{ CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 					{ CLSID = "{5335D97A-35A5-4643-9D9B-026C75961E52}" }, -- CBU-97
@@ -395,8 +397,8 @@ A_29B =  {
 		{
 			Cy0	=	0.1, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
 			Mzalfa	=	4.355, -- Horizontal tail pitch coefficient
-			Mzalfadt	=	0.8,  -- Wing pitch coefficient
-			kjx = 2.25, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
+			Mzalfadt	=	1,  -- Wing pitch coefficient
+			kjx = 2.95, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
 			kjz = 0.00125,  -- Unknown pitch constant. All planes use 0.00125 -- -- Inertia parametre Z - Dimension (clean) airframe drag coefficient at Z (Front) Simply the wing area in square meters (as that is a major factor in drag calculations)
 			Czbe = -0.016, -- Directional stability coefficient  -- coefficient, along Z axis (perpendicular), affects yaw, negative value means force orientation in FC coordinate system
 			cx_gear = 0.0277, -- Additional coefficient of drag for gear extended
@@ -445,14 +447,14 @@ A_29B =  {
 			--      M	    Cx0		 Cya		    B		 B4	     Omxmax	    Aldop	    Cymax
 					{-0.1,	0.0187,	0.0746*2,		0.052,	0.012,	0.79,		22.0,		1.45*2,	},
 					{0.0,	0.0187,	0.0746*2,		0.052,	0.012,	0.79,		22.0,		1.45*2,	},
-					{0.2,	0.0187,	0.0746*2,		0.052,	0.012,	0.796144,	22.0,		1.45*2,   },
-					{0.3,	0.0187,	0.0722*2,		0.052,	0.015,	1.24,		19.0,		1.2*2,    },
-					{0.5,	0.0187,	0.0798*2,		0.045,	0.025,	1.323,		17.0,		1.08*2,   },
-					{0.59,	0.0187,	0.084*2,		0.047,	0.026,	1.129077,	17.0,		1.07*2,   },
-					{0.67,	0.0187,	0.0907*2,		0.047,	0.021,	0.943,		14.5,		0.98*2,   },
-					{0.74,	0.0227,	0.0855*2,		0.08,	0.16,	0.675,		10.0,	  	0.72*2,   },
-					{0.76,	0.032,	0.078*2,		0.1,	0.25,	0.577,		9.0,  		0.6*2,    },
-					{0.8,	0.063,	0.072*2,		0.2,	0.36,	0.456,		6.0,	    0.4*2,	},
+					{0.2,	0.0187,	0.0746*2,		0.052,	0.012,	2.796144,	22.0,		1.45*2,   },
+					{0.3,	0.0187,	0.0722*2,		0.052,	0.015,	4.24,		19.0,		1.2*2,    },
+					{0.5,	0.0187,	0.0798*2,		0.045,	0.025,	4.323,		17.0,		1.08*2,   },
+					{0.59,	0.0187,	0.084*2,		0.047,	0.026,	4.129077,	17.0,		1.07*2,   },
+					{0.67,	0.0187,	0.0907*2,		0.047,	0.021,	3.943,		14.5,		0.98*2,   },
+					{0.74,	0.0227,	0.0855*2,		0.08,	0.16,	3.675,		10.0,	  	0.72*2,   },
+					{0.76,	0.032,	0.078*2,		0.1,	0.25,	2.577,		9.0,  		0.6*2,    },
+					{0.8,	0.063,	0.072*2,		0.2,	0.36,	1.456,		6.0,	    0.4*2,	},
 					{0.83,	0.1,	0.0725*2,		0.34,	2.4,	0.32,		4.5,		0.3*2,	},
 					{0.9,	0.126,	0.073*2,		0.56,	3.0,	0.076,		3.0,	    0.2*2,	},
 					{1.1,	0.16,	0.03*2,			0.56,	3.0,	0.076,		1.0,		0.3*2		},
@@ -468,8 +470,8 @@ A_29B =  {
 			typeng	=	3, -- E_TURBOJET = 0, E_TURBOJET_AB = 1, E_PISTON = 2, E_TURBOPROP = 3,	E_TURBOFAN    = 4,	E_TURBOSHAFT = 5
 			hMaxEng	=	19.5, -- maximum operating altitude for the engine in km -- typically higher than service ceiling of the aircraft
 			dcx_eng	=	0.0114, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
-			cemax	=	0.097, -- kg / sec - fuel consumption for a single engine in dry configuration
-			cefor	=	0.097, -- kg / sec - fuel consumption for a single engine in afterburner configuration
+			cemax	=	0.0225, -- kg / sec - fuel consumption for a single engine in dry configuration
+			cefor	=	0.0225, -- kg / sec - fuel consumption for a single engine in afterburner configuration
 			dpdh_m	=	1800, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			dpdh_f	=	1800, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			table_data = {
@@ -723,8 +725,8 @@ A_29B =  {
 	mapclasskey = "P0091000024",
 
 	Guns = {
-		MG_20({muzzle_pos = {0.96,-0.68, 2.32},_connector =  "Point_Gun_01_R",rates = {1025},effect_arg_number = 350,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 1,supply_position = {4.5,0.22, 0.3}}),-- MITRAIL AVR 1 
-		MG_20({muzzle_pos = {0.96, -0.68, -2.32},_connector =  "Point_Gun_01_L",rates = {1025},effect_arg_number = 436,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 1,supply_position = {2.0, -0.25, 0.8}}),-- MITRAIL AVR 2 B
+		MG_20({muzzle_pos = {0.96,-0.68, 2.32},_connector =  "Point_Gun_01_R",rates = {1025},effect_arg_number = 350,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 0,supply_position = {4.5,0.22, 0.3}}),-- MITRAIL AVR 1 
+		MG_20({muzzle_pos = {0.96, -0.68, -2.32},_connector =  "Point_Gun_01_L",rates = {1025},effect_arg_number = 436,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 0,supply_position = {2.0, -0.25, 0.8}}),-- MITRAIL AVR 2 B
 	},
 }
 

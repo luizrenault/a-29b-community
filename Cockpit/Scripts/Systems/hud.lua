@@ -275,7 +275,13 @@ end
 
 function update_ag()
     local master_mode = get_avionics_master_mode()
-    if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R then update_piper_ccip() end
+    if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R or get_avionics_master_mode_ag_gun(master_mode) then update_piper_ccip() end
+    if get_avionics_master_mode_ag_gun() then
+        HUD_RANGE:set(WS_TARGET_RANGE:get())
+    else 
+        HUD_RANGE:set(-1)
+    end
+    
 end
 
 
@@ -479,11 +485,14 @@ function update()
     if nav_time == UFCP_NAV_TIME_IDS.DT then
         if dt >= 0 then time_text = "A" else time_text = "D" end
         dt = math.abs(dt)
-        time_text = time_text .. string.format("%02.0f:%02.0f ", math.floor(dt / 60), dt % 60 )
+        if dt >= 100*60 then dt = 100*60-1 end
+        time_text = time_text .. string.format("%02.0f:%02.0f ", math.floor(dt / 60), math.floor(dt % 60) )
     elseif nav_time == UFCP_NAV_TIME_IDS.TTD then
-        time_text = string.format("%02.0f:%02.0f", math.floor(ttd / 60), ttd % 60 )
+        if ttd >= 100*60 then ttd = 100*60-1 end
+        time_text = string.format("%02.0f:%02.0f", math.floor(ttd / 60), math.floor(ttd % 60) )
     elseif nav_time == UFCP_NAV_TIME_IDS.ETA then
         local tot = get_absolute_model_time() + ttd
+        if tot > 24*3600 then tot=24*3600-1 end
         time_text = string.format("%02.0f:%02.0f:%02.0f", math.floor(tot / 3600), math.floor((tot % 3600) / 60), math.floor(tot % 60) )
     end
     

@@ -7,6 +7,13 @@ local SMS_INV = get_param_handle("SMS_INV")
 local SMS_GUNS_L_SEL = get_param_handle("SMS_GUNS_L_SEL")
 local SMS_GUNS_R_SEL = get_param_handle("SMS_GUNS_R_SEL")
 
+local SMS_FUSE_SEL = get_param_handle("SMS_FUSE_SEL")
+local SMS_FUSE_TYPE = get_param_handle("SMS_FUSE_TYPE")
+local SMS_TIME_ALT_SEL = get_param_handle("SMS_TIME_ALT_SEL")
+local SMS_IS_UNIT = get_param_handle("SMS_IS_UNIT")
+local SMS_BR_RR_SEL = get_param_handle("SMS_BR_RR_SEL")
+local SMS_PROF_SEL = get_param_handle("SMS_PROF_SEL")
+
 local weapons
 local sms_mode = SMS_MODE_IDS.SAFE
 local sms_cargotype = SMS_CARGO_TYPE_IDS.WPN
@@ -64,8 +71,10 @@ end
 local function update_ag()
     local sms_ag_sel = get_wpn_ag_sel()
     for i=1, 5 do
-        param = get_param_handle("SMS_POS_"..tostring(i).."_SEL")
-        if sms_ag_sel == i then
+        local param = get_param_handle("SMS_POS_"..tostring(i).."_SEL")
+        local lauch_op = WPN_LAUNCH_OP:get()
+
+        if not get_avionics_master_mode_ag_gun() and (sms_ag_sel == i or (lauch_op == WPN_LAUNCH_OP_IDS.PAIR and (6-sms_ag_sel) == i)) then
             if get_wpn_ag_ready() then
                 param:set(1)
             else 
@@ -75,7 +84,7 @@ local function update_ag()
             param:set(0)
         end
     end
-    if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.GUN  or master_mode == AVIONICS_MASTER_MODE_ID.GUN_R then
+    if get_avionics_master_mode_ag_gun() then
         if get_wpn_guns_ready() then
             SMS_GUNS_L_SEL:set(1)
             SMS_GUNS_R_SEL:set(1)
@@ -153,9 +162,77 @@ local function SetCommandSmsSj(command,value, CMFD)
     end
 end
 
+local function SetCommandSmsOther(command,value, CMFD)
+
+end
+
 local function SetCommandSmsAg(command,value, CMFD)
-    if value == 0 then return 0 end
-    if command==device_commands.CMFD1OSS1 or command==device_commands.CMFD2OSS1 then 
+    local master_mode = get_avionics_master_mode()
+    if value == 0 or sms_inv == 1 then return 0 end
+
+    if sms_mode == SMS_MODE_IDS.CD then
+        if command==device_commands.CMFD1OSS1 or command==device_commands.CMFD2OSS1 then
+            sms_mode = SMS_MODE_IDS.AG
+        elseif command==device_commands.CMFD1OSS28 or command==device_commands.CMFD2OSS28 then
+            if master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R or master_mode == AVIONICS_MASTER_MODE_ID.GUN_R then 
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP_R)
+            else
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+            end
+            sms_mode = SMS_MODE_IDS.AG
+        elseif command==device_commands.CMFD1OSS27 or command==device_commands.CMFD2OSS27 then
+            set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.MAN)
+            sms_mode = SMS_MODE_IDS.AG
+        elseif command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26 and WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
+            set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCRP)
+            sms_mode = SMS_MODE_IDS.AG
+        elseif command==device_commands.CMFD1OSS25 or command==device_commands.CMFD2OSS25 and WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
+            if master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R or master_mode == AVIONICS_MASTER_MODE_ID.GUN_R then 
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DTOS_R)
+            else
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DTOS)
+            end
+            sms_mode = SMS_MODE_IDS.AG
+        end
+    elseif sms_mode == SMS_MODE_IDS.AG then
+
+        if command==device_commands.CMFD1OSS1 or command==device_commands.CMFD2OSS1 then
+            -- implement last option to return
+            if master_mode == AVIONICS_MASTER_MODE_ID.GUN then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+            elseif master_mode == AVIONICS_MASTER_MODE_ID.GUN_R then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP_R)
+            elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.DTOS or master_mode == AVIONICS_MASTER_MODE_ID.MAN or master_mode == AVIONICS_MASTER_MODE_ID.CCRP then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.GUN)
+            elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.GUN_R)
+            end
+        elseif command==device_commands.CMFD1OSS2 or command==device_commands.CMFD2OSS2 then
+            sms_mode = SMS_MODE_IDS.CD
+            -- if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R  then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCRP)
+            -- elseif master_mode == AVIONICS_MASTER_MODE_ID.CCRP then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DTOS)
+            -- elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.MAN)
+            -- elseif master_mode == AVIONICS_MASTER_MODE_ID.MAN then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+            -- end
+        elseif command==device_commands.CMFD1OSS9 or command==device_commands.CMFD2OSS9 then 
+            SMS_FUSE_SEL:set((SMS_FUSE_SEL:get() + 1)% 4)
+        elseif command==device_commands.CMFD1OSS10 or command==device_commands.CMFD2OSS10 then 
+        elseif command==device_commands.CMFD1OSS11 or command==device_commands.CMFD2OSS11 then 
+            -- SMS_TIME_ALT_SEL:set((SMS_TIME_ALT_SEL:get() + 1)% 3)
+        elseif command==device_commands.CMFD1OSS24 or command==device_commands.CMFD2OSS24 then 
+            -- SMS_IS_UNIT:set((SMS_IS_UNIT:get() + 1)% 2)
+        elseif command==device_commands.CMFD1OSS25 or command==device_commands.CMFD2OSS25 then 
+            -- SMS_BR_RR_SEL:set((SMS_BR_RR_SEL:get() + 1)% 2)
+        elseif command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26 then 
+            if not get_avionics_master_mode_ag_gun() then 
+                weapons:performClickableAction(device_commands.WPN_AG_LAUNCH_OP_STEP, 1, true)
+            end
+        elseif command==device_commands.CMFD1OSS27 or command==device_commands.CMFD2OSS27 then 
+            -- SMS_PROF_SEL:set((SMS_PROF_SEL:get() + 1)% 2)
+            if not get_avionics_master_mode_ag_gun() then 
+                -- weapons:performClickableAction(device_commands.WPN_AG_STEP, 1, true)
+            end
+        elseif command==device_commands.CMFD1OSS28 or command==device_commands.CMFD2OSS28 then 
+            if not get_avionics_master_mode_ag_gun() then 
+                weapons:performClickableAction(device_commands.WPN_AG_STEP, 1, true)
+            end
+        end
     end
 end
 
@@ -191,7 +268,7 @@ function SetCommandSms(command,value, CMFD)
     if sms_mode == SMS_MODE_IDS.SAFE then SetCommandSmsSafe(command, value, CMFD)
     elseif sms_mode == SMS_MODE_IDS.SJ then SetCommandSmsSj(command, value, CMFD)
     elseif sms_mode == SMS_MODE_IDS.AA then SetCommandSmsAa(command, value, CMFD)
-    elseif sms_mode == SMS_MODE_IDS.AG then SetCommandSmsAg(command, value, CMFD)
+    elseif sms_mode == SMS_MODE_IDS.AG or sms_mode == SMS_MODE_IDS.CD then SetCommandSmsAg(command, value, CMFD)
     elseif sms_mode == SMS_MODE_IDS.EJ then set_avionics_master_mode(get_avionics_master_mode_last())
     end
 
@@ -203,7 +280,7 @@ function SetCommandSms(command,value, CMFD)
                 sms_cargotype = (sms_cargotype + 1 ) % 2
             end
         elseif command==device_commands.CMFD1OSS4 or command==device_commands.CMFD2OSS4 then 
-            if sms_mode == SMS_MODE_IDS.SAFE or sms_mode == SMS_MODE_IDS.AA then
+            if sms_mode == SMS_MODE_IDS.SAFE or sms_mode == SMS_MODE_IDS.AA or sms_mode == SMS_MODE_IDS.AG then
                 sms_inv = (sms_inv + 1 ) % 2
             end
         elseif command==device_commands.CMFD1OSS5 or command==device_commands.CMFD2OSS5 then 

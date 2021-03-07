@@ -511,13 +511,15 @@ device_commands =
     WPN_AA_SCAN_STEP                    = __counter(),
     WPN_AA_LIMIT_STEP                    = __counter(),
 
+    WPN_AG_STEP                          = __counter(),
 
     STICK_WEAPON_RELEASE                    = __counter(),
     STICK_TRIGGER_2ND_DETENT                    = __counter(),
     STICK_PADDLE                    = __counter(),
     NAV_INC_FYT                    = __counter(),
     NAV_DEC_FYT                    = __counter(),
-    AAA                    = __counter(),
+    
+    
     AAA                    = __counter(),
     AAA                    = __counter(),
     AAA                    = __counter(),
@@ -526,5 +528,6 @@ device_commands =
     AAA                    = __counter(),
 
     STICK_WEAPON_RELEASE_OFF                = __counter(),
+    WPN_AG_LAUNCH_OP_STEP                    = __counter(),
 
 }

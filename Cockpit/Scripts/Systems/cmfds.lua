@@ -200,16 +200,12 @@ function post_initialize()
     
     local birth = LockOn_Options.init_conditions.birth_place
     if birth=="GROUND_HOT" then
-        dev:performClickableAction(device_commands.CMFD1ButtonOn,1)
-        dev:performClickableAction(device_commands.CMFD2ButtonOn,1)
     elseif birth=="AIR_HOT" then
-        dev:performClickableAction(device_commands.CMFD1ButtonOn,1)
-        dev:performClickableAction(device_commands.CMFD2ButtonOn,1)
     elseif birth=="GROUND_COLD" then
-        dev:performClickableAction(device_commands.CMFD1ButtonOn,0)
-        dev:performClickableAction(device_commands.CMFD2ButtonOn,0)
     end
-    post_initialize_sms()
+    dev:performClickableAction(device_commands.CMFD1ButtonOn,1)
+    dev:performClickableAction(device_commands.CMFD2ButtonOn,1)
+post_initialize_sms()
     post_initialize_eicas()
     post_initialize_nav()
     startup_print("environ: postinit end")

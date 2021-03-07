@@ -242,29 +242,21 @@ function post_initialize()
 
     if birth=="GROUND_HOT" or birth=="AIR_HOT" then
         dev:performClickableAction(device_commands.ElecBatt, 0, true)
-        dev:performClickableAction(device_commands.ElecGen, 1, true)
-        dev:performClickableAction(device_commands.ElecExtPwr, 0, true)
-        dev:performClickableAction(device_commands.ElecBkp, 1, true)
-        dev:performClickableAction(device_commands.ElecEmer, -1, true)
-        dev:performClickableAction(device_commands.ElecAcftIntc, -1, true)
-        dev:performClickableAction(device_commands.AviMdp1, 1, true)
-        dev:performClickableAction(device_commands.AviMdp2, 1, true)
-        dev:performClickableAction(device_commands.AviMst, 1, true)
-        dev:performClickableAction(device_commands.AviSms, 1, true)
-        dev:performClickableAction(device_commands.AviVuhf, 0, true)
     elseif birth=="GROUND_COLD" then
         dev:performClickableAction(device_commands.ElecBatt, -1, true)
-        dev:performClickableAction(device_commands.ElecGen, 0, true)
-        dev:performClickableAction(device_commands.ElecExtPwr, 0, true)
-        dev:performClickableAction(device_commands.ElecBkp, 0, true)
-        dev:performClickableAction(device_commands.ElecEmer, -1, true)
-        dev:performClickableAction(device_commands.ElecAcftIntc, -1, true)
-        dev:performClickableAction(device_commands.AviMdp1, 0, true)
-        dev:performClickableAction(device_commands.AviMdp2, 0, true)
-        dev:performClickableAction(device_commands.AviMst, 0, true)
-        dev:performClickableAction(device_commands.AviSms, 0, true)
-        dev:performClickableAction(device_commands.AviVuhf, 0, true)
     end
+
+    dev:performClickableAction(device_commands.ElecExtPwr, 0, true)
+    dev:performClickableAction(device_commands.ElecEmer, -1, true)
+    dev:performClickableAction(device_commands.ElecAcftIntc, -1, true)
+    dev:performClickableAction(device_commands.AviVuhf, 0, true)
+
+    dev:performClickableAction(device_commands.AviMst, 1, true)
+    dev:performClickableAction(device_commands.AviMdp1, 1, true)
+    dev:performClickableAction(device_commands.AviMdp2, 1, true)
+    dev:performClickableAction(device_commands.ElecBkp, 1, true)
+    dev:performClickableAction(device_commands.AviSms, 1, true)
+    dev:performClickableAction(device_commands.ElecGen, 1, true)
     startup_print("electric_system: postinit end")
 end
 

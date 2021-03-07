@@ -20,17 +20,15 @@ function post_initialize()
     local birth = LockOn_Options.init_conditions.birth_place
 
     if birth=="GROUND_HOT" or birth=="AIR_HOT" then
-        dev:performClickableAction(device_commands.EnginePMU, 1, true)
-        dev:performClickableAction(device_commands.EngineIgnition, 0, true)
         dev:performClickableAction(device_commands.EngineStart, 0, true)
         dev:performClickableAction(device_commands.FuelHydBleed, -1, true)
     elseif birth=="GROUND_COLD" then
-        dev:performClickableAction(device_commands.EnginePMU, 0, true)
-        dev:performClickableAction(device_commands.EngineIgnition, -1, true)
         dev:performClickableAction(device_commands.EngineStart, 0, true)
         dev:performClickableAction(device_commands.FuelHydBleed, -1, true)
     end
-    startup_print("engine: postinit end")
+    dev:performClickableAction(device_commands.EnginePMU, 1, true)
+    dev:performClickableAction(device_commands.EngineIgnition, 0, true)
+startup_print("engine: postinit end")
 end
 
 

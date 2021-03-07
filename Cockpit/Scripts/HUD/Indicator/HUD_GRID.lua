@@ -118,15 +118,8 @@ boresightShiftY = 98		--DegToMil(4.8)
 
 local object
 
--- object = addStrokeSymbol("HUD_Base", {"a29b_hud", "nav-mode"}, "FromSet", {0, -34}, nil, nil, 0.85, "INDICATION_COMMON_RED")
--- object = addStrokeSymbol("HUD_Base", {"a29b_hud", "landing-mode"}, "FromSet", {0, -34}, nil, nil, 0.85, "INDICATION_COMMON_AMBER")
-
-
 
 local HUD_BoresightRoot = addStrokeSymbol("HUD_Boresight_Cross", {"a29b_stroke_symbols_HUD", "1-boresight-cross"}, "CenterCenter", {0, DegToMil(1.2)})
-
--- PL_origin.element_params            = {"HUD_PITCH", "HUD_ROLL", "HUD_PL_SLIDE"}
--- PL_origin.controllers 		        = {{"move_left_right_using_parameter", 2, 0.75}, {"rotate_using_parameter",1, 1 }, {"move_up_down_using_parameter",0,-0.75}, }
 
 -- FYT
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "aim9lm-caged"}, "CenterCenter", {0, 0})
@@ -156,6 +149,28 @@ object.element_params = {"HUD_BRIGHT", "HUD_FYT_OS"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
 
 
+-- CCIP Gun
+local HUD_CCIP_GUN_origin = addPlaceholder(nil, {0,0})
+HUD_CCIP_GUN_origin.element_params = {"AVIONICS_MASTER_MODE", "WPN_MASS"}
+HUD_CCIP_GUN_origin.controllers = {
+	{"parameter_in_range",0,AVIONICS_MASTER_MODE_ID.GUN-0.5, AVIONICS_MASTER_MODE_ID.GUN_R + 0.5},
+	{"parameter_compare_with_number", 1, WPN_MASS_IDS.LIVE},
+}
+-- CCIP Gun cue
+object = addStrokeCircle(nil, 16, {0,0}, HUD_CCIP_GUN_origin.name)
+object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_AZIMUTH", "HUD_CCIP_PIPER_ELEVATION"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"move_left_right_using_parameter", 1, 0.75},
+	{"move_up_down_using_parameter", 2, 0.75},
+}
+object = addStrokeCircle(nil, 1, {0,0}, object.name)
+
+-- CCIP Gun out of screen
+object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
+object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_HIDDEN"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+
 -- CCIP
 local HUD_CCIP_origin = addPlaceholder(nil, {0,0})
 HUD_CCIP_origin.element_params = {"AVIONICS_MASTER_MODE", "WPN_MASS", "WPN_SELECTED_WEAPON_TYPE"}
@@ -165,6 +180,7 @@ HUD_CCIP_origin.controllers = {
 	{"parameter_in_range",2, WPN_WEAPON_TYPE_IDS.AG_WEAPON_BEG, WPN_WEAPON_TYPE_IDS.AG_WEAPON_END},
 }
 
+-- CCIP Rocket
 local HUD_CCIP_ROCKET_origin = addPlaceholder(nil, {0,0}, HUD_CCIP_origin.name)
 HUD_CCIP_ROCKET_origin.element_params = {"WPN_SELECTED_WEAPON_TYPE"}
 HUD_CCIP_ROCKET_origin.controllers = {
@@ -186,7 +202,7 @@ object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterC
 object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_HIDDEN"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
 
-
+-- CCIP Bomb
 local HUD_CCIP_BOMB_origin = addPlaceholder(nil, {0,0}, HUD_CCIP_origin.name)
 HUD_CCIP_BOMB_origin.element_params = {"WPN_SELECTED_WEAPON_TYPE"}
 HUD_CCIP_BOMB_origin.controllers = {
@@ -258,7 +274,7 @@ object.controllers = {
 local HUD_DGFT_origin = addPlaceholder(nil, {0,0}, HUD_BoresightRoot.name)
 HUD_DGFT_origin.element_params = {"AVIONICS_MASTER_MODE"}
 HUD_DGFT_origin.controllers = {
-	{"parameter_in_range",0,AVIONICS_MASTER_MODE_ID.DGFT_B-0.5, AVIONICS_MASTER_MODE_ID.GUN_R + 0.5},
+	{"parameter_in_range",0,AVIONICS_MASTER_MODE_ID.DGFT_B-0.5, AVIONICS_MASTER_MODE_ID.DGFT_L + 0.5},
 }
 
 -- IR Caged
@@ -800,5 +816,5 @@ object.element_params = {"HUD_BRIGHT", "WPN_AA_INTRG_QTY", "AVIONICS_MASTER_MODE
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
 	{"text_using_parameter", 1, 0}, 
-	{"parameter_in_range",2,AVIONICS_MASTER_MODE_ID.DGFT_B-0.5, AVIONICS_MASTER_MODE_ID.GUN_R + 0.5},
+	{"parameter_in_range",2,AVIONICS_MASTER_MODE_ID.DGFT_B-0.5, AVIONICS_MASTER_MODE_ID.GUN_M + 0.5},
 }
