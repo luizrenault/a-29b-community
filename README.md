@@ -13,20 +13,19 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Tutorial videos 
 
-(Pt-BR by [Lucas Orsi](https://www.youtube.com/user/lucaoorsi))
+(Pt-BR by [Lucas Orsi](https://www.youtube.com/user/lucaoorsi)) - English subtitles now available.
 - [Startup](https://www.youtube.com/watch?v=9XkSzbTcajE&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=1)
 - [Taxi, takeoff and navigation](https://www.youtube.com/watch?v=zL0vY9_0fGU&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=3)
 - [Visual landing](https://www.youtube.com/watch?v=0UId68gH33M&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=4)
 - [Cutoff](https://www.youtube.com/watch?v=RPF_G8d9tMI&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=2)
-
+- [A/G Attack](https://www.youtube.com/watch?v=TyX-CzaA5FM)
 
 # Changelog
  
-All notable changes to this project will be documented in this file.
+## Version 0.1.7b - 07 March 2021
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### Added
+- 
 
 ## Version 0.1.6b - 07 March 2021
 

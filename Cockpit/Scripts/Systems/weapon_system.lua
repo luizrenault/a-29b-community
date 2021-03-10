@@ -21,7 +21,7 @@ local sms_search_sequence = {
     {4, 3, 1, 5, 2},
     {1, 5, 2, 4, 3},
     {3, 1, 5, 2, 4},
-    {2, 4, 3, 1, 5}
+    {2, 4, 3, 1, 5},
 }
 
 local ir_missile_lock_param = get_param_handle("WS_IR_MISSILE_LOCK")
@@ -126,6 +126,10 @@ local function update_storages()
         param:set(wname)
         -----------------------------------
     end
+    if wpn_ag_sel > 0 then 
+        wpn_ag_name = wpn_sto_name[wpn_ag_sel] or ""
+        wpn_ag_qty = wpn_sto_total_count[wpn_ag_name] or 0
+    end
     WPN_GUNS_L:set(wpn_guns_l)
     WPN_GUNS_R:set(wpn_guns_r)
 end
@@ -133,47 +137,59 @@ end
 local function update_ag_sel_next(byname)
     local master_mode = get_avionics_master_mode()
     local name = ""
+    local lauch_op = WPN_LAUNCH_OP:get()
+
     if wpn_ag_sel ~= 0  then 
-        local station = dev:get_station_info(wpn_ag_sel - 1)
-        name = station["CLSID"]
+        name = wpn_sto_name[wpn_ag_sel]
+    else 
+        name = wpn_ag_name
     end
-    local sequence = sms_search_sequence[wpn_ag_sel + 1]
-    for k, pos in pairs(sequence) do
-        local station = dev:get_station_info(pos - 1)
-        if (station.weapon.level2 == wsType_Bomb or station.weapon.level2 == wsType_NURS or station.weapon.level3 == wsType_AS_Missile)  and (station["count"] > 0) then
-            -- log.info("name=".. (get_wpn_weapon_name(name) or " ") .." sms_name=" .. (get_wpn_weapon_name(station["CLSID"]) or " ") .. " "..tostring(byname).." "..tostring(not byname))
-            if (not byname) or name == station["CLSID"] or (byname and name == "" and wpn_ag_name ~= "" and wpn_ag_name == get_wpn_weapon_name(station["CLSID"])) then
-                wpn_ag_sel = pos
-                set_wpn_ag_sel(wpn_ag_sel)
-                wpn_ag_name = get_wpn_weapon_name(station["CLSID"])
-                wpn_ag_qty = wpn_sto_total_count[wpn_ag_name] or 0
-                dev:select_station(wpn_ag_sel-1)
-                WPN_SELECTED_WEAPON_TYPE:set(wpn_sto_type[wpn_ag_sel])
-                if  wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET and (master_mode == AVIONICS_MASTER_MODE_ID.DTOS or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R or master_mode == AVIONICS_MASTER_MODE_ID.CCRP) then
-                    if master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then 
-                        set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP_R)
-                    else
-                        set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
-                    end
-                end
-                return 0
+    if byname and name == "" then return 0 end
+    if not byname then
+        local sequence = sms_search_sequence[wpn_ag_sel + 1]
+        for k, pos in pairs(sequence) do
+            if wpn_sto_name[k] ~= name and wpn_sto_type[k] >= WPN_WEAPON_TYPE_IDS.AG_WEAPON_BEG and wpn_sto_type[k] <= WPN_WEAPON_TYPE_IDS.AG_WEAPON_END then
+                name = wpn_sto_name[k]
+                break
             end
-        elseif (station.weapon.level2 == wsType_Bomb or station.weapon.level2 == wsType_NURS or station.weapon.level3 == wsType_AS_Missile)  and (byname and station["count"] == 0) then
-            wpn_ag_sel = 0
-            set_wpn_ag_sel(wpn_ag_sel)
-            wpn_ag_qty = 0
-            dev:select_station(wpn_ag_sel-1)
-            WPN_SELECTED_WEAPON_TYPE:set(WPN_WEAPON_TYPE_IDS.NO_WEAPON)
-            return 0
         end
     end
-    if wpn_ag_sel ~= 0 then 
-        wpn_ag_sel = 0
+
+    local pos = 0
+    for i=1, 5 do
+        if wpn_sto_name[i] == name then
+            if wpn_sto_name[6-i] == name and wpn_sto_count[6-i] > wpn_sto_count[i] then
+                pos = 6-i
+            elseif wpn_sto_count[i] > 0 then
+                pos = i
+            end
+            if pos > 0 then break end
+        end
+    end
+    if pos > 0 then
+        wpn_ag_sel = pos
         set_wpn_ag_sel(wpn_ag_sel)
-        wpn_ag_name = ""
-        wpn_ag_qty = -1
-        WPN_SELECTED_WEAPON_TYPE:set(WPN_WEAPON_TYPE_IDS.NO_WEAPON)
+        wpn_ag_name = wpn_sto_name[wpn_ag_sel]
+        wpn_ag_qty = wpn_sto_total_count[wpn_ag_name] or 0
         dev:select_station(wpn_ag_sel-1)
+        WPN_SELECTED_WEAPON_TYPE:set(wpn_sto_type[wpn_ag_sel])
+        if  wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET and (master_mode == AVIONICS_MASTER_MODE_ID.DTOS or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R or master_mode == AVIONICS_MASTER_MODE_ID.CCRP) then
+            if master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then 
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP_R)
+            else
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+            end
+        end
+        return 0
+    else
+        if wpn_ag_sel ~= 0 then 
+            wpn_ag_sel = 0
+            set_wpn_ag_sel(wpn_ag_sel)
+            -- wpn_ag_name = ""
+            -- wpn_ag_qty = -1
+            WPN_SELECTED_WEAPON_TYPE:set(WPN_WEAPON_TYPE_IDS.NO_WEAPON)
+            dev:select_station(wpn_ag_sel-1)
+        end
     end
 end
 
@@ -303,7 +319,11 @@ local function  update_ccip()
             Vz0 = Vz0 + 890 * Vz0 / vel_temp
         elseif wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
         elseif wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET then
-            g=-0.1
+            local vel_temp = math.sqrt(Vx0 * Vx0 + Vy0 * Vy0 + Vz0 * Vz0)
+            Vx0 = Vx0 + 890 * Vx0 / vel_temp
+            Vy0 = Vy0 + 890 * Vy0 / vel_temp
+            Vz0 = Vz0 + 890 * Vz0 / vel_temp
+            -- g=-0.5
         end
         local delta = Vy0 * Vy0 - 2 * g * h0
         t = (-Vy0  - math.sqrt(delta))/g
@@ -845,3 +865,72 @@ need_to_be_closed = false -- close lua state after initialization
 -- STO5["weapon"]["level1"] = 4
 -- STO5["weapon"]["level4"] = 145
 -- STO5["weapon"]["level2"] = 7
+
+
+
+
+-- //type of GOS homing head:
+-- const int InfraredSeeker = 1; / / thermal IR (infrared finder)
+-- const int ActiveRadar = 2; / / active-radar (active radar (AR) (+ins))
+-- const int AntiRadar = 3; / / antiradar (passive radar +ins)
+-- const int Laserhooming = 4; / / laser illumination (+ins)
+-- const int Autopilot = 5; / / Autonomous (ins + map, GPS, TV, IIR...)
+-- constant int SemiActiveRadar = 6; / / semi-active-radar semi-active radar (SAR) - radio light
+-- const int SemiAutoAT = 7; / / semi-automatic control from the platform for ATGM, fly to wopoint, wopoint coordinates are changed by the platform.
+
+-- struct WEAPONS_API Rocket_Const // Rocket constants and settings for control laws.
+-- // Characteristics of the missile
+-- unsigned char Name_; // name of the rocket
+-- int Escort_; / / escort: 0-No, 1-La launch, 2-other La, 3-C ground
+-- int Head_Type_; / / type of homing head (GOS) (CM above)
+-- Sigma = {x, y, z}, maximum aiming error in meters, in target coordinates. X-longitudinal axis of the target, y-axis virtualna purpose, Z - axis, transverse target
+-- float M_; / / gross weight in kg
+-- float H_max_; / / maximum flight altitude.
+-- float H_min_; / / minimum flight height.
+-- float Diam_; / / case Diameter in mm
+-- int Cx_pil; / / Cx as suspension
+-- float D_max_; / / maximum launch range at low altitude
+-- float D_min_; / / minimum launch range
+-- bool Head_Form_;/ / false - hemispherical head shape,
+-- //True-animate (~conic)
+-- float Life_time;// lifetime (self-destruct timer), sec
+-- double Nr_max_; / / Maximum overload during u
+--turns -- float v_min_; / / Minimum speed.
+-- float v_mid_; / / Average speed
+-- float Mach_max_; / / Maximum Mach number.
+-- float t_b_; / / engine start time
+-- t_acc_ float; // time of operation of the accelerator
+-- float t_marsh_; / / operating time in marching mode
+-- float Range_max_;/ / maximum launch range at maximum altitude
+-- float H_min_t_; / / minimum height of the target above the terrain, m.
+-- float Fi_start_; / / angle of tracking and sighting at launch
+-- float Fi_rak_; / / acceptable angle of view of the target (rad)
+-- float Fi_excort_; / / angle of tracking (sight) of the target by the missile.
+-- float Fi_search_;// limit angle of free search
+-- float OmViz_max_;// maximum line-of-sight speed
+-- float Damage_;/ / damage caused by a direct hit
+-- / * int Engine_Type_; / / engine type: 1-solid fuel;
+-- // 2 - Liquid Rocket engine(RD) (LRE);
+-- // 3 - Ramjet air RD ;
+-- // 4 - accelerator-1 + LRE.
+-- // 5 - turbojet
+-- // 6 - turbojet + accelerator
+-- int Stage_; / / number of steps.* /
+-- float X_back_; / / coordinates of the nozzle center in the rocket axes
+-- y_back float_;
+-- z_back float_;
+-- float X_back_acc_; / / coordinates of the accelerator nozzle center in the rocket axes
+-- float Y_back_acc_;
+-- float Z_back_acc_;
+-- float reflection; / / effective radio reflection surface, square meters
+
+-- //Kill distances - this distance is used to start the fuse
+-- double the distance of murder;
+
+-- // These are warheads used to simulate explosions
+-- // Due to the blocksim architecture, we have to use two schemes -
+-- //one for the server object (which actually does damage), and the other for
+-- //client object (which does not cause any damage)
+
+-- Instantaneous angle of view of missiles:
+-- IR GOS + - 1 degree
