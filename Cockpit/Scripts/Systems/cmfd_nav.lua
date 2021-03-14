@@ -563,6 +563,9 @@ function post_initialize_nav()
             end
         end
     end
+    if nav_fyt_list[2] == nil then
+            nav_fyt = 0
+    end
     wpt_index = get_valid_wpt_list()
 
 end

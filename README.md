@@ -18,14 +18,33 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - [Taxi, takeoff and navigation](https://www.youtube.com/watch?v=zL0vY9_0fGU&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=3)
 - [Visual landing](https://www.youtube.com/watch?v=0UId68gH33M&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=4)
 - [Cutoff](https://www.youtube.com/watch?v=RPF_G8d9tMI&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=2)
+- [Waypoints](https://www.youtube.com/watch?v=ZrFa4Mv7TUA&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=5&t=3s)
 - [A/G Attack](https://www.youtube.com/watch?v=TyX-CzaA5FM)
+- [A/A Attack](https://www.youtube.com/watch?v=m_SypnfGmYI&t=84s)
+
+(En by [Grim Reapers](https://www.youtube.com/channel/UCZuXjkFY00p1ga3UyCBbR2w))
+- [Install, Setup, Startup, Cockpit, Pages, Nav & Weapons Guide](https://youtu.be/gATHRMtI_vM)
+
+(En by [311Gryphon](https://www.youtube.com/channel/UCR0ojtQ0Srh2y2O4pelFrDA))
+- [Startup](https://www.youtube.com/watch?v=QbKsh-kPhIA)
+
+
 
 # Changelog
  
 ## Version 0.1.7b - 07 March 2021
 
 ### Added
-- 
+- A/G Ripple Pulses (RP) and Impact Separation (IS)
+- UFCP, throttle handle and stick textures.
+
+### Changed
+- A/G Weapon selection order (External Pylons > Internal Pylons > Ventral Pylon. Left first.)
+- Roll rate reduced.
+
+### Fixes
+- FYT 0 selected when no route is pre-loaded on mission.
+
 
 ## Version 0.1.6b - 07 March 2021
 
@@ -255,7 +274,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Throttle and Stick are inconsistent with the real ones;
 
 ### Contributors
-- Renault, Milaré, Athos, Malamem, PaKo, Dino, Jorge Rodrigues, Paoladelf and many others.
+- Renault, Milaré, Athos, Malamem, PaKo, Dino, Jorge Rodrigues, Paoladelf, Farias, and many others.
 
 
 ### Changed

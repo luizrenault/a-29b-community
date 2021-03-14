@@ -54,10 +54,10 @@ object = addStrokeText("SMS_GUNS_L", "100", CMFD_STRINGDEFS_DEF_X08, "CenterCent
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_L"}
 object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}}
 object = addStrokeBox(nil, 0.15, 0.062, "CenterCenter", {0,0}, object.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_GUNS_L_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_L_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
 object = addStrokeBoxDashed(nil, 0.15, 0.062, 0.02, 0.02, {0,0}, object.parent_element)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_GUNS_L_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_L_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 2}}
 
 
@@ -65,60 +65,60 @@ object = addStrokeText("SMS_GUNS_R", "100", CMFD_STRINGDEFS_DEF_X08, "CenterCent
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_R"}
 object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}}
 object = addStrokeBox(nil, 0.15, 0.062, "CenterCenter", {0,0}, object.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_GUNS_R_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_R_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
 object = addStrokeBoxDashed(nil, 0.15, 0.062, 0.02, 0.02, {0,0}, object.parent_element)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_GUNS_R_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_R_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 2}}
 
 object = addStrokeText("SMS_POS_5_TEXT", "TANK", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0.53, -0.518}, CMFD_SMS_BG_origin.name, nil,{"%s"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_5_TEXT"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_5_TEXT"}
 object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}}
 object = addStrokeBox(nil, 0.3, 0.062, "CenterCenter", {0,0}, object.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_5_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_5_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
 object = addStrokeBoxDashed(nil, 0.3, 0.062, 0.02, 0.02, {0,0}, object.parent_element)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_5_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_5_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 2}}
 
 object = addStrokeText("SMS_POS_4_TEXT", "TANK", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0.277, -0.229}, CMFD_SMS_BG_origin.name, nil,{"%s"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_4_TEXT"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_4_TEXT"}
 object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}}
 object = addStrokeBox(nil, 0.3, 0.062, "CenterCenter", {0,0}, object.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_4_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_4_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
 object = addStrokeBoxDashed(nil, 0.3, 0.062, 0.02, 0.02, {0,0}, object.parent_element)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_4_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_4_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 2}}
 
 object = addStrokeText("SMS_POS_3_TEXT", "TANK", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0, 0.1}, CMFD_SMS_BG_origin.name, nil,{"%s"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_3_TEXT"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_3_TEXT"}
 object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}}
 object = addStrokeBox(nil, 0.3, 0.062, "CenterCenter", {0,0}, object.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_3_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_3_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
 object = addStrokeBoxDashed(nil, 0.3, 0.062, 0.02, 0.02, {0,0}, object.parent_element)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_3_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_3_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 2}}
 
 object = addStrokeText("SMS_POS_2_TEXT", "TANK", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {-0.277, -0.229}, CMFD_SMS_BG_origin.name, nil,{"%s"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_2_TEXT"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_2_TEXT"}
 object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}}
 object = addStrokeBox(nil, 0.3, 0.062, "CenterCenter", {0,0}, object.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_2_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_2_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
 object = addStrokeBoxDashed(nil, 0.3, 0.062, 0.02, 0.02, {0,0}, object.parent_element)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_2_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_2_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 2}}
 
 object = addStrokeText("SMS_POS_1_TEXT", "TANK", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {-0.53, -0.518}, CMFD_SMS_BG_origin.name, nil,{"%s"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_1_TEXT"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_1_TEXT"}
 object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}}
 object = addStrokeBox(nil, 0.3, 0.062, "CenterCenter", {0,0}, object.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_1_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_1_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
 object = addStrokeBoxDashed(nil, 0.3, 0.062, 0.02, 0.02, {0,0}, object.parent_element)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_POS_1_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_POS_1_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 2}}
 
 -- RELEASE
@@ -467,11 +467,11 @@ object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_WEAP
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}, {"parameter_compare_with_number", 2, AVIONICS_MASTER_MODE_ID.MAN}, {"text_using_parameter", 3, 0 }}
 
 object = addOSSText(25, "RPBR", SMS_mode_ag_nogun.name, nil, nil, {"RP%02.0f\n","(BR%02.0f)"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_WEAPON_TYPE", "WPN_RP", "WPN_RP_TOT"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_WEAPON_TYPE", "WPN_RP", "WPN_RP_TOTAL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}, {"text_using_parameter", 2, 0 }, {"text_using_parameter", 3, 1 }}
 
 object = addOSSText(25, "RPBR", SMS_mode_ag_nogun.name, nil, nil, {"RP%02.0f\n","(RR%02.0f)"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_WEAPON_TYPE", "WPN_RP", "WPN_RP_TOT"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_WEAPON_TYPE", "WPN_RP", "WPN_RP_TOTAL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET}, {"text_using_parameter", 2, 0 }, {"text_using_parameter", 3, 1 }}
 
 object = addOSSText(26, "SGL", SMS_mode_ag_nogun.name)

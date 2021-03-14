@@ -4,8 +4,6 @@ dofile(LockOn_Options.script_path.."CMFD/CMFD_SMS_ID_defs.lua")
 local SMS_MODE = get_param_handle("SMS_MODE")
 local SMS_CARGOTYPE = get_param_handle("SMS_CARGOTYPE")
 local SMS_INV = get_param_handle("SMS_INV")
-local SMS_GUNS_L_SEL = get_param_handle("SMS_GUNS_L_SEL")
-local SMS_GUNS_R_SEL = get_param_handle("SMS_GUNS_R_SEL")
 
 local SMS_FUSE_SEL = get_param_handle("SMS_FUSE_SEL")
 local SMS_FUSE_TYPE = get_param_handle("SMS_FUSE_TYPE")
@@ -30,11 +28,6 @@ local master_mode_last = -1
 
 local current_edit_data
 
-local WPN_RP = get_param_handle("WPN_RP")
-local WPN_IS_M = get_param_handle("WPN_IS_M")
-WPN_RP:set(1)
-WPN_IS_M:set(12)
-
 
 local sms_rp_data = {mode=SMS_MODE_IDS.RP, title="RELEASE PULSES\nNUM       ", desc="SELECT PULSES NUMBER", param="WPN_RP",
     validate = function(value)
@@ -56,7 +49,6 @@ local sms_is_time_data = {mode=SMS_MODE_IDS.RP, title="IMPACT SEPARATION\nINT:  
         if val >= 0 and val <=9999 then return true else return false end
     end
 }
-
 
 local sms_sd_data = {mode=SMS_MODE_IDS.RP, title="SIGHT\nMR:       ", desc="SELECT DEP", param="WPN_SD",
     validate = function(value)
@@ -83,80 +75,12 @@ local function update_master_mode_changed()
 end
 
 local function update_aa()
-    local sms_aa_sel = get_wpn_aa_sel()
-    for i=1, 5 do
-        param = get_param_handle("SMS_POS_"..tostring(i).."_SEL")
-        if sms_aa_sel == i then
-            if get_wpn_aa_msl_ready() then
-                param:set(1)
-            else 
-                param:set(2)
-            end
-        else
-            param:set(0)
-        end
-    end
-    if master_mode == AVIONICS_MASTER_MODE_ID.DGFT_B or master_mode == AVIONICS_MASTER_MODE_ID.DGFT_L then
-        if get_wpn_guns_ready() then
-            SMS_GUNS_L_SEL:set(1)
-            SMS_GUNS_R_SEL:set(1)
-        else
-            SMS_GUNS_L_SEL:set(2)
-            SMS_GUNS_R_SEL:set(2)
-        end
-    else
-        SMS_GUNS_L_SEL:set(0)
-        SMS_GUNS_R_SEL:set(0)
-    end
 end
 
 local function update_ag()
-    local sms_ag_sel = get_wpn_ag_sel()
-    for i=1, 5 do
-        local param = get_param_handle("SMS_POS_"..tostring(i).."_SEL")
-        local lauch_op = WPN_LAUNCH_OP:get()
-
-        if not get_avionics_master_mode_ag_gun() and (sms_ag_sel == i or (lauch_op == WPN_LAUNCH_OP_IDS.PAIR and (6-sms_ag_sel) == i)) then
-            if get_wpn_ag_ready() then
-                param:set(1)
-            else 
-                param:set(2)
-            end
-        else
-            param:set(0)
-        end
-    end
-    if get_avionics_master_mode_ag_gun() then
-        if get_wpn_guns_ready() then
-            SMS_GUNS_L_SEL:set(1)
-            SMS_GUNS_R_SEL:set(1)
-        else
-            SMS_GUNS_L_SEL:set(2)
-            SMS_GUNS_R_SEL:set(2)
-        end
-    else
-        SMS_GUNS_L_SEL:set(0)
-        SMS_GUNS_R_SEL:set(0)
-    end
 end
 
 local function update_sj()
-    for i=1,5 do
-        -- if sms_sto_count[i] == 0 then sms_sj_sel[i] = 0 end
-        param = get_param_handle("SMS_POS_"..tostring(i).."_SEL")
-        sms_sj_sel = get_param_handle("WPN_SJ_STO"..tostring(i).."_SEL")
-        if sms_sj_sel:get() == 1 then
-            if get_wpn_mass() ~= WPN_MASS_IDS.LIVE or get_wpn_latearm() ~= WPN_LATEARM_IDS.ON or get_avionics_onground() then
-                param:set(2)
-            else 
-                param:set(1)
-            end
-        else
-            param:set(0)
-        end
-    end
-    SMS_GUNS_L_SEL:set(0)
-    SMS_GUNS_R_SEL:set(0)
 end
 
 
@@ -166,15 +90,6 @@ function update_sms()
     if sms_mode == SMS_MODE_IDS.SJ then update_sj() end
     if sms_mode == SMS_MODE_IDS.AA then update_aa() end
     if sms_mode == SMS_MODE_IDS.AG then update_ag() end
-
-    if sms_mode == SMS_MODE_IDS.SAFE then
-        for i=1,5 do
-            local param = get_param_handle("SMS_POS_"..tostring(i).."_SEL")
-            param:set(0)
-        end
-        SMS_GUNS_L_SEL:set(0)
-        SMS_GUNS_R_SEL:set(0)
-    end
 
     SMS_MODE:set(sms_mode)
     SMS_CARGOTYPE:set(sms_cargotype)

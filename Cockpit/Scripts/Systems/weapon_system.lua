@@ -85,6 +85,8 @@ local iCommandPlaneFire = 84
 local iCommandPlaneFireOff = 85
 
 WPN_MSL_CAGED:set(2)
+WPN_RP:set(1)
+WPN_IS_M:set(12)
 
 function wpn_get_weapon_type(station)
 
@@ -122,7 +124,7 @@ local function update_storages()
             wname = ""
         end
         --------------- mixed with CMFD SMS
-        local param = get_param_handle("SMS_POS_"..tostring(i+1).."_TEXT")
+        local param = get_param_handle("WPN_POS_"..tostring(i+1).."_TEXT")
         param:set(wname)
         -----------------------------------
     end
@@ -347,6 +349,42 @@ local function  update_ccip()
     return 0, 0, 0, 0, 0
 end
 
+
+
+local function update_ag_sel_wpn()
+    for i=1, 5 do
+        local param = get_param_handle("WPN_POS_"..tostring(i).."_SEL")
+        local lauch_op = WPN_LAUNCH_OP:get()
+
+        if not get_avionics_master_mode_ag_gun() and (wpn_ag_sel == i or 
+        (lauch_op == WPN_LAUNCH_OP_IDS.PAIR and (6-wpn_ag_sel) == i and wpn_sto_name[i] == wpn_sto_name[wpn_ag_sel] and wpn_sto_count[i] > 0) or 
+        (lauch_op == WPN_LAUNCH_OP_IDS.SALVO and wpn_sto_name[i] == wpn_sto_name[wpn_ag_sel] and wpn_sto_count[i] > 0)) then
+            if get_wpn_ag_ready() then
+                param:set(1)
+            else 
+                param:set(2)
+            end
+        else
+            param:set(0)
+        end
+    end
+    if get_avionics_master_mode_ag_gun() then
+        if get_wpn_guns_ready() then
+            WPN_GUNS_L_SEL:set(1)
+            WPN_GUNS_R_SEL:set(1)
+        else
+            WPN_GUNS_L_SEL:set(2)
+            WPN_GUNS_R_SEL:set(2)
+        end
+    else
+        WPN_GUNS_L_SEL:set(0)
+        WPN_GUNS_R_SEL:set(0)
+    end
+end
+
+local wpn_rp_last
+local wpn_is_m_last
+local wpn_is_time_last
 local function update_ag()
     if wpn_ag_sel == 0 or (wpn_ag_sel ~= 0 and ((wpn_sto_count[wpn_ag_sel] <=0 or wpn_sto_type[wpn_ag_sel] < WPN_WEAPON_TYPE_IDS.AG_WEAPON_BEG or wpn_sto_type[wpn_ag_sel] > WPN_WEAPON_TYPE_IDS.AG_WEAPON_END))) then 
         update_ag_sel_next(true)
@@ -362,13 +400,80 @@ local function update_ag()
         WPN_SELECTED_WEAPON_TYPE:set(WPN_WEAPON_TYPE_IDS.NO_WEAPON)
     end
 
-
+    update_ag_sel_wpn()
     update_ccip()
+
+    local wpn_rp = WPN_RP:get()
+    local wpn_rp_total = wpn_rp
+    local sel_qty = 0
+    for i=1,5 do
+        local param = get_param_handle("WPN_POS_"..tostring(i).."_SEL")
+        if param:get() > 0 then sel_qty = sel_qty + 1 end
+    end
+    wpn_rp_total = wpn_rp * sel_qty
+    if wpn_rp_total > wpn_sto_total_count[wpn_ag_name] then wpn_rp_total = wpn_sto_total_count[wpn_ag_sel] end
+
+    WPN_RP_TOTAL:set(wpn_rp_total)
+
+    local wpn_is_m = WPN_IS_M:get()
+    local wpn_is_time = WPN_IS_TIME:get()
+    if WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
+        if wpn_is_m < 12 then wpn_is_m = 12
+        elseif wpn_is_m > 999 then wpn_is_m = 999 
+        end
+    elseif WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET then
+        if wpn_is_time < 0 then wpn_is_time = 0
+        elseif wpn_is_time > 9999 then wpn_is_time = 9999
+        end
+    end
+
+    if wpn_is_m_last ~= wpn_is_m then
+        wpn_is_m_last = wpn_is_m
+        WPN_IS_M:set(wpn_is_m)
+    --     wpn_is_time = wpn_is_m * 10
+    --     wpn_is_time_last = wpn_is_time
+    --     WPN_IS_TIME:set(wpn_is_time_last)
+    elseif wpn_is_time_last ~= wpn_is_time then
+        wpn_is_time_last = wpn_is_time
+        WPN_IS_TIME:set(wpn_is_time)
+        -- wpn_is_m = wpn_is_time / 10
+        -- wpn_is_m_last = wpn_is_m
+        -- WPN_IS_M:set(wpn_is_m)
+    end
+
 
     WPN_AG_QTY:set(wpn_ag_qty)
     WPN_AG_NAME:set(wpn_ag_name)
     WPN_AA_INTRG_QTY:set(wpn_guns_l + wpn_guns_r)
 end
+
+local function update_aa_sel_wpn()
+    for i=1, 5 do
+        local param = get_param_handle("WPN_POS_"..tostring(i).."_SEL")
+        if wpn_aa_sel == i then
+            if get_wpn_aa_msl_ready() then
+                param:set(1)
+            else 
+                param:set(2)
+            end
+        else
+            param:set(0)
+        end
+    end
+    if master_mode == AVIONICS_MASTER_MODE_ID.DGFT_B or master_mode == AVIONICS_MASTER_MODE_ID.DGFT_L then
+        if get_wpn_guns_ready() then
+            WPN_GUNS_L_SEL:set(1)
+            WPN_GUNS_R_SEL:set(1)
+        else
+            WPN_GUNS_L_SEL:set(2)
+            WPN_GUNS_R_SEL:set(2)
+        end
+    else
+        WPN_GUNS_L_SEL:set(0)
+        WPN_GUNS_R_SEL:set(0)
+    end
+end
+
 
 local function update_aa()
     check_sidewinder()
@@ -376,7 +481,7 @@ local function update_aa()
     if get_wpn_aa_msl_ready() or get_wpn_guns_ready() then WPN_READY:set(1) else WPN_READY:set(0) end
     if get_wpn_aa_msl_sim_ready() or get_wpn_guns_sim_ready() then WPN_SIM_READY:set(1) else WPN_SIM_READY:set(0) end
 
-
+    update_aa_sel_wpn()
 
     if get_avionics_master_mode() == AVIONICS_MASTER_MODE_ID.DGFT_B then
         local range = WS_TARGET_RANGE:get()
@@ -461,31 +566,70 @@ local function update_ej()
             end
         end
     end
+    WPN_GUNS_L_SEL:set(0)
+    WPN_GUNS_R_SEL:set(0)
 end    
 
 local function update_sj()
     for i=1,5 do
         local wpn_sj_sel = get_param_handle("WPN_SJ_STO"..tostring(i).."_SEL")
         if wpn_sto_count[i] == 0 and not wpn_sto_container[i] then wpn_sj_sel:set(0) end
+        param = get_param_handle("WPN_POS_"..tostring(i).."_SEL")
+        if wpn_sj_sel:get() == 1 then
+            if get_wpn_mass() ~= WPN_MASS_IDS.LIVE or get_wpn_latearm() ~= WPN_LATEARM_IDS.ON or get_avionics_onground() then
+                param:set(2)
+            else 
+                param:set(1)
+            end
+        else
+            param:set(0)
+        end
     end
+    WPN_GUNS_L_SEL:set(0)
+    WPN_GUNS_R_SEL:set(0)
 end
+
+local wpn_ripple_count = 0
+local wpn_ripple_interval = 0
+local wpn_ripple_elapsed = 0
 
 function update()
     update_storages()
     update_master_mode_changed()
-    if get_avionics_master_mode_aa() then 
-        update_aa()
-    elseif get_avionics_master_mode_ag() then 
-        update_ag()
+    if get_avionics_master_mode_aa() then update_aa()
+    elseif get_avionics_master_mode_ag() then update_ag()
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.SJ then  update_sj()
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.EJ then  update_ej()
     else
         WPN_READY:set(0)
         WPN_SELECTED_WEAPON_TYPE:set(WPN_WEAPON_TYPE_IDS.NO_WEAPON)
+        for i=1,5 do
+            param = get_param_handle("WPN_POS_"..tostring(i).."_SEL")
+            param:set(0)
+        end
+        WPN_GUNS_L_SEL:set(0)
+        WPN_GUNS_R_SEL:set(0)
     end
-    
-    if master_mode == AVIONICS_MASTER_MODE_ID.SJ then 
-        update_sj()
-    elseif master_mode == AVIONICS_MASTER_MODE_ID.EJ then 
-        update_ej()
+
+    if wpn_ripple_count > 0 then
+        wpn_ripple_elapsed = wpn_ripple_elapsed + update_time_step
+        while wpn_ripple_elapsed >= wpn_ripple_interval and wpn_ripple_count > 0 do
+            wpn_ripple_elapsed = wpn_ripple_elapsed - wpn_ripple_interval
+            wpn_ripple_count = wpn_ripple_count - 1
+            local lauch_op = WPN_LAUNCH_OP:get()
+            if lauch_op == WPN_LAUNCH_OP_IDS.SALVO or lauch_op == WPN_LAUNCH_OP_IDS.PAIR then
+                for i=1,5 do
+                    local param = get_param_handle("WPN_POS_"..i.."_SEL")
+                    if param:get() == 1 then
+                        dev:launch_station(i-1)
+                    end
+                end
+            else 
+                dev:launch_station(wpn_ag_sel-1)
+            end
+            update_storages()
+            update_ag_sel_next(true)
+        end
     end
 
     if wpn_guns_on then
@@ -595,7 +739,7 @@ function SetCommand(command,value)
         if value == 1 and not get_avionics_onground() then
             wpn_ej_timeout = 0.5;
             for i=1,5 do
-                local param = get_param_handle("SMS_POS_"..tostring(i).."_SEL")
+                local param = get_param_handle("WPN_POS_"..tostring(i).."_SEL")
                 local station = dev:get_station_info(i-1)
                 if station.weapon.level3 ~= wsType_AA_Missile and (station.count > 0 or station.container) then
                     set_wpn_sto_jet(i,1)
@@ -619,15 +763,21 @@ function SetCommand(command,value)
             wpn_release_elapsed = 0.5
         end
         if get_wpn_ag_ready() and not get_avionics_master_mode_ag_gun() and value == 1 then
+            wpn_ripple_count = WPN_RP:get()-1
+            if wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET or (wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB and get_avionics_master_mode() == AVIONICS_MASTER_MODE_ID.MAN) then
+                wpn_ripple_interval = WPN_IS_TIME:get() / 1000
+            elseif wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
+                wpn_ripple_interval = WPN_IS_M:get() / (get_avionics_gs() or 100)
+                print_message_to_user(wpn_ripple_interval)
+            end
+            wpn_ripple_elapsed = 0
             local lauch_op = WPN_LAUNCH_OP:get()
-            if lauch_op == WPN_LAUNCH_OP_IDS.SALVO then
-                for i=1, wpn_sto_count[wpn_ag_sel] do
-                    dev:launch_station(wpn_ag_sel-1)
-                end
-            elseif lauch_op == WPN_LAUNCH_OP_IDS.PAIR then
-                dev:launch_station(wpn_ag_sel-1)
-                if wpn_sto_name[wpn_ag_sel] == wpn_sto_name[6-wpn_ag_sel] then 
-                    dev:launch_station(4-(wpn_ag_sel-1))
+            if lauch_op == WPN_LAUNCH_OP_IDS.SALVO or lauch_op == WPN_LAUNCH_OP_IDS.PAIR then
+                for i=1,5 do
+                    local param = get_param_handle("WPN_POS_"..i.."_SEL")
+                    if param:get() == 1 then
+                        dev:launch_station(i-1)
+                    end
                 end
             else 
                 dev:launch_station(wpn_ag_sel-1)
@@ -637,6 +787,8 @@ function SetCommand(command,value)
             WPN_RELEASE:set(1)
             wpn_release = true
             wpn_release_elapsed = 0.5
+        elseif wpn_ripple_count > 0 and get_wpn_ag_ready() and not get_avionics_master_mode_ag_gun() and value == 0 then
+            wpn_ripple_count = 0
         end
         if value == 0 and wpn_release  then
             if wpn_release_elapsed == -1 then WPN_RELEASE:set(0) end

@@ -104,6 +104,13 @@ WPN_CCIP_PIPER_AZIMUTH = get_param_handle("WPN_CCIP_PIPER_AZIMUTH")
 WPN_CCIP_PIPER_AVAILABLE = get_param_handle("WPN_CCIP_PIPER_AVAILABLE")
 
 WPN_SELECTED_WEAPON_TYPE = get_param_handle("WPN_SELECTED_WEAPON_TYPE")
+WPN_RP = get_param_handle("WPN_RP")
+WPN_RP_TOTAL = get_param_handle("WPN_RP_TOTAL")
+WPN_IS_M = get_param_handle("WPN_IS_M")
+WPN_IS_TIME = get_param_handle("WPN_IS_TIME")
+WPN_SD = get_param_handle("WPN_SD")
+WPN_GUNS_L_SEL = get_param_handle("WPN_GUNS_L_SEL")
+WPN_GUNS_R_SEL = get_param_handle("WPN_GUNS_R_SEL")
 
 
 function get_wpn_aa_sel()
