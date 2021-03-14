@@ -32,7 +32,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
  
-## Version 0.1.7b - 07 March 2021
+## Version 0.1.7b - 14 March 2021
 
 ### Added
 - A/G Ripple Pulses (RP) and Impact Separation (IS)
