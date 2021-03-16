@@ -242,8 +242,10 @@ function post_initialize()
 
     if birth=="GROUND_HOT" or birth=="AIR_HOT" then
         dev:performClickableAction(device_commands.ElecBatt, 0, true)
+        dev:performClickableAction(device_commands.AviMst, 1, true)
     elseif birth=="GROUND_COLD" then
         dev:performClickableAction(device_commands.ElecBatt, -1, true)
+        dev:performClickableAction(device_commands.AviMst, 0, true)
     end
 
     dev:performClickableAction(device_commands.ElecExtPwr, 0, true)
@@ -251,7 +253,6 @@ function post_initialize()
     dev:performClickableAction(device_commands.ElecAcftIntc, -1, true)
     dev:performClickableAction(device_commands.AviVuhf, 0, true)
 
-    dev:performClickableAction(device_commands.AviMst, 1, true)
     dev:performClickableAction(device_commands.AviMdp1, 1, true)
     dev:performClickableAction(device_commands.AviMdp2, 1, true)
     dev:performClickableAction(device_commands.ElecBkp, 1, true)

@@ -467,13 +467,18 @@ function post_initialize()
     local birth = LockOn_Options.init_conditions.birth_place
     alarm = GetDevice(devices.ALARM)
     hud = GetDevice(devices.HUD)
-    if birth=="GROUND_HOT" then
-        dev:performClickableAction(device_commands.UFCP_UFC, 1, true)
-    elseif birth=="AIR_HOT" then
-        dev:performClickableAction(device_commands.UFCP_UFC, 1, true)
+    if birth=="GROUND_HOT" or birth=="AIR_HOT" then
+        dev:performClickableAction(device_commands.UFCP_EGI, 1, true)
+        dev:performClickableAction(device_commands.UFCP_DVR, 0, true)
+        dev:performClickableAction(device_commands.UFCP_RALT, 1, true)
     elseif birth=="GROUND_COLD" then
-        dev:performClickableAction(device_commands.UFCP_UFC, 0, true)
+        dev:performClickableAction(device_commands.UFCP_EGI, 0.15, true)
+        dev:performClickableAction(device_commands.UFCP_DVR, -1, true)
+        dev:performClickableAction(device_commands.UFCP_RALT, 0, true)
     end
+    dev:performClickableAction(device_commands.UFCP_UFC, 1, true)
+    dev:performClickableAction(device_commands.UFCP_DAY_NIGHT, 0, true)
+
     startup_print("ufcs: postinit end")
 end
 

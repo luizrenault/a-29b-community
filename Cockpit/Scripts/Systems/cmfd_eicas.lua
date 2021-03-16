@@ -62,9 +62,9 @@ local EICAS_SPD_BRK_TXT = get_param_handle("EICAS_SPD_BRK_TXT")
 
 local EICAS_INIT = get_param_handle("EICAS_INIT")
 
-local fuel_init = 300;
+fuel_init = 300;
 
-local fuel_joker = 200;
+fuel_joker = 200;
 
 local torque_tempo = -1
 local np_tempo = -1

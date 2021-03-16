@@ -411,7 +411,7 @@ local function update_ag()
         if param:get() > 0 then sel_qty = sel_qty + 1 end
     end
     wpn_rp_total = wpn_rp * sel_qty
-    if wpn_rp_total > wpn_sto_total_count[wpn_ag_name] then wpn_rp_total = wpn_sto_total_count[wpn_ag_sel] end
+    if wpn_ag_name ~= "" and wpn_rp_total > wpn_sto_total_count[wpn_ag_name] then wpn_rp_total = wpn_sto_total_count[wpn_ag_name] end
 
     WPN_RP_TOTAL:set(wpn_rp_total)
 

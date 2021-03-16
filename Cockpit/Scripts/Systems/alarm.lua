@@ -131,7 +131,6 @@ local caution_light = get_param_handle("CAUTION_LIGHT")
 function update_alerts()
   local i=1
   local warning_flash = 0
-  local warning_on = 0
   for key, value in pairs(warnings) do
       if i >= 10 then  break end
       local text_param = get_param_handle("EICAS_ERROR".. tostring(i) .."_TEXT")
@@ -140,10 +139,8 @@ function update_alerts()
       if value.state == 1 then
           color_param:set(4)
           warning_flash = 1
-          warning_on = 1
       elseif value.state == 2 then
           color_param:set(1)
-          warning_on = 1
       end
       i = i + 1
   end
@@ -157,15 +154,12 @@ function update_alerts()
     elseif flash_elapsed > flash_period then 
       warning_light:set(0)
     end
-  elseif warning_on == 1 then
-    if get_elec_emergency_ok() then warning_light:set(1) end
-  else 
+  else
     warning_light:set(0)
   end
   if not get_elec_emergency_ok() then warning_light:set(0) end
 
   local caution_flash = 0
-  local caution_on = 0
   for key, value in pairs(cautions) do
       if i >= 10 then  break end
       local text_param = get_param_handle("EICAS_ERROR".. tostring(i) .."_TEXT")
@@ -174,10 +168,8 @@ function update_alerts()
       if value.state == 1 then
           color_param:set(5)
           caution_flash = 1
-          caution_on = 1
       elseif value.state == 2 then
           color_param:set(2)
-          caution_on = 1
       end
       i = i + 1
   end
@@ -188,9 +180,7 @@ function update_alerts()
     elseif flash_elapsed > flash_period then 
       caution_light:set(0)
     end
-  elseif caution_on == 1 then
-    if get_elec_emergency_ok() then caution_light:set(1) end
-  else 
+  else
     caution_light:set(0)
   end
   if not get_elec_emergency_ok() then caution_light:set(0) end

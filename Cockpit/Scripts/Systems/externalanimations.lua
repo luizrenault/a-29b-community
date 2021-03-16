@@ -57,6 +57,7 @@ function post_initialize()
 
 	BFI_BARO_param:set(ALT_PRESSURE_STD)
 	set_aircraft_draw_argument_value(DRAW_FAN,-1)
+    dev:performClickableAction(device_commands.EmerSpdBrk, -1, true)
 
 end
 
