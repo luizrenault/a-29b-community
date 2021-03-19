@@ -58,6 +58,8 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Cold Start UFCP Brightness knob default position to Max Brt.
 - Cold Start EGI switch default position to Off.
 - Hot Air/Ground EGI switch default position to Nav.
+- Gear drag increased.
+- SFM parameters according to pilot feedbacks.
 
 ### Fixes
 - FYT 0 selected when no route is pre-loaded on mission.

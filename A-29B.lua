@@ -400,11 +400,11 @@ A_29B =  {
 			Mzalfadt	=	1,  -- Wing pitch coefficient
 			kjx = 2.95, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
 			kjz = 0.00125,  -- Unknown pitch constant. All planes use 0.00125 -- -- Inertia parametre Z - Dimension (clean) airframe drag coefficient at Z (Front) Simply the wing area in square meters (as that is a major factor in drag calculations)
-			Czbe = -0.016, -- Directional stability coefficient  -- coefficient, along Z axis (perpendicular), affects yaw, negative value means force orientation in FC coordinate system
-			cx_gear = 0.0277, -- Additional coefficient of drag for gear extended
+			Czbe = -0.056, -- Directional stability coefficient  -- coefficient, along Z axis (perpendicular), affects yaw, negative value means force orientation in FC coordinate system
+			cx_gear = 0.3, -- Additional coefficient of drag for gear extended
 			cx_flap = 0.095, -- Additional coefficient of drag for flap extended
 			cy_flap = 0.31, -- Additional coefficient of lift for flap extended
-			cx_brk = 0.06, -- Additional coefficient of drag for air brakes
+			cx_brk = 0.6, -- Additional coefficient of drag for air brakes
 			
 			-- Hi guys. I try to calculate the rollrate, or maxrollrate (omxmax) for a plane and I've got the measurements of the plane, Cl (rolling moment coefficient) and Clp.
 			-- I've found a formula for Rollrate which looks like this:
@@ -446,19 +446,40 @@ A_29B =  {
 			-- more efficient. The shorter, thicker the wing, the more unefficient (I would say/guess or whatever)...or you can calculate it (see above) which looks like a 
 			-- nicely spent weekend to me
 			--      M	    Cx0		 Cya		    B		 B4	     Omxmax	    Aldop	    Cymax
-					{-0.1,	0.0187,	0.0746*2,		0.052,	0.012,	0.79,		22.0,		1.45*2,	},
-					{0.0,	0.0187,	0.0746*2,		0.052,	0.012,	0.79,		22.0,		1.45*2,	},
-					{0.2,	0.0187,	0.0746*2,		0.052,	0.012,	1.796144,	22.0,		1.45*2,   },
-					{0.3,	0.0187,	0.0722*2,		0.052,	0.015,	2.24,		19.0,		1.2*2,    },
-					{0.5,	0.0187,	0.0798*2,		0.045,	0.025,	2.323,		17.0,		1.08*2,   },
-					{0.59,	0.0187,	0.084*2,		0.047,	0.026,	2.129077,	17.0,		1.07*2,   },
-					{0.67,	0.0187,	0.0907*2,		0.047,	0.021,	1.943,		14.5,		0.98*2,   },
-					{0.74,	0.0227,	0.0855*2,		0.08,	0.16,	1.675,		10.0,	  	0.72*2,   },
-					{0.76,	0.032,	0.078*2,		0.1,	0.25,	1.577,		9.0,  		0.6*2,    },
-					{0.8,	0.063,	0.072*2,		0.2,	0.36,	1.456,		6.0,	    0.4*2,	},
-					{0.83,	0.1,	0.0725*2,		0.34,	2.4,	0.32,		4.5,		0.3*2,	},
-					{0.9,	0.126,	0.073*2,		0.56,	3.0,	0.076,		3.0,	    0.2*2,	},
-					{1.1,	0.16,	0.03*2,			0.56,	3.0,	0.076,		1.0,		0.3*2		},
+					{-0.1,	0.0187,	0.0746,		    0.052,	0.012,	  2.7,		22.0,		0.0*2,	},
+					{0.00,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.01,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.02,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.03,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.04,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.05,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.06,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.1*2,	},
+					{0.07,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.2*2,	},
+					{0.08,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.3*2,	},
+					{0.09,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.4*2,	},							
+					{0.10,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.5*2,	},
+					{0.11,	0.0287,	0.0146*2,		0.1,	0.092,	  2.7,		22.0,		0.6*2,	},
+					{0.12,	0.0287,	0.0146*2,		0.1,	0.092,	  2.7,		22.0,		0.6*2,	},
+					{0.13,	0.0287,	0.0146*2,		0.1,	0.092,	  2.7,		22.0,		0.7*2,	},
+					{0.14,	0.0287,	0.0146*2,		0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
+					{0.15,	0.0287,	0.0146*2,		0.1,	0.092,	  2.7,		22.0,		1.0*2,	},
+					{0.16,	0.0287,	0.0246*2,		0.1,	0.092,	  2.7,		22.0,		1.1*2,	},
+					{0.17,	0.0287,	0.046*2,		0.1,	0.092,	  2.7,		22.0,		1.15*2,	},
+					{0.18,	0.0287,	0.0646*2,		0.1,	0.092,	  2.7,		22.0,		1.20*2,	},
+					{0.19,	0.0287,	0.0746*2,		0.1,	0.092,	  2.7,		22.0,		1.45*2,	},
+					{0.2,	0.0287,	0.0746*2,		0.1,	0.092,	  2.7,     	22.0,		1.45*2,   },
+					{0.3,	0.0297,	0.0652*2,		0.1,	0.092,	  2.7,		19.0,		1.45*2,    },
+					{0.31,	0.0287,	0.0650*2,		0.1,	0.092,	  2.7,		19.0,		1.45*2,    },
+					{0.39,	0.0420,	0.0522*2,		0.1,	0.092,	  2.7,		19.0,		1.45*2,    },
+					{0.5,	0.0487,	0.0398*2,		0.1,	0.092,	  2.7,		17.0,		1.45*2,   },
+					{0.59,	0.0587,	0.054*2,		0.1,	0.095,	  2.7,	    17.0,		1.45*2,   },
+					{0.67,	0.0487,	0.0707*2,		0.1,	0.091,	  2.7,		14.5,		0.98*2,   },
+					{0.74,	0.0427,	0.0855*2,		0.1,	0.16,	  2.7,		10.0,	  	0.72*2,   },
+					{0.76,	0.032,	0.078*2,		0.1,	0.25,	  2.7,      9.0,  		0.6*2,    },
+					{0.8,	0.063,	0.072*2,		0.2,	0.36,	  2.456,	6.0,	    0.4*2,	},
+					{0.83,	0.1,	0.0725*2,		0.34,	2.4,	  0.32,		4.5,		0.3*2,	},
+					{0.9,	0.126,	0.073*2,		0.56,	3.0,	  0.076,	3.0,	    0.2*2,	},
+					{1.1,	0.16,	0.03*2,			0.56,	3.0,	  0.076,	1.0,		0.3*2		},
 			}
 		}, -- end of aerodynamics
 		engine = 
@@ -470,24 +491,26 @@ A_29B =  {
 			ForsRUD	=	1, -- .91 for afterburning, 1 for non-afterburning -- Afterburner state of the throttle
 			typeng	=	3, -- E_TURBOJET = 0, E_TURBOJET_AB = 1, E_PISTON = 2, E_TURBOPROP = 3,	E_TURBOFAN    = 4,	E_TURBOSHAFT = 5
 			hMaxEng	=	19.5, -- maximum operating altitude for the engine in km -- typically higher than service ceiling of the aircraft
-			dcx_eng	=	0.0114, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
-			cemax	=	0.0225, -- kg / sec - fuel consumption for a single engine in dry configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
+			dcx_eng	=	0.095, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
+			cemax	=	0.0125, -- kg / sec - fuel consumption for a single engine in dry configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
 			cefor	=	0.0225, -- kg / sec - fuel consumption for a single engine in afterburner configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
-			dpdh_m	=	1800, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
-			dpdh_f	=	1800, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			dpdh_m	=	2500, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			dpdh_f	=	2500, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			table_data = {
 			-- Pmax - total thrust in Newtons (kN * 1000) for all engines
 			-- Pfor - total thrust in Newtons (kN * 1000) for all engines
 			--   M		Pmax		 Pfor
-				{0.0,		16620.0},
-				{0.1,		15600.0},
-				{0.2,		14340.0},
-				{0.3,		13320.0},
-				{0.4,		12230.0},
-				{0.5,		11300.0},
-				{0.6,		10600.0},
-				{0.7,		10050.0},
-				{0.8,		 9820.0},
+				{0.0,		18000.0},
+				{0.1,		18000.0},
+				{0.2,		18000.0},
+				{0.3,		18000.0},
+				{0.31,		18000.0},
+				{0.39,		10000.0},
+				{0.4,		 9050.0},
+				{0.5,		 9050.0},
+				{0.6,		 9050.0},
+				{0.7,		 9050.0},
+				{0.8,		 9020.0},
 				{0.9,		 5902.0},
 				{1.0,		 3469.0}
 			}                 
