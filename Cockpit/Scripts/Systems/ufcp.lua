@@ -110,6 +110,35 @@ function update_main()
     UFCP_TEXT:set(text)
 end
 
+function update_com1()
+    local text = ""
+    text = text .. "COM 1\n"
+    UFCP_TEXT:set(text)
+end
+
+function update_com2()
+    local text = ""
+    text = text .. "COM 2\n"
+    UFCP_TEXT:set(text)
+end
+
+function update_nav_aids()
+    local text = ""
+    text = text .. "NAV AIDS\n"
+    UFCP_TEXT:set(text)
+end
+
+function update_vv_vah()
+    local text = ""
+    text = text .. "VV/VAH\n"
+    UFCP_TEXT:set(text)
+end
+
+function update_da_h()
+    local text = ""
+    text = text .. "DA/H\n"
+    UFCP_TEXT:set(text)
+end
 
 UFCP_WPT_TYPE_IDS = {
     FYT = 0,
@@ -396,6 +425,36 @@ function update_wpt()
     UFCP_TEXT:set(text)
 end
 
+function update_xpdr()
+    local text = ""
+    text = text .. "XPDR\n"
+    UFCP_TEXT:set(text)
+end
+
+function update_time()
+    local text = ""
+    text = text .. "TIME\n"
+    UFCP_TEXT:set(text)
+end
+
+function update_mark()
+    local text = ""
+    text = text .. "MARK\n"
+    UFCP_TEXT:set(text)
+end
+
+function update_fix()
+    local text = ""
+    text = text .. "FIX\n"
+    UFCP_TEXT:set(text)
+end
+
+function update_tip()
+    local text = ""
+    text = text .. "TIP\n"
+    UFCP_TEXT:set(text)
+end
+
 local ufcp_menu_sel = 0
 local function update_menu()
     local text = ""
@@ -403,6 +462,24 @@ local function update_menu()
     text = text .. "1LMT 2DTK  3BAL C ACAL\n"
     text = text .. "4NAV 5WS   6EGI E FUEL\n"
     text = text .. "7TAC 8MODE 9OAP O MISC\n"
+    UFCP_TEXT:set(text)
+end
+
+function update_lmt()
+    local text = ""
+    text = text .. "FLIGHT LIMITS\n"
+    UFCP_TEXT:set(text)
+end
+
+function update_dtk()
+    local text = ""
+    text = text .. "DTK\n"
+    UFCP_TEXT:set(text)
+end
+
+function update_bal()
+    local text = ""
+    text = text .. "BAL\n"
     UFCP_TEXT:set(text)
 end
 
@@ -447,13 +524,213 @@ local function update_nav()
     UFCP_TEXT:set(text)
 end
 
+local function update_ws()
+    local text = ""
+    text = text .. "WINGSPAN\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_egi()
+    local text = ""
+    text = text .. "EGI\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_tac()
+    local text = ""
+    text = text .. "TAC MENU\n"
+    text = text .. "1CTLN 2AVOID 3        \n"
+    text = text .. "4     5      6        \n"
+    text = text .. "7     8      9        \n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_tac_ctln()
+    local text = ""
+    text = text .. "TAC CTLN\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_tac_avoid()
+    local text = ""
+    text = text .. "TAC AVOID\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_mode()
+    local text = ""
+    text = text .. "MODE\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_oap()
+    local text = ""
+    text = text .. "OAP\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_acal()
+    local text = ""
+    text = text .. "ACAL\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_fuel()
+    local text = ""
+    text = text .. "FUEL\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_misc()
+    local text = ""
+    text = text .. "MISC\n"
+    text = text .. "1C/F  2PARA 3FTI  C  \n"
+    text = text .. "4DCLT 5CRUS 6DRFT EDL\n"
+    text = text .. "7TK/L 8STRM 9FLIR O  \n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_c_f()
+    local text = ""
+    text = text .. "C/F\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_para()
+    local text = ""
+    text = text .. "PARA\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_fti()
+    local text = ""
+    text = text .. "FTI\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_dclt()
+    local text = ""
+    text = text .. "DCLT\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_crus()
+    local text = ""
+    text = text .. "CRUS\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_drft()
+    local text = ""
+    text = text .. "DRIFT\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_tk_l()
+    local text = ""
+    text = text .. "TK/L\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_strm()
+    local text = ""
+    text = text .. "STORMSCOPE\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_flir()
+    local text = ""
+    text = text .. "FLIR\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_dl_menu()
+    local text = ""
+    text = text .. "DL MENU\n"
+    text = text .. "1SET  2INV  3MSG  C  \n"
+    text = text .. "4DLWP 5SNDP 6     E  \n"
+    text = text .. "7     8S    9     O  \n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_dl_set()
+    local text = ""
+    text = text .. "DL SET\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_dl_inv()
+    local text = ""
+    text = text .. "DL INV\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_dl_msg()
+    local text = ""
+    text = text .. "DL MSG\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_dlwp()
+    local text = ""
+    text = text .. "DLWP\n"
+    UFCP_TEXT:set(text)
+end
+
+local function update_sndp()
+    local text = ""
+    text = text .. "SNDP\n"
+    UFCP_TEXT:set(text)
+end
+
 function update()
     local ufcp_bright = get_cockpit_draw_argument_value(480)
     UFCP_BRIGHT:set(ufcp_bright)
     if ufcp_sel_format == UFCP_FORMAT_IDS.MAIN then update_main()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT then update_wpt()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM1 then update_com1()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM2 or ufcp_sel_format == UFCP_FORMAT_IDS.COM2_NET then update_com2()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_AIDS then update_nav_aids()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.VV_VAH then update_vv_vah()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DA_H then update_da_h()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT then update_wpt()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.XPDR then update_xpdr()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.TIME then update_time()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DL_MENU then update_dl_menu()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.MARK then update_mark()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.FIX then update_fix()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.TIP then update_tip()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.MENU then update_menu()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.LMT then update_lmt()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DTK then update_dtk()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.BAL then update_bal()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.ACAL then update_acal()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE or ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MISC then update_nav()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.WS then update_ws()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.EGI_INS or ufcp_sel_format == UFCP_FORMAT_IDS.EGI_GPS then update_egi()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.FUEL then update_fuel()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.TAC_MENU then update_tac()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.TAC_CTLN then update_tac_ctln()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.TAC_AVOID then update_tac_avoid()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.MODE then update_mode()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.OAP then update_oap()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.MISC then update_misc()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.C_F then update_c_f()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.PARA then update_para()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.FTI then update_fti()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DCLT then update_dclt()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.CRUS then update_crus()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DRFT then update_drft()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.TK_L_DATA or ufcp_sel_format == UFCP_FORMAT_IDS.TK_L_TKOF or ufcp_sel_format == UFCP_FORMAT_IDS.TK_L_LAND then update_tk_l()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.STRM then update_strm()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.FLIR then update_flir()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DL_SET then update_dl_set()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DL_INV then update_dl_inv()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DL_MSG then update_dl_msg()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DLWP then update_dlwp()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.SNDP then update_sndp()
+    
+    
     end
     UFCP_NAV_MODE:set(ufcp_nav_mode)
     UFCP_NAV_TIME:set(ufcp_nav_time)
@@ -536,9 +813,23 @@ HUD_VAH:set(1)
 function SetCommandMain(command,value)
     if command == device_commands.UFCP_1 and value == 1 then
         HUD_VAH:set((HUD_VAH:get() + 1) % 2)
+    elseif command == device_commands.UFCP_2 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DA_H
     elseif command == device_commands.UFCP_4 and value == 1 then
         ufcp_wpt_sel = UFCP_WPT_SEL_IDS.FYT_WP
         ufcp_sel_format = UFCP_FORMAT_IDS.WPT
+    elseif command == device_commands.UFCP_5 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.XPDR
+    elseif command == device_commands.UFCP_6 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.TIME
+    elseif command == device_commands.UFCP_ENTR and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DL_MENU
+    elseif command == device_commands.UFCP_7 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.MARK
+    elseif command == device_commands.UFCP_8 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.FIX
+    elseif command == device_commands.UFCP_9 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.TIP
     elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.MENU
     elseif command == device_commands.UFCP_UP and value == 1 then
@@ -550,15 +841,81 @@ end
 
 function SetCommandMenu(command,value)
     if command == device_commands.UFCP_1 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.LMT
+    elseif command == device_commands.UFCP_2 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DTK
+    elseif command == device_commands.UFCP_3 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.BAL
+    elseif command == device_commands.UFCP_CLR and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.ACAL
     elseif command == device_commands.UFCP_4 and value == 1 then
         ufcp_menu_sel = 0
         ufcp_sel_format = UFCP_FORMAT_IDS.NAV_MODE
+    elseif command == device_commands.UFCP_5 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.WS
+    elseif command == device_commands.UFCP_6 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.EGI_INS
+    elseif command == device_commands.UFCP_ENTR and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.FUEL
+    elseif command == device_commands.UFCP_7 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.TAC_MENU
+    elseif command == device_commands.UFCP_8 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.MODE
+    elseif command == device_commands.UFCP_9 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.OAP
+    elseif command == device_commands.UFCP_0 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.MISC
     elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
     elseif command == device_commands.UFCP_UP and value == 1 then
     elseif command == device_commands.UFCP_DOWN and value == 1 then
     end
 end
 
+function SetCommandTacMenu(command,value)
+    if command == device_commands.UFCP_1 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.TAC_CTLN
+    elseif command == device_commands.UFCP_2 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.TAC_AVOID
+    end
+end
+
+function SetCommandMisc(command,value)
+    if command == device_commands.UFCP_1 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.C_F
+    elseif command == device_commands.UFCP_2 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.PARA
+    elseif command == device_commands.UFCP_3 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.FTI
+    elseif command == device_commands.UFCP_4 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DCLT
+    elseif command == device_commands.UFCP_5 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.CRUS
+    elseif command == device_commands.UFCP_6 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DRFT
+    elseif command == device_commands.UFCP_ENTR and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DL_MENU
+    elseif command == device_commands.UFCP_7 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.TK_L_DATA
+    elseif command == device_commands.UFCP_8 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.STRM
+    elseif command == device_commands.UFCP_9 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.FLIR
+    end
+end
+
+function SetCommandDlMenu(command,value)
+    if command == device_commands.UFCP_1 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DL_SET
+    elseif command == device_commands.UFCP_2 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DL_INV
+    elseif command == device_commands.UFCP_3 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DL_MSG
+    elseif command == device_commands.UFCP_4 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DLWP
+    elseif command == device_commands.UFCP_5 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.SNDP
+    end
+end
 
 function SetCommandCommon(command, value)
     if command == device_commands.UFCP_JOY_DOWN and value == 1 then
@@ -633,6 +990,9 @@ function SetCommand(command,value)
     if ufcp_sel_format == UFCP_FORMAT_IDS.MAIN then SetCommandMain(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT then SetCommandWpt(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.MENU then SetCommandMenu(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.TAC_MENU then SetCommandTacMenu(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.MISC then SetCommandMisc(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DL_MENU then SetCommandDlMenu(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE or ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MISC then SetCommandNav(command, value)
     end
 end
