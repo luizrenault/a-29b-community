@@ -485,6 +485,7 @@ device_commands =
     UFCP_JOY_LEFT                      = __counter(),
     UFCP_JOY_UP                      = __counter(),
     UFCP_JOY_DOWN                      = __counter(),
+    UFCP_VV                      = __counter(),
 
     ALERTS_SET_WARNING                      = __counter(),
     ALERTS_RESET_WARNING                      = __counter(),

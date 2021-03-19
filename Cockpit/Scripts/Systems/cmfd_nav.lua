@@ -84,6 +84,8 @@ local function get_heading(x1, y1, x2, y2)
     end
     if x > 0 then hdg = hdg + 180 end
     hdg = hdg % 360
+    
+    if x == 0 and y == 0 then return get_avionics_hdg() end
     return hdg
 end
 local function cmfd_nav_sel_next_wpt()

@@ -566,6 +566,7 @@ local function update_ej()
             end
         end
     end
+    WPN_READY:set(0)
     WPN_GUNS_L_SEL:set(0)
     WPN_GUNS_R_SEL:set(0)
 end    
@@ -587,6 +588,7 @@ local function update_sj()
     end
     WPN_GUNS_L_SEL:set(0)
     WPN_GUNS_R_SEL:set(0)
+    WPN_READY:set(0)
 end
 
 local wpn_ripple_count = 0

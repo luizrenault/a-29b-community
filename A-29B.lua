@@ -413,13 +413,14 @@ A_29B =  {
 			-- If it Rolls to fast then decrease Omxmax. If The rollaccelleration is to quick, lower kjx.
 			table_data = 
 			{
-			-- Cx0 - Coefficient of drag for zero lift
-			-- Cya - Coefficient of lift for angle of attack
-			-- B - Induced drag factor
-			-- B4 - Viscous drag factor
-			-- Omxmax - Roll rate
-			-- Aldop - Visual effects settings for stability / controlability
-			-- Cymax - Maximum coefficient of lift, corresponding to αstall
+			-- M - Mach number
+			-- Cx0 - Coefficient of drag for zero lift -- Coefficient, drag, profile, of the airplane
+			-- Cya - Coefficient of lift for angle of attack -- Normal force coefficient of the wing and body of the aircraft in the normal direction to that of flight. Inversely proportional to the available G-loading at any Mach value. (lower the Cya value, higher G available) per 1 degree AOA
+			-- B - Induced drag factor -- Polar quad coeff
+			-- B4 - Viscous drag factor --Polar 4th power coeff
+			-- Omxmax - Roll rate - roll rate, rad/s
+			-- Aldop - Visual effects settings for stability / controlability -- Alfadop Max AOA at current M - departure threshold
+			-- Cymax - Maximum coefficient of lift, corresponding to αstall -- Coefficient, lift, maximum possible (ignores other calculations if current Cy > Cymax)
 			-- 
 
 			-- The variables "B" and "B4" in the SFM of DCS are "modifiers" of the variable "drag at zero Lift" aka Cx0 to make those values fit the Lift/Drag (or Drag/Lift)-Polars, 
@@ -470,8 +471,8 @@ A_29B =  {
 			typeng	=	3, -- E_TURBOJET = 0, E_TURBOJET_AB = 1, E_PISTON = 2, E_TURBOPROP = 3,	E_TURBOFAN    = 4,	E_TURBOSHAFT = 5
 			hMaxEng	=	19.5, -- maximum operating altitude for the engine in km -- typically higher than service ceiling of the aircraft
 			dcx_eng	=	0.0114, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
-			cemax	=	0.0225, -- kg / sec - fuel consumption for a single engine in dry configuration
-			cefor	=	0.0225, -- kg / sec - fuel consumption for a single engine in afterburner configuration
+			cemax	=	0.0225, -- kg / sec - fuel consumption for a single engine in dry configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
+			cefor	=	0.0225, -- kg / sec - fuel consumption for a single engine in afterburner configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
 			dpdh_m	=	1800, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			dpdh_f	=	1800, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			table_data = {
@@ -708,9 +709,9 @@ A_29B =  {
 
 	passivCounterm = {
 		CMDS_Edit = true,
-		SingleChargeTotal = 2000,
-		chaff = {default = 1000, increment = 1, chargeSz = 1},
-		flare = {default = 1000,  increment = 1, chargeSz = 1},
+		SingleChargeTotal = 60,
+		chaff = {default = 30, increment = 1, chargeSz = 1},
+		flare = {default = 30,  increment = 1, chargeSz = 1},
 	},
 
 	chaff_flare_dispenser 	= {

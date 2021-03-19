@@ -474,7 +474,7 @@ local HUD_Indication_bias = addPlaceholder("HUD_Indication_bias", {0, 0}, nil, {
 
 -- Velocity numerics
 local HUD_Vel_num_origin	= addPlaceholder("HUD_Vel_num_origin", {-93, 0}, HUD_Indication_bias.name)
-HUD_Vel_num_origin.element_params = {"HUD_VAH"}
+HUD_Vel_num_origin.element_params = {"UFCP_VAH"}
 HUD_Vel_num_origin.controllers = {{"parameter_compare_with_number",0,0}}
 
 object = addStrokeText("HUD_Velocity_num", "520", STROKE_FNT_DFLT_100_NARROW, "RightCenter", {0, 0}, HUD_Vel_num_origin.name, {{"HUD_Velocity_Num"}}, {"%3.0f"})
@@ -491,7 +491,7 @@ local velScaleShortTickLen		= 2
 local Mil_PerOneKnots			= velScale20KnotsStep / 50
 
 local HUD_VelScale_origin = addPlaceholder("HUD_VelScale_origin", {-90, 0}, HUD_Indication_bias.name, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_VelScaleOrigin"}})
-HUD_VelScale_origin.element_params = {"HUD_VAH", "HUD_BRIGHT"}
+HUD_VelScale_origin.element_params = {"UFCP_VAH", "HUD_BRIGHT"}
 HUD_VelScale_origin.controllers = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter", 1}}
 
 
@@ -549,7 +549,7 @@ addStrokeLine("HUD_VelScaleLine", 10, {10, 0}, 90, HUD_VelScale_origin.name)
 
 -- Altitude numerics
 local HUD_Alt_num_origin	= addPlaceholder("HUD_Alt_num_origin", {115, 0}, HUD_Indication_bias.name)
-HUD_Alt_num_origin.element_params = {"HUD_VAH", "HUD_BRIGHT"}
+HUD_Alt_num_origin.element_params = {"UFCP_VAH", "HUD_BRIGHT"}
 HUD_Alt_num_origin.controllers = {{"parameter_compare_with_number",0,0}, {"opacity_using_parameter", 1}}
 
 object = addStrokeText("HUD_Altitude_num_k", "10", STROKE_FNT_DFLT_100_NARROW, "RightCenter", {-20, 0}, HUD_Alt_num_origin.name, {{"HUD_Altitude_Num", 0}}, {"%1.0f"})
@@ -572,7 +572,7 @@ local altScaleShortTickLen		= 2
 local Mil_Per100Feet			= altScale500FeetStep / 50
 
 local HUD_AltScale_origin = addPlaceholder("HUD_AltScale_origin", {84, 0}, HUD_Indication_bias.name, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_AltScaleOrigin"}})
-HUD_AltScale_origin.element_params = {"HUD_VAH"}
+HUD_AltScale_origin.element_params = {"UFCP_VAH"}
 HUD_AltScale_origin.controllers = {{"parameter_compare_with_number",0,1}}
 
 local HUD_AltScale_originLong  = addPlaceholder("HUD_AltScale_originLong", {altScaleShortTickLen, 0}, HUD_AltScale_origin.name, {{"HUD_AltScaleVerPos", 0, Mil_Per100Feet}})
@@ -626,7 +626,7 @@ local VSScaleShortTickLen		= 2
 local VSMil_Per100Feet			= VSScale1000FeetStep / 50
 
 local HUD_VSScale_origin = addPlaceholder(nil, {66, 0}, HUD_Indication_bias.name, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_AltScaleOrigin"}})
-HUD_VSScale_origin.element_params = {"HUD_VV"}
+HUD_VSScale_origin.element_params = {"UFCP_VV"}
 HUD_VSScale_origin.controllers = {{"parameter_compare_with_number",0,1}}
 
 local HUD_VSScale_originLong  = addPlaceholder(nil, {VSScaleShortTickLen, 0}, HUD_VSScale_origin.name, {{"HUD_AltScaleVerPos", 0, VSMil_Per100Feet}})
@@ -650,7 +650,7 @@ object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "AA-DLZ-range"}, "Righ
 
 -- Heading numerics
 local HUD_Hdg_origin	= addPlaceholder("HUD_Hdg_origin", {0, 95}, nil, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_Heading_Bias"}})
-HUD_Hdg_origin.element_params = {"HUD_VAH", "HUD_BRIGHT"}
+HUD_Hdg_origin.element_params = {"UFCP_VAH", "HUD_BRIGHT"}
 HUD_Hdg_origin.controllers = {{"parameter_compare_with_number",0,0}, {"opacity_using_parameter", 1}}
 object = addStrokeText("HUD_Heading_num", "360", STROKE_FNT_DFLT_100_NARROW, "CenterCenter", {0, -12.5}, HUD_Hdg_origin.name, {{"HUD_Heading_Num"}}, {"%03.0f"})
 object.element_params = {"HUD_HDG", "HUD_BRIGHT"}
@@ -664,7 +664,7 @@ local hdgScaleTextShiftY		= 2
 local Mil_PerOneDegree			= hdgScaleTenDegreesStep / 10
 
 local HUD_HdgScale_origin = addPlaceholder("HUD_HdgScale_origin", {0, 97}, nil, {{"HUD_HdgScaleOrigin"}})		--  -53
-HUD_HdgScale_origin.element_params = {"HUD_VAH", "HUD_BRIGHT"}
+HUD_HdgScale_origin.element_params = {"UFCP_VAH", "HUD_BRIGHT"}
 HUD_HdgScale_origin.controllers = {{"parameter_compare_with_number",0,1}, {"opacity_using_parameter", 1}}
 
 local HUD_HdgScale_originLong  = addPlaceholder("HUD_HdgScale_originLong", {0, -hdgScaleTextShiftY}, HUD_HdgScale_origin.name, {{"HUD_HdgScaleHorPos", 0, Mil_PerOneDegree}})

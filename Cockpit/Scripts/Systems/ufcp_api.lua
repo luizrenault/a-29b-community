@@ -1,6 +1,8 @@
 
 UFCP_NAV_MODE = get_param_handle("UFCP_NAV_MODE")
 UFCP_NAV_TIME = get_param_handle("UFCP_NAV_TIME")
+UFCP_VAH = get_param_handle("UFCP_VAH")
+UFCP_VV = get_param_handle("UFCP_VV")
 
 UFCP_FORMAT_IDS = {
     MAIN = 0,
@@ -8,10 +10,17 @@ UFCP_FORMAT_IDS = {
     MENU = 2,
     NAV_MODE = 3,
     NAV_MISC = 4,
+    VVVAH = 5,
 }
 
 UFCP_MAIN_SEL_IDS = {
     FYT = 0,
+}
+
+UFCP_VVVAH_MODE_IDS = {
+    VAH = 0,
+    OFF = 1,
+    VV_VAH = 2,
 }
 
 UFCP_NAV_MODE_IDS = {

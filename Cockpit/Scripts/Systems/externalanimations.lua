@@ -46,7 +46,7 @@ local ALT_PRESSURE_MIN = 29.10 -- in Hg
 
 function post_initialize()
 	
-	DC_param:set(28.0)
+	DC_param:set(24.0)
     hdd_001_brightness_param:set(1.0)
     hdd_002_brightness_param:set(1.0)
     HDD001_PFD_param:set(1.0)

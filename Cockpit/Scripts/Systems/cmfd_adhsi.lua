@@ -1,5 +1,3 @@
-local adhsi_vv = 1
-
 local adhsi_ap_flash = 0
 local adhsi_ap_status_old = 0
 local adhsi_ap_status = 0
@@ -26,7 +24,6 @@ local adhsi_gps_hdg = -1
 
 
 local ADHSI_VV_LIM = get_param_handle("ADHSI_VV_LIM")
-local ADHSI_VV = get_param_handle("ADHSI_VV")
 local ADHSI_AP = get_param_handle("ADHSI_AP")
 local ADHSI_ROLL = get_param_handle("ADHSI_ROLL")
 local ADHSI_PITCH = get_param_handle("ADHSI_PITCH")
@@ -133,7 +130,6 @@ function update_adhsi()
     end
 
     ADHSI_VV_LIM:set(adhsi_vv_lim)
-    ADHSI_VV:set(adhsi_vv)
     ADHSI_AP:set(adhsi_ap)
     ADHSI_ROLL:set(adhsi_roll)
     ADHSI_PITCH:set(adhsi_pitch)
@@ -159,11 +155,8 @@ end
 function SetCommandAdhsi(command,value, CMFD)
     if value == 1 then 
         if command==device_commands.CMFD1OSS8 or command==device_commands.CMFD2OSS8 then 
-            if adhsi_vv == 0 then 
-                adhsi_vv = 1
-            else 
-                adhsi_vv = 0
-            end
+            local ufcp = GetDevice(devices.UFCP)
+            if ufcp then ufcp:performClickableAction(device_commands.UFCP_VV, 1, true) end
         elseif command==device_commands.CMFD1OSS12 or command==device_commands.CMFD2OSS12 then 
             adhsi_hdg_sel = (adhsi_hdg_sel + 1) % 360
         elseif command==device_commands.CMFD1OSS13 or command==device_commands.CMFD2OSS13 then 

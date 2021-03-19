@@ -32,32 +32,40 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
  
-## Version 0.1.7b - 15 March 2021
+## Version 0.1.7b - 18 March 2021
 
 ### Added
 - A/G Ripple Pulses (RP) and Impact Separation (IS)
 - UFCP, throttle handle and stick textures.
+- UFCP VV/VAH format.
+- UFCP VV/VAH now syncs with CMFD ADHSI.
+- Livery template (by Cubeboy)
+- Argentina liveries (by GOA -_Max_)
 
 ### Changed
 - A/G Weapon selection order (External Pylons > Internal Pylons > Ventral Pylon. Left first.)
 - Roll rate reduced.
-- VV/VAH default state is now off [Issue 17](https://github.com/luizrenault/a-29b-community/issues/17)
-- Cold Start ECS switch default position to MAN. [Issue 15](https://github.com/luizrenault/a-29b-community/issues/15)
-- Cold Start Avionics Master switch default position to Off. [Issue 15](https://github.com/luizrenault/a-29b-community/issues/15)
-- Cold Start Emer Speed Break switch default position to Normal. [Issue 15](https://github.com/luizrenault/a-29b-community/issues/15)
-- Cold Start Flaps switch default position to Down. [Issue 15](https://github.com/luizrenault/a-29b-community/issues/15)
-- Cold Start Rec switch default position to Stop. [Issue 15](https://github.com/luizrenault/a-29b-community/issues/15)
-- Cold Start UFCP Brightness knob default position to Max Brt. [Issue 15](https://github.com/luizrenault/a-29b-community/issues/15)
-- Cold Start EGI switch default position to Off. [Issue 15](https://github.com/luizrenault/a-29b-community/issues/15)
+- VV/VAH default state is now off.
+- Cold Start ECS switch default position to MAN.
+- Cold Start Avionics Master switch default position to Off.
+- Cold Start Emer Speed Break switch default position to Normal.
+- Cold Start Flaps switch default position to Down.
+- Cold Start Rec switch default position to Stop.
+- Cold Start UFCP Brightness knob default position to Max Brt.
+- Cold Start EGI switch default position to Off.
 - Hot Air/Ground EGI switch default position to Nav.
-
 
 ### Fixes
 - FYT 0 selected when no route is pre-loaded on mission.
-- Warn and Caut lights now turns off when pressed. [Issue 18.](https://github.com/luizrenault/a-29b-community/issues/18)
+- Warn and Caut lights now turns off when pressed.
 - UFCP Increase Brightness knob rotation to CW.
+- UFCP power source is now avionics master main dc bus.
+- BFI power source is now the backup battery.
 - Rearm / Refuel now sets Fuel Init quantity.
-
+- Battery and gererator voltages.
+- Gear down mapping now working.
+- SJ JET and A/A or A/G RDY overlap.
+- CHMD NAV A/C TRK no loger oscillates when stopped.
 
 ## Version 0.1.6b - 07 March 2021
 

@@ -103,16 +103,16 @@ local font_DED_chars = {
 	[97]	= {latin['Y']+32, ded_char_w, ded_char_h},
 	[98]	= {latin['Z']+32, ded_char_w, ded_char_h},
 
-	[99]	= {symbol['1']-34, ded_char_w, ded_char_h}, -- 17
-	[100]	= {symbol['2']-34, ded_char_w, ded_char_h}, -- 18
-	[101]	= {symbol['3']-34, ded_char_w, ded_char_h}, -- 19
-	[102]	= {symbol['4']-34, ded_char_w, ded_char_h}, -- 20
-	[103]	= {symbol['5']-34, ded_char_w, ded_char_h}, -- 21
-	[104]	= {symbol['6']-34, ded_char_w, ded_char_h}, -- 22
-	[105]	= {symbol['7']-34, ded_char_w, ded_char_h}, -- 23
-	[106]	= {symbol['8']-34, ded_char_w, ded_char_h}, -- 24
-	[107]	= {symbol['9']-34, ded_char_w, ded_char_h}, -- 25
-	[108]	= {symbol['0']-34, ded_char_w, ded_char_h}, -- 16
+	[99]	= {symbol['1']-34, ded_char_w, ded_char_h},
+	[100]	= {symbol['2']-34, ded_char_w, ded_char_h},
+	[101]	= {symbol['3']-34, ded_char_w, ded_char_h},
+	[102]	= {symbol['4']-34, ded_char_w, ded_char_h},
+	[103]	= {symbol['5']-34, ded_char_w, ded_char_h},
+	[104]	= {symbol['6']-34, ded_char_w, ded_char_h},
+	[105]	= {symbol['7']-34, ded_char_w, ded_char_h},
+	[106]	= {symbol['8']-34, ded_char_w, ded_char_h},
+	[107]	= {symbol['9']-34, ded_char_w, ded_char_h},
+	[108]	= {symbol['0']-34, ded_char_w, ded_char_h},
 
 	[109]	= {latin['z']+128, ded_char_w, ded_char_h},	-- small triangles up and down in the same symbol
 	[110]	= {symbol['(']-31, ded_char_w, ded_char_h},

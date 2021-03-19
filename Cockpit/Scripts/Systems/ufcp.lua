@@ -5,6 +5,7 @@ dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
 dofile(LockOn_Options.script_path.."utils.lua")
 dofile(LockOn_Options.script_path.."dump.lua")
 dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
+dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 
 startup_print("ufcs: load")
 
@@ -22,6 +23,7 @@ local UFCP_TEXT = get_param_handle("UFCP_TEXT")
 local CMFD_NAV_FYT = get_param_handle("CMFD_NAV_FYT")
 local EICAS_FUEL_INIT = get_param_handle("EICAS_FUEL_INIT")
 local CMFD_NAV_FYT_OAP_STT = get_param_handle("CMFD_NAV_FYT_OAP_STT")
+local ADHSI_VV = get_param_handle("ADHSI_VV")
 
 
 local ufcp_nav_mode = UFCP_NAV_MODE_IDS.AUTO
@@ -328,6 +330,20 @@ local function replace_text(text, c_start, c_size)
     return text_copy
 end
 
+local function replace_pos(text, c_pos)
+    local text_copy = text:sub(1,c_pos-1)
+    local val = string.byte(text,c_pos)
+    if     val >= string.byte("A") and val <= string.byte("Z") then val = val + 32
+    elseif val >= string.byte("0") and val <= string.byte("9") then val = val - 34
+    elseif val >= string.byte(" ") and val <= string.byte("+") then val = val - 31
+    elseif val >= string.byte(",") and val <= string.byte("/") then val = val - 20
+    elseif val == string.byte(":") then val = val - 30
+    end
+    text_copy = text_copy .. string.char(val)
+    text_copy = text_copy .. text:sub(c_pos + 1)
+    return text_copy
+end
+
 function update_wpt()
 
     ufcp_wpt_save()
@@ -406,6 +422,22 @@ local function update_menu()
     UFCP_TEXT:set(text)
 end
 
+local ufcp_vvvah_mode = UFCP_VVVAH_MODE_IDS.OFF
+local ufcp_vvvah_mode_sel = UFCP_VVVAH_MODE_IDS.OFF
+local function update_vvvah()
+    local text = ""
+    text = text .. "VV/VAH\n\n"
+    if ufcp_vvvah_mode_sel == UFCP_VVVAH_MODE_IDS.VAH    then  text = text .. "*VAH*       \n" else text = text .. " VAH        \n" end
+    if ufcp_vvvah_mode_sel == UFCP_VVVAH_MODE_IDS.OFF    then  text = text .. "*OFF*       \n" else text = text .. " OFF        \n" end
+    if ufcp_vvvah_mode_sel == UFCP_VVVAH_MODE_IDS.VV_VAH then  text = text .. "*VV/VAH*    "   else text = text .. " VV/VAH     " end
+    if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VAH then text = replace_pos(text, 9); text = replace_pos(text, 13); end
+    if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.OFF then text = replace_pos(text, 22); text = replace_pos(text, 26); end
+    if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VV_VAH then text = replace_pos(text, 35); text = replace_pos(text, 42); end
+
+    UFCP_TEXT:set(text)
+end
+
+
 local function update_nav()
     local text = ""
     if ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE then 
@@ -446,14 +478,42 @@ local function update_nav()
     end
     UFCP_TEXT:set(text)
 end
+local function ufcp_on()
+    return get_elec_avionics_ok() and get_cockpit_draw_argument_value(480) > 0
+end
 
 function update()
     local ufcp_bright = get_cockpit_draw_argument_value(480)
-    UFCP_BRIGHT:set(ufcp_bright)
+    if ufcp_on() then 
+        UFCP_BRIGHT:set(ufcp_bright) 
+    else  
+        UFCP_BRIGHT:set(0) 
+        return 0
+    end
+
     if ufcp_sel_format == UFCP_FORMAT_IDS.MAIN then update_main()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT then update_wpt()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.MENU then update_menu()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE or ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MISC then update_nav()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.VVVAH then update_vvvah()
+    end
+    if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VAH then
+        UFCP_VV:set(0)
+        ADHSI_VV:set(0)
+        UFCP_VAH:set(1)
+    elseif ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VV_VAH then 
+        if get_avionics_master_mode() == AVIONICS_MASTER_MODE_ID.NAV or get_avionics_master_mode() == AVIONICS_MASTER_MODE_ID.LANDING then
+            UFCP_VV:set(1)
+            ADHSI_VV:set(1)
+        else
+            UFCP_VV:set(0)
+            ADHSI_VV:set(0)
+        end
+        UFCP_VAH:set(1)
+    elseif ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.OFF then 
+        UFCP_VV:set(0)
+        UFCP_VAH:set(0)
+        ADHSI_VV:set(0)
     end
     UFCP_NAV_MODE:set(ufcp_nav_mode)
     UFCP_NAV_TIME:set(ufcp_nav_time)
@@ -531,11 +591,12 @@ end
 
 
 local HUD_VAH = get_param_handle("HUD_VAH")
-HUD_VAH:set(1)
+HUD_VAH:set(0)
 
 function SetCommandMain(command,value)
     if command == device_commands.UFCP_1 and value == 1 then
-        HUD_VAH:set((HUD_VAH:get() + 1) % 2)
+        ufcp_vvvah_mode_sel = ufcp_vvvah_mode
+        ufcp_sel_format = UFCP_FORMAT_IDS.VVVAH
     elseif command == device_commands.UFCP_4 and value == 1 then
         ufcp_wpt_sel = UFCP_WPT_SEL_IDS.FYT_WP
         ufcp_sel_format = UFCP_FORMAT_IDS.WPT
@@ -597,8 +658,11 @@ function SetCommandNav(command,value)
     SetCommandCommon(command, value)
 end
 
+local ufcp_vvvah_mode_last = UFCP_VVVAH_MODE_IDS.OFF
+
 function SetCommand(command,value)
     debug_message_to_user("ufcs: command "..tostring(command).." = "..tostring(value))
+    if not ufcp_on() then return 0 end
     if command==device_commands.UFCP_WARNRST and value == 1 then
         alarm:SetCommand(command, value)
         hud:SetCommand(command, value)
@@ -628,12 +692,27 @@ function SetCommand(command,value)
         if master_mode ~= master_mode_last then
             set_avionics_master_mode(master_mode)
         end
+    elseif command == device_commands.UFCP_VV and value == 1 then
+        if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VV_VAH then 
+            ufcp_vvvah_mode = ufcp_vvvah_mode_last
+        elseif ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VAH or ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.OFF then 
+            ufcp_vvvah_mode_last = ufcp_vvvah_mode
+            ufcp_vvvah_mode = UFCP_VVVAH_MODE_IDS.VV_VAH
+        end
     end
 
     if ufcp_sel_format == UFCP_FORMAT_IDS.MAIN then SetCommandMain(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT then SetCommandWpt(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.MENU then SetCommandMenu(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE or ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MISC then SetCommandNav(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.VVVAH then 
+        if command == device_commands.UFCP_JOY_DOWN and value == 1 then
+            ufcp_vvvah_mode_sel = (ufcp_vvvah_mode_sel + 1) % (UFCP_VVVAH_MODE_IDS.VV_VAH + 1)
+        elseif command == device_commands.UFCP_JOY_UP and value == 1 then
+            ufcp_vvvah_mode_sel = (ufcp_vvvah_mode_sel - 1) % (UFCP_VVVAH_MODE_IDS.VV_VAH + 1)
+        elseif command == device_commands.UFCP_0 and value == 1 then
+            ufcp_vvvah_mode = ufcp_vvvah_mode_sel
+        end
     end
 end
 

@@ -1,3 +1,6 @@
+dofile(LockOn_Options.script_path.."Systems/engine_api.lua")
+
+
 local EICAS_TQ = get_param_handle("EICAS_TQ")
 local EICAS_TQ_ROT = get_param_handle("EICAS_TQ_ROT")
 local EICAS_TQ_REQ_ROT = get_param_handle("EICAS_TQ_REQ_ROT")
@@ -308,7 +311,9 @@ function update_eicas()
     if bat_amp <= 400 then bat_amp_cor = 0 
     else bat_amp_cor = 1 end
 
-    local bat_volt = 28.8
+    local bat_volt = 24
+    if get_generator_on() and get_engine_on() then bat_volt = 28.8 end
+
     bat_volt = round_to(bat_volt,0.1)
     if bat_volt < 0 then bat_volt = 0 end
     if bat_volt > 40 then bat_volt = 40 end

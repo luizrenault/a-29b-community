@@ -2,6 +2,8 @@
 livery = 
 {
     {"a29b_01.bmp", 0, "a29b_01", false};
+    {"a29b_01.bmp", ROUGHNESS_METALLIC, "a29b_01_Roughmet", false};	
+    {"A-29B Pilot.dds", 0, "a-29b pilot", false};	
 --     {"a29b_02.bmp", 0, "a29b_02", false};
 
    --[[
