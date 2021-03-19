@@ -556,6 +556,10 @@ A_29B =  {
             weightWhenOn = -80,
             wCtrl = 150,
         },
+		{ id = "LaserCode100",  control = 'spinbox',  label = _('Laser code for GBUs, 1x11'), defValue = 6, min = 1, max = 8, dimension = ' ' },
+        { id = "LaserCode10",   control = 'spinbox',  label = _('Laser code for GBUs, 11x1'), defValue = 8, min = 1, max = 8, dimension = ' ' },
+        { id = "LaserCode1",    control = 'spinbox',  label = _('Laser code for GBUs, 111x'), defValue = 8, min = 1, max = 8, dimension = ' ' },
+
         -- {
         --     id = 'PropellorType',
         --     control = 'comboList',

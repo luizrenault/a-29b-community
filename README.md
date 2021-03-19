@@ -28,7 +28,9 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 (En by [311Gryphon](https://www.youtube.com/channel/UCR0ojtQ0Srh2y2O4pelFrDA))
 - [Startup](https://www.youtube.com/watch?v=QbKsh-kPhIA)
 
+# ED Forum
 
+[A-29 Super Tucano](https://forums.eagle.ru/topic/265017-a-29-super-tucano/)
 
 # Changelog
  
@@ -41,6 +43,8 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - UFCP VV/VAH now syncs with CMFD ADHSI.
 - Livery template (by Cubeboy)
 - Argentina liveries (by GOA -_Max_)
+- Several UFCP format placeholders (by x-b-l-a-h)
+- Livery pack (by Urbi)
 
 ### Changed
 - A/G Weapon selection order (External Pylons > Internal Pylons > Ventral Pylon. Left first.)
@@ -295,7 +299,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Throttle and Stick are inconsistent with the real ones;
 
 ### Contributors
-- Renault, Milaré, Athos, Malamem, PaKo, Dino, Jorge Rodrigues, Paoladelf, Farias, and many others.
+- Renault, Milaré, Athos, x-b-l-a-h, Malamem, PaKo, Dino, Jorge Rodrigues, Paoladelf, Farias, Skypork, and many others.
 
 
 ### Changed
