@@ -60,7 +60,8 @@ UFCP_FORMAT_IDS = {
 UFCP_MAIN_SEL_IDS = {
     FYT = 0,
 }
-UFCP_COM1_MODE_IDS = {
+
+UFCP_COM_MODE_IDS = {
     OFF = 0,
     TR= 1,
     TR_G = 2,
@@ -77,18 +78,31 @@ UFCP_COM1_SEL_IDS = {
     MODE = 7,
 }
 
-UFCP_COM1_FREQUENCY_SEL_IDS = {
+UFCP_COM2_SEL_IDS = {
+    MAN_FREQUENCY = 0,
+    CHANNEL = 1,
+    PRST_FREQUENCY = 2,
+    NEXT_FREQUENCY = 3,
+    POWER = 4,
+    MODULATION = 5,
+    SQL = 6,
+    FORMAT = 7,
+    MODE = 8,
+    DL = 9
+}
+
+UFCP_COM_FREQUENCY_SEL_IDS = {
     MAN = 0,
     PRST = 1,
 }
 
-UFCP_COM1_POWER_IDS = {
+UFCP_COM_POWER_IDS = {
     HIGH = 0,
     MED= 1,
     LOW = 2,
 }
 
-UFCP_COM1_MODULATION_IDS = {
+UFCP_COM_MODULATION_IDS = {
     AM = 0,
     FM= 1,
 }
