@@ -69,7 +69,7 @@ function engine_try_start()
     local fuelmainpump_sw=get_cockpit_draw_argument_value(801) == 1
     local pmu_sw=get_cockpit_draw_argument_value(921) == 1
     
-    if bat_sw and ign_sw and fuelbld_sw and fuelmainpump_sw and pmu_sw then
+    if bat_sw and ign_sw and fuelbld_sw and pmu_sw then
         debug_message_to_user("Starter On")
         dispatch_action(nil,iCommandEnginesStart,0)
     end
