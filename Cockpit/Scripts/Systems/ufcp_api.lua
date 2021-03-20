@@ -59,6 +59,9 @@ UFCP_FORMAT_IDS = {
 
 UFCP_MAIN_SEL_IDS = {
     FYT = 0,
+    COM1 = 1,
+    COM2 = 2,
+    TIME = 3,
 }
 
 UFCP_COM_MODE_IDS = {

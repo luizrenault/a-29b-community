@@ -99,16 +99,29 @@ function update_main()
     text = text .. "\n"
 
     -- Line 2
-    text = text .. string.format("COM1 %02.0f [%07.3f]     ", ufcp_com1_channel, ufcp_com1_frequency)
+    text = text .. "COM1"
+    if ufcp_main_sel == UFCP_MAIN_SEL_IDS.COM1 then text = text .. "^" else text = text .. " " end 
+    if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
+        text = text .. string.format("%02.0f [%07.3f]     ", ufcp_com1_channel, ufcp_com1_frequency)
+    else
+        text = text .. string.format("%07.3f          ", ufcp_com1_frequency)
+    end
     text = text .. "\n"
 
     -- Line 3
-    text = text .. string.format("COM2 %02.0f [%07.3f]  ", ufcp_com2_channel, ufcp_com2_frequency)
+    text = text .. "COM2"
+    if ufcp_main_sel == UFCP_MAIN_SEL_IDS.COM2 then text = text .. "^" else text = text .. " " end 
+    if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
+        text = text .. string.format("%02.0f [%07.3f]  ", ufcp_com2_channel, ufcp_com2_frequency)
+    else
+        text = text .. string.format("%07.3f       ", ufcp_com2_frequency)
+    end
     if ufcp_com2_sync then text = text .. "SOK" else text = text .. "   " end
     text = text .. "\n"
 
     -- Line 4
     text = text .. UFCP_TIME_TYPE_IDS[ufcp_time_type]
+    if ufcp_main_sel == UFCP_MAIN_SEL_IDS.TIME then text = text .. "^" else text = text .. " " end 
     local time = get_absolute_model_time()
     local time_secs = math.floor(time % 60)
     local time_mins = math.floor((time / 60) % 60)
@@ -120,7 +133,7 @@ function update_main()
         time_hours =  99
     end
 
-    text = text .. string.format(" %02.0f:%02.0f:%02.0f        ", time_hours, time_mins, time_secs)
+    text = text .. string.format("%02.0f:%02.0f:%02.0f        ", time_hours, time_mins, time_secs)
 
     if ufcp_com2_por then text = text .. "POR" else text = text .. "   " end
     text = text .. "\n"
@@ -1100,7 +1113,25 @@ function SetCommandMain(command,value)
                 ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
             end
         end
-        
+    elseif ufcp_main_sel == UFCP_MAIN_SEL_IDS.COM2 then
+        if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
+            if command == device_commands.UFCP_UP and value == 1 and ufcp_com2_channel < ufcp_com2_max_channel then
+                ufcp_com2_channel = (ufcp_com2_channel + 1)
+                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
+            elseif command == device_commands.UFCP_DOWN and value == 1 and ufcp_com2_channel > 0 then
+                ufcp_com2_channel = (ufcp_com2_channel - 1)
+                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com1_channel + 1]
+            end
+        end
+        if command == device_commands.UFCP_0 and value == 1 then
+            if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
+                ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
+                ufcp_com2_frequency = ufcp_com2_frequency_manual
+            else
+                ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
+                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
+            end
+        end
     end
 end
 
