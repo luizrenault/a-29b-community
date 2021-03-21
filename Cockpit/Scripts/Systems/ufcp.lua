@@ -73,6 +73,18 @@ local ufcp_drift_co = false;
 
 local elapsed = 0
 
+local ufcp_edit_pos = 0
+local ufcp_edit_lim = 0
+local ufcp_edit_string = ""
+local ufcp_edit_validate = nil
+
+local function ufcp_edit_clear()
+    ufcp_edit_pos = 0
+    ufcp_edit_lim = 0
+    ufcp_edit_string = ""
+    ufcp_edit_validate = nil
+end
+
 local function replace_text(text, c_start, c_size)
     if ufcp_edit_pos == 0 then return text end
     local text_copy = text:sub(1,c_start-1)
@@ -431,19 +443,6 @@ local ufcp_wpt_elv = 0
 local ufcp_wpt_time = 0
 
 local Terrain = require('terrain')
-
-
-local ufcp_edit_pos = 0
-local ufcp_edit_lim = 0
-local ufcp_edit_string = ""
-local ufcp_edit_validate = nil
-
-local function ufcp_edit_clear()
-    ufcp_edit_pos = 0
-    ufcp_edit_lim = 0
-    ufcp_edit_string = ""
-    ufcp_edit_validate = nil
-end
 
 local ufcp_wpt_save_now = false
 
