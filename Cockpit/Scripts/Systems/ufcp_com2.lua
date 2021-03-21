@@ -14,6 +14,21 @@ local SEL_IDS = {
 }
 
 -- Variables
+ufcp_com2_mode = UFCP_COM_MODE_IDS.TR
+ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
+ufcp_com2_channel = 0
+ufcp_com2_frequency = 118
+ufcp_com2_tx = false
+ufcp_com2_rx = false
+ufcp_com2_channels = {118, 119, 120, 121, 122, 123, 124, 125, 126, 127}
+ufcp_com2_max_channel = 78
+ufcp_com2_frequency_manual = 118.0
+ufcp_com2_frequency_next = 136.0
+ufcp_com2_power = UFCP_COM_POWER_IDS.HIGH
+ufcp_com2_modulation = UFCP_COM_MODULATION_IDS.AM
+ufcp_com2_sql = true
+ufcp_com2_sync = false
+ufcp_com2_por = false
 
 
 -- Methods

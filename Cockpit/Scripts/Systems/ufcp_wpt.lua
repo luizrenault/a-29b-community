@@ -39,12 +39,18 @@ ufcp_wpt_lat = 0
 ufcp_wpt_lon = 0
 ufcp_wpt_elv = 0
 ufcp_wpt_time = 0
+ufcp_wpt_sel = UFCP_WPT_SEL_IDS.FYT_WP
 
-local ufcp_wpt_sel = UFCP_WPT_SEL_IDS.FYT_WP
 local Terrain = require('terrain')
 local ufcp_wpt_save_now = false
 
 -- Methods
+
+function ufcp_wpt_enter()
+    ufcp_wpt_sel = UFCP_WPT_SEL_IDS.FYT_WP
+    ufcp_sel_format = UFCP_FORMAT_IDS.WPT
+    ufcp_edit_clear()
+end
 
 local function ufcp_wpt_load()
     if ufcp_wpt_fyt_num ~= ufcp_wpt_fyt_num_last then

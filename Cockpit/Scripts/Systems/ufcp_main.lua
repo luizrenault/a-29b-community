@@ -13,7 +13,7 @@ local SEL_IDS = {
 
 -- Methods
 
-local sel = SEL_IDS.FYT
+local ufcp_main_sel = SEL_IDS.FYT
 function update_main()
     elapsed = elapsed + update_time_step
     if elapsed > 0.4 then elapsed = 0
@@ -34,7 +34,7 @@ function update_main()
     else
         text = text .. string.format("%02.0f", CMFD_NAV_FYT:get())
     end
-    if sel == SEL_IDS.FYT then text = text .. "^" else text = text .. " " end 
+    if ufcp_main_sel == SEL_IDS.FYT then text = text .. "^" else text = text .. " " end 
     text = text .. " "
     text = text .. UFCP_NAV_SOLUTION_IDS[ufcp_nav_solution]
     text = text .. " "
@@ -43,7 +43,7 @@ function update_main()
 
     -- Line 2
     text = text .. "COM1"
-    if sel == SEL_IDS.COM1 then text = text .. "^" else text = text .. " " end 
+    if ufcp_main_sel == SEL_IDS.COM1 then text = text .. "^" else text = text .. " " end 
     if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
         text = text .. string.format("%02.0f [%07.3f]     ", ufcp_com1_channel, ufcp_com1_frequency)
     else
@@ -53,7 +53,7 @@ function update_main()
 
     -- Line 3
     text = text .. "COM2"
-    if sel == SEL_IDS.COM2 then text = text .. "^" else text = text .. " " end 
+    if ufcp_main_sel == SEL_IDS.COM2 then text = text .. "^" else text = text .. " " end 
     if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
         text = text .. string.format("%02.0f [%07.3f]  ", ufcp_com2_channel, ufcp_com2_frequency)
     else
@@ -64,7 +64,7 @@ function update_main()
 
     -- Line 4
     text = text .. UFCP_TIME_TYPE_IDS[ufcp_time_type]
-    if sel == SEL_IDS.TIME then text = text .. "^" else text = text .. " " end 
+    if ufcp_main_sel == SEL_IDS.TIME then text = text .. "^" else text = text .. " " end 
     local time = get_absolute_model_time()
     local time_secs = math.floor(time % 60)
     local time_mins = math.floor((time / 60) % 60)
@@ -92,20 +92,17 @@ end
 
 function SetCommandMain(command,value)
     if command == device_commands.UFCP_JOY_DOWN and value == 1 then
-        sel = (sel + 1) % 4
+        ufcp_main_sel = (ufcp_main_sel + 1) % 4
     elseif command == device_commands.UFCP_JOY_UP and value == 1 then
-        sel = (sel - 1) % 4
+        ufcp_main_sel = (ufcp_main_sel - 1) % 4
     elseif command == device_commands.UFCP_1 and value == 1 then
-        ufcp_vvvah_mode_sel = ufcp_vvvah_mode
-        ufcp_sel_format = UFCP_FORMAT_IDS.VVVAH
+        ufcp_vvvah_enter()
     elseif command == device_commands.UFCP_2 and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.DA_H
     elseif command == device_commands.UFCP_3 and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.F_ACK
     elseif command == device_commands.UFCP_4 and value == 1 then
-        ufcp_wpt_sel = UFCP_WPT_SEL_IDS.FYT_WP
-        ufcp_sel_format = UFCP_FORMAT_IDS.WPT
-        ufcp_edit_clear()
+        ufcp_wpt_enter()
     elseif command == device_commands.UFCP_5 and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.XPDR
     elseif command == device_commands.UFCP_6 and value == 1 then
@@ -120,13 +117,13 @@ function SetCommandMain(command,value)
         ufcp_sel_format = UFCP_FORMAT_IDS.TIP
     elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.MENU
-    elseif sel == SEL_IDS.FYT and AVIONICS_ANS_MODE:get() ~= AVIONICS_ANS_MODE_IDS.GPS and cmfd ~= nil then
+    elseif ufcp_main_sel == SEL_IDS.FYT and AVIONICS_ANS_MODE:get() ~= AVIONICS_ANS_MODE_IDS.GPS and ufcp_cmfd_ref ~= nil then
         if command == device_commands.UFCP_UP and value == 1 then 
-            cmfd:performClickableAction(device_commands.NAV_INC_FYT, 1, true)
+            ufcp_cmfd_ref:performClickableAction(device_commands.NAV_INC_FYT, 1, true)
         elseif command == device_commands.UFCP_DOWN and value == 1 then
-            cmfd:performClickableAction(device_commands.NAV_DEC_FYT, 1, true)
+            ufcp_cmfd_ref:performClickableAction(device_commands.NAV_DEC_FYT, 1, true)
         end
-    elseif sel == SEL_IDS.COM1 then
+    elseif ufcp_main_sel == SEL_IDS.COM1 then
         if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
             if command == device_commands.UFCP_UP and value == 1 and ufcp_com1_channel < ufcp_com1_max_channel then
                 ufcp_com1_channel = (ufcp_com1_channel + 1)
@@ -145,7 +142,7 @@ function SetCommandMain(command,value)
                 ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
             end
         end
-    elseif sel == SEL_IDS.COM2 then
+    elseif ufcp_main_sel == SEL_IDS.COM2 then
         if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
             if command == device_commands.UFCP_UP and value == 1 and ufcp_com2_channel < ufcp_com2_max_channel then
                 ufcp_com2_channel = (ufcp_com2_channel + 1)

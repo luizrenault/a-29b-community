@@ -21,12 +21,7 @@ local sensor_data = get_base_data()
 local UFCP_BRIGHT = get_param_handle("UFCP_BRIGHT")
 local ADHSI_VV = get_param_handle("ADHSI_VV")
 
--- METHODS
-
-local function ufcp_on()
-    return get_elec_avionics_ok() and get_cockpit_draw_argument_value(480) > 0
-end
-
+-- Variables
 ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
 ufcp_edit_pos = 0
 ufcp_edit_lim = 0
@@ -40,48 +35,11 @@ ufcp_ident = false
 ufcp_ident_blink = false
 elapsed = 0
 
-ufcp_nav_mode = UFCP_NAV_MODE_IDS.AUTO
-ufcp_nav_time = UFCP_NAV_TIME_IDS.TTD
-ufcp_nav_solution = UFCP_NAV_SOLUTION_IDS.NAV_EGI
-ufcp_nav_egi_error = 35 -- meters
 
-
--- COM1
-ufcp_com1_mode = UFCP_COM_MODE_IDS.TR
-ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
-ufcp_com1_channel = 0
-ufcp_com1_frequency = 118
-ufcp_com1_tx = false
-ufcp_com1_rx = false
-ufcp_com1_channels = {118, 119, 120, 121, 122, 123, 124, 125, 126, 127}
-ufcp_com1_max_channel = 78
-ufcp_com1_frequency_manual = 118.0
-ufcp_com1_frequency_next = 136.0
-ufcp_com1_power = UFCP_COM_POWER_IDS.HIGH
-ufcp_com1_modulation = UFCP_COM_MODULATION_IDS.AM
-ufcp_com1_sql = true
-
--- COM2
-ufcp_com2_mode = UFCP_COM_MODE_IDS.TR
-ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
-ufcp_com2_channel = 0
-ufcp_com2_frequency = 118
-ufcp_com2_tx = false
-ufcp_com2_rx = false
-ufcp_com2_channels = {118, 119, 120, 121, 122, 123, 124, 125, 126, 127}
-ufcp_com2_max_channel = 78
-ufcp_com2_frequency_manual = 118.0
-ufcp_com2_frequency_next = 136.0
-ufcp_com2_power = UFCP_COM_POWER_IDS.HIGH
-ufcp_com2_modulation = UFCP_COM_MODULATION_IDS.AM
-ufcp_com2_sql = true
-ufcp_com2_sync = false
-ufcp_com2_por = false
-
--- VV/VAH
-ufcp_vvvah_mode = UFCP_VVVAH_MODE_IDS.OFF
-ufcp_vvvah_mode_last = UFCP_VVVAH_MODE_IDS.OFF
-
+-- METHODS
+local function ufcp_on()
+    return get_elec_avionics_ok() and get_cockpit_draw_argument_value(480) > 0
+end
 
 function ufcp_edit_clear()
     ufcp_edit_pos = 0
@@ -325,11 +283,11 @@ function SetCommand(command,value)
         if master_mode ~= master_mode_last then
             set_avionics_master_mode(master_mode)
         end
-    -- TODO is this still used?
+    -- TODO is this still used? Yes, because has to monitor changes from CMFD.
     elseif command == device_commands.UFCP_VV and value == 1 then
         if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VV_VAH then 
             ufcp_vvvah_mode = ufcp_vvvah_mode_last
-        elseif ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VAH or ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.OFF then 
+        elseif ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VAH or ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.OFF then
             ufcp_vvvah_mode_last = ufcp_vvvah_mode
             ufcp_vvvah_mode = UFCP_VVVAH_MODE_IDS.VV_VAH
         end

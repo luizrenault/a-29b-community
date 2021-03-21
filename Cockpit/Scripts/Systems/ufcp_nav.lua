@@ -3,6 +3,10 @@ local CMFD_NAV_FYT_OAP_STT = get_param_handle("CMFD_NAV_FYT_OAP_STT")
 -- Constants
 
 -- Variables
+ufcp_nav_mode = UFCP_NAV_MODE_IDS.AUTO
+ufcp_nav_time = UFCP_NAV_TIME_IDS.TTD
+ufcp_nav_solution = UFCP_NAV_SOLUTION_IDS.NAV_EGI
+ufcp_nav_egi_error = 35 -- meters
 
 
 local ufcp_menu_sel = 0
