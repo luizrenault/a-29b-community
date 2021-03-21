@@ -4,8 +4,8 @@ dofile(LockOn_Options.script_path.."devices.lua")
 dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
 dofile(LockOn_Options.script_path.."utils.lua")
 dofile(LockOn_Options.script_path.."dump.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
 dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
+dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
 
 startup_print("ufcs: load")
 
@@ -13,6 +13,7 @@ local dev = GetSelf()
 local alarm 
 local hud
 
+update_time_step = 0.02 --update will be called 50 times per second
 make_default_activity(update_time_step)
 
 local sensor_data = get_base_data()
@@ -24,6 +25,108 @@ local ADHSI_VV = get_param_handle("ADHSI_VV")
 
 local function ufcp_on()
     return get_elec_avionics_ok() and get_cockpit_draw_argument_value(480) > 0
+end
+
+ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+ufcp_edit_pos = 0
+ufcp_edit_lim = 0
+ufcp_edit_string = ""
+ufcp_edit_validate = nil
+
+ufcp_cmfd_ref = nil
+
+ufcp_time_type =  UFCP_TIME_TYPE_IDS.LC
+ufcp_ident = false
+ufcp_ident_blink = false
+elapsed = 0
+
+ufcp_nav_mode = UFCP_NAV_MODE_IDS.AUTO
+ufcp_nav_time = UFCP_NAV_TIME_IDS.TTD
+ufcp_nav_solution = UFCP_NAV_SOLUTION_IDS.NAV_EGI
+ufcp_nav_egi_error = 35 -- meters
+
+
+-- COM1
+ufcp_com1_mode = UFCP_COM_MODE_IDS.TR
+ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
+ufcp_com1_channel = 0
+ufcp_com1_frequency = 118
+ufcp_com1_tx = false
+ufcp_com1_rx = false
+ufcp_com1_channels = {118, 119, 120, 121, 122, 123, 124, 125, 126, 127}
+ufcp_com1_max_channel = 78
+ufcp_com1_frequency_manual = 118.0
+ufcp_com1_frequency_next = 136.0
+ufcp_com1_power = UFCP_COM_POWER_IDS.HIGH
+ufcp_com1_modulation = UFCP_COM_MODULATION_IDS.AM
+ufcp_com1_sql = true
+
+-- COM2
+ufcp_com2_mode = UFCP_COM_MODE_IDS.TR
+ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
+ufcp_com2_channel = 0
+ufcp_com2_frequency = 118
+ufcp_com2_tx = false
+ufcp_com2_rx = false
+ufcp_com2_channels = {118, 119, 120, 121, 122, 123, 124, 125, 126, 127}
+ufcp_com2_max_channel = 78
+ufcp_com2_frequency_manual = 118.0
+ufcp_com2_frequency_next = 136.0
+ufcp_com2_power = UFCP_COM_POWER_IDS.HIGH
+ufcp_com2_modulation = UFCP_COM_MODULATION_IDS.AM
+ufcp_com2_sql = true
+ufcp_com2_sync = false
+ufcp_com2_por = false
+
+-- VV/VAH
+ufcp_vvvah_mode = UFCP_VVVAH_MODE_IDS.OFF
+ufcp_vvvah_mode_last = UFCP_VVVAH_MODE_IDS.OFF
+
+
+function ufcp_edit_clear()
+    ufcp_edit_pos = 0
+    ufcp_edit_lim = 0
+    ufcp_edit_string = ""
+    ufcp_edit_validate = nil
+end
+
+function replace_text(text, c_start, c_size)
+    if ufcp_edit_pos == 0 then return text end
+    local text_copy = text:sub(1,c_start-1)
+    local text_new = text:sub(c_start, c_start+c_size-1)
+    if ufcp_edit_pos > 0 then 
+        text_new = "*"
+        for i=1,(c_size - ufcp_edit_pos-2) do
+            text_new = text_new .. " "
+        end
+        text_new = text_new .. ufcp_edit_string .. "*"
+    end
+    for i=1, c_size do
+        local val = string.byte(text_new,i)
+        if val >= string.byte("A") and val <= string.byte("Z") then val = val + 32
+        elseif val >= string.byte("0") and val <= string.byte("9") then val = val - 34
+        elseif val >= string.byte(" ") and val <= string.byte("+") then val = val - 31
+        elseif val >= string.byte(",") and val <= string.byte("/") then val = val - 20
+        elseif val == string.byte(":") then val = val - 30
+        end
+        text_copy = text_copy .. string.char(val)
+    end
+    text_copy = text_copy .. text:sub(c_start + c_size)
+    return text_copy
+end
+
+function replace_pos(text, c_pos)
+    local text_copy = text:sub(1,c_pos-1)
+    local val = string.byte(text,c_pos)
+    if     val >= string.byte("A") and val <= string.byte("Z") then val = val + 32
+    elseif val >= string.byte("0") and val <= string.byte("9") then val = val - 34
+    elseif val >= string.byte(" ") and val <= string.byte("+") then val = val - 31
+    elseif val >= string.byte(",") and val <= string.byte("/") then val = val - 20
+    elseif val == string.byte(":") then val = val - 30
+    end
+    text_copy = text_copy .. string.char(val)
+    text_copy = text_copy .. text:sub(c_pos + 1)
+    return text_copy
 end
 
 dofile(LockOn_Options.script_path.."Systems/ufcp_main.lua")
@@ -60,6 +163,7 @@ dofile(LockOn_Options.script_path.."Systems/ufcp_tkl.lua")
 dofile(LockOn_Options.script_path.."Systems/ufcp_strm.lua")
 dofile(LockOn_Options.script_path.."Systems/ufcp_flir.lua")
 dofile(LockOn_Options.script_path.."Systems/ufcp_dl.lua")
+
 
 function update()
     local ufcp_bright = get_cockpit_draw_argument_value(480)
@@ -138,9 +242,9 @@ function update()
 
     -- UPDATE DRIFT C/O MODE
     if ufcp_drift_co or get_avionics_master_mode_ag() then
-        HUD_DRIFT_CO:set(1)
+        UFCP_DRIFT_CO:set(1)
     else
-        HUD_DRIFT_CO:set(0)
+        UFCP_DRIFT_CO:set(0)
     end
 
     UFCP_NAV_MODE:set(ufcp_nav_mode)

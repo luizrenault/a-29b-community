@@ -3,6 +3,7 @@ UFCP_NAV_TIME = get_param_handle("UFCP_NAV_TIME")
 UFCP_VAH = get_param_handle("UFCP_VAH")
 UFCP_VV = get_param_handle("UFCP_VV")
 UFCP_TEXT = get_param_handle("UFCP_TEXT")
+UFCP_DRIFT_CO = get_param_handle("UFCP_DRIFT_CO")
 
 UFCP_FORMAT_IDS = {
     MAIN = 0,
@@ -57,67 +58,64 @@ UFCP_FORMAT_IDS = {
     F_ACK = 49,
 }
 
-ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
-
 -- COM 1 & 2
 UFCP_COM_FREQUENCY_SEL_IDS = {
     MAN = 0,
     PRST = 1,
 }
 
-ufcp_edit_pos = 0
-ufcp_edit_lim = 0
-ufcp_edit_string = ""
-ufcp_edit_validate = nil
+UFCP_TIME_TYPE_IDS = {
+    LC = 0,
+    RT = 1,
+    SW = 2.
+}
+UFCP_TIME_TYPE_IDS[UFCP_TIME_TYPE_IDS.LC] = "LC"
+UFCP_TIME_TYPE_IDS[UFCP_TIME_TYPE_IDS.RT] = "RT"
+UFCP_TIME_TYPE_IDS[UFCP_TIME_TYPE_IDS.SW] = "SW"
 
-UFCP_TEXT = get_param_handle("UFCP_TEXT")
+UFCP_NAV_MODE_IDS = {
+    MAN = 0,
+    AUTO = 1,
+    END = 2,
+}
 
-ufcp_cmfd_ref = nil
+UFCP_NAV_TIME_IDS = {
+    ETA = 0,
+    TTD = 1,
+    DT = 2,
+    END = 3,
+}
 
-update_time_step = 0.02 --update will be called 50 times per second
+UFCP_NAV_SOLUTION_IDS = {
+    NAV_EGI = 0,
+    NAV_INS = 1,
+    NAV_GPS = 2,
+    NAV_BU  = 3,
+}
+UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_EGI] = "NAV-EGI"
+UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_INS] = "NAV-INS"
+UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_GPS] = "NAV-GPS"
+UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_BU] = "NAV-B/U"
 
-function ufcp_edit_clear()
-    ufcp_edit_pos = 0
-    ufcp_edit_lim = 0
-    ufcp_edit_string = ""
-    ufcp_edit_validate = nil
-end
+UFCP_COM_MODE_IDS = {
+    OFF = 0,
+    TR= 1,
+    TR_G = 2,
+}
 
-function replace_text(text, c_start, c_size)
-    if ufcp_edit_pos == 0 then return text end
-    local text_copy = text:sub(1,c_start-1)
-    local text_new = text:sub(c_start, c_start+c_size-1)
-    if ufcp_edit_pos > 0 then 
-        text_new = "*"
-        for i=1,(c_size - ufcp_edit_pos-2) do
-            text_new = text_new .. " "
-        end
-        text_new = text_new .. ufcp_edit_string .. "*"
-    end
-    for i=1, c_size do
-        local val = string.byte(text_new,i)
-        if val >= string.byte("A") and val <= string.byte("Z") then val = val + 32
-        elseif val >= string.byte("0") and val <= string.byte("9") then val = val - 34
-        elseif val >= string.byte(" ") and val <= string.byte("+") then val = val - 31
-        elseif val >= string.byte(",") and val <= string.byte("/") then val = val - 20
-        elseif val == string.byte(":") then val = val - 30
-        end
-        text_copy = text_copy .. string.char(val)
-    end
-    text_copy = text_copy .. text:sub(c_start + c_size)
-    return text_copy
-end
+UFCP_COM_POWER_IDS = {
+    HIGH = 0,
+    MED= 1,
+    LOW = 2,
+}
 
-function replace_pos(text, c_pos)
-    local text_copy = text:sub(1,c_pos-1)
-    local val = string.byte(text,c_pos)
-    if     val >= string.byte("A") and val <= string.byte("Z") then val = val + 32
-    elseif val >= string.byte("0") and val <= string.byte("9") then val = val - 34
-    elseif val >= string.byte(" ") and val <= string.byte("+") then val = val - 31
-    elseif val >= string.byte(",") and val <= string.byte("/") then val = val - 20
-    elseif val == string.byte(":") then val = val - 30
-    end
-    text_copy = text_copy .. string.char(val)
-    text_copy = text_copy .. text:sub(c_pos + 1)
-    return text_copy
-end
+UFCP_COM_MODULATION_IDS = {
+    AM = 0,
+    FM= 1,
+}
+
+UFCP_VVVAH_MODE_IDS = {
+    VAH = 0,
+    OFF = 1,
+    VV_VAH = 2,
+}

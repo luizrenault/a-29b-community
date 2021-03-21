@@ -1,14 +1,3 @@
-dofile(LockOn_Options.script_path.."command_defs.lua")
-dofile(LockOn_Options.script_path.."functions.lua")
-dofile(LockOn_Options.script_path.."devices.lua")
-dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
-dofile(LockOn_Options.script_path.."utils.lua")
-dofile(LockOn_Options.script_path.."dump.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
-dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_time.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_nav.lua")
-
 local CMFD_NAV_FYT = get_param_handle("CMFD_NAV_FYT")
 local EICAS_FUEL_INIT = get_param_handle("EICAS_FUEL_INIT")
 
@@ -21,10 +10,6 @@ local SEL_IDS = {
 }
 
 -- Variables
-ufcp_time_type =  UFCP_TIME_TYPE_IDS.LC
-ufcp_ident = false
-ufcp_ident_blink = false
-elapsed = 0
 
 -- Methods
 

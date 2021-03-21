@@ -1,44 +1,9 @@
-dofile(LockOn_Options.script_path.."command_defs.lua")
-dofile(LockOn_Options.script_path.."functions.lua")
-dofile(LockOn_Options.script_path.."devices.lua")
-dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
-dofile(LockOn_Options.script_path.."utils.lua")
-dofile(LockOn_Options.script_path.."dump.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
-
 local CMFD_NAV_FYT_OAP_STT = get_param_handle("CMFD_NAV_FYT_OAP_STT")
 
 -- Constants
-UFCP_NAV_MODE_IDS = {
-    MAN = 0,
-    AUTO = 1,
-    END = 2,
-}
-
-UFCP_NAV_TIME_IDS = {
-    ETA = 0,
-    TTD = 1,
-    DT = 2,
-    END = 3,
-}
-
-UFCP_NAV_SOLUTION_IDS = {
-    NAV_EGI = 0,
-    NAV_INS = 1,
-    NAV_GPS = 2,
-    NAV_BU  = 3,
-}
-UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_EGI] = "NAV-EGI"
-UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_INS] = "NAV-INS"
-UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_GPS] = "NAV-GPS"
-UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_BU] = "NAV-B/U"
 
 -- Variables
 
-ufcp_nav_mode = UFCP_NAV_MODE_IDS.AUTO
-ufcp_nav_time = UFCP_NAV_TIME_IDS.TTD
-ufcp_nav_solution = UFCP_NAV_SOLUTION_IDS.NAV_EGI
-ufcp_nav_egi_error = 35 -- meters
 
 local ufcp_menu_sel = 0
 function update_nav()

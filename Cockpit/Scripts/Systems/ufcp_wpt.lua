@@ -1,12 +1,3 @@
-dofile(LockOn_Options.script_path.."command_defs.lua")
-dofile(LockOn_Options.script_path.."functions.lua")
-dofile(LockOn_Options.script_path.."devices.lua")
-dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
-dofile(LockOn_Options.script_path.."utils.lua")
-dofile(LockOn_Options.script_path.."dump.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
-dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
-
 local CMFD_NAV_GET_INDEX = get_param_handle("CMFD_NAV_GET_INDEX")
 local CMFD_NAV_GET_LAT = get_param_handle("CMFD_NAV_GET_LAT")
 local CMFD_NAV_GET_LON = get_param_handle("CMFD_NAV_GET_LON")

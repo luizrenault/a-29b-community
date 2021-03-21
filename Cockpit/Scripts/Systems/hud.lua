@@ -6,7 +6,6 @@ dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
 dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
 dofile(LockOn_Options.script_path.."Systems/weapon_system_api.lua")
 dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_nav.lua")
 
 startup_print("hud: load")
 
@@ -492,7 +491,8 @@ function update()
     local angleh = math.atan2(iasz, iasx) - math.atan2(speedz, speedx)
     angleh = math.rad(sensor_data.getAngleOfSlide())-angleh
 
-    if HUD_DRIFT_CO:get() == 1 then 
+    
+    if UFCP_DRIFT_CO:get() == 1 then 
         angleh = 0
     else 
     end

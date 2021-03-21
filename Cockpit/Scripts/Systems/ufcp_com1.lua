@@ -1,11 +1,3 @@
-dofile(LockOn_Options.script_path.."command_defs.lua")
-dofile(LockOn_Options.script_path.."functions.lua")
-dofile(LockOn_Options.script_path.."devices.lua")
-dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
-dofile(LockOn_Options.script_path.."utils.lua")
-dofile(LockOn_Options.script_path.."dump.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
-
 -- Constants
 
 local SEL_IDS = {
@@ -19,38 +11,10 @@ local SEL_IDS = {
     MODE = 7,
 }
 
-local MODE_IDS = {
-    OFF = 0,
-    TR= 1,
-    TR_G = 2,
-}
 
-local POWER_IDS = {
-    HIGH = 0,
-    MED= 1,
-    LOW = 2,
-}
-
-local MODULATION_IDS = {
-    AM = 0,
-    FM= 1,
-}
 
 -- Inits
 
-ufcp_com1_mode = MODE_IDS.TR
-ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
-ufcp_com1_channel = 0
-ufcp_com1_frequency = 118
-ufcp_com1_tx = false
-ufcp_com1_rx = false
-ufcp_com1_channels = {118, 119, 120, 121, 122, 123, 124, 125, 126, 127}
-ufcp_com1_max_channel = 78
-ufcp_com1_frequency_manual = 118.0
-ufcp_com1_frequency_next = 136.0
-ufcp_com1_power = POWER_IDS.HIGH
-ufcp_com1_modulation = MODULATION_IDS.AM
-ufcp_com1_sql = true
 
 -- Methods
 
@@ -61,11 +25,11 @@ function update_com1()
     -- Line 1
     text = text .. "       COM 1   "
     if sel == SEL_IDS.MODE then text = text .. "*" else text = text .. " " end
-    if ufcp_com1_mode == MODE_IDS.OFF then
+    if ufcp_com1_mode == UFCP_COM_MODE_IDS.OFF then
         text = text .. "OFF "
-    elseif ufcp_com1_mode == MODE_IDS.TR then
+    elseif ufcp_com1_mode == UFCP_COM_MODE_IDS.TR then
         text = text .. "TR  "
-    elseif ufcp_com1_mode == MODE_IDS.TR_G then
+    elseif ufcp_com1_mode == UFCP_COM_MODE_IDS.TR_G then
         text = text .. "TR+G"
     end
     if sel == SEL_IDS.MODE then text = text .. "*" else text = text .. " " end
@@ -107,17 +71,17 @@ function update_com1()
     -- Line 5
     text = text .. "POWER"
     if sel == SEL_IDS.POWER then text = text .. "*" else text = text .. " " end
-    if ufcp_com1_power == POWER_IDS.HIGH then
+    if ufcp_com1_power == UFCP_COM_POWER_IDS.HIGH then
         text = text .. "HIGH"
-    elseif ufcp_com1_power == POWER_IDS.MED then
+    elseif ufcp_com1_power == UFCP_COM_POWER_IDS.MED then
         text = text .. "MED "
-    elseif ufcp_com1_power == POWER_IDS.LOW then
+    elseif ufcp_com1_power == UFCP_COM_POWER_IDS.LOW then
         text = text .. "LOW "
     end
     if sel == SEL_IDS.POWER then text = text .. "*" else text = text .. " " end
     text = text .. " "
     if sel == SEL_IDS.MODULATION then text = text .. "*" else text = text .. " " end
-    if ufcp_com1_modulation == MODULATION_IDS.FM then
+    if ufcp_com1_modulation == UFCP_COM_MODULATION_IDS.FM then
         text = text .. "FM"
     else
         text = text .. "AM"

@@ -433,11 +433,11 @@ HUD_FPM_origin.controllers = {{"parameter_compare_with_number",0,0}, {"opacity_u
 
 
 object = addStrokeSymbol("HUD_FPM", {"a29b_stroke_symbols_HUD", "2-flightpath-marker"}, "FromSet", {0, 0}, HUD_FPM_origin.name, {{"HUD_FPM_Flash"}})
-object.element_params = {"HUD_FPM_SLIDE", "HUD_FPM_VERT", "HUD_DRIFT_CO", "HUD_BRIGHT"}
+object.element_params = {"HUD_FPM_SLIDE", "HUD_FPM_VERT", "UFCP_DRIFT_CO", "HUD_BRIGHT"}
 object.controllers = {{"move_left_right_using_parameter", 0, 0.75}, {"move_up_down_using_parameter", 1, 0.75}, {"parameter_compare_with_number",2,0}, {"opacity_using_parameter", 3}}
 
 object = addStrokeSymbol("HUD_FPM_CO", {"a29b_stroke_symbols_HUD", "2-flightpath-marker-co"}, "FromSet", {0, 0}, HUD_FPM_origin.name, {{"HUD_FPM_Flash"}})
-object.element_params = {"HUD_FPM_VERT", "HUD_DRIFT_CO", "HUD_BRIGHT"}
+object.element_params = {"HUD_FPM_VERT", "UFCP_DRIFT_CO", "HUD_BRIGHT"}
 object.controllers = {{"move_up_down_using_parameter", 0, 0.75}, {"parameter_compare_with_number",1,1}, {"opacity_using_parameter", 2}}
 
 -- FPM cross
