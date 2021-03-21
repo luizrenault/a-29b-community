@@ -73,6 +73,45 @@ local ufcp_drift_co = false;
 
 local elapsed = 0
 
+local function replace_text(text, c_start, c_size)
+    if ufcp_edit_pos == 0 then return text end
+    local text_copy = text:sub(1,c_start-1)
+    local text_new = text:sub(c_start, c_start+c_size-1)
+    if ufcp_edit_pos > 0 then 
+        text_new = "*"
+        for i=1,(c_size - ufcp_edit_pos-2) do
+            text_new = text_new .. " "
+        end
+        text_new = text_new .. ufcp_edit_string .. "*"
+    end
+    for i=1, c_size do
+        local val = string.byte(text_new,i)
+        if val >= string.byte("A") and val <= string.byte("Z") then val = val + 32
+        elseif val >= string.byte("0") and val <= string.byte("9") then val = val - 34
+        elseif val >= string.byte(" ") and val <= string.byte("+") then val = val - 31
+        elseif val >= string.byte(",") and val <= string.byte("/") then val = val - 20
+        elseif val == string.byte(":") then val = val - 30
+        end
+        text_copy = text_copy .. string.char(val)
+    end
+    text_copy = text_copy .. text:sub(c_start + c_size)
+    return text_copy
+end
+
+local function replace_pos(text, c_pos)
+    local text_copy = text:sub(1,c_pos-1)
+    local val = string.byte(text,c_pos)
+    if     val >= string.byte("A") and val <= string.byte("Z") then val = val + 32
+    elseif val >= string.byte("0") and val <= string.byte("9") then val = val - 34
+    elseif val >= string.byte(" ") and val <= string.byte("+") then val = val - 31
+    elseif val >= string.byte(",") and val <= string.byte("/") then val = val - 20
+    elseif val == string.byte(":") then val = val - 30
+    end
+    text_copy = text_copy .. string.char(val)
+    text_copy = text_copy .. text:sub(c_pos + 1)
+    return text_copy
+end
+
 function update_main()
     elapsed = elapsed + update_time_step
     if elapsed > 0.4 then elapsed = 0
@@ -524,45 +563,6 @@ local function ufcp_continue_edit(text, save)
     if ufcp_edit_validate then ufcp_edit_string = ufcp_edit_validate(ufcp_edit_string, save) end
     if ufcp_edit_string:len() > ufcp_edit_lim then ufcp_edit_string = ufcp_edit_string:sub(1,ufcp_edit_lim) end
     ufcp_edit_pos = ufcp_edit_string:len()
-end
-
-local function replace_text(text, c_start, c_size)
-    if ufcp_edit_pos == 0 then return text end
-    local text_copy = text:sub(1,c_start-1)
-    local text_new = text:sub(c_start, c_start+c_size-1)
-    if ufcp_edit_pos > 0 then 
-        text_new = "*"
-        for i=1,(c_size - ufcp_edit_pos-2) do
-            text_new = text_new .. " "
-        end
-        text_new = text_new .. ufcp_edit_string .. "*"
-    end
-    for i=1, c_size do
-        local val = string.byte(text_new,i)
-        if val >= string.byte("A") and val <= string.byte("Z") then val = val + 32
-        elseif val >= string.byte("0") and val <= string.byte("9") then val = val - 34
-        elseif val >= string.byte(" ") and val <= string.byte("+") then val = val - 31
-        elseif val >= string.byte(",") and val <= string.byte("/") then val = val - 20
-        elseif val == string.byte(":") then val = val - 30
-        end
-        text_copy = text_copy .. string.char(val)
-    end
-    text_copy = text_copy .. text:sub(c_start + c_size)
-    return text_copy
-end
-
-local function replace_pos(text, c_pos)
-    local text_copy = text:sub(1,c_pos-1)
-    local val = string.byte(text,c_pos)
-    if     val >= string.byte("A") and val <= string.byte("Z") then val = val + 32
-    elseif val >= string.byte("0") and val <= string.byte("9") then val = val - 34
-    elseif val >= string.byte(" ") and val <= string.byte("+") then val = val - 31
-    elseif val >= string.byte(",") and val <= string.byte("/") then val = val - 20
-    elseif val == string.byte(":") then val = val - 30
-    end
-    text_copy = text_copy .. string.char(val)
-    text_copy = text_copy .. text:sub(c_pos + 1)
-    return text_copy
 end
 
 local function update_wpt()
