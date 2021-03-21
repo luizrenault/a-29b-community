@@ -1,4 +1,3 @@
-
 UFCP_NAV_MODE = get_param_handle("UFCP_NAV_MODE")
 UFCP_NAV_TIME = get_param_handle("UFCP_NAV_TIME")
 UFCP_VAH = get_param_handle("UFCP_VAH")
@@ -57,6 +56,7 @@ UFCP_FORMAT_IDS = {
     F_ACK = 49,
 }
 
+-- MAIN
 UFCP_MAIN_SEL_IDS = {
     FYT = 0,
     COM1 = 1,
@@ -64,34 +64,11 @@ UFCP_MAIN_SEL_IDS = {
     TIME = 3,
 }
 
+-- COM 1 & 2
 UFCP_COM_MODE_IDS = {
     OFF = 0,
     TR= 1,
     TR_G = 2,
-}
-
-UFCP_COM1_SEL_IDS = {
-    MAN_FREQUENCY = 0,
-    CHANNEL = 1,
-    PRST_FREQUENCY = 2,
-    NEXT_FREQUENCY = 3,
-    POWER = 4,
-    MODULATION = 5,
-    SQL = 6,
-    MODE = 7,
-}
-
-UFCP_COM2_SEL_IDS = {
-    MAN_FREQUENCY = 0,
-    CHANNEL = 1,
-    PRST_FREQUENCY = 2,
-    NEXT_FREQUENCY = 3,
-    POWER = 4,
-    MODULATION = 5,
-    SQL = 6,
-    FORMAT = 7,
-    MODE = 8,
-    DL = 9
 }
 
 UFCP_COM_FREQUENCY_SEL_IDS = {
@@ -110,12 +87,59 @@ UFCP_COM_MODULATION_IDS = {
     FM= 1,
 }
 
+-- COM 1
+UFCP_COM1_SEL_IDS = {
+    MAN_FREQUENCY = 0,
+    CHANNEL = 1,
+    PRST_FREQUENCY = 2,
+    NEXT_FREQUENCY = 3,
+    POWER = 4,
+    MODULATION = 5,
+    SQL = 6,
+    MODE = 7,
+}
+
+-- COM 2
+UFCP_COM2_SEL_IDS = {
+    MAN_FREQUENCY = 0,
+    CHANNEL = 1,
+    PRST_FREQUENCY = 2,
+    NEXT_FREQUENCY = 3,
+    POWER = 4,
+    MODULATION = 5,
+    SQL = 6,
+    FORMAT = 7,
+    MODE = 8,
+    DL = 9
+}
+
+-- VV/VAH
 UFCP_VVVAH_MODE_IDS = {
     VAH = 0,
     OFF = 1,
     VV_VAH = 2,
 }
 
+-- WPT
+UFCP_WPT_TYPE_IDS = {
+    FYT = 0,
+    WP = 1,
+}
+UFCP_WPT_TYPE_IDS[UFCP_WPT_TYPE_IDS.FYT] = "FYT"
+UFCP_WPT_TYPE_IDS[UFCP_WPT_TYPE_IDS.WP] = " WP"
+
+UFCP_WPT_SEL_IDS = {
+    FYT_WP = 0,
+    -- GEO_UTM = 1,
+    LAT = 1,
+    LON = 2,
+    ELV = 3,
+    TOFT = 4,
+
+    END = 5,
+}
+
+-- NAV
 UFCP_NAV_MODE_IDS = {
     MAN = 0,
     AUTO = 1,
@@ -140,6 +164,7 @@ UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_INS] = "NAV-INS"
 UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_GPS] = "NAV-GPS"
 UFCP_NAV_SOLUTION_IDS[UFCP_NAV_SOLUTION_IDS.NAV_BU] = "NAV-B/U"
 
+-- TIME
 UFCP_TIME_TYPE_IDS = {
     LC = 0,
     RT = 1,

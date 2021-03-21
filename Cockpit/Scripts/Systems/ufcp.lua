@@ -24,13 +24,28 @@ local CMFD_NAV_FYT = get_param_handle("CMFD_NAV_FYT")
 local EICAS_FUEL_INIT = get_param_handle("EICAS_FUEL_INIT")
 local CMFD_NAV_FYT_OAP_STT = get_param_handle("CMFD_NAV_FYT_OAP_STT")
 local ADHSI_VV = get_param_handle("ADHSI_VV")
+
+local CMFD_NAV_GET_INDEX = get_param_handle("CMFD_NAV_GET_INDEX")
+local CMFD_NAV_GET_LAT = get_param_handle("CMFD_NAV_GET_LAT")
+local CMFD_NAV_GET_LON = get_param_handle("CMFD_NAV_GET_LON")
+local CMFD_NAV_GET_ELV = get_param_handle("CMFD_NAV_GET_ELV")
+local CMFD_NAV_GET_TIME = get_param_handle("CMFD_NAV_GET_TIME")
+local CMFD_NAV_GET_RDY = get_param_handle("CMFD_NAV_GET_RDY")
+local CMFD_NAV_SET_INDEX = get_param_handle("CMFD_NAV_SET_INDEX")
+local CMFD_NAV_SET_LAT = get_param_handle("CMFD_NAV_SET_LAT")
+local CMFD_NAV_SET_LON = get_param_handle("CMFD_NAV_SET_LON")
+local CMFD_NAV_SET_ELV = get_param_handle("CMFD_NAV_SET_ELV")
+local CMFD_NAV_SET_TIME = get_param_handle("CMFD_NAV_SET_TIME")
+
 local HUD_DRIFT_CO = get_param_handle("HUD_DRIFT_CO")
 
-local ufcp_nav_mode = UFCP_NAV_MODE_IDS.AUTO
-local ufcp_nav_time = UFCP_NAV_TIME_IDS.TTD
-local ufcp_nav_solution = UFCP_NAV_SOLUTION_IDS.NAV_EGI
-local ufcp_nav_egi_error = 35 -- meters
+-- VARIABLES
 
+-- MAIN
+local ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+local ufcp_main_sel = UFCP_MAIN_SEL_IDS.FYT
+
+-- COM 1
 local ufcp_com1_mode = UFCP_COM_MODE_IDS.TR
 local ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
 local ufcp_com1_channel = 0
@@ -45,6 +60,7 @@ local ufcp_com1_power = UFCP_COM_POWER_IDS.HIGH
 local ufcp_com1_modulation = UFCP_COM_MODULATION_IDS.AM
 local ufcp_com1_sql = true
 
+-- COM 2
 local ufcp_com2_mode = UFCP_COM_MODE_IDS.TR
 local ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
 local ufcp_com2_channel = 0
@@ -61,14 +77,33 @@ local ufcp_com2_sql = true
 local ufcp_com2_sync = false
 local ufcp_com2_por = false
 
+-- IDENT
 local ufcp_ident = false
 local ufcp_ident_blink = false
 
+-- VV/VAH
+local ufcp_vvvah_mode = UFCP_VVVAH_MODE_IDS.OFF
+local ufcp_vvvah_mode_last = UFCP_VVVAH_MODE_IDS.OFF
+
+-- WPT
+local ufcp_wpt_type = UFCP_WPT_TYPE_IDS.FYT
+local ufcp_wpt_fyt_num_last = -1
+local ufcp_wpt_fyt_num = 0
+local ufcp_wpt_lat = 0
+local ufcp_wpt_lon = 0
+local ufcp_wpt_elv = 0
+local ufcp_wpt_time = 0
+
+-- TIME
 local ufcp_time_type =  UFCP_TIME_TYPE_IDS.LC
 
-local ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
-local ufcp_main_sel = UFCP_MAIN_SEL_IDS.FYT
+-- NAV
+local ufcp_nav_mode = UFCP_NAV_MODE_IDS.AUTO
+local ufcp_nav_time = UFCP_NAV_TIME_IDS.TTD
+local ufcp_nav_solution = UFCP_NAV_SOLUTION_IDS.NAV_EGI
+local ufcp_nav_egi_error = 35 -- meters
 
+-- DRIFT
 local ufcp_drift_co = false;
 
 local elapsed = 0
@@ -77,6 +112,12 @@ local ufcp_edit_pos = 0
 local ufcp_edit_lim = 0
 local ufcp_edit_string = ""
 local ufcp_edit_validate = nil
+
+-- METHODS
+
+local function ufcp_on()
+    return get_elec_avionics_ok() and get_cockpit_draw_argument_value(480) > 0
+end
 
 local function ufcp_edit_clear()
     ufcp_edit_pos = 0
@@ -124,6 +165,7 @@ local function replace_pos(text, c_pos)
     return text_copy
 end
 
+-- MAIN
 function update_main()
     elapsed = elapsed + update_time_step
     if elapsed > 0.4 then elapsed = 0
@@ -200,7 +242,84 @@ function update_main()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandMain(command,value)
+    if command == device_commands.UFCP_JOY_DOWN and value == 1 then
+        ufcp_main_sel = (ufcp_main_sel + 1) % 4
+    elseif command == device_commands.UFCP_JOY_UP and value == 1 then
+        ufcp_main_sel = (ufcp_main_sel - 1) % 4
+    elseif command == device_commands.UFCP_1 and value == 1 then
+        ufcp_vvvah_mode_sel = ufcp_vvvah_mode
+        ufcp_sel_format = UFCP_FORMAT_IDS.VVVAH
+    elseif command == device_commands.UFCP_2 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DA_H
+    elseif command == device_commands.UFCP_3 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.F_ACK
+    elseif command == device_commands.UFCP_4 and value == 1 then
+        ufcp_wpt_sel = UFCP_WPT_SEL_IDS.FYT_WP
+        ufcp_sel_format = UFCP_FORMAT_IDS.WPT
+        ufcp_edit_clear()
+    elseif command == device_commands.UFCP_5 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.XPDR
+    elseif command == device_commands.UFCP_6 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.TIME
+    elseif command == device_commands.UFCP_ENTR and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DL_MENU
+    elseif command == device_commands.UFCP_7 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.MARK
+    elseif command == device_commands.UFCP_8 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.FIX
+    elseif command == device_commands.UFCP_9 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.TIP
+    elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.MENU
+    elseif ufcp_main_sel == UFCP_MAIN_SEL_IDS.FYT and AVIONICS_ANS_MODE:get() ~= AVIONICS_ANS_MODE_IDS.GPS and cmfd ~= nil then
+        if command == device_commands.UFCP_UP and value == 1 then 
+            cmfd:performClickableAction(device_commands.NAV_INC_FYT, 1, true)
+        elseif command == device_commands.UFCP_DOWN and value == 1 then
+            cmfd:performClickableAction(device_commands.NAV_DEC_FYT, 1, true)
+        end
+    elseif ufcp_main_sel == UFCP_MAIN_SEL_IDS.COM1 then
+        if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
+            if command == device_commands.UFCP_UP and value == 1 and ufcp_com1_channel < ufcp_com1_max_channel then
+                ufcp_com1_channel = (ufcp_com1_channel + 1)
+                ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
+            elseif command == device_commands.UFCP_DOWN and value == 1 and ufcp_com1_channel > 0 then
+                ufcp_com1_channel = (ufcp_com1_channel - 1)
+                ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
+            end
+        end
+        if command == device_commands.UFCP_0 and value == 1 then
+            if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
+                ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
+                ufcp_com1_frequency = ufcp_com1_frequency_manual
+            else
+                ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
+                ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
+            end
+        end
+    elseif ufcp_main_sel == UFCP_MAIN_SEL_IDS.COM2 then
+        if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
+            if command == device_commands.UFCP_UP and value == 1 and ufcp_com2_channel < ufcp_com2_max_channel then
+                ufcp_com2_channel = (ufcp_com2_channel + 1)
+                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
+            elseif command == device_commands.UFCP_DOWN and value == 1 and ufcp_com2_channel > 0 then
+                ufcp_com2_channel = (ufcp_com2_channel - 1)
+                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com1_channel + 1]
+            end
+        end
+        if command == device_commands.UFCP_0 and value == 1 then
+            if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
+                ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
+                ufcp_com2_frequency = ufcp_com2_frequency_manual
+            else
+                ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
+                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
+            end
+        end
+    end
+end
 
+-- COM 1
 local ufcp_com1_sel = 0
 local function update_com1()
     local text = ""
@@ -292,6 +411,52 @@ local function update_com1()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandCom1(command,value)
+    if command == device_commands.UFCP_JOY_DOWN and value == 1 then
+        ufcp_com1_sel = (ufcp_com1_sel + 1) % 8
+    elseif command == device_commands.UFCP_JOY_UP and value == 1 then
+        ufcp_com1_sel = (ufcp_com1_sel - 1) % 8
+    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.MAN_FREQUENCY and command == device_commands.UFCP_0 and value == 1 then
+        ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
+        ufcp_com1_frequency = ufcp_com1_frequency_manual
+        ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.CHANNEL then
+        if command == device_commands.UFCP_UP and value == 1 and ufcp_com1_channel < ufcp_com1_max_channel then
+            ufcp_com1_channel = (ufcp_com1_channel + 1)
+            if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
+                ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
+            end
+        elseif command == device_commands.UFCP_DOWN and value == 1 and ufcp_com1_channel > 0 then
+            ufcp_com1_channel = (ufcp_com1_channel - 1)
+            if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
+                ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
+            end
+        elseif command == device_commands.UFCP_0 and value == 1 then
+            ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
+            ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
+            ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+        end
+    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.PRST_FREQUENCY then
+
+    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.NEXT_FREQUENCY and command == device_commands.UFCP_0 and value == 1 then
+        local current_frequency_manual = ufcp_com1_frequency_manual
+        ufcp_com1_frequency_manual = ufcp_com1_frequency_next
+        ufcp_com1_frequency_next = current_frequency_manual
+        ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
+        ufcp_com1_frequency = ufcp_com1_frequency_manual
+        ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.POWER and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+        ufcp_com1_power = (ufcp_com1_power + 1) % 3
+    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.MODULATION and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+        ufcp_com1_modulation = (ufcp_com1_modulation + 1) % 2
+    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.SQL and command == device_commands.UFCP_0 and value == 1 then
+        ufcp_com1_sql = not ufcp_com1_sql
+    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.MODE and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+        ufcp_com1_mode = (ufcp_com1_mode + 1) % 3
+    end
+end
+
+-- COM 2
 local ufcp_com2_sel = 0
 local function update_com2()
     local text = ""
@@ -390,60 +555,103 @@ local function update_com2()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandCom2(command,value)
+    if command == device_commands.UFCP_JOY_DOWN and value == 1 then
+        ufcp_com2_sel = (ufcp_com2_sel + 1) % 9
+    elseif command == device_commands.UFCP_JOY_UP and value == 1 then
+        ufcp_com2_sel = (ufcp_com2_sel - 1) % 9
+    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.MAN_FREQUENCY and command == device_commands.UFCP_0 and value == 1 then
+        ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
+        ufcp_com2_frequency = ufcp_com2_frequency_manual
+        ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.CHANNEL then
+        if command == device_commands.UFCP_UP and value == 1 and ufcp_com2_channel < ufcp_com2_max_channel then
+            ufcp_com2_channel = (ufcp_com2_channel + 1)
+            if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
+                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
+            end
+        elseif command == device_commands.UFCP_DOWN and value == 1 and ufcp_com2_channel > 0 then
+            ufcp_com2_channel = (ufcp_com2_channel - 1)
+            if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
+                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
+            end
+        elseif command == device_commands.UFCP_0 and value == 1 then
+            ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
+            ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
+            ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+        end
+    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.PRST_FREQUENCY then
+
+    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.NEXT_FREQUENCY and command == device_commands.UFCP_0 and value == 1 then
+        local current_frequency_manual = ufcp_com2_frequency_manual
+        ufcp_com2_frequency_manual = ufcp_com2_frequency_next
+        ufcp_com2_frequency_next = current_frequency_manual
+        ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
+        ufcp_com2_frequency = ufcp_com2_frequency_manual
+        ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.POWER and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+        ufcp_com2_power = (ufcp_com2_power + 1) % 3
+    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.MODULATION and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+        ufcp_com2_modulation = (ufcp_com2_modulation + 1) % 2
+    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.SQL and command == device_commands.UFCP_0 and value == 1 then
+        ufcp_com2_sql = not ufcp_com2_sql
+    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.FORMAT and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.COM2_NET
+    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.MODE and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+        ufcp_com2_mode = (ufcp_com2_mode + 1) % 3
+    end
+end
+
+-- NAV AIDS
 local function update_nav_aids()
     local text = ""
     text = text .. "NAV AIDS\n"
     UFCP_TEXT:set(text)
 end
 
+function SetCommandNavAids(command,value)
+
+end
+
+-- VV/VAH
+local ufcp_vvvah_mode_sel = UFCP_VVVAH_MODE_IDS.OFF
+local function update_vvvah()
+    local text = ""
+    text = text .. "VV/VAH\n\n"
+    if ufcp_vvvah_mode_sel == UFCP_VVVAH_MODE_IDS.VAH    then  text = text .. "*VAH*       \n" else text = text .. " VAH        \n" end
+    if ufcp_vvvah_mode_sel == UFCP_VVVAH_MODE_IDS.OFF    then  text = text .. "*OFF*       \n" else text = text .. " OFF        \n" end
+    if ufcp_vvvah_mode_sel == UFCP_VVVAH_MODE_IDS.VV_VAH then  text = text .. "*VV/VAH*    "   else text = text .. " VV/VAH     " end
+    if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VAH then text = replace_pos(text, 9); text = replace_pos(text, 13); end
+    if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.OFF then text = replace_pos(text, 22); text = replace_pos(text, 26); end
+    if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VV_VAH then text = replace_pos(text, 35); text = replace_pos(text, 42); end
+
+    UFCP_TEXT:set(text)
+end
+
+local function SetCommandVVVAH(command,value)
+    if command == device_commands.UFCP_JOY_DOWN and value == 1 then
+        ufcp_vvvah_mode_sel = (ufcp_vvvah_mode_sel + 1) % (UFCP_VVVAH_MODE_IDS.VV_VAH + 1)
+    elseif command == device_commands.UFCP_JOY_UP and value == 1 then
+        ufcp_vvvah_mode_sel = (ufcp_vvvah_mode_sel - 1) % (UFCP_VVVAH_MODE_IDS.VV_VAH + 1)
+    elseif command == device_commands.UFCP_0 and value == 1 then
+        ufcp_vvvah_mode = ufcp_vvvah_mode_sel
+    end
+end
+
+-- DA/H
 local function update_da_h()
     local text = ""
     text = text .. "DA/H\n"
     UFCP_TEXT:set(text)
 end
 
-UFCP_WPT_TYPE_IDS = {
-    FYT = 0,
-    WP = 1,
-}
-UFCP_WPT_TYPE_IDS[UFCP_WPT_TYPE_IDS.FYT] = "FYT"
-UFCP_WPT_TYPE_IDS[UFCP_WPT_TYPE_IDS.WP] = " WP"
+function SetCommandDAH(command,value)
 
-UFCP_WPT_SEL_IDS = {
-    FYT_WP = 0,
-    -- GEO_UTM = 1,
-    LAT = 1,
-    LON = 2,
-    ELV = 3,
-    TOFT = 4,
+end
 
-    END = 5,
-}
-
-local CMFD_NAV_GET_INDEX = get_param_handle("CMFD_NAV_GET_INDEX")
-local CMFD_NAV_GET_LAT = get_param_handle("CMFD_NAV_GET_LAT")
-local CMFD_NAV_GET_LON = get_param_handle("CMFD_NAV_GET_LON")
-local CMFD_NAV_GET_ELV = get_param_handle("CMFD_NAV_GET_ELV")
-local CMFD_NAV_GET_TIME = get_param_handle("CMFD_NAV_GET_TIME")
-local CMFD_NAV_GET_RDY = get_param_handle("CMFD_NAV_GET_RDY")
-local CMFD_NAV_SET_INDEX = get_param_handle("CMFD_NAV_SET_INDEX")
-local CMFD_NAV_SET_LAT = get_param_handle("CMFD_NAV_SET_LAT")
-local CMFD_NAV_SET_LON = get_param_handle("CMFD_NAV_SET_LON")
-local CMFD_NAV_SET_ELV = get_param_handle("CMFD_NAV_SET_ELV")
-local CMFD_NAV_SET_TIME = get_param_handle("CMFD_NAV_SET_TIME")
-
-
-local ufcp_wpt_type = UFCP_WPT_TYPE_IDS.FYT
+-- WPT
 local ufcp_wpt_sel = UFCP_WPT_SEL_IDS.FYT_WP
-local ufcp_wpt_fyt_num_last = -1
-local ufcp_wpt_fyt_num = 0
-local ufcp_wpt_lat = 0
-local ufcp_wpt_lon = 0
-local ufcp_wpt_elv = 0
-local ufcp_wpt_time = 0
-
 local Terrain = require('terrain')
-
 local ufcp_wpt_save_now = false
 
 local function ufcp_wpt_load()
@@ -552,7 +760,7 @@ local function ufcp_wpt_lat_lon_input_validade(text, save)
     return text
 end
 
-local UFCP_EDIT_FIELDS = {
+local UFCP_WPT_FIELDS = {
     [UFCP_WPT_SEL_IDS.LAT] = {11, ufcp_wpt_lat_lon_input_validade},
     [UFCP_WPT_SEL_IDS.LON] = {11, ufcp_wpt_lat_lon_input_validade},
     [UFCP_WPT_SEL_IDS.ELV] = {5, ufcp_wpt_input_validade},
@@ -560,10 +768,10 @@ local UFCP_EDIT_FIELDS = {
     [UFCP_WPT_SEL_IDS.TOFT] = {8, ufcp_wpt_time_input_validade},
 }
 
-
-local function ufcp_continue_edit(text, save)
+local function ufcp_wpt_continue_edit(text, save)
     if ufcp_edit_pos == 0 then 
-        local field_info = UFCP_EDIT_FIELDS[ufcp_wpt_sel]
+        local field_info = UFCP_WPT_FIELDS[ufcp_wpt_sel]
+
         if field_info then
             ufcp_edit_string = ""
             ufcp_edit_lim = field_info[1] or 1
@@ -582,7 +790,6 @@ local function ufcp_continue_edit(text, save)
 end
 
 local function update_wpt()
-
     ufcp_wpt_save()
     ufcp_wpt_load()
 
@@ -649,36 +856,101 @@ local function update_wpt()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandWpt(command,value)
+    if command == device_commands.UFCP_1 and value == 1 then
+        ufcp_wpt_continue_edit("1")
+    elseif command == device_commands.UFCP_2 and value == 1 then
+        ufcp_wpt_continue_edit("2")
+    elseif command == device_commands.UFCP_3 and value == 1 then
+        ufcp_wpt_continue_edit("3")
+    elseif command == device_commands.UFCP_4 and value == 1 then
+        ufcp_wpt_continue_edit("4")
+    elseif command == device_commands.UFCP_5 and value == 1 then
+        ufcp_wpt_continue_edit("5")
+    elseif command == device_commands.UFCP_6 and value == 1 then
+        ufcp_wpt_continue_edit("6")
+    elseif command == device_commands.UFCP_7 and value == 1 then
+        ufcp_wpt_continue_edit("7")
+    elseif command == device_commands.UFCP_8 and value == 1 then
+        ufcp_wpt_continue_edit("8")
+    elseif command == device_commands.UFCP_9 and value == 1 then
+        ufcp_wpt_continue_edit("9")
+    elseif command == device_commands.UFCP_0 and value == 1 then
+        ufcp_wpt_continue_edit("0")
+    elseif command == device_commands.UFCP_UP and value == 1 then
+        if ufcp_wpt_sel == UFCP_WPT_SEL_IDS.FYT_WP  and cmfd ~= nil then ufcp_wpt_fyt_num = (ufcp_wpt_fyt_num + 1) % 100 end
+    elseif command == device_commands.UFCP_DOWN and value == 1 then
+        if ufcp_wpt_sel == UFCP_WPT_SEL_IDS.FYT_WP  and cmfd ~= nil then ufcp_wpt_fyt_num = (ufcp_wpt_fyt_num - 1) % 100 end
+    elseif command == device_commands.UFCP_JOY_UP and value == 1 then
+        ufcp_wpt_sel = (ufcp_wpt_sel - 1) % UFCP_WPT_SEL_IDS.END
+        ufcp_edit_clear()
+    elseif command == device_commands.UFCP_JOY_DOWN and value == 1 then
+        ufcp_wpt_sel = (ufcp_wpt_sel + 1) % UFCP_WPT_SEL_IDS.END
+        ufcp_edit_clear()
+    elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+    elseif command == device_commands.UFCP_CLR and value == 1 then
+        ufcp_edit_clear()
+    elseif command == device_commands.UFCP_ENTR and value == 1 then
+        ufcp_wpt_continue_edit("", true)
+    end
+end
+
+-- XPDR
 local function update_xpdr()
     local text = ""
     text = text .. "XPDR\n"
     UFCP_TEXT:set(text)
 end
 
+function SetCommandXPDR(command,value)
+
+end
+
+-- TIME
 local function update_time()
     local text = ""
     text = text .. "TIME\n"
     UFCP_TEXT:set(text)
 end
 
+function SetCommandTime(command,value)
+
+end
+
+-- MARK
 local function update_mark()
     local text = ""
     text = text .. "MARK\n"
     UFCP_TEXT:set(text)
 end
 
+function SetCommandMark(command,value)
+
+end
+
+-- FIX
 local function update_fix()
     local text = ""
     text = text .. "FIX\n"
     UFCP_TEXT:set(text)
 end
 
+function SetCommandFix(command,value)
+
+end
+
+-- TIP
 local function update_tip()
     local text = ""
     text = text .. "TIP\n"
     UFCP_TEXT:set(text)
 end
 
+function SetCommandTip(command,value)
+
+end
+
+-- MENU
 local ufcp_menu_sel = 0
 local function update_menu()
     local text = ""
@@ -689,39 +961,60 @@ local function update_menu()
     UFCP_TEXT:set(text)
 end
 
-local ufcp_vvvah_mode = UFCP_VVVAH_MODE_IDS.OFF
-local ufcp_vvvah_mode_sel = UFCP_VVVAH_MODE_IDS.OFF
-local function update_vvvah()
-    local text = ""
-    text = text .. "VV/VAH\n\n"
-    if ufcp_vvvah_mode_sel == UFCP_VVVAH_MODE_IDS.VAH    then  text = text .. "*VAH*       \n" else text = text .. " VAH        \n" end
-    if ufcp_vvvah_mode_sel == UFCP_VVVAH_MODE_IDS.OFF    then  text = text .. "*OFF*       \n" else text = text .. " OFF        \n" end
-    if ufcp_vvvah_mode_sel == UFCP_VVVAH_MODE_IDS.VV_VAH then  text = text .. "*VV/VAH*    "   else text = text .. " VV/VAH     " end
-    if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VAH then text = replace_pos(text, 9); text = replace_pos(text, 13); end
-    if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.OFF then text = replace_pos(text, 22); text = replace_pos(text, 26); end
-    if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VV_VAH then text = replace_pos(text, 35); text = replace_pos(text, 42); end
-
-    UFCP_TEXT:set(text)
+function SetCommandMenu(command,value)
+    if command == device_commands.UFCP_1 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.LMT
+    elseif command == device_commands.UFCP_2 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DTK
+    elseif command == device_commands.UFCP_3 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.BAL
+    elseif command == device_commands.UFCP_CLR and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.ACAL
+    elseif command == device_commands.UFCP_4 and value == 1 then
+        ufcp_menu_sel = 0
+        ufcp_sel_format = UFCP_FORMAT_IDS.NAV_MODE
+    elseif command == device_commands.UFCP_5 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.WS
+    elseif command == device_commands.UFCP_6 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.EGI_INS
+    elseif command == device_commands.UFCP_ENTR and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.FUEL
+    elseif command == device_commands.UFCP_7 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.TAC_MENU
+    elseif command == device_commands.UFCP_8 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.MODE
+    elseif command == device_commands.UFCP_9 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.OAP
+    elseif command == device_commands.UFCP_0 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.MISC
+    elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+    elseif command == device_commands.UFCP_UP and value == 1 then
+    elseif command == device_commands.UFCP_DOWN and value == 1 then
+    end
 end
 
+-- LMT
 local function update_lmt()
     local text = ""
     text = text .. "FLIGHT LIMITS\n"
     UFCP_TEXT:set(text)
 end
 
+-- DTK
 local function update_dtk()
     local text = ""
     text = text .. "DTK\n"
     UFCP_TEXT:set(text)
 end
 
+-- BAL
 local function update_bal()
     local text = ""
     text = text .. "BAL\n"
     UFCP_TEXT:set(text)
 end
 
+-- NAV
 local function update_nav()
     local text = ""
     if ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE then 
@@ -762,22 +1055,52 @@ local function update_nav()
     end
     UFCP_TEXT:set(text)
 end
-local function ufcp_on()
-    return get_elec_avionics_ok() and get_cockpit_draw_argument_value(480) > 0
+
+function SetCommandNav(command,value)
+    if ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE then 
+        if command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 0 then
+            ufcp_menu_sel = 0
+            ufcp_sel_format = UFCP_FORMAT_IDS.NAV_MISC
+        elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 1 then
+            ufcp_nav_mode = (ufcp_nav_mode + 1) % (UFCP_NAV_MODE_IDS.END)
+        elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 2 then
+            ufcp_nav_time = (ufcp_nav_time + 1) % (UFCP_NAV_TIME_IDS.END)
+        end
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MISC then
+        if command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 0 then
+            ufcp_menu_sel = 0
+            ufcp_sel_format = UFCP_FORMAT_IDS.NAV_MODE
+        elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 1 then
+            ufcp_nav_mode = (ufcp_nav_mode + 1) % #UFCP_NAV_MODE_IDS
+        elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 2 then
+            ufcp_nav_time = (ufcp_nav_time + 1) % #UFCP_NAV_TIME_IDS
+        end
+    end
+
+    if command == device_commands.UFCP_1 and value == 1 then
+    elseif command == device_commands.UFCP_4 and value == 1 then
+    elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+    elseif command == device_commands.UFCP_UP and value == 1 then
+    elseif command == device_commands.UFCP_DOWN and value == 1 then
+    end
+    SetCommandCommon(command, value)
 end
 
+-- WS
 local function update_ws()
     local text = ""
     text = text .. "WINGSPAN\n"
     UFCP_TEXT:set(text)
 end
 
+-- EGI
 local function update_egi()
     local text = ""
     text = text .. "EGI\n"
     UFCP_TEXT:set(text)
 end
 
+-- TAC
 local function update_tac()
     local text = ""
     text = text .. "TAC MENU\n"
@@ -787,42 +1110,57 @@ local function update_tac()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandTacMenu(command,value)
+    if command == device_commands.UFCP_1 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.TAC_CTLN
+    elseif command == device_commands.UFCP_2 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.TAC_AVOID
+    end
+end
+
+-- CTLN
 local function update_tac_ctln()
     local text = ""
     text = text .. "TAC CTLN\n"
     UFCP_TEXT:set(text)
 end
 
+-- AVOID
 local function update_tac_avoid()
     local text = ""
     text = text .. "TAC AVOID\n"
     UFCP_TEXT:set(text)
 end
 
+-- MODE
 local function update_mode()
     local text = ""
     text = text .. "MODE\n"
     UFCP_TEXT:set(text)
 end
 
+-- OAP
 local function update_oap()
     local text = ""
     text = text .. "OAP\n"
     UFCP_TEXT:set(text)
 end
 
+-- ACAL
 local function update_acal()
     local text = ""
     text = text .. "ACAL\n"
     UFCP_TEXT:set(text)
 end
 
+-- FUEL
 local function update_fuel()
     local text = ""
     text = text .. "FUEL\n"
     UFCP_TEXT:set(text)
 end
 
+-- MISC
 local function update_misc()
     local text = ""
     text = text .. "MISC\n"
@@ -832,36 +1170,66 @@ local function update_misc()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandMisc(command,value)
+    if command == device_commands.UFCP_1 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.C_F
+    elseif command == device_commands.UFCP_2 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.PARA
+    elseif command == device_commands.UFCP_3 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.FTI
+    elseif command == device_commands.UFCP_4 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DCLT
+    elseif command == device_commands.UFCP_5 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.CRUS
+    elseif command == device_commands.UFCP_6 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DRFT
+    elseif command == device_commands.UFCP_ENTR and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DL_MENU
+    elseif command == device_commands.UFCP_7 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.TK_L_DATA
+    elseif command == device_commands.UFCP_8 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.STRM
+    elseif command == device_commands.UFCP_9 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.FLIR
+    end
+end
+
+-- C/F
 local function update_c_f()
     local text = ""
     text = text .. "C/F\n"
     UFCP_TEXT:set(text)
 end
 
+-- PARA
 local function update_para()
     local text = ""
     text = text .. "PARA\n"
     UFCP_TEXT:set(text)
 end
 
+-- FTI
 local function update_fti()
     local text = ""
     text = text .. "FTI\n"
     UFCP_TEXT:set(text)
 end
 
+-- DCLT
 local function update_dclt()
     local text = ""
     text = text .. "DCLT\n"
     UFCP_TEXT:set(text)
 end
 
+-- CRUS
 local function update_crus()
     local text = ""
     text = text .. "CRUS\n"
     UFCP_TEXT:set(text)
 end
 
+-- DRFT
 local function update_drft()
     local text = ""
     text = text .. "DRIFT\n\n"
@@ -872,24 +1240,34 @@ local function update_drft()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandDrft(command,value)
+    if command == device_commands.UFCP_0 and value == 1 then
+        ufcp_drift_co = not ufcp_drift_co
+    end
+end
+
+-- TK/L
 local function update_tk_l()
     local text = ""
     text = text .. "TK/L\n"
     UFCP_TEXT:set(text)
 end
 
+-- STRM
 local function update_strm()
     local text = ""
     text = text .. "STORMSCOPE\n"
     UFCP_TEXT:set(text)
 end
 
+-- FLIR
 local function update_flir()
     local text = ""
     text = text .. "FLIR\n"
     UFCP_TEXT:set(text)
 end
 
+-- DL MENU
 local function update_dl_menu()
     local text = ""
     text = text .. "DL MENU\n"
@@ -899,30 +1277,49 @@ local function update_dl_menu()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandDlMenu(command,value)
+    if command == device_commands.UFCP_1 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DL_SET
+    elseif command == device_commands.UFCP_2 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DL_INV
+    elseif command == device_commands.UFCP_3 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DL_MSG
+    elseif command == device_commands.UFCP_4 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.DLWP
+    elseif command == device_commands.UFCP_5 and value == 1 then
+        ufcp_sel_format = UFCP_FORMAT_IDS.SNDP
+    end
+end
+
+-- DL SET
 local function update_dl_set()
     local text = ""
     text = text .. "DL SET\n"
     UFCP_TEXT:set(text)
 end
 
+-- DL_INV
 local function update_dl_inv()
     local text = ""
     text = text .. "DL INV\n"
     UFCP_TEXT:set(text)
 end
 
+-- DL MSG
 local function update_dl_msg()
     local text = ""
     text = text .. "DL MSG\n"
     UFCP_TEXT:set(text)
 end
 
+-- DLWP
 local function update_dlwp()
     local text = ""
     text = text .. "DLWP\n"
     UFCP_TEXT:set(text)
 end
 
+-- SNDP
 local function update_sndp()
     local text = ""
     text = text .. "SNDP\n"
@@ -938,6 +1335,7 @@ function update()
         return 0
     end
 
+    -- UPDATE FORMATS
     if ufcp_sel_format == UFCP_FORMAT_IDS.MAIN then update_main()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT then update_wpt()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM1 then update_com1()
@@ -983,6 +1381,7 @@ function update()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.SNDP then update_sndp()
     end
 
+    -- UPDATE VV/VAH MODE
     if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VAH then
         UFCP_VV:set(0)
         ADHSI_VV:set(0)
@@ -1002,6 +1401,7 @@ function update()
         ADHSI_VV:set(0)
     end
 
+    -- UPDATE DRIFT C/O MODE
     if ufcp_drift_co or get_avionics_master_mode_ag() then
         HUD_DRIFT_CO:set(1)
     else
@@ -1041,303 +1441,8 @@ dev:listen_command(device_commands.UFCP_WARNRST)
 dev:listen_command(device_commands.UFCP_4)
 dev:listen_command(device_commands.UFCP_BARO_RALT)
 
-
-
-function SetCommandWpt(command,value)
-    if command == device_commands.UFCP_1 and value == 1 then
-        ufcp_continue_edit("1")
-    elseif command == device_commands.UFCP_2 and value == 1 then
-        ufcp_continue_edit("2")
-    elseif command == device_commands.UFCP_3 and value == 1 then
-        ufcp_continue_edit("3")
-    elseif command == device_commands.UFCP_4 and value == 1 then
-        ufcp_continue_edit("4")
-    elseif command == device_commands.UFCP_5 and value == 1 then
-        ufcp_continue_edit("5")
-    elseif command == device_commands.UFCP_6 and value == 1 then
-        ufcp_continue_edit("6")
-    elseif command == device_commands.UFCP_7 and value == 1 then
-        ufcp_continue_edit("7")
-    elseif command == device_commands.UFCP_8 and value == 1 then
-        ufcp_continue_edit("8")
-    elseif command == device_commands.UFCP_9 and value == 1 then
-        ufcp_continue_edit("9")
-    elseif command == device_commands.UFCP_0 and value == 1 then
-        ufcp_continue_edit("0")
-    elseif command == device_commands.UFCP_UP and value == 1 then
-        if ufcp_wpt_sel == UFCP_WPT_SEL_IDS.FYT_WP  and cmfd ~= nil then ufcp_wpt_fyt_num = (ufcp_wpt_fyt_num + 1) % 100 end
-    elseif command == device_commands.UFCP_DOWN and value == 1 then
-        if ufcp_wpt_sel == UFCP_WPT_SEL_IDS.FYT_WP  and cmfd ~= nil then ufcp_wpt_fyt_num = (ufcp_wpt_fyt_num - 1) % 100 end
-    elseif command == device_commands.UFCP_JOY_UP and value == 1 then
-        ufcp_wpt_sel = (ufcp_wpt_sel - 1) % UFCP_WPT_SEL_IDS.END
-        ufcp_edit_clear()
-    elseif command == device_commands.UFCP_JOY_DOWN and value == 1 then
-        ufcp_wpt_sel = (ufcp_wpt_sel + 1) % UFCP_WPT_SEL_IDS.END
-        ufcp_edit_clear()
-    elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
-    elseif command == device_commands.UFCP_CLR and value == 1 then
-        ufcp_edit_clear()
-    elseif command == device_commands.UFCP_ENTR and value == 1 then
-        ufcp_continue_edit("", true)
-    end
-end
-
-
 local HUD_VAH = get_param_handle("HUD_VAH")
 HUD_VAH:set(0)
-
-function SetCommandMain(command,value)
-    if command == device_commands.UFCP_JOY_DOWN and value == 1 then
-        ufcp_main_sel = (ufcp_main_sel + 1) % 4
-    elseif command == device_commands.UFCP_JOY_UP and value == 1 then
-        ufcp_main_sel = (ufcp_main_sel - 1) % 4
-    elseif command == device_commands.UFCP_1 and value == 1 then
-        ufcp_vvvah_mode_sel = ufcp_vvvah_mode
-        ufcp_sel_format = UFCP_FORMAT_IDS.VVVAH
-    elseif command == device_commands.UFCP_2 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.DA_H
-    elseif command == device_commands.UFCP_3 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.F_ACK
-    elseif command == device_commands.UFCP_4 and value == 1 then
-        ufcp_wpt_sel = UFCP_WPT_SEL_IDS.FYT_WP
-        ufcp_sel_format = UFCP_FORMAT_IDS.WPT
-        ufcp_edit_clear()
-    elseif command == device_commands.UFCP_5 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.XPDR
-    elseif command == device_commands.UFCP_6 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.TIME
-    elseif command == device_commands.UFCP_ENTR and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.DL_MENU
-    elseif command == device_commands.UFCP_7 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.MARK
-    elseif command == device_commands.UFCP_8 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.FIX
-    elseif command == device_commands.UFCP_9 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.TIP
-    elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.MENU
-    elseif ufcp_main_sel == UFCP_MAIN_SEL_IDS.FYT and AVIONICS_ANS_MODE:get() ~= AVIONICS_ANS_MODE_IDS.GPS and cmfd ~= nil then
-        if command == device_commands.UFCP_UP and value == 1 then 
-            cmfd:performClickableAction(device_commands.NAV_INC_FYT, 1, true)
-        elseif command == device_commands.UFCP_DOWN and value == 1 then
-            cmfd:performClickableAction(device_commands.NAV_DEC_FYT, 1, true)
-        end
-    elseif ufcp_main_sel == UFCP_MAIN_SEL_IDS.COM1 then
-        if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-            if command == device_commands.UFCP_UP and value == 1 and ufcp_com1_channel < ufcp_com1_max_channel then
-                ufcp_com1_channel = (ufcp_com1_channel + 1)
-                ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
-            elseif command == device_commands.UFCP_DOWN and value == 1 and ufcp_com1_channel > 0 then
-                ufcp_com1_channel = (ufcp_com1_channel - 1)
-                ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
-            end
-        end
-        if command == device_commands.UFCP_0 and value == 1 then
-            if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
-                ufcp_com1_frequency = ufcp_com1_frequency_manual
-            else
-                ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
-                ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
-            end
-        end
-    elseif ufcp_main_sel == UFCP_MAIN_SEL_IDS.COM2 then
-        if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-            if command == device_commands.UFCP_UP and value == 1 and ufcp_com2_channel < ufcp_com2_max_channel then
-                ufcp_com2_channel = (ufcp_com2_channel + 1)
-                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
-            elseif command == device_commands.UFCP_DOWN and value == 1 and ufcp_com2_channel > 0 then
-                ufcp_com2_channel = (ufcp_com2_channel - 1)
-                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com1_channel + 1]
-            end
-        end
-        if command == device_commands.UFCP_0 and value == 1 then
-            if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
-                ufcp_com2_frequency = ufcp_com2_frequency_manual
-            else
-                ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
-                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
-            end
-        end
-    end
-end
-
-function SetCommandCom1(command,value)
-    if command == device_commands.UFCP_JOY_DOWN and value == 1 then
-        ufcp_com1_sel = (ufcp_com1_sel + 1) % 8
-    elseif command == device_commands.UFCP_JOY_UP and value == 1 then
-        ufcp_com1_sel = (ufcp_com1_sel - 1) % 8
-    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.MAN_FREQUENCY and command == device_commands.UFCP_0 and value == 1 then
-        ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
-        ufcp_com1_frequency = ufcp_com1_frequency_manual
-        ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
-    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.CHANNEL then
-        if command == device_commands.UFCP_UP and value == 1 and ufcp_com1_channel < ufcp_com1_max_channel then
-            ufcp_com1_channel = (ufcp_com1_channel + 1)
-            if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
-            end
-        elseif command == device_commands.UFCP_DOWN and value == 1 and ufcp_com1_channel > 0 then
-            ufcp_com1_channel = (ufcp_com1_channel - 1)
-            if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
-            end
-        elseif command == device_commands.UFCP_0 and value == 1 then
-            ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
-            ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
-            ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
-        end
-    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.PRST_FREQUENCY then
-
-    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.NEXT_FREQUENCY and command == device_commands.UFCP_0 and value == 1 then
-        local current_frequency_manual = ufcp_com1_frequency_manual
-        ufcp_com1_frequency_manual = ufcp_com1_frequency_next
-        ufcp_com1_frequency_next = current_frequency_manual
-        ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
-        ufcp_com1_frequency = ufcp_com1_frequency_manual
-        ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
-    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.POWER and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
-        ufcp_com1_power = (ufcp_com1_power + 1) % 3
-    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.MODULATION and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
-        ufcp_com1_modulation = (ufcp_com1_modulation + 1) % 2
-    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.SQL and command == device_commands.UFCP_0 and value == 1 then
-        ufcp_com1_sql = not ufcp_com1_sql
-    elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.MODE and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
-        ufcp_com1_mode = (ufcp_com1_mode + 1) % 3
-    end
-end
-
-function SetCommandCom2(command,value)
-    if command == device_commands.UFCP_JOY_DOWN and value == 1 then
-        ufcp_com2_sel = (ufcp_com2_sel + 1) % 9
-    elseif command == device_commands.UFCP_JOY_UP and value == 1 then
-        ufcp_com2_sel = (ufcp_com2_sel - 1) % 9
-    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.MAN_FREQUENCY and command == device_commands.UFCP_0 and value == 1 then
-        ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
-        ufcp_com2_frequency = ufcp_com2_frequency_manual
-        ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
-    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.CHANNEL then
-        if command == device_commands.UFCP_UP and value == 1 and ufcp_com2_channel < ufcp_com2_max_channel then
-            ufcp_com2_channel = (ufcp_com2_channel + 1)
-            if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
-            end
-        elseif command == device_commands.UFCP_DOWN and value == 1 and ufcp_com2_channel > 0 then
-            ufcp_com2_channel = (ufcp_com2_channel - 1)
-            if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
-            end
-        elseif command == device_commands.UFCP_0 and value == 1 then
-            ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
-            ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
-            ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
-        end
-    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.PRST_FREQUENCY then
-
-    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.NEXT_FREQUENCY and command == device_commands.UFCP_0 and value == 1 then
-        local current_frequency_manual = ufcp_com2_frequency_manual
-        ufcp_com2_frequency_manual = ufcp_com2_frequency_next
-        ufcp_com2_frequency_next = current_frequency_manual
-        ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
-        ufcp_com2_frequency = ufcp_com2_frequency_manual
-        ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
-    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.POWER and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
-        ufcp_com2_power = (ufcp_com2_power + 1) % 3
-    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.MODULATION and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
-        ufcp_com2_modulation = (ufcp_com2_modulation + 1) % 2
-    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.SQL and command == device_commands.UFCP_0 and value == 1 then
-        ufcp_com2_sql = not ufcp_com2_sql
-    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.FORMAT and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.COM2_NET
-    elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.MODE and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
-        ufcp_com2_mode = (ufcp_com2_mode + 1) % 3
-    end
-end
-
-function SetCommandMenu(command,value)
-    if command == device_commands.UFCP_1 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.LMT
-    elseif command == device_commands.UFCP_2 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.DTK
-    elseif command == device_commands.UFCP_3 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.BAL
-    elseif command == device_commands.UFCP_CLR and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.ACAL
-    elseif command == device_commands.UFCP_4 and value == 1 then
-        ufcp_menu_sel = 0
-        ufcp_sel_format = UFCP_FORMAT_IDS.NAV_MODE
-    elseif command == device_commands.UFCP_5 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.WS
-    elseif command == device_commands.UFCP_6 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.EGI_INS
-    elseif command == device_commands.UFCP_ENTR and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.FUEL
-    elseif command == device_commands.UFCP_7 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.TAC_MENU
-    elseif command == device_commands.UFCP_8 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.MODE
-    elseif command == device_commands.UFCP_9 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.OAP
-    elseif command == device_commands.UFCP_0 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.MISC
-    elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
-    elseif command == device_commands.UFCP_UP and value == 1 then
-    elseif command == device_commands.UFCP_DOWN and value == 1 then
-    end
-end
-
-function SetCommandTacMenu(command,value)
-    if command == device_commands.UFCP_1 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.TAC_CTLN
-    elseif command == device_commands.UFCP_2 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.TAC_AVOID
-    end
-end
-
-function SetCommandMisc(command,value)
-    if command == device_commands.UFCP_1 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.C_F
-    elseif command == device_commands.UFCP_2 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.PARA
-    elseif command == device_commands.UFCP_3 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.FTI
-    elseif command == device_commands.UFCP_4 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.DCLT
-    elseif command == device_commands.UFCP_5 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.CRUS
-    elseif command == device_commands.UFCP_6 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.DRFT
-    elseif command == device_commands.UFCP_ENTR and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.DL_MENU
-    elseif command == device_commands.UFCP_7 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.TK_L_DATA
-    elseif command == device_commands.UFCP_8 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.STRM
-    elseif command == device_commands.UFCP_9 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.FLIR
-    end
-end
-
-function SetCommandDrft(command,value)
-    if command == device_commands.UFCP_0 and value == 1 then
-        ufcp_drift_co = not ufcp_drift_co
-    end
-end
-
-function SetCommandDlMenu(command,value)
-    if command == device_commands.UFCP_1 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.DL_SET
-    elseif command == device_commands.UFCP_2 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.DL_INV
-    elseif command == device_commands.UFCP_3 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.DL_MSG
-    elseif command == device_commands.UFCP_4 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.DLWP
-    elseif command == device_commands.UFCP_5 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.SNDP
-    end
-end
 
 function SetCommandCommon(command, value)
     if command == device_commands.UFCP_JOY_DOWN and value == 1 then
@@ -1352,38 +1457,6 @@ function SetCommandCommon(command, value)
         ucfp_sel_format = UFCP_FORMAT_IDS.NAV_AIDS
     end
 end
-
-function SetCommandNav(command,value)
-    if ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE then 
-        if command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 0 then
-            ufcp_menu_sel = 0
-            ufcp_sel_format = UFCP_FORMAT_IDS.NAV_MISC
-        elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 1 then
-            ufcp_nav_mode = (ufcp_nav_mode + 1) % (UFCP_NAV_MODE_IDS.END)
-        elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 2 then
-            ufcp_nav_time = (ufcp_nav_time + 1) % (UFCP_NAV_TIME_IDS.END)
-        end
-    elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MISC then
-        if command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 0 then
-            ufcp_menu_sel = 0
-            ufcp_sel_format = UFCP_FORMAT_IDS.NAV_MODE
-        elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 1 then
-            ufcp_nav_mode = (ufcp_nav_mode + 1) % #UFCP_NAV_MODE_IDS
-        elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 and ufcp_menu_sel == 2 then
-            ufcp_nav_time = (ufcp_nav_time + 1) % #UFCP_NAV_TIME_IDS
-        end
-    end
-
-    if command == device_commands.UFCP_1 and value == 1 then
-    elseif command == device_commands.UFCP_4 and value == 1 then
-    elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
-    elseif command == device_commands.UFCP_UP and value == 1 then
-    elseif command == device_commands.UFCP_DOWN and value == 1 then
-    end
-    SetCommandCommon(command, value)
-end
-
-local ufcp_vvvah_mode_last = UFCP_VVVAH_MODE_IDS.OFF
 
 function SetCommand(command,value)
     debug_message_to_user("ufcs: command "..tostring(command).." = "..tostring(value))
@@ -1435,21 +1508,20 @@ function SetCommand(command,value)
     if ufcp_sel_format == UFCP_FORMAT_IDS.MAIN then SetCommandMain(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM1 then SetCommandCom1(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM2 then SetCommandCom2(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.VVVAH then SetCommandVVVAH(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DA_H then SetCommandDAH(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT then SetCommandWpt(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.XPDR then SetCommandXPDR(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.TIME then SetCommandTime(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.MARK then SetCommandMark(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.FIX then SetCommandFix(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.TIP then SetCommandTip(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.MENU then SetCommandMenu(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE or ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MISC then SetCommandNav(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.TAC_MENU then SetCommandTacMenu(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.MISC then SetCommandMisc(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.DRFT then SetCommandDrft(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.DL_MENU then SetCommandDlMenu(command, value)
-    elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE or ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MISC then SetCommandNav(command, value)
-    elseif ufcp_sel_format == UFCP_FORMAT_IDS.VVVAH then 
-        if command == device_commands.UFCP_JOY_DOWN and value == 1 then
-            ufcp_vvvah_mode_sel = (ufcp_vvvah_mode_sel + 1) % (UFCP_VVVAH_MODE_IDS.VV_VAH + 1)
-        elseif command == device_commands.UFCP_JOY_UP and value == 1 then
-            ufcp_vvvah_mode_sel = (ufcp_vvvah_mode_sel - 1) % (UFCP_VVVAH_MODE_IDS.VV_VAH + 1)
-        elseif command == device_commands.UFCP_0 and value == 1 then
-            ufcp_vvvah_mode = ufcp_vvvah_mode_sel
-        end
     end
 end
 
