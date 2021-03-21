@@ -6,6 +6,7 @@ dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
 dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
 dofile(LockOn_Options.script_path.."Systems/weapon_system_api.lua")
 dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
+dofile(LockOn_Options.script_path.."Systems/ufcp_nav.lua")
 
 startup_print("hud: load")
 
