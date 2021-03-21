@@ -207,10 +207,7 @@ local function update_com1()
     text = text .. "\n"
 
     -- Line 2
-    if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.MAN then text = text .. "=" else text = text .. " " end
-    text = text .. "MAN"
-    if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.MAN then text = text .. "=" else text = text .. " " end
-    text = text .. " "
+    text = text .. " MAN  "
     if ufcp_com1_sel == UFCP_COM1_SEL_IDS.MAN_FREQUENCY then text = text .. "*" else text = text .. " " end
     text = text .. string.format("%07.3f", ufcp_com1_frequency_manual)
     if ufcp_com1_sel == UFCP_COM1_SEL_IDS.MAN_FREQUENCY then text = text .. "*" else text = text .. " " end
@@ -218,9 +215,7 @@ local function update_com1()
     text = text .. "\n"
 
     -- Line 3
-    if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then text = text .. "=" else text = text .. " " end
-    text = text .. "PRST"
-    if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then text = text .. "=" else text = text .. " " end
+    text = text .. " PRST "
     if ufcp_com1_sel == UFCP_COM1_SEL_IDS.CHANNEL then text = text .. "*" else text = text .. " " end
     text = text .. string.format("%02.0f", ufcp_com1_channel)
     if ufcp_com1_sel == UFCP_COM1_SEL_IDS.CHANNEL then text = text .. "*" else text = text .. " " end
@@ -263,10 +258,24 @@ local function update_com1()
         text = text .. "AM"
     end
     if ufcp_com1_sel == UFCP_COM1_SEL_IDS.MODULATION then text = text .. "*" else text = text .. " " end
-    if ufcp_com1_sql then text = text .. "=" elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.SQL then text = text .. "*" else text = text .. " " end
+
+    if ufcp_com1_sel == UFCP_COM1_SEL_IDS.SQL then text = text .. "*" else text = text .. " " end
     text = text .. "SQL"
-    if ufcp_com1_sql then text = text .. "=" elseif ufcp_com1_sel == UFCP_COM1_SEL_IDS.SQL then text = text .. "*" else text = text .. " " end
+    if ufcp_com1_sel == UFCP_COM1_SEL_IDS.SQL then text = text .. "*" else text = text .. " " end
     text = text .. " "
+
+    if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.MAN then 
+        text = replace_pos(text, 23)
+        text = replace_pos(text, 27)
+    else
+        text = replace_pos(text, 48)
+        text = replace_pos(text, 53)
+    end
+
+    if ufcp_com1_sql then
+        text = replace_pos(text, 114)
+        text = replace_pos(text, 118)
+    end
 
     UFCP_TEXT:set(text)
 end
@@ -281,7 +290,7 @@ local function update_com2()
         if ufcp_com2_sel == UFCP_COM2_SEL_IDS.FORMAT then text = text .. "*" else text = text .. " " end
         text = text .. "COM 2"
         if ufcp_com2_sel == UFCP_COM2_SEL_IDS.FORMAT then text = text .. "*" else text = text .. " " end
-        text = text .. "   "
+        text = text .. "  "
         if ufcp_com2_sel == UFCP_COM2_SEL_IDS.MODE then text = text .. "*" else text = text .. " " end
         if ufcp_com2_mode == UFCP_COM_MODE_IDS.OFF then
             text = text .. "OFF "
@@ -294,10 +303,7 @@ local function update_com2()
         text = text .. "\n"
 
         -- Line 2
-        if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.MAN then text = text .. "=" else text = text .. " " end
-        text = text .. "MAN"
-        if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.MAN then text = text .. "=" else text = text .. " " end
-        text = text .. " "
+        text = text .. " MAN  "
         if ufcp_com2_sel == UFCP_COM2_SEL_IDS.MAN_FREQUENCY then text = text .. "*" else text = text .. " " end
         text = text .. string.format("%07.3f", ufcp_com2_frequency_manual)
         if ufcp_com2_sel == UFCP_COM2_SEL_IDS.MAN_FREQUENCY then text = text .. "*" else text = text .. " " end
@@ -305,9 +311,7 @@ local function update_com2()
         text = text .. "\n"
     
         -- Line 3
-        if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then text = text .. "=" else text = text .. " " end
-        text = text .. "PRST"
-        if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then text = text .. "=" else text = text .. " " end
+        text = text .. " PRST "
         if ufcp_com2_sel == UFCP_COM2_SEL_IDS.CHANNEL then text = text .. "*" else text = text .. " " end
         text = text .. string.format("%02.0f", ufcp_com2_channel)
         if ufcp_com2_sel == UFCP_COM2_SEL_IDS.CHANNEL then text = text .. "*" else text = text .. " " end
@@ -350,10 +354,23 @@ local function update_com2()
             text = text .. "AM"
         end
         if ufcp_com2_sel == UFCP_COM2_SEL_IDS.MODULATION then text = text .. "*" else text = text .. " " end
-        if ufcp_com2_sql then text = text .. "=" elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.SQL then text = text .. "*" else text = text .. " " end
+        if ufcp_com2_sel == UFCP_COM2_SEL_IDS.SQL then text = text .. "*" else text = text .. " " end
         text = text .. "SQL"
-        if ufcp_com2_sql then text = text .. "=" elseif ufcp_com2_sel == UFCP_COM2_SEL_IDS.SQL then text = text .. "*" else text = text .. " " end
+        if ufcp_com2_sel == UFCP_COM2_SEL_IDS.SQL then text = text .. "*" else text = text .. " " end
         text = text .. " "
+
+        if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.MAN then 
+            text = replace_pos(text, 23)
+            text = replace_pos(text, 27)
+        else
+            text = replace_pos(text, 48)
+            text = replace_pos(text, 53)
+        end
+    
+        if ufcp_com2_sql then
+            text = replace_pos(text, 114)
+            text = replace_pos(text, 118)
+        end
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM2_NET then
         text = text .. "COM 2-NET"
     end
