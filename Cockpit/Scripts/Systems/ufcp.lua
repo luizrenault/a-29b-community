@@ -1000,6 +1000,10 @@ local function update_lmt()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandLmt(command,value)
+
+end
+
 -- DTK
 local function update_dtk()
     local text = ""
@@ -1007,11 +1011,19 @@ local function update_dtk()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandDtk(command,value)
+
+end
+
 -- BAL
 local function update_bal()
     local text = ""
     text = text .. "BAL\n"
     UFCP_TEXT:set(text)
+end
+
+function SetCommandBal(command,value)
+
 end
 
 -- NAV
@@ -1093,11 +1105,19 @@ local function update_ws()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandWs(command,value)
+
+end
+
 -- EGI
 local function update_egi()
     local text = ""
     text = text .. "EGI\n"
     UFCP_TEXT:set(text)
+end
+
+function SetCommandEgi(command,value)
+
 end
 
 -- TAC
@@ -1125,11 +1145,19 @@ local function update_tac_ctln()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandTacCtln(command,value)
+
+end
+
 -- AVOID
 local function update_tac_avoid()
     local text = ""
     text = text .. "TAC AVOID\n"
     UFCP_TEXT:set(text)
+end
+
+function SetCommandTacAvoid(command,value)
+
 end
 
 -- MODE
@@ -1139,11 +1167,19 @@ local function update_mode()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandMode(command,value)
+
+end
+
 -- OAP
 local function update_oap()
     local text = ""
     text = text .. "OAP\n"
     UFCP_TEXT:set(text)
+end
+
+function SetCommandOAP(command,value)
+
 end
 
 -- ACAL
@@ -1153,11 +1189,19 @@ local function update_acal()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandACal(command,value)
+
+end
+
 -- FUEL
 local function update_fuel()
     local text = ""
     text = text .. "FUEL\n"
     UFCP_TEXT:set(text)
+end
+
+function SetCommandFuel(command,value)
+
 end
 
 -- MISC
@@ -1201,11 +1245,19 @@ local function update_c_f()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandCF(command,value)
+
+end
+
 -- PARA
 local function update_para()
     local text = ""
     text = text .. "PARA\n"
     UFCP_TEXT:set(text)
+end
+
+function SetCommandPara(command,value)
+
 end
 
 -- FTI
@@ -1215,6 +1267,10 @@ local function update_fti()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandFTI(command,value)
+
+end
+
 -- DCLT
 local function update_dclt()
     local text = ""
@@ -1222,11 +1278,19 @@ local function update_dclt()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandDclt(command,value)
+
+end
+
 -- CRUS
 local function update_crus()
     local text = ""
     text = text .. "CRUS\n"
     UFCP_TEXT:set(text)
+end
+
+function SetCommandCrus(command,value)
+
 end
 
 -- DRFT
@@ -1253,6 +1317,10 @@ local function update_tk_l()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandTkL(command,value)
+
+end
+
 -- STRM
 local function update_strm()
     local text = ""
@@ -1260,11 +1328,19 @@ local function update_strm()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandStrm(command,value)
+
+end
+
 -- FLIR
 local function update_flir()
     local text = ""
     text = text .. "FLIR\n"
     UFCP_TEXT:set(text)
+end
+
+function SetCommandFlir(command,value)
+
 end
 
 -- DL MENU
@@ -1298,11 +1374,19 @@ local function update_dl_set()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandDlSet(command,value)
+
+end
+
 -- DL_INV
 local function update_dl_inv()
     local text = ""
     text = text .. "DL INV\n"
     UFCP_TEXT:set(text)
+end
+
+function SetCommandDlInv(command,value)
+
 end
 
 -- DL MSG
@@ -1312,6 +1396,10 @@ local function update_dl_msg()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandDlMsg(command,value)
+
+end
+
 -- DLWP
 local function update_dlwp()
     local text = ""
@@ -1319,11 +1407,19 @@ local function update_dlwp()
     UFCP_TEXT:set(text)
 end
 
+function SetCommandDlwp(command,value)
+
+end
+
 -- SNDP
 local function update_sndp()
     local text = ""
     text = text .. "SNDP\n"
     UFCP_TEXT:set(text)
+end
+
+function SetCommandSndp(command,value)
+
 end
 
 function update()
@@ -1496,6 +1592,7 @@ function SetCommand(command,value)
         if master_mode ~= master_mode_last then
             set_avionics_master_mode(master_mode)
         end
+    -- TODO is this still used?
     elseif command == device_commands.UFCP_VV and value == 1 then
         if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VV_VAH then 
             ufcp_vvvah_mode = ufcp_vvvah_mode_last
@@ -1508,6 +1605,7 @@ function SetCommand(command,value)
     if ufcp_sel_format == UFCP_FORMAT_IDS.MAIN then SetCommandMain(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM1 then SetCommandCom1(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM2 then SetCommandCom2(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_AIDS then SetCommandNavAids(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.VVVAH then SetCommandVVVAH(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.DA_H then SetCommandDAH(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT then SetCommandWpt(command, value)
@@ -1517,11 +1615,35 @@ function SetCommand(command,value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.FIX then SetCommandFix(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.TIP then SetCommandTip(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.MENU then SetCommandMenu(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.LMT then SetCommandLmt(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DTK then SetCommandDtk(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.BAL then SetCommandBal(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.ACAL then SetCommandACal(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE or ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MISC then SetCommandNav(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.WS then SetCommandWs(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.EGI_INS or ufcp_sel_format == UFCP_FORMAT_IDS.EGI_GPS then SetCommandEgi(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.FUEL then SetCommandFuel(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.TAC_MENU then SetCommandTacMenu(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.TAC_CTLN then SetCommandTacCtln(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.TAC_AVOID then SetCommandTacAvoid(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.MODE then SetCommandMode(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.OAP then SetCommandOAP(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.MISC then SetCommandMisc(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.C_F then SetCommandCF(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.PARA then SetCommandPara(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.FTI then SetCommandFTI(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DCLT then SetCommandDclt(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.CRUS then SetCommandCrus(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.DRFT then SetCommandDrft(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.TK_L_DATA or ufcp_sel_format == UFCP_FORMAT_IDS.TK_L_TKOF or ufcp_sel_format == UFCP_FORMAT_IDS.TK_L_LAND then SetCommandTkL()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.STRM then SetCommandStrm()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.FLIR then SetCommandFlir()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.DL_MENU then SetCommandDlMenu(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DL_SET then SetCommandDlSet()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DL_INV then SetCommandDlInv()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DL_MSG then SetCommandDlMsg()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DLWP then SetCommandDlwp()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.SNDP then SetCommandSndp()
     end
 end
 
