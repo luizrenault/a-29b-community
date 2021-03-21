@@ -2,30 +2,36 @@ dofile(LockOn_Options.script_path.."CMFD/CMFD_NAV_ID_defs.lua")
 dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
 
 
-local CMFD_NAV_FYT_VALID = get_param_handle("CMFD_NAV_FYT_VALID")
 local CMFD_NAV_FORMAT = get_param_handle("CMFD_NAV_FORMAT")
-local CMFD_NAV_FYT = get_param_handle("CMFD_NAV_FYT")
-local CMFD_NAV_FYT_ELV = get_param_handle("CMFD_NAV_FYT_ELV")
-local CMFD_NAV_FYT_HOURS = get_param_handle("CMFD_NAV_FYT_HOURS")
-local CMFD_NAV_FYT_MINS = get_param_handle("CMFD_NAV_FYT_MINS")
-local CMFD_NAV_FYT_SECS = get_param_handle("CMFD_NAV_FYT_SECS")
-local CMFD_NAV_FYT_LAT_HEMIS = get_param_handle("CMFD_NAV_FYT_LAT_HEMIS")
-local CMFD_NAV_FYT_LAT_DEG = get_param_handle("CMFD_NAV_FYT_LAT_DEG")
-local CMFD_NAV_FYT_LAT_MIN = get_param_handle("CMFD_NAV_FYT_LAT_MIN")
-local CMFD_NAV_FYT_LON_HEMIS = get_param_handle("CMFD_NAV_FYT_LON_HEMIS")
-local CMFD_NAV_FYT_LON_DEG = get_param_handle("CMFD_NAV_FYT_LON_DEG")
-local CMFD_NAV_FYT_LON_MIN = get_param_handle("CMFD_NAV_FYT_LON_MIN")
-local CMFD_NAV_FYT_OAP_BRG = get_param_handle("CMFD_NAV_FYT_OAP_BRG")
-local CMFD_NAV_FYT_OAP_BRG_TEXT = get_param_handle("CMFD_NAV_FYT_OAP_BRG_TEXT")
-local CMFD_NAV_FYT_OAP_DIST = get_param_handle("CMFD_NAV_FYT_OAP_DIST")
-local CMFD_NAV_FYT_OAP_ELV = get_param_handle("CMFD_NAV_FYT_OAP_ELV")
-local CMFD_NAV_FYT_OAP_MINS = get_param_handle("CMFD_NAV_FYT_OAP_MINS")
-local CMFD_NAV_FYT_OAP_SECS = get_param_handle("CMFD_NAV_FYT_OAP_SECS")
-local CMFD_NAV_FYT_OAP_AZIMUTH = get_param_handle("CMFD_NAV_FYT_OAP_AZIMUTH")
-local CMFD_NAV_FYT_OAP_ELEVATION = get_param_handle("CMFD_NAV_FYT_OAP_ELEVATION")
-local CMFD_NAV_FYT_OAP_STT = get_param_handle("CMFD_NAV_FYT_OAP_STT")
-local CMFD_NAV_FYT_OAP_TTD = get_param_handle("CMFD_NAV_FYT_OAP_TTD")
-local CMFD_NAV_FYT_OAP_DT = get_param_handle("CMFD_NAV_FYT_OAP_DT")
+
+local CMFD = {
+    NAV_FYT = get_param_handle("CMFD_NAV_FYT"),
+    NAV_FYT_LAT_M = get_param_handle("CMFD_NAV_FYT_LAT_M"),
+    NAV_FYT_LON_M = get_param_handle("CMFD_NAV_FYT_LON_M"),
+    NAV_FYT_ALT_M = get_param_handle("CMFD_NAV_FYT_ALT_M"),
+    NAV_FYT_VALID = get_param_handle("CMFD_NAV_FYT_VALID"),
+    NAV_FYT_ELV = get_param_handle("CMFD_NAV_FYT_ELV"),
+    NAV_FYT_HOURS = get_param_handle("CMFD_NAV_FYT_HOURS"),
+    NAV_FYT_MINS = get_param_handle("CMFD_NAV_FYT_MINS"),
+    NAV_FYT_SECS = get_param_handle("CMFD_NAV_FYT_SECS"),
+    NAV_FYT_LAT_HEMIS = get_param_handle("CMFD_NAV_FYT_LAT_HEMIS"),
+    NAV_FYT_LAT_DEG = get_param_handle("CMFD_NAV_FYT_LAT_DEG"),
+    NAV_FYT_LAT_MIN = get_param_handle("CMFD_NAV_FYT_LAT_MIN"),
+    NAV_FYT_LON_HEMIS = get_param_handle("CMFD_NAV_FYT_LON_HEMIS"),
+    NAV_FYT_LON_DEG = get_param_handle("CMFD_NAV_FYT_LON_DEG"),
+    NAV_FYT_LON_MIN = get_param_handle("CMFD_NAV_FYT_LON_MIN"),
+    NAV_FYT_OAP_BRG = get_param_handle("CMFD_NAV_FYT_OAP_BRG"),
+    NAV_FYT_OAP_BRG_TEXT = get_param_handle("CMFD_NAV_FYT_OAP_BRG_TEXT"),
+    NAV_FYT_OAP_DIST = get_param_handle("CMFD_NAV_FYT_OAP_DIST"),
+    NAV_FYT_OAP_ELV = get_param_handle("CMFD_NAV_FYT_OAP_ELV"),
+    NAV_FYT_OAP_MINS = get_param_handle("CMFD_NAV_FYT_OAP_MINS"),
+    NAV_FYT_OAP_SECS = get_param_handle("CMFD_NAV_FYT_OAP_SECS"),
+    NAV_FYT_OAP_AZIMUTH = get_param_handle("CMFD_NAV_FYT_OAP_AZIMUTH"),
+    NAV_FYT_OAP_ELEVATION = get_param_handle("CMFD_NAV_FYT_OAP_ELEVATION"),
+    NAV_FYT_OAP_STT = get_param_handle("CMFD_NAV_FYT_OAP_STT"),
+    NAV_FYT_OAP_TTD = get_param_handle("CMFD_NAV_FYT_OAP_TTD"),
+    NAV_FYT_OAP_DT = get_param_handle("CMFD_NAV_FYT_OAP_DT"),
+}
 local CMFD_NAV_ROUT_TEXT = get_param_handle("CMFD_NAV_ROUT_TEXT")
 local CMFD_NAV_ROUT_TEXT1 = get_param_handle("CMFD_NAV_ROUT_TEXT1")
 local CMFD_NAV_ROUT_TEXT2 = get_param_handle("CMFD_NAV_ROUT_TEXT2")
@@ -163,7 +169,9 @@ local distance_last = -1
 function update_nav()
     count = count + 1
     CMFD_NAV_FORMAT:set(nav_format)
-    CMFD_NAV_FYT:set(nav_fyt)
+    CMFD.NAV_FYT:set(nav_fyt)
+
+   
     
     local get_index = CMFD_NAV_GET_INDEX:get()
     local get_rdy = CMFD_NAV_GET_RDY:get()
@@ -232,6 +240,8 @@ function update_nav()
         x = x - nav_fyt_list[nav_fyt+1].lat_m
         y = y - nav_fyt_list[nav_fyt+1].altitude / 3.28084
         z = z - nav_fyt_list[nav_fyt+1].lon_m
+
+
         local distance = math.sqrt(x*x + z*z) * 0.000539957
         local elev = y * 3.28084
         if distance < 2 and distance > distance_last and nav_fyt_last == nav_fyt and UFCP_NAV_MODE:get() == UFCP_NAV_MODE_IDS.AUTO then
@@ -304,58 +314,67 @@ function update_nav()
         azimuth = new_azimuth + pitch * s
         elevation = new_elevation - pitch * c
 
-        CMFD_NAV_FYT_HOURS:set(nav_fyt_list[nav_fyt+1].time_hours)
-        CMFD_NAV_FYT_MINS:set(nav_fyt_list[nav_fyt+1].time_mins)
-        CMFD_NAV_FYT_SECS:set(nav_fyt_list[nav_fyt+1].time_secs)
+        CMFD.NAV_FYT_HOURS:set(nav_fyt_list[nav_fyt+1].time_hours)
+        CMFD.NAV_FYT_MINS:set(nav_fyt_list[nav_fyt+1].time_mins)
+        CMFD.NAV_FYT_SECS:set(nav_fyt_list[nav_fyt+1].time_secs)
 
-        CMFD_NAV_FYT_OAP_MINS:set(time_mins)
-        CMFD_NAV_FYT_OAP_SECS:set(time_secs)
-        CMFD_NAV_FYT_OAP_STT:set(speed_to_target)
-        CMFD_NAV_FYT_OAP_TTD:set(time)
-        CMFD_NAV_FYT_OAP_DT:set(dt)
+        CMFD.NAV_FYT_OAP_MINS:set(time_mins)
+        CMFD.NAV_FYT_OAP_SECS:set(time_secs)
+        CMFD.NAV_FYT_OAP_STT:set(speed_to_target)
+        CMFD.NAV_FYT_OAP_TTD:set(time)
+        CMFD.NAV_FYT_OAP_DT:set(dt)
 
-        if nav_fyt_list[nav_fyt+1].lat >= 0 then CMFD_NAV_FYT_LAT_HEMIS:set("N") else CMFD_NAV_FYT_LAT_HEMIS:set("S") end
-        CMFD_NAV_FYT_LAT_DEG:set(math.floor(math.abs(nav_fyt_list[nav_fyt+1].lat)))
-        CMFD_NAV_FYT_LAT_MIN:set((math.abs(nav_fyt_list[nav_fyt+1].lat) - math.floor(math.abs(nav_fyt_list[nav_fyt+1].lat)))*60)
+        if nav_fyt_list[nav_fyt+1].lat >= 0 then CMFD.NAV_FYT_LAT_HEMIS:set("N") else CMFD.NAV_FYT_LAT_HEMIS:set("S") end
+        CMFD.NAV_FYT_LAT_DEG:set(math.floor(math.abs(nav_fyt_list[nav_fyt+1].lat)))
+        CMFD.NAV_FYT_LAT_MIN:set((math.abs(nav_fyt_list[nav_fyt+1].lat) - math.floor(math.abs(nav_fyt_list[nav_fyt+1].lat)))*60)
 
-        if nav_fyt_list[nav_fyt+1].lon >= 0 then CMFD_NAV_FYT_LON_HEMIS:set("E") else CMFD_NAV_FYT_LON_HEMIS:set("W") end
-        CMFD_NAV_FYT_LON_DEG:set(math.floor(math.abs(nav_fyt_list[nav_fyt+1].lon)))
-        CMFD_NAV_FYT_LON_MIN:set((math.abs(nav_fyt_list[nav_fyt+1].lon) - math.floor(math.abs(nav_fyt_list[nav_fyt+1].lon)))*60)
+        if nav_fyt_list[nav_fyt+1].lon >= 0 then CMFD.NAV_FYT_LON_HEMIS:set("E") else CMFD.NAV_FYT_LON_HEMIS:set("W") end
+        CMFD.NAV_FYT_LON_DEG:set(math.floor(math.abs(nav_fyt_list[nav_fyt+1].lon)))
+        CMFD.NAV_FYT_LON_MIN:set((math.abs(nav_fyt_list[nav_fyt+1].lon) - math.floor(math.abs(nav_fyt_list[nav_fyt+1].lon)))*60)
 
-        CMFD_NAV_FYT_ELV:set(nav_fyt_list[nav_fyt+1].altitude)
+        CMFD.NAV_FYT_ELV:set(nav_fyt_list[nav_fyt+1].altitude)
 
-        CMFD_NAV_FYT_OAP_BRG:set(hdg )
-        CMFD_NAV_FYT_OAP_BRG_TEXT:set(math.floor(hdg + 0.5) % 360)
-        CMFD_NAV_FYT_OAP_DIST:set(distance)
-        CMFD_NAV_FYT_OAP_ELV:set(elev)
-        CMFD_NAV_FYT_OAP_AZIMUTH:set(azimuth)
-        CMFD_NAV_FYT_OAP_ELEVATION:set(elevation)
+        CMFD.NAV_FYT_OAP_BRG:set(hdg )
+        CMFD.NAV_FYT_OAP_BRG_TEXT:set(math.floor(hdg + 0.5) % 360)
+        CMFD.NAV_FYT_OAP_DIST:set(distance)
+        CMFD.NAV_FYT_OAP_ELV:set(elev)
+        CMFD.NAV_FYT_OAP_AZIMUTH:set(azimuth)
+        CMFD.NAV_FYT_OAP_ELEVATION:set(elevation)
 
-        CMFD_NAV_FYT_VALID:set(1)
+        CMFD.NAV_FYT_LAT_M:set(nav_fyt_list[nav_fyt+1].lat_m)
+        CMFD.NAV_FYT_LON_M:set(nav_fyt_list[nav_fyt+1].lon_m)
+        CMFD.NAV_FYT_ALT_M:set(nav_fyt_list[nav_fyt+1].altitude)
+
+        CMFD.NAV_FYT_VALID:set(1)
+
     else
-        CMFD_NAV_FYT_HOURS:set(0)
-        CMFD_NAV_FYT_MINS:set(0)
-        CMFD_NAV_FYT_SECS:set(0)
+        CMFD.NAV_FYT_HOURS:set(0)
+        CMFD.NAV_FYT_MINS:set(0)
+        CMFD.NAV_FYT_SECS:set(0)
 
-        CMFD_NAV_FYT_OAP_MINS:set(0)
-        CMFD_NAV_FYT_OAP_SECS:set(0)
+        CMFD.NAV_FYT_OAP_MINS:set(0)
+        CMFD.NAV_FYT_OAP_SECS:set(0)
 
-        CMFD_NAV_FYT_LAT_DEG:set(0)
-        CMFD_NAV_FYT_LAT_MIN:set(0)
+        CMFD.NAV_FYT_LAT_DEG:set(0)
+        CMFD.NAV_FYT_LAT_MIN:set(0)
 
-        CMFD_NAV_FYT_LON_DEG:set(0)
-        CMFD_NAV_FYT_LON_MIN:set(0)
+        CMFD.NAV_FYT_LON_DEG:set(0)
+        CMFD.NAV_FYT_LON_MIN:set(0)
 
-        CMFD_NAV_FYT_ELV:set(0)
+        CMFD.NAV_FYT_ELV:set(0)
 
-        CMFD_NAV_FYT_OAP_BRG:set(0)
-        CMFD_NAV_FYT_OAP_BRG_TEXT:set(0)
-        CMFD_NAV_FYT_OAP_DIST:set(0)
-        CMFD_NAV_FYT_OAP_ELV:set(0)
-        CMFD_NAV_FYT_OAP_AZIMUTH:set(0)
-        CMFD_NAV_FYT_OAP_ELEVATION:set(0)
+        CMFD.NAV_FYT_OAP_BRG:set(0)
+        CMFD.NAV_FYT_OAP_BRG_TEXT:set(0)
+        CMFD.NAV_FYT_OAP_DIST:set(0)
+        CMFD.NAV_FYT_OAP_ELV:set(0)
+        CMFD.NAV_FYT_OAP_AZIMUTH:set(0)
+        CMFD.NAV_FYT_OAP_ELEVATION:set(0)
 
-        CMFD_NAV_FYT_VALID:set(0)
+        CMFD.NAV_FYT_LAT_M:set(0)
+        CMFD.NAV_FYT_LON_M:set(0)
+        CMFD.NAV_FYT_ALT_M:set(0)
+
+        CMFD.NAV_FYT_VALID:set(0)
     end
 
     if CMFD_NAV_FORMAT:get() == CMFD_NAV_FORMAT_IDS.ROUT then 

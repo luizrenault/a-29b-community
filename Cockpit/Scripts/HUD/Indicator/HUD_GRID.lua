@@ -123,10 +123,10 @@ local HUD_BoresightRoot = addStrokeSymbol("HUD_Boresight_Cross", {"a29b_stroke_s
 
 -- FYT
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "aim9lm-caged"}, "CenterCenter", {0, 0})
-object.element_params = {"HUD_BRIGHT", "AVIONICS_MASTER_MODE", "CMFD_NAV_FYT_VALID", "HUD_FYT_AZIMUTH", "HUD_FYT_ELEVATION"}
+object.element_params = {"HUD_BRIGHT", "HUD_FYT_HIDE", "CMFD_NAV_FYT_VALID", "HUD_FYT_AZIMUTH", "HUD_FYT_ELEVATION"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
-	{"parameter_in_range", 1, AVIONICS_MASTER_MODE_ID.NAV - 0.05, AVIONICS_MASTER_MODE_ID.LANDING + 0.05},
+	{"parameter_compare_with_number", 1, 0},
 	{"parameter_compare_with_number",2,1},
 	{"move_left_right_using_parameter", 3, 0.75},
 	{"move_up_down_using_parameter", 4, 0.75},
@@ -135,18 +135,57 @@ object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterC
 object.element_params = {"HUD_BRIGHT", "HUD_FYT_OS"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
 
-object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "aim9lm-caged"}, "CenterCenter", {0, 0})
-object.element_params = {"HUD_BRIGHT", "AVIONICS_MASTER_MODE", "CMFD_NAV_FYT_VALID", "HUD_FYT_AZIMUTH", "HUD_FYT_ELEVATION"}
+
+-- CCRP
+local HUD_CCRP_origin = addPlaceholder(nil, {0,0})
+HUD_CCRP_origin.element_params = {"HUD_CCRP"}
+HUD_CCRP_origin.controllers = {{"parameter_compare_with_number", 0, 1}}
+
+-- TD Target Designator
+object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "5-target"}, "CenterCenter", {0, 0}, HUD_CCRP_origin.name)
+object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_TD_AZIMUTH", "HUD_TD_ELEVATION"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
-	{"parameter_in_range", 1, AVIONICS_MASTER_MODE_ID.GUN - 0.05, AVIONICS_MASTER_MODE_ID.MAN + 0.05},
-	{"parameter_compare_with_number",2,1},
-	{"move_left_right_using_parameter", 3, 0.75},
-	{"move_up_down_using_parameter", 4, 0.75},
+	{"parameter_compare_with_number", 1, 0},
+	{"move_left_right_using_parameter", 2, 0.75},
+	{"move_up_down_using_parameter", 3, 0.75},
 }
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
-object.element_params = {"HUD_BRIGHT", "HUD_FYT_OS"}
+object.element_params = {"HUD_BRIGHT", "HUD_TD_OS"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+
+-- TLL Target Locator Line
+object = addStrokeLine(nil, 30, {0,DegToMil(1.2)}, 0, HUD_CCRP_origin.name)
+object.vertices = {{8, 0}, {40,0}}
+object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_TD_ANGLE"}
+object.controllers = {{"opacity_using_parameter", 0}, 
+						{"parameter_compare_with_number",1,1},
+						{"rotate_using_parameter", 2, 1}}
+
+-- SL Steering Line
+object = addStrokeLine(nil, 30, {0,0}, 0, HUD_CCRP_origin.name)
+object.vertices = {{0, 200}, {0,-200}}
+object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_SL_AZIMUTH", "HUD_ROLL"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_compare_with_number", 1, 0},
+	{"move_left_right_using_parameter", 2, 0.75},
+	{"rotate_using_parameter", 3,1},
+}
+-- SI Solution Indicator
+object = addStrokeLine(nil, 10, {0,0}, 0, object.name)
+object.vertices = {{-10,0}, {10,0}}
+object.element_params = {"HUD_BRIGHT", "HUD_SI_HIDE", "HUD_SI_ELEVATION"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_compare_with_number", 1, 0},
+	{"move_up_down_using_parameter", 2, 0.75},
+}
+
+-- Max Range Circle
+object = addStrokeCircle(nil, 50, {0, 0}, HUD_CCRP_origin.name)
+object.element_params = {"HUD_BRIGHT", "HUD_MAX_RANGE"}
+object.controllers = { {"opacity_using_parameter", 0},  {"parameter_compare_with_number", 1, 1},}
 
 
 -- CCIP Gun

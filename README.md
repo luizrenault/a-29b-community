@@ -37,6 +37,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 ## Version 0.1.7b - 18 March 2021
 
 ### Added
+- A/G CCRP mode.
 - A/G Ripple Pulses (RP) and Impact Separation (IS)
 - UFCP, throttle handle and stick textures.
 - UFCP VV/VAH format.
@@ -44,7 +45,8 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Livery template (by Cubeboy)
 - Argentina liveries (by GOA -_Max_)
 - Several UFCP format placeholders (by x-b-l-a-h)
-- Livery pack (by Urbi)
+- Livery pack (by Urbi, gheoss)
+- Coldstart training mission (by Rudel_chw)
 
 ### Changed
 - A/G Weapon selection order (External Pylons > Internal Pylons > Ventral Pylon. Left first.)
@@ -59,7 +61,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Cold Start EGI switch default position to Off.
 - Hot Air/Ground EGI switch default position to Nav.
 - Gear drag increased.
-- SFM parameters according to pilot feedbacks.
+- SFM parameters according to pilot feedbacks (PaKo, Leno, Malamem, EDAV, and others).
 
 ### Fixes
 - FYT 0 selected when no route is pre-loaded on mission.
@@ -301,7 +303,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Throttle and Stick are inconsistent with the real ones;
 
 ### Contributors
-- Renault, Milaré, Athos, x-b-l-a-h, Malamem, PaKo, Dino, Jorge Rodrigues, Paoladelf, Farias, Skypork, and many others.
+- Renault, Milaré, x-b-l-a-h, PaKo, Malamem, Athos, Dino, Jorge Rodrigues, Paoladelf, Farias, Skypork, EDAV, and many others.
 
 
 ### Changed

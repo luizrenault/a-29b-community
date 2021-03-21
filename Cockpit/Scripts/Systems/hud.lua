@@ -16,10 +16,10 @@ make_default_activity(update_time_step)
 
 local sensor_data = get_base_data()
 
-local function round_to(value, roundto)
-    value = value + roundto/2
-    return value - value % roundto
-end
+-- local function round_to(value, roundto)
+--     value = value + roundto/2
+--     return value - value % roundto
+-- end
 
 
 local HUD_PITCH = get_param_handle("HUD_PITCH")
@@ -39,15 +39,34 @@ local HUD_HDG_SCALE_MOVE = get_param_handle("HUD_HDG_SCALE_MOVE")
 local HUD_HDG_CUE_MOVE = get_param_handle("HUD_HDG_CUE_MOVE")
 local HUD_HDG_CUE_VALUE = get_param_handle("HUD_HDG_CUE_VALUE")
 local HUD_VS_CUE_MOVE = get_param_handle("HUD_VS_CUE_MOVE")
-local HUD_VS_CUE_VALUE = get_param_handle("HUD_VS_CUE_VALUE")
 local HUD_FPM_SLIDE = get_param_handle("HUD_FPM_SLIDE")
 local HUD_FPM_VERT = get_param_handle("HUD_FPM_VERT")
-local HUD_FPM_OOR = get_param_handle("HUD_FPM_OOR")
 local HUD_PL_SLIDE = get_param_handle("HUD_PL_SLIDE")
 local HUD_RI_ROLL = get_param_handle("HUD_RI_ROLL")
-local HUD_FYT_AZIMUTH = get_param_handle("HUD_FYT_AZIMUTH")
-local HUD_FYT_ELEVATION = get_param_handle("HUD_FYT_ELEVATION")
-local HUD_FYT_OS = get_param_handle("HUD_FYT_OS")
+
+local HUD = {
+    CCRP = get_param_handle("HUD_CCRP"),
+    FYT_AZIMUTH = get_param_handle("HUD_FYT_AZIMUTH"),
+    FYT_ELEVATION = get_param_handle("HUD_FYT_ELEVATION"),
+    FYT_OS = get_param_handle("HUD_FYT_OS"),
+    FYT_HIDE = get_param_handle("HUD_FYT_HIDE"),
+    TD_AZIMUTH = get_param_handle("HUD_TD_AZIMUTH"),
+    TD_ELEVATION = get_param_handle("HUD_TD_ELEVATION"),
+    TD_OS = get_param_handle("HUD_TD_OS"),
+    TD_HIDE = get_param_handle("HUD_TD_HIDE"),
+    TD_ANGLE = get_param_handle("HUD_TD_ANGLE"),
+    MAX_RANGE = get_param_handle("HUD_MAX_RANGE"),
+    SL_AZIMUTH = get_param_handle("HUD_SL_AZIMUTH"),
+    SI_ELEVATION = get_param_handle("HUD_SI_ELEVATION"),
+    SI_HIDE = get_param_handle("HUD_SI_HIDE"),
+}
+local WPN = {
+    TD_AZIMUTH = get_param_handle("WPN_TD_AZIMUTH"),
+    TD_ELEVATION = get_param_handle("WPN_TD_ELEVATION"),
+    CCRP_TIME = get_param_handle("WPN_CCRP_TIME"),
+    CCRP_TIME_MAX_RANGE = get_param_handle("WPN_CCRP_TIME_MAX_RANGE"),
+    WEAPON_RELEASE = get_param_handle("WPN_WEAPON_RELEASE"),
+}
 
 
 -- Visuals
@@ -68,6 +87,7 @@ local HUD_VOR_DIST = get_param_handle("HUD_VOR_DIST")
 local HUD_VOR_MAG = get_param_handle("HUD_VOR_MAG")
 local HUD_MACH = get_param_handle("HUD_MACH")
 
+
 local HUD_AOA = get_param_handle("HUD_AOA")
 local HUD_AOA_DELTA = get_param_handle("HUD_AOA_DELTA")
 local HUD_PL = get_param_handle("HUD_PL")
@@ -79,8 +99,10 @@ local HUD_BRIGHT = get_param_handle("HUD_BRIGHT")
 local CMFDDoi = get_param_handle("CMFDDoi")
 
 local hud_piper_diameter = math.rad(1.8)
-local hud_limit_x = math.rad(6)
-local hud_limit_y = math.rad(6)
+local hud_limit = {
+    x= math.rad(6),
+    y = math.rad(6)
+}
 
 local HUD_PIPER_LINE_A_X = get_param_handle("HUD_PIPER_LINE_A_X")
 local HUD_PIPER_LINE_A_Y = get_param_handle("HUD_PIPER_LINE_A_Y")
@@ -101,7 +123,7 @@ local HUD_CCIP_PIPER_HIDDEN = get_param_handle("HUD_CCIP_PIPER_HIDDEN")
 
 local WS_GUN_PIPER_AZIMUTH = get_param_handle("WS_GUN_PIPER_AZIMUTH")
 local WS_GUN_PIPER_ELEVATION = get_param_handle("WS_GUN_PIPER_ELEVATION")
-local WS_GUN_PIPER_SPAN = get_param_handle("WS_GUN_PIPER_SPAN")
+-- local WS_GUN_PIPER_SPAN = get_param_handle("WS_GUN_PIPER_SPAN")
 local WS_TARGET_RANGE = get_param_handle("WS_TARGET_RANGE")
 local CMFD_NAV_FYT_OAP_BRG = get_param_handle("CMFD_NAV_FYT_OAP_BRG")
 local CMFD_NAV_FYT_OAP_AZIMUTH = get_param_handle("CMFD_NAV_FYT_OAP_AZIMUTH")
@@ -110,40 +132,42 @@ local CMFD_NAV_FYT_OAP_STT = get_param_handle("CMFD_NAV_FYT_OAP_STT")
 local CMFD_NAV_FYT_OAP_TTD = get_param_handle("CMFD_NAV_FYT_OAP_TTD")
 local CMFD_NAV_FYT_OAP_DT = get_param_handle("CMFD_NAV_FYT_OAP_DT")
 
-function limit_xy(x, y, limit_x, limit_y, limit_x_down, limit_y_down) 
+local function limit_xy(x, y, limit_x, limit_y, limit_x_down, limit_y_down) 
     limit_x_down = limit_x_down or -limit_x
     limit_y_down = limit_y_down or -limit_y
 
-    local limited = false
+    local limited_x = false
+    local limited_y = false
     if x > limit_x then 
         y = y * limit_x / x
         x = limit_x
-        limited = true
+        limited_x = true
     end
     if x < limit_x_down then 
         y = y * limit_x_down / x
         x = limit_x_down 
-        limited = true
+        limited_x = true
     end
     if y > limit_y then 
         x = x * limit_y / y
         y = limit_y 
-        limited = true
+        limited_y = true
     end
     if y < limit_y_down then 
         x = x * limit_y_down / y
         y = limit_y_down 
-        limited = true
+        limited_y = true
     end
-    return x, y, limited and 1 or 0, limited
+    local limited = (limited_x or limited_y) and 1 or 0
+    return x, y, limited, limited_x, limited_y
 end
 
-function update_piper_ccip()
+local function update_piper_ccip()
     local slide = HUD_FPM_SLIDE:get()
     local vert = HUD_FPM_VERT:get()
 
     local az, el, limited
-    az, el, limited = limit_xy(WPN_CCIP_PIPER_AZIMUTH:get(), WPN_CCIP_PIPER_ELEVATION:get(), hud_limit_x, hud_limit_y, -hud_limit_x, -hud_limit_y * 1.3)
+    az, el, limited = limit_xy(WPN_CCIP_PIPER_AZIMUTH:get(), WPN_CCIP_PIPER_ELEVATION:get(), hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
 
     HUD_CCIP_PIPER_AZIMUTH:set(az)
     HUD_CCIP_PIPER_ELEVATION:set(el)
@@ -158,11 +182,11 @@ function update_piper_ccip()
     HUD_PIPER_LINE_B_Y:set(el + 0.005 * math.cos(roll))
 end
 
-function update_piper_lcos()
+local function update_piper_lcos()
     local piper_x = WS_GUN_PIPER_AZIMUTH:get()
     local piper_y = WS_GUN_PIPER_ELEVATION:get()
     local limited = false
-    piper_x, piper_y, limited = limit_xy(piper_x, piper_y, hud_limit_x, hud_limit_y)
+    piper_x, piper_y, limited = limit_xy(piper_x, piper_y, hud_limit.x, hud_limit.y)
     local piper_dist = math.sqrt(piper_x*piper_x + piper_y*piper_y)
     local piper_line_x, piper_line_y
 
@@ -198,14 +222,14 @@ function update_piper_lcos()
     HUD_PIPER_HIDDEN:set(limited)
 end
 
-function update_piper_snap()
+local function update_piper_snap()
     local bullet_speed = 1000 -- m/s
     local piper_x = WS_GUN_PIPER_AZIMUTH:get()
     local piper_y = WS_GUN_PIPER_ELEVATION:get()
     local limited = false
     local time_to_piper = WS_TARGET_RANGE:get() / bullet_speed
 
-    -- piper_x, piper_y, limited = limit_xy(piper_x, piper_y, hud_limit_x, hud_limit_y)
+    -- piper_x, piper_y, limited = limit_xy(piper_x, piper_y, hud_limit.x, hud_limit.y)
 
     local piper_dist = math.sqrt(piper_x*piper_x + piper_y*piper_y)
     local piper_line_x = 0
@@ -244,7 +268,7 @@ function update_piper_snap()
 end
 
 
-function update_aa()
+local function update_aa()
     local wpn_aa_sight = WPN_AA_SIGHT:get()
     if  wpn_aa_sight == WPN_AA_SIGHT_IDS.LCOS or wpn_aa_sight == WPN_AA_SIGHT_IDS.SSLC then update_piper_lcos() end
     if  wpn_aa_sight == WPN_AA_SIGHT_IDS.SNAP or wpn_aa_sight == WPN_AA_SIGHT_IDS.SSLC then update_piper_snap() end
@@ -253,7 +277,7 @@ function update_aa()
     local msl_az = WS_IR_MISSILE_TARGET_AZIMUTH:get()
     local msl_el = WS_IR_MISSILE_TARGET_ELEVATION:get()
     local msl_hidden
-    msl_az, msl_el, msl_hidden = limit_xy(msl_az, msl_el, hud_limit_x, hud_limit_y)
+    msl_az, msl_el, msl_hidden = limit_xy(msl_az, msl_el, hud_limit.x, hud_limit.y)
     HUD_IR_MISSILE_TARGET_AZIMUTH:set(msl_az)
     HUD_IR_MISSILE_TARGET_ELEVATION:set(msl_el)
     HUD_MSL_HIDDEN:set(msl_hidden)
@@ -269,7 +293,7 @@ function update_aa()
     
 end
 
-function update_ag()
+local function update_ag()
     local master_mode = get_avionics_master_mode()
     if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R or get_avionics_master_mode_ag_gun(master_mode) then update_piper_ccip() end
     if get_avionics_master_mode_ag_gun() then
@@ -280,6 +304,73 @@ function update_ag()
     
 end
 
+local function atan(y, x)
+    local angle
+    x = x or 1
+    if x == 0 then
+        if y >= 0 then angle = 0 else angle = math.pi end
+    else 
+        angle = math.atan(y/math.abs(x))
+        if x < 0 then angle = math.pi - angle end
+    end
+    return angle
+end
+
+local function update_td()
+    local master_mode = get_avionics_master_mode()
+
+    local td_azimuth = WPN.TD_AZIMUTH:get()
+    local td_elevation = WPN.TD_ELEVATION:get()
+    local td_angle = atan(td_elevation - math.rad(1.2), td_azimuth)
+    
+    local hud_fyt_azimuth, hud_fyt_elevation, hud_fyt_os, hud_fyt_lim_x, hud_fyt_lim_y = limit_xy(CMFD_NAV_FYT_OAP_AZIMUTH:get(), CMFD_NAV_FYT_OAP_ELEVATION:get(), hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
+    HUD.FYT_AZIMUTH:set(hud_fyt_azimuth)
+    HUD.FYT_ELEVATION:set(hud_fyt_elevation)
+    HUD.FYT_OS:set(hud_fyt_os)
+    HUD.FYT_HIDE:set(0)
+
+
+    if master_mode == AVIONICS_MASTER_MODE_ID.CCRP and (get_wpn_mass() == WPN_MASS_IDS.SAFE or get_avionics_onground() or (get_wpn_mass() == WPN_MASS_IDS.LIVE and WPN_AG_SEL:get() == 0) or (get_wpn_mass() == WPN_MASS_IDS.SIM and WPN_AG_SEL:get() == 0) ) then
+        HUD.CCRP:set(0)
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.CCRP then
+        HUD.CCRP:set(1)
+        HUD.TD_HIDE:set(0)
+        HUD.FYT_HIDE:set(1)
+    elseif get_avionics_master_mode_aa() then
+        HUD.CCRP:set(0)
+        HUD.FYT_HIDE:set(1)
+    else
+        HUD.CCRP:set(0)
+    end
+
+    local hud_td_azimuth, hud_td_elevation, hud_td_lim, hud_td_lim_x, hud_td_lim_y = limit_xy(td_azimuth, td_elevation, hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
+    HUD.TD_AZIMUTH:set(hud_td_azimuth)
+    HUD.TD_ELEVATION:set(hud_td_elevation)
+    HUD.TD_OS:set(hud_td_lim_y and 1 or 0)
+    HUD.TD_ANGLE:set(td_angle)
+    HUD.TD_HIDE:set(hud_td_lim_x and 1 or 0) 
+    HUD.SL_AZIMUTH:set(td_azimuth + td_elevation * math.sin(sensor_data.getRoll()))
+
+    local time_to_max_range = WPN.CCRP_TIME_MAX_RANGE:get()
+    if time_to_max_range > 0 and time_to_max_range < 2 then
+        HUD.MAX_RANGE:set(1)
+    elseif time_to_max_range > -2 and time_to_max_range < 0 then
+        local blink_time = math.floor(-time_to_max_range * 10)
+        if blink_time % 2 == 0 then HUD.MAX_RANGE:set(1) else HUD.MAX_RANGE:set(0) end
+    else 
+        HUD.MAX_RANGE:set(0)
+    end
+
+    local time_to_impact = WPN.CCRP_TIME:get()
+    if time_to_impact > 5 then time_to_impact = 5 end
+    if WPN.WEAPON_RELEASE:get() == 1 or time_to_max_range <= 2 then
+        HUD.SI_HIDE:set(0)
+    elseif time_to_max_range > 2 then 
+        HUD.SI_HIDE:set(1)
+    end
+    HUD.SI_ELEVATION:set(HUD_FPM_VERT:get() - 0.0025 + time_to_impact/100)
+end
+
 
 HUD_DCLT:set(0)
 HUD_DRIFT_CO:set(0)
@@ -287,29 +378,21 @@ UFCP_VAH:set(0)
 
 local max_accel = 0
 
-
 local hud_warn_period = 0.1
 local hud_warn_elapsed = 0
 local hud_warning = get_param_handle("HUD_WARNING")
+
 function update()
+    local master_mode = get_avionics_master_mode()
     local hud_on = get_elec_avionics_ok() and 1 or 0
     local hud_bright = get_cockpit_draw_argument_value(483)
-    if get_cockpit_draw_argument_value(476) == 0 then hud_bright = hud_bright * 0.5 
-    end
-
-
-    local master_mode = get_avionics_master_mode()
+    if get_cockpit_draw_argument_value(476) == 0 then hud_bright = hud_bright * 0.5 end
 
     if (get_avionics_master_mode_ag() or get_avionics_master_mode_aa()) and WPN_READY:get() == 1 then HUD_RDY:set(1) 
     elseif (get_avionics_master_mode_ag() or get_avionics_master_mode_aa()) and WPN_SIM_READY:get() == 1 then HUD_RDY:set(2)
     else HUD_RDY:set(0) end
 
-
-    local hud_fyt_azimuth, hud_fyt_elevation, hud_fyt_os = limit_xy(CMFD_NAV_FYT_OAP_AZIMUTH:get(), CMFD_NAV_FYT_OAP_ELEVATION:get(), hud_limit_x, hud_limit_y, -hud_limit_x, -hud_limit_y * 1.3)
-    HUD_FYT_AZIMUTH:set(hud_fyt_azimuth)
-    HUD_FYT_ELEVATION:set(hud_fyt_elevation)
-    HUD_FYT_OS:set(hud_fyt_os)
-
+    update_td()
 
     local hud_warn = get_hud_warning()
     hud_warn_elapsed = hud_warn_elapsed + update_time_step
@@ -421,7 +504,7 @@ function update()
     end
 
     local fpm_cross = 0        
-    angleh, anglev, fpm_cross = limit_xy(angleh, anglev - pitch, hud_limit_x, hud_limit_y)
+    angleh, anglev, fpm_cross = limit_xy(angleh, anglev - pitch, hud_limit.x, hud_limit.y)
     anglev = anglev + pitch
    
     local pl_slide = angleh + (anglev-pitch) * math.tan(roll)
@@ -471,7 +554,10 @@ function update()
     local ttd = CMFD_NAV_FYT_OAP_TTD:get()
     local dt = CMFD_NAV_FYT_OAP_DT:get()
 
-    if nav_time == UFCP_NAV_TIME_IDS.DT then
+    local ccrp_time = WPN.CCRP_TIME:get() + 1
+    if ccrp_time >= 0 then 
+        time_text = time_text .. string.format("%02.0f:%02.0f ", math.floor(ccrp_time / 60), math.floor(ccrp_time % 60) )
+    elseif nav_time == UFCP_NAV_TIME_IDS.DT then
         if dt >= 0 then time_text = "A" else time_text = "D" end
         dt = math.abs(dt)
         if dt >= 100*60 then dt = 100*60-1 end

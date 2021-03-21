@@ -395,10 +395,10 @@ A_29B =  {
 	SFM_Data = {
 		aerodynamics = 
 		{
-			Cy0	=	0.1, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
+			Cy0	=	0.155, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
 			Mzalfa	=	4.355, -- Horizontal tail pitch coefficient
-			Mzalfadt	=	1,  -- Wing pitch coefficient
-			kjx = 2.95, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
+			Mzalfadt	=	0.8,  -- Wing pitch coefficient
+			kjx = 2.25, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
 			kjz = 0.00125,  -- Unknown pitch constant. All planes use 0.00125 -- -- Inertia parametre Z - Dimension (clean) airframe drag coefficient at Z (Front) Simply the wing area in square meters (as that is a major factor in drag calculations)
 			Czbe = -0.056, -- Directional stability coefficient  -- coefficient, along Z axis (perpendicular), affects yaw, negative value means force orientation in FC coordinate system
 			cx_gear = 0.3, -- Additional coefficient of drag for gear extended
@@ -467,12 +467,13 @@ A_29B =  {
 					{0.17,	0.0287,	0.046*2,		0.1,	0.092,	  2.7,		22.0,		1.15*2,	},
 					{0.18,	0.0287,	0.0646*2,		0.1,	0.092,	  2.7,		22.0,		1.20*2,	},
 					{0.19,	0.0287,	0.0746*2,		0.1,	0.092,	  2.7,		22.0,		1.45*2,	},
-					{0.2,	0.0287,	0.0746*2,		0.1,	0.092,	  2.7,     	22.0,		1.45*2,   },
+					{0.2,	0.0187,	0.0746*2,		0.01,	0.012,	  2.7,     	22.0,		1.45*2,   },
 					{0.3,	0.0297,	0.0652*2,		0.1,	0.092,	  2.7,		19.0,		1.45*2,    },
 					{0.31,	0.0287,	0.0650*2,		0.1,	0.092,	  2.7,		19.0,		1.45*2,    },
+					{0.38,	0.0187,	0.0650*2,		0.01,	0.012,	  2.7,		19.0,		1.45*2,    },
 					{0.39,	0.0420,	0.0522*2,		0.1,	0.092,	  2.7,		19.0,		1.45*2,    },
-					{0.5,	0.0487,	0.0398*2,		0.1,	0.092,	  2.7,		17.0,		1.45*2,   },
-					{0.59,	0.0587,	0.054*2,		0.1,	0.095,	  2.7,	    17.0,		1.45*2,   },
+					{0.5,	0.0587,	0.0598*2,		0.1,	0.099,	  2.7,		17.0,		1.45*2,   },
+					{0.59,	0.0587,	0.0540*2,		0.1,	0.099,	  2.7,	    17.0,		1.45*2,   },
 					{0.67,	0.0487,	0.0707*2,		0.1,	0.091,	  2.7,		14.5,		0.98*2,   },
 					{0.74,	0.0427,	0.0855*2,		0.1,	0.16,	  2.7,		10.0,	  	0.72*2,   },
 					{0.76,	0.032,	0.078*2,		0.1,	0.25,	  2.7,      9.0,  		0.6*2,    },
@@ -480,7 +481,7 @@ A_29B =  {
 					{0.83,	0.1,	0.0725*2,		0.34,	2.4,	  0.32,		4.5,		0.3*2,	},
 					{0.9,	0.126,	0.073*2,		0.56,	3.0,	  0.076,	3.0,	    0.2*2,	},
 					{1.1,	0.16,	0.03*2,			0.56,	3.0,	  0.076,	1.0,		0.3*2		},
-			}
+	}
 		}, -- end of aerodynamics
 		engine = 
 		{
@@ -492,10 +493,10 @@ A_29B =  {
 			typeng	=	3, -- E_TURBOJET = 0, E_TURBOJET_AB = 1, E_PISTON = 2, E_TURBOPROP = 3,	E_TURBOFAN    = 4,	E_TURBOSHAFT = 5
 			hMaxEng	=	19.5, -- maximum operating altitude for the engine in km -- typically higher than service ceiling of the aircraft
 			dcx_eng	=	0.095, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
-			cemax	=	0.0125, -- kg / sec - fuel consumption for a single engine in dry configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
-			cefor	=	0.0225, -- kg / sec - fuel consumption for a single engine in afterburner configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
-			dpdh_m	=	2500, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
-			dpdh_f	=	2500, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			cemax	=	0.005, -- kg / sec - fuel consumption for a single engine in dry configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
+			cefor	=	0.005, -- kg / sec - fuel consumption for a single engine in afterburner configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
+			dpdh_m	=	1700, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			dpdh_f	=	2000, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			table_data = {
 			-- Pmax - total thrust in Newtons (kN * 1000) for all engines
 			-- Pfor - total thrust in Newtons (kN * 1000) for all engines
@@ -505,14 +506,14 @@ A_29B =  {
 				{0.2,		18000.0},
 				{0.3,		18000.0},
 				{0.31,		18000.0},
-				{0.39,		10000.0},
-				{0.4,		 9050.0},
-				{0.5,		 9050.0},
-				{0.6,		 9050.0},
+				{0.39,		17000.0},
+				{0.4,		17000.0},
+				{0.5,		10000.0},
+				{0.6,		10000.0},
 				{0.7,		 9050.0},
 				{0.8,		 9020.0},
 				{0.9,		 5902.0},
-				{1.0,		 3469.0}
+				{1.0,		 3469.0},
 			}                 
 		}, -- end of engine
 		-- thrust_max = -- thrust interpolation table by altitude and mach number, 2d table.  Modified for carrier takeoffs at/around 71 foot deck height
