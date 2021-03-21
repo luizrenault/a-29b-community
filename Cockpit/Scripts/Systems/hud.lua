@@ -408,13 +408,6 @@ function update()
     local angleh = math.atan2(iasz, iasx) - math.atan2(speedz, speedx)
     angleh = math.rad(sensor_data.getAngleOfSlide())-angleh
 
-
-    if get_avionics_master_mode_ag() then
-        HUD_DRIFT_CO:set(1)
-    else
-        HUD_DRIFT_CO:set(0)
-    end
-
     if HUD_DRIFT_CO:get() == 1 then 
         angleh = 0
     else 

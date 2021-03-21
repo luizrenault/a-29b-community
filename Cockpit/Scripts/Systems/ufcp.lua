@@ -24,7 +24,7 @@ local CMFD_NAV_FYT = get_param_handle("CMFD_NAV_FYT")
 local EICAS_FUEL_INIT = get_param_handle("EICAS_FUEL_INIT")
 local CMFD_NAV_FYT_OAP_STT = get_param_handle("CMFD_NAV_FYT_OAP_STT")
 local ADHSI_VV = get_param_handle("ADHSI_VV")
-
+local HUD_DRIFT_CO = get_param_handle("HUD_DRIFT_CO")
 
 local ufcp_nav_mode = UFCP_NAV_MODE_IDS.AUTO
 local ufcp_nav_time = UFCP_NAV_TIME_IDS.TTD
@@ -68,6 +68,8 @@ local ufcp_time_type =  UFCP_TIME_TYPE_IDS.LC
 
 local ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
 local ufcp_main_sel = UFCP_MAIN_SEL_IDS.FYT
+
+local ufcp_drift_co = false;
 
 local elapsed = 0
 
@@ -846,7 +848,11 @@ end
 
 local function update_drft()
     local text = ""
-    text = text .. "DRIFT\n"
+    text = text .. "DRIFT\n\n"
+    text = text .. "*DRIFT C/O*"
+    text = text .. "\n\n"
+    if ufcp_drift_co then text = replace_pos(text, 8); text = replace_pos(text, 18) end
+
     UFCP_TEXT:set(text)
 end
 
@@ -978,6 +984,12 @@ function update()
         UFCP_VV:set(0)
         UFCP_VAH:set(0)
         ADHSI_VV:set(0)
+    end
+
+    if ufcp_drift_co or get_avionics_master_mode_ag() then
+        HUD_DRIFT_CO:set(1)
+    else
+        HUD_DRIFT_CO:set(0)
     end
 
     UFCP_NAV_MODE:set(ufcp_nav_mode)
@@ -1291,6 +1303,12 @@ function SetCommandMisc(command,value)
     end
 end
 
+function SetCommandDrft(command,value)
+    if command == device_commands.UFCP_0 and value == 1 then
+        ufcp_drift_co = not ufcp_drift_co
+    end
+end
+
 function SetCommandDlMenu(command,value)
     if command == device_commands.UFCP_1 and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.DL_SET
@@ -1405,6 +1423,7 @@ function SetCommand(command,value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.MENU then SetCommandMenu(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.TAC_MENU then SetCommandTacMenu(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.MISC then SetCommandMisc(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.DRFT then SetCommandDrft(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.DL_MENU then SetCommandDlMenu(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE or ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MISC then SetCommandNav(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.VVVAH then 
