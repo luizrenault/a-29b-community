@@ -6,6 +6,7 @@ dofile(LockOn_Options.script_path.."utils.lua")
 dofile(LockOn_Options.script_path.."dump.lua")
 dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
+dofile(LockOn_Options.script_path.."Systems/weapon_system_api.lua")
 
 startup_print("ufcs: load")
 
