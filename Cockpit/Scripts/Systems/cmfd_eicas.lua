@@ -487,7 +487,7 @@ function update_eicas()
         EICAS_SPD_BRK_TXT:set("CLOSED")
     else 
         EICAS_SPD_BRK:set(1)
-        EICEICAS_SPD_BRK_TXTAS_FLAP_TXT:set("OPEN")
+        EICAS_SPD_BRK_TXT:set("OPEN")
     end
 end
 

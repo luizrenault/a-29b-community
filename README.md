@@ -47,6 +47,13 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Several UFCP format placeholders (by x-b-l-a-h)
 - Livery pack (by Urbi, gheoss)
 - Coldstart training mission (by Rudel_chw)
+- Pylons are now removable
+- New external 3d model with new animations
+- New propeller animation
+- New suspension parameters
+- New external lights
+- Speedbreak now working
+
 
 ### Changed
 - A/G Weapon selection order (External Pylons > Internal Pylons > Ventral Pylon. Left first.)

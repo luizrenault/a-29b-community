@@ -42,10 +42,12 @@ A_29B =  {
     -- add model draw args for network transmitting to this draw_args table (32 limit)
     net_animation ={
         0, -- front gear
-        1, -- front gear suspension
+        -- 1, -- front gear suspension
 		2, -- nose wheel steering
 		3, -- main gear
-        4, -- main gear suspension
+        -- 4, -- main gear suspension
+		5, -- main gear
+		-- 6, -- main gear suspension
         9, -- right flap
         10, -- left flap
         11, -- right aileron
@@ -53,18 +55,37 @@ A_29B =  {
         15, -- right elevator
         16, -- left elevator
         17, -- rudder
+		21, -- speadbreak
         38, -- canopy
-		39, -- pilots heads
-		49, -- nav lights
-		50, -- pilots
-		51, -- landing lights
-		77, -- wheel rollAngle
-		83, -- strobe lights
-		324, -- proppellerer
-		350, -- Guns
-		802, -- other lights
-		407,
-		475,
+		-- 39, -- pilots heads
+		-- 49, -- nav lights
+		50, -- pilots fron eject
+		-- 51, -- landing lights
+		-- 77, -- wheel rollAngle
+		83, -- formation lights
+		-- 99, -- front pilot up down
+		101, -- wheel rolling
+		102, -- wheel rolling
+		103, -- wheel rolling
+		-- 114, -- canopy
+		190, -- nav light
+		191, -- nav light
+		192, -- strobe light
+		193, -- landing light
+		-- 198, -- beacon light
+		200, -- beacon light
+		201, -- beacon rotation
+		208, -- taxi light
+		209, -- search light
+		308, -- pylons
+		309, -- pylons
+		310, -- pylons
+		311, -- pylons
+		312, -- pylons
+		-- 337, -- back pilot head left right
+		-- 399, -- back pilot head up down
+		407, -- propellerer
+		472, -- back pilot disapear
     },
 
 	mapclasskey 		= "P0091000024",
@@ -104,9 +125,22 @@ A_29B =  {
 		has_speedbrake 				= true, -- Speedbrake yes/no
 		has_differential_stabilizer	= false, -- differential stabilizers
 
-		main_gear_pos 				= 	{-1,	-2.03,	2.},
-		nose_gear_pos 				= 	{2.808,	-2.09,	0},
+		main_gear_pos 				= 	{-0.66,	-2.13,	1.813}, --{-1,	-2.03,	2.},
+		nose_gear_pos 				= 	{2.544, -2.184,  -0.011}, --{2.808,	-2.09,	0},
 		tand_gear_max				=	0.363970234, -- tangent of degrees of rotation max of nose wheel steering
+
+		nose_gear_amortizer_direct_stroke        = 0.00,    -- down from nose_gear_pos !!!
+		nose_gear_amortizer_reversal_stroke      = -0.156,   -- up
+		nose_gear_amortizer_normal_weight_stroke = -0.056,   
+		main_gear_amortizer_direct_stroke        = 0.00,     -- down from main_gear_pos !!!
+		main_gear_amortizer_reversal_stroke      = -0.156,   -- up
+		main_gear_amortizer_normal_weight_stroke = -0.056,   
+
+		nose_gear_wheel_diameter	=	0.433, --in m
+		main_gear_wheel_diameter	=	0.563, -- in m
+	
+	
+
 		wing_area 					= 19.4, -- wing area in m2
 		wing_span 					= 11.135, -- wing spain in m
 		wing_type 					= 0,
@@ -121,8 +155,6 @@ A_29B =  {
 		IR_emission_coeff 			= 0.1, -- Normal engine -- IR_emission_coeff = 1 is Su-27 without afterburner. It is reference.
 		IR_emission_coeff_ab 		= 0.1, -- With afterburner
 		wing_tip_pos 				= {-0.82, -0.250,     5.5}, -- wingtip coords for visual effects
-		nose_gear_wheel_diameter	=	0.754, --in m
-		main_gear_wheel_diameter	=	0.972, -- in m
 		brakeshute_name 			= 0, -- Landing - brake chute visual shape after separation
 		
 		-- The following is used for graphical AB effects
@@ -131,7 +163,7 @@ A_29B =  {
 		{
 			[1] = 
 			{
-				pos 		=  {1.624990,0.047866,-0.56}, -- nozzle coords
+				pos 		=  {2.427,-0.565,0.563}, -- nozzle coords
 				elevation   =  0, -- AFB cone elevation –- for engines mounted at an angle to fuselage, change elevation
 				diameter	 = 0*0.1, -- AFB cone diameter
 				exhaust_length_ab   = -3.0, -- lenght in m
@@ -142,7 +174,7 @@ A_29B =  {
 	
 			[2] = 
 			{
-				pos 		=  {1.624990,0.047866,0.56}, -- nozzle coords
+				pos 		=  {2.427,-0.565,-0.563}, -- nozzle coords
 				elevation   =  0, -- AFB cone elevation
 				diameter	 = 0*0.1, -- AFB cone diameter
 				exhaust_length_ab   = -3.0, -- lenght in m
@@ -254,114 +286,128 @@ A_29B =  {
 		}, -- end of chaff_flare_dispenser
 
 		Pylons =     {
-			pylon(1, 0, -0.200, -0.90, -3.230000,
+			pylon(1, 0, -0.200, -0.90, -3.273,
 				{
-					-- arg = 308 ,arg_value = 0,
+					connector = 'pylon1', arg = 308 ,arg_value = 0,
 					use_full_connector_position = false,
 				},
 				{
 					{ CLSID = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}" }, -- AIM-9P
 								
 					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
-					{ CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
-					{ CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
+					-- { CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
+					-- { CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 					{ CLSID = "{5335D97A-35A5-4643-9D9B-026C75961E52}" }, -- CBU-97
 	
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
 					{ CLSID = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}" }, -- LAU-61 - 19
 	
-					{ CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
+					-- { CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
 	
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
 	
-					{ CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+					-- { CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+					
+					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
 				}
 			),
-			pylon(2, 0, -0.200, -1.0, -2.3900,
+			pylon(2, 0, -0.200, -1.0, -2.437,
 				{
+					connector = 'pylon2', arg = 309 ,arg_value = 0,
 					use_full_connector_position = false,
 				},
 				{
 					{ CLSID = "{A-29B TANK}" },
 	
 					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
-					{ CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
-					{ CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
+					-- { CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
+					-- { CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 					{ CLSID = "{5335D97A-35A5-4643-9D9B-026C75961E52}" }, -- CBU-97
 
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
 					{ CLSID = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}" }, -- LAU-61 - 19
 	
-					{ CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
+					-- { CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
 	
 	
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
 	
 	
 					{ CLSID = "{CBU_105}" ,arg_increment = 0.0}, -- CBU-105	
-					{ CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+					-- { CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+
+					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
 				}
 			),
-			pylon(3, 0, -0.66, -1.2000, 0,
+			pylon(3, 0, -0.66, -1.236, -0.012,
 				{
+					connector = 'pylon3', arg = 310 ,arg_value = 0,
 					use_full_connector_position = false,
 				},
 				{
 					{ CLSID = "{A-29B TANK}" },
 					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
-					{ CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+					-- { CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+
+					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
 	
 				}
 			),
-			pylon(4, 0, -0.200, -1.0, 2.39,
+			pylon(4, 0, -0.200, -1.0, 2.415,
 				{
+					connector = 'pylon4', arg = 311 ,arg_value = 0,
 					use_full_connector_position = false,
 				 },
 				{
 					{ CLSID = "{A-29B TANK}" },
 	
 					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
-					{ CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
-					{ CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
+					-- { CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
+					-- { CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 					{ CLSID = "{5335D97A-35A5-4643-9D9B-026C75961E52}" }, -- CBU-97
 	
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
 					{ CLSID = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}" }, -- LAU-61 - 19
 	
-					{ CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
+					-- { CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
 	
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
 	
 	
 					{ CLSID = "{CBU_105}" ,arg_increment = 0.0}, -- CBU-105	
-					{ CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+					-- { CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+
+					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
 				}
 			),
-			pylon(5, 0, -0.20, -0.9, 3.23,
+			pylon(5, 0, -0.20, -0.9, 3.251,
 				{
+					connector = 'pylon5', arg = 312 ,arg_value = 0,
 					use_full_connector_position = false,
 				 },
 				{
 					{ CLSID = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}" }, -- AIM-9P
 	
 					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
-					{ CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
-					{ CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
+					-- { CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
+					-- { CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 					{ CLSID = "{5335D97A-35A5-4643-9D9B-026C75961E52}" }, -- CBU-97
 	
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
 					{ CLSID = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}" }, -- LAU-61 - 19
 	
-					{ CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
+					-- { CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
 									
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
-					{ CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+					-- { CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+
+					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
 				}
 			),
-			pylon(6, 0.1, 2.0, -0.5, 0.88,
+			pylon(6, 0, 2.427, -0.565, 0.563,
 				{
-					use_full_connector_position = false,
+					use_full_connector_position = true,
 					connector 		= "SmokeWhite",
 				    DisplayName 	= "Smoke",
 				 },
@@ -754,9 +800,9 @@ A_29B =  {
 	mapclasskey = "P0091000024",
 
 	Guns = {
-		MG_20({muzzle_pos = {0.96,-0.68, 2.32},_connector =  "Point_Gun_01_R",rates = {1025},effect_arg_number = 350,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 0,supply_position = {4.5,0.22, 0.3}}),-- MITRAIL AVR 1 
-		MG_20({muzzle_pos = {0.96, -0.68, -2.32},_connector =  "Point_Gun_01_L",rates = {1025},effect_arg_number = 436,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 0,supply_position = {2.0, -0.25, 0.8}}),-- MITRAIL AVR 2 B
-	},
+		MG_20({muzzle_pos = {0.82,-0.705, 2.326},_connector =  "Point_Gun_01_R",rates = {1025},effect_arg_number = 350,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 0,supply_position = {4.5,0.22, 0.3}}),-- MITRAIL AVR 1 
+		MG_20({muzzle_pos = {0.82, -0.705, -2.326},_connector =  "Point_Gun_01_L",rates = {1025},effect_arg_number = 436,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 0,supply_position = {2.0, -0.25, 0.8}}),-- MITRAIL AVR 2 B
+	}, -- 3dsmax X, Z, -Y
 }
 
 add_aircraft(A_29B)

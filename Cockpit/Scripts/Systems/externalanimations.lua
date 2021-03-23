@@ -66,10 +66,10 @@ end
 -- local update_time_step = 0.0167
 -- make_default_activity(update_time_step)
 
-local DRAW_FAN			 = 	324
+local DRAW_FAN			 = 	407
 local PropStepLim		 =  0.0833
 local propState         =   -1
-local propMaxRPM		= 250
+local propMaxRPM		= 2000
 local bfi_bright = 1
 function update()
 	--Test set anim argument
@@ -84,15 +84,17 @@ function update()
 
 	ALT_param:set(sensor_data.getBarometricAltitude()*meters_to_feet+(BFI_BARO_param:get()-ALT_PRESSURE_STD)*1000)
 
-	local propRPM = sensor_data.getEngineLeftRPM()
+	local propRPM = sensor_data.getEngineLeftRPM() / 100 * propMaxRPM
 	--sensor is from 0 to 100 so it is divided by 100 and multiplied by the prop max RPM.
-	local propStep = 3*propRPM*update_time_step/60
+	
+	local propStep = propRPM/60*update_time_step
 	--keeps prop animation between 0 and 1
+
 	propState = (propState + propStep)%1
-	if propRPM < 50 then
-		set_aircraft_draw_argument_value(DRAW_FAN,-propState)
+	if propRPM < 400 then
+		set_aircraft_draw_argument_value(DRAW_FAN,-1+propState/2)
 	else
-		set_aircraft_draw_argument_value(DRAW_FAN,100)
+		set_aircraft_draw_argument_value(DRAW_FAN,propState)
 	end
 
 
