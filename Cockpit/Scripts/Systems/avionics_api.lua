@@ -128,6 +128,18 @@ function get_avionics_master_mode_aa(master_mode)
         master_mode == AVIONICS_MASTER_MODE_ID.INT_L
 end
 
+function get_avionics_master_mode_aa_int(master_mode)
+    master_mode = master_mode or get_avionics_master_mode()
+    return  master_mode == AVIONICS_MASTER_MODE_ID.INT_B or 
+        master_mode == AVIONICS_MASTER_MODE_ID.INT_L
+end
+
+function get_avionics_master_mode_aa_dgft(master_mode)
+    master_mode = master_mode or get_avionics_master_mode()
+    return  master_mode == AVIONICS_MASTER_MODE_ID.DGFT_B or
+    master_mode == AVIONICS_MASTER_MODE_ID.DGFT_L
+end
+
 function get_avionics_master_mode_ag_gun(master_mode)
     master_mode = master_mode or get_avionics_master_mode()
     return master_mode >= AVIONICS_MASTER_MODE_ID.GUN and master_mode <= AVIONICS_MASTER_MODE_ID.GUN_M

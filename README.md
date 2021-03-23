@@ -44,7 +44,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - UFCP VV/VAH now syncs with CMFD ADHSI.
 - Livery template (by Cubeboy)
 - Argentina liveries (by GOA -_Max_)
-- Several UFCP format placeholders (by x-b-l-a-h)
+- Several UFCP format placeholders
 - Livery pack (by Urbi, gheoss)
 - Coldstart training mission (by Rudel_chw)
 - Pylons are now removable
@@ -310,7 +310,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Throttle and Stick are inconsistent with the real ones;
 
 ### Contributors
-- Renault, Milaré, x-b-l-a-h, PaKo, Malamem, Athos, Dino, Jorge Rodrigues, Paoladelf, Farias, Skypork, EDAV, and many others.
+- Renault, Milaré, PaKo, Malamem, Athos, Dino, Jorge Rodrigues, Paoladelf, Farias, Skypork, EDAV, and many others.
 
 
 ### Changed
