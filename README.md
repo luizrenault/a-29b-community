@@ -34,7 +34,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
  
-## Version 0.1.7b - 18 March 2021
+## Version 0.1.7b - 23 March 2021
 
 ### Added
 - A/G CCRP mode.
@@ -53,7 +53,6 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - New suspension parameters
 - New external lights
 - Speedbreak now working
-
 
 ### Changed
 - A/G Weapon selection order (External Pylons > Internal Pylons > Ventral Pylon. Left first.)
