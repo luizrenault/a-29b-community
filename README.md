@@ -51,7 +51,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - New external 3d model with new animations
 - New propeller animation
 - New suspension parameters
-- New external lights
+- New external lights (working with AI)
 - Speedbreak now working
 
 ### Changed

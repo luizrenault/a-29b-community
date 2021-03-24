@@ -99,6 +99,9 @@ local function update_storages()
         local wname = get_wpn_weapon_name(station_info["CLSID"])
         wpn_sto_name[i+1] = wname
         wpn_sto_count[i+1] = station_info["count"]
+        
+        if i==2 then WPN_VENTRAL_FREE:set(station_info["count"] == 0 and 1 or 0) end
+        
         if wname ~= nil then 
             wpn_sto_total_count[wname] = (wpn_sto_total_count[wname] or 0) + station_info["count"]
         end

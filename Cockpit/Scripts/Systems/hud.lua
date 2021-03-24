@@ -167,7 +167,7 @@ local function update_piper_ccip()
     local vert = HUD_FPM_VERT:get()
 
     local az, el, limited
-    az, el, limited = limit_xy(WPN_CCIP_PIPER_AZIMUTH:get(), WPN_CCIP_PIPER_ELEVATION:get(), hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
+    az, el, limited = limit_xy(WPN_CCIP_PIPER_AZIMUTH:get() + slide, WPN_CCIP_PIPER_ELEVATION:get(), hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
 
     HUD_CCIP_PIPER_AZIMUTH:set(az)
     HUD_CCIP_PIPER_ELEVATION:set(el)
@@ -371,6 +371,20 @@ local function update_td()
     HUD.SI_ELEVATION:set(HUD_FPM_VERT:get() - 0.0025 + time_to_impact/100)
 end
 
+local function update_fpm()
+    local velx, vely, velz = sensor_data.getSelfVelocity()
+
+    
+    local anglex, angley, anglez
+    angley = sensor_data.getPitch()
+    anglez = sensor_data.getRoll()
+    anglex = sensor_data.getHeading()
+    
+
+    local unitx, unity, uintz
+
+
+end
 
 HUD_DCLT:set(0)
 HUD_DRIFT_CO:set(0)
@@ -392,6 +406,7 @@ function update()
     elseif (get_avionics_master_mode_ag() or get_avionics_master_mode_aa()) and WPN_SIM_READY:get() == 1 then HUD_RDY:set(2)
     else HUD_RDY:set(0) end
 
+    update_fpm()
     update_td()
 
     local hud_warn = get_hud_warning()
@@ -548,8 +563,8 @@ function update()
     local ttd = CMFD_NAV_FYT_OAP_TTD:get()
     local dt = CMFD_NAV_FYT_OAP_DT:get()
 
-    local ccrp_time = WPN.CCRP_TIME:get() + 1
-    if ccrp_time >= 0 then 
+    local ccrp_time = WPN.CCRP_TIME:get()
+    if  master_mode == AVIONICS_MASTER_MODE_ID.CCRP then 
         time_text = time_text .. string.format("%02.0f:%02.0f ", math.floor(ccrp_time / 60), math.floor(ccrp_time % 60) )
     elseif nav_time == UFCP_NAV_TIME_IDS.DT then
         if dt >= 0 then time_text = "A" else time_text = "D" end

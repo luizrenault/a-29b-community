@@ -94,16 +94,15 @@ function SetCommand(command,value)
     end
 end
 
-local ExtLight_LeftNav_arg = 190
-local ExtLight_RightNav_arg = 191
-local ExtLight_Strobe_arg = 192
-local ExtLight_TopCollision_arg = 198
-local ExtLight_BottomCollision_arg = 199
-local ExtLight_TopCollisionBrightness_arg = 200
-local ExtLight_BottomCollisionBrightness_arg = 202
-local ExtLight_TopCollisionRotation_arg = 201
-local ExtLight_BottomCollisionRotation_arg = 203
+local ExtLight_Nav_arg = 49
+local ExtLight_Strobe_arg = 83
+local ExtLight_Beacom_arg = 198
+local ExtLight_BeaconBrightness_arg = 200
+local ExtLight_BeaconRotation_arg = 201
 local ExtLight_Taxi_arg = 208
+local ExtLight_Landing_arg = 51
+local ExtLight_Formation_arg = 88
+local ExtLight_Search_arg = 209
 
 
 local flashcounter = 0.5
@@ -163,57 +162,51 @@ function update()
     if get_elec_main_bar_ok() then
         if extlight_flashsteady == 1 then
             -- in "FLASH" mode, modulate output with flashon value
-            set_aircraft_draw_argument_value(ExtLight_LeftNav_arg, navlight*flashon_ext)
-            set_aircraft_draw_argument_value(ExtLight_RightNav_arg, navlight*flashon_ext)
+            set_aircraft_draw_argument_value(ExtLight_Nav_arg, navlight*flashon_ext)
             set_aircraft_draw_argument_value(ExtLight_Strobe_arg, strobelight*flashon_ext)
         else
             -- in "STEADY" mode, just draw them
-            set_aircraft_draw_argument_value(ExtLight_LeftNav_arg, navlight)
-            set_aircraft_draw_argument_value(ExtLight_RightNav_arg, navlight)
+            set_aircraft_draw_argument_value(ExtLight_Nav_arg, navlight)
             set_aircraft_draw_argument_value(ExtLight_Strobe_arg, strobelight*flashon_ext)
         end
 
-        set_aircraft_draw_argument_value(ExtLight_Taxi_arg, (gear > 0) and (taxilight == 1 or (taxilight == 0 and sensor_data:getWOW_LeftMainLandingGear() >0)) and 1 or 0)
+        if (gear > 0) and (taxilight == 1 or (taxilight == 0 and sensor_data:getWOW_LeftMainLandingGear() >0)) then 
+            set_aircraft_draw_argument_value(ExtLight_Taxi_arg,  1 )
+        else 
+            set_aircraft_draw_argument_value(ExtLight_Taxi_arg,  0 )
+        end
 
         if beaconlight == 1 then
-            set_aircraft_draw_argument_value(ExtLight_TopCollision_arg, beaconlight)
-            set_aircraft_draw_argument_value(ExtLight_BottomCollision_arg, beaconlight)
+            set_aircraft_draw_argument_value(ExtLight_Beacom_arg, beaconlight)
+            
+            set_aircraft_draw_argument_value(ExtLight_BeaconBrightness_arg, beaconlight)
 
-            set_aircraft_draw_argument_value(ExtLight_TopCollisionBrightness_arg, beaconlight)
-            set_aircraft_draw_argument_value(ExtLight_BottomCollisionBrightness_arg, beaconlight)
-
-            set_aircraft_draw_argument_value(ExtLight_TopCollisionRotation_arg, anticoll)
-            set_aircraft_draw_argument_value(ExtLight_BottomCollisionRotation_arg, anticoll)
+            set_aircraft_draw_argument_value(ExtLight_BeaconRotation_arg, anticoll)
         else
-            set_aircraft_draw_argument_value(ExtLight_TopCollision_arg, 0)
-            set_aircraft_draw_argument_value(ExtLight_BottomCollision_arg, 0)
+            set_aircraft_draw_argument_value(ExtLight_Beacom_arg, 0)
 
-            set_aircraft_draw_argument_value(ExtLight_TopCollisionBrightness_arg, 0)
-            set_aircraft_draw_argument_value(ExtLight_BottomCollisionBrightness_arg, 0)
+            set_aircraft_draw_argument_value(ExtLight_BeaconBrightness_arg, 0)
         end
-        set_aircraft_draw_argument_value(209, searchlight) -- search light
-        set_aircraft_draw_argument_value(193, landlight) -- landing light
+        set_aircraft_draw_argument_value(ExtLight_Search_arg, searchlight)
+        set_aircraft_draw_argument_value(ExtLight_Landing_arg, landlight) 
 
-        set_aircraft_draw_argument_value(83, formationlight) -- formation light
+        set_aircraft_draw_argument_value(ExtLight_Formation_arg, formationlight) 
 
     else
-        set_aircraft_draw_argument_value(ExtLight_LeftNav_arg, 0)
-        set_aircraft_draw_argument_value(ExtLight_RightNav_arg, 0)
-
+        set_aircraft_draw_argument_value(ExtLight_Nav_arg, 0)
+        
         set_aircraft_draw_argument_value(ExtLight_Strobe_arg, 0)
 
         set_aircraft_draw_argument_value(ExtLight_Taxi_arg, 0)
 
-        set_aircraft_draw_argument_value(ExtLight_TopCollision_arg, 0)
-        set_aircraft_draw_argument_value(ExtLight_BottomCollision_arg, 0)
+        set_aircraft_draw_argument_value(ExtLight_Beacom_arg, 0)
 
-        set_aircraft_draw_argument_value(ExtLight_TopCollisionBrightness_arg, 0)
-        set_aircraft_draw_argument_value(ExtLight_BottomCollisionBrightness_arg, 0)
+        set_aircraft_draw_argument_value(ExtLight_BeaconBrightness_arg, 0)
 
-        set_aircraft_draw_argument_value(209, 0) -- search light
-        set_aircraft_draw_argument_value(193, 0) -- landing light
+        set_aircraft_draw_argument_value(ExtLight_Search_arg, 0)
+        set_aircraft_draw_argument_value(ExtLight_Landing_arg, 0)
 
-        set_aircraft_draw_argument_value(83, 0) -- formation light
+        set_aircraft_draw_argument_value(ExtLight_Formation_arg, 0)
 
     end
 

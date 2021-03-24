@@ -90,6 +90,7 @@ Keys =
     Cage        	     = __custom_counter(),
     TDCX        	     = __custom_counter(),
     TDCY        	     = __custom_counter(),
+    AirBrake           = __custom_counter(),
 }
 
 start_command   = 3000

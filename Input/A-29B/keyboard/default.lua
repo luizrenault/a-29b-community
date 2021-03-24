@@ -30,8 +30,8 @@ join(res.keyCommands,{
 
 -- Systems
 {combos = {{key = 'B'}},							down = iCommandPlaneAirBrake,				name = _('Airbrake'),								category = _('Systems')},
-{combos = {{key = 'B', reformers = {'LShift'}}},	down = iCommandPlaneAirBrakeOn,				name = _('Airbrake On'),							category = _('Systems')},
-{combos = {{key = 'B', reformers = {'LCtrl'}}},		down = iCommandPlaneAirBrakeOff,			name = _('Airbrake Off'),							category = _('Systems')},
+{combos = {{key = 'B', reformers = {'LShift'}}},	down = iCommandPlaneAirBrakeOn, up = iCommandPlaneAirBrakeOn,				name = _('Airbrake On'),							category = _('Systems'), value_down =  1.0,		value_up = 0.0},
+{combos = {{key = 'B', reformers = {'LCtrl'}}},		down = iCommandPlaneAirBrakeOff,up = iCommandPlaneAirBrakeOff,			    name = _('Airbrake Off'),							category = _('Systems'), value_down =  1.0,		value_up = 0.0},
 {combos = {{key = 'T'}},							down = iCommandPlaneWingtipSmokeOnOff,		name = _('Smoke'),									category = _('Systems')},
 {combos = {{key = 'L'}},							down = iCommandPlaneCockpitIllumination,	name = _('Illumination Cockpit'),					category = _('Systems')},
 {combos = {{key = 'L', reformers = {'RCtrl'}}},		down = iCommandPlaneLightsOnOff,			name = _('Navigation lights'),						category = _('Systems')},
