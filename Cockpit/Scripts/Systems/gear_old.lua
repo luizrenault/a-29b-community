@@ -125,7 +125,9 @@ function SetCommand(command,value)
             dev:performClickableAction(device_commands.LndGear, 0, false)                -- gear handle animation:  0 = retracted, 1 = extended
         end
     elseif command == Keys.PlaneGearDown then
-        dev:performClickableAction(GearHandle, 1, false)                -- gear handle animation:  0 = retracted, 1 = extended
+        if (get_elec_retraction_release_airborne()) then
+            dev:performClickableAction(device_commands.LndGear, 1, false)                -- gear handle animation:  0 = retracted, 1 = extended
+        end
     elseif command == device_commands.LndGear then
         if value ~= GEAR_TARGET then
             if get_hyd_utility_ok() then

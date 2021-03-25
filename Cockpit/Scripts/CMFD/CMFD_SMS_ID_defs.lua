@@ -13,6 +13,10 @@ SMS_MODE_IDS = {
     EJ          = counter(),
     OTHER       = counter(),
     CD          = counter(),
+    RP          = counter(),
+    IS          = counter(),
+    SD          = counter(),
+    REL         = counter(),
 
 }
 

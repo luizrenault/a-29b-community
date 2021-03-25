@@ -94,24 +94,122 @@ function SetCommand(command,value)
     end
 end
 
+local ExtLight_Nav_arg = 49
+local ExtLight_Strobe_arg = 83
+local ExtLight_Beacom_arg = 198
+local ExtLight_BeaconBrightness_arg = 200
+local ExtLight_BeaconRotation_arg = 201
+local ExtLight_Taxi_arg = 208
+local ExtLight_Landing_arg = 51
+local ExtLight_Formation_arg = 88
+local ExtLight_Search_arg = 209
 
 
+local flashcounter = 0.5
+local flashperminute = 60
+local anticoll_inc = 1
+
+-- returns linear movement from 0.0 to 1.0 at 85 cycles per minute
+function update_anticoll_value()
+    -- if anticoll_inc == 1 then
+    --     flashcounter = flashcounter + (update_time_step*(flashperminute/60) * 0.5)
+    -- else
+    --     flashcounter = flashcounter - (update_time_step*(flashperminute/60) * 0.5)
+    -- end
+
+    -- if flashcounter > 1 or flashcounter < 0.075 then
+    --     anticoll_inc = 1 - anticoll_inc
+    -- end
+
+    -- -- set flashing duty cycle here
+    -- local a,b = math.modf(flashcounter) -- extract the decimal part
+    -- return b
+
+    local increase = update_time_step * (flashperminute/60)
+    
+    local y = flashcounter % 1
+    flashcounter = flashcounter + increase
+    return y
+
+end
+
+
+local flashcounter_ext = 0
+local flashperminute_ext = 80
+
+function update_flashing_ext()
+    -- exterior lights flash 80 flashes/minute, on for 0.54 seconds and off for 0.21 seconds.
+    flashcounter_ext = flashcounter_ext + (update_time_step*(flashperminute_ext/60))
+    if flashcounter_ext > flashperminute_ext then
+        flashcounter_ext = 0
+    end
+
+    -- set flashing duty cycle here
+    local a,b = math.modf(flashcounter_ext) -- extract the decimal part
+    if b < (0.54/(0.54+0.21)) then
+        return 1
+    else
+        return 0
+    end
+end
+
+local extlight_flashsteady=0
 function update()
-    if get_elec_main_bar_ok() then 
-        set_aircraft_draw_argument_value(802, beaconlight) -- beacon light
-        set_aircraft_draw_argument_value(83, formationlight) -- formation light
-        set_aircraft_draw_argument_value(49, navlight) -- nav light
-        if searchlight==1 or landlight == 1 or taxilight == 1 or (taxilight == 0 and sensor_data:getWOW_LeftMainLandingGear() >0) then
-            set_aircraft_draw_argument_value(51, 1) -- taxi light
-        else 
-            set_aircraft_draw_argument_value(51, 0) -- taxi light
+    local anticoll = update_anticoll_value()
+    local flashon_ext = update_flashing_ext()
+    local gear = get_aircraft_draw_argument_value(3)    -- right main gear extension
+
+    if get_elec_main_bar_ok() then
+        if extlight_flashsteady == 1 then
+            -- in "FLASH" mode, modulate output with flashon value
+            set_aircraft_draw_argument_value(ExtLight_Nav_arg, navlight*flashon_ext)
+            set_aircraft_draw_argument_value(ExtLight_Strobe_arg, strobelight*flashon_ext)
+        else
+            -- in "STEADY" mode, just draw them
+            set_aircraft_draw_argument_value(ExtLight_Nav_arg, navlight)
+            set_aircraft_draw_argument_value(ExtLight_Strobe_arg, strobelight*flashon_ext)
         end
-    else 
-        set_aircraft_draw_argument_value(802, 0) -- beacon light
-        set_aircraft_draw_argument_value(83, 0) -- formation light
-        set_aircraft_draw_argument_value(49, 0) -- nav light
-        set_aircraft_draw_argument_value(51, 0) -- taxi light
-    end        
+
+        if (gear > 0) and (taxilight == 1 or (taxilight == 0 and sensor_data:getWOW_LeftMainLandingGear() >0)) then 
+            set_aircraft_draw_argument_value(ExtLight_Taxi_arg,  1 )
+        else 
+            set_aircraft_draw_argument_value(ExtLight_Taxi_arg,  0 )
+        end
+
+        if beaconlight == 1 then
+            set_aircraft_draw_argument_value(ExtLight_Beacom_arg, beaconlight)
+            
+            set_aircraft_draw_argument_value(ExtLight_BeaconBrightness_arg, beaconlight)
+
+            set_aircraft_draw_argument_value(ExtLight_BeaconRotation_arg, anticoll)
+        else
+            set_aircraft_draw_argument_value(ExtLight_Beacom_arg, 0)
+
+            set_aircraft_draw_argument_value(ExtLight_BeaconBrightness_arg, 0)
+        end
+        set_aircraft_draw_argument_value(ExtLight_Search_arg, searchlight)
+        set_aircraft_draw_argument_value(ExtLight_Landing_arg, landlight) 
+
+        set_aircraft_draw_argument_value(ExtLight_Formation_arg, formationlight) 
+
+    else
+        set_aircraft_draw_argument_value(ExtLight_Nav_arg, 0)
+        
+        set_aircraft_draw_argument_value(ExtLight_Strobe_arg, 0)
+
+        set_aircraft_draw_argument_value(ExtLight_Taxi_arg, 0)
+
+        set_aircraft_draw_argument_value(ExtLight_Beacom_arg, 0)
+
+        set_aircraft_draw_argument_value(ExtLight_BeaconBrightness_arg, 0)
+
+        set_aircraft_draw_argument_value(ExtLight_Search_arg, 0)
+        set_aircraft_draw_argument_value(ExtLight_Landing_arg, 0)
+
+        set_aircraft_draw_argument_value(ExtLight_Formation_arg, 0)
+
+    end
+
 end
 
 

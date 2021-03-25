@@ -4,8 +4,6 @@ dofile(LockOn_Options.script_path.."CMFD/CMFD_SMS_ID_defs.lua")
 local SMS_MODE = get_param_handle("SMS_MODE")
 local SMS_CARGOTYPE = get_param_handle("SMS_CARGOTYPE")
 local SMS_INV = get_param_handle("SMS_INV")
-local SMS_GUNS_L_SEL = get_param_handle("SMS_GUNS_L_SEL")
-local SMS_GUNS_R_SEL = get_param_handle("SMS_GUNS_R_SEL")
 
 local SMS_FUSE_SEL = get_param_handle("SMS_FUSE_SEL")
 local SMS_FUSE_TYPE = get_param_handle("SMS_FUSE_TYPE")
@@ -13,6 +11,11 @@ local SMS_TIME_ALT_SEL = get_param_handle("SMS_TIME_ALT_SEL")
 local SMS_IS_UNIT = get_param_handle("SMS_IS_UNIT")
 local SMS_BR_RR_SEL = get_param_handle("SMS_BR_RR_SEL")
 local SMS_PROF_SEL = get_param_handle("SMS_PROF_SEL")
+
+local CMFD_EDIT_NR_DESC = get_param_handle("CMFD_EDIT_NR_DESC")
+local CMFD_EDIT_NR_TITLE = get_param_handle("CMFD_EDIT_NR_TITLE")
+local CMFD_EDIT_NR_VALUE = get_param_handle("CMFD_EDIT_NR_VALUE")
+local CMFD_EDIT_NR_BLINK = get_param_handle("CMFD_EDIT_NR_BLINK")
 
 local weapons
 local sms_mode = SMS_MODE_IDS.SAFE
@@ -22,6 +25,37 @@ local sms_sj_sel = {}
 
 local master_mode = -1
 local master_mode_last = -1
+
+local current_edit_data
+
+
+local sms_rp_data = {mode=SMS_MODE_IDS.RP, title="RELEASE PULSES\nNUM       ", desc="SELECT PULSES NUMBER", param="WPN_RP",
+    validate = function(value)
+        local val = tonumber(value) or 0
+        if val > 0 and val <=76 then return true else return false end
+    end
+}
+
+local sms_is_dist_data = {mode=SMS_MODE_IDS.RP, title="IMPACT SEPARATION\nDIS:      M", desc="SELECT METERS ON GROUND", param="WPN_IS_M", 
+    validate = function(value)
+        local val = tonumber(value) or 0
+        if val >= 12 and val <=999 then return true else return false end
+    end
+}
+
+local sms_is_time_data = {mode=SMS_MODE_IDS.RP, title="IMPACT SEPARATION\nINT:      MS", desc="SELECT INTERVAL TIME", param="WPN_IS_TIME", maxsize=4,
+    validate = function(value)
+        local val = tonumber(value) or 0
+        if val >= 0 and val <=9999 then return true else return false end
+    end
+}
+
+local sms_sd_data = {mode=SMS_MODE_IDS.RP, title="SIGHT\nMR:       ", desc="SELECT DEP", param="WPN_SD",
+    validate = function(value)
+        local val = tonumber(value) or 0
+        if val >= 0 and val <=190 then return true else return false end
+    end
+}
 
 local function update_master_mode_changed()
     master_mode = get_avionics_master_mode()
@@ -41,80 +75,12 @@ local function update_master_mode_changed()
 end
 
 local function update_aa()
-    local sms_aa_sel = get_wpn_aa_sel()
-    for i=1, 5 do
-        param = get_param_handle("SMS_POS_"..tostring(i).."_SEL")
-        if sms_aa_sel == i then
-            if get_wpn_aa_msl_ready() then
-                param:set(1)
-            else 
-                param:set(2)
-            end
-        else
-            param:set(0)
-        end
-    end
-    if master_mode == AVIONICS_MASTER_MODE_ID.DGFT_B or master_mode == AVIONICS_MASTER_MODE_ID.DGFT_L then
-        if get_wpn_guns_ready() then
-            SMS_GUNS_L_SEL:set(1)
-            SMS_GUNS_R_SEL:set(1)
-        else
-            SMS_GUNS_L_SEL:set(2)
-            SMS_GUNS_R_SEL:set(2)
-        end
-    else
-        SMS_GUNS_L_SEL:set(0)
-        SMS_GUNS_R_SEL:set(0)
-    end
 end
 
 local function update_ag()
-    local sms_ag_sel = get_wpn_ag_sel()
-    for i=1, 5 do
-        local param = get_param_handle("SMS_POS_"..tostring(i).."_SEL")
-        local lauch_op = WPN_LAUNCH_OP:get()
-
-        if not get_avionics_master_mode_ag_gun() and (sms_ag_sel == i or (lauch_op == WPN_LAUNCH_OP_IDS.PAIR and (6-sms_ag_sel) == i)) then
-            if get_wpn_ag_ready() then
-                param:set(1)
-            else 
-                param:set(2)
-            end
-        else
-            param:set(0)
-        end
-    end
-    if get_avionics_master_mode_ag_gun() then
-        if get_wpn_guns_ready() then
-            SMS_GUNS_L_SEL:set(1)
-            SMS_GUNS_R_SEL:set(1)
-        else
-            SMS_GUNS_L_SEL:set(2)
-            SMS_GUNS_R_SEL:set(2)
-        end
-    else
-        SMS_GUNS_L_SEL:set(0)
-        SMS_GUNS_R_SEL:set(0)
-    end
 end
 
 local function update_sj()
-    for i=1,5 do
-        -- if sms_sto_count[i] == 0 then sms_sj_sel[i] = 0 end
-        param = get_param_handle("SMS_POS_"..tostring(i).."_SEL")
-        sms_sj_sel = get_param_handle("WPN_SJ_STO"..tostring(i).."_SEL")
-        if sms_sj_sel:get() == 1 then
-            if get_wpn_mass() ~= WPN_MASS_IDS.LIVE or get_wpn_latearm() ~= WPN_LATEARM_IDS.ON or get_avionics_onground() then
-                param:set(2)
-            else 
-                param:set(1)
-            end
-        else
-            param:set(0)
-        end
-    end
-    SMS_GUNS_L_SEL:set(0)
-    SMS_GUNS_R_SEL:set(0)
 end
 
 
@@ -125,19 +91,11 @@ function update_sms()
     if sms_mode == SMS_MODE_IDS.AA then update_aa() end
     if sms_mode == SMS_MODE_IDS.AG then update_ag() end
 
-    if sms_mode == SMS_MODE_IDS.SAFE then
-        for i=1,5 do
-            local param = get_param_handle("SMS_POS_"..tostring(i).."_SEL")
-            param:set(0)
-        end
-        SMS_GUNS_L_SEL:set(0)
-        SMS_GUNS_R_SEL:set(0)
-    end
-
     SMS_MODE:set(sms_mode)
     SMS_CARGOTYPE:set(sms_cargotype)
     SMS_INV:set(sms_inv)
-    
+
+    if current_edit_data and current_edit_data.update then current_edit_data.update() end
 end
 
 local function SetCommandSmsSj(command,value, CMFD)
@@ -162,8 +120,108 @@ local function SetCommandSmsSj(command,value, CMFD)
     end
 end
 
-local function SetCommandSmsOther(command,value, CMFD)
+local function CallEditFormat(data)
+    current_edit_data = data
+    current_edit_data.sms_mode_last = sms_mode
+    current_edit_data.blink_period = 0
+    current_edit_data.clr_count = 0
+    current_edit_data.edit_value = nil
 
+    if current_edit_data.param then
+        current_edit_data.param_handle = get_param_handle(current_edit_data.param)
+    end
+
+    if current_edit_data.param_handle then 
+        current_edit_data.value = current_edit_data.param_handle:get()
+    else
+        current_edit_data.value = ""
+    end
+
+    sms_mode = data.mode
+
+    CMFD_EDIT_NR_DESC:set(data.desc)
+    CMFD_EDIT_NR_TITLE:set(data.title)
+    CMFD_EDIT_NR_VALUE:set(data.value)
+    
+    current_edit_data.enter_data = function (newdata)
+        current_edit_data.clr_count = 0
+        local max_size = current_edit_data.maxsize or 3
+        if current_edit_data.edit_value == nil or (current_edit_data.edit_value and current_edit_data.edit_value:len() < max_size) then
+            current_edit_data.edit_value = (current_edit_data.edit_value or "") .. newdata
+        else
+            current_edit_data.blink_period = 0.3
+        end
+    end
+
+    current_edit_data.clear = function ()
+        if current_edit_data.clr_count == 0 and current_edit_data.edit_value then
+            current_edit_data.edit_value = string.sub(current_edit_data.edit_value, 1, -2)
+        elseif current_edit_data.clr_count == 1 then
+            current_edit_data.edit_value = nil
+        elseif current_edit_data.clr_count == 2 or current_edit_data.edit_value == nil then
+            current_edit_data.exit()
+        end
+        current_edit_data.clr_count = current_edit_data.clr_count + 1
+    end
+    current_edit_data.exit = function (save)
+        current_edit_data.clr_count = 0
+        if save then
+            if current_edit_data.validate and current_edit_data.validate(current_edit_data.edit_value or current_edit_data.value) then
+                current_edit_data.value = current_edit_data.edit_value or current_edit_data.value
+                if current_edit_data.param_handle then current_edit_data.param_handle:set(current_edit_data.value) end
+                sms_mode = current_edit_data.sms_mode_last
+            else 
+                current_edit_data.blink_period = 0.3
+            end
+        else 
+            sms_mode = current_edit_data.sms_mode_last
+        end
+    end
+    
+    current_edit_data.update = function()
+        CMFD_EDIT_NR_VALUE:set(current_edit_data.edit_value or  current_edit_data.value)
+        if current_edit_data.blink_period == -1 then
+        elseif current_edit_data.blink_period <= 0 then
+            CMFD_EDIT_NR_BLINK:set(0)
+            current_edit_data.blink_period = -1
+        elseif current_edit_data.blink_period > 0 then
+            CMFD_EDIT_NR_BLINK:set(1)
+            current_edit_data.blink_period = current_edit_data.blink_period - update_time_step
+
+        end
+    end
+
+end
+
+local function SetCommandEdit(command, value)
+    if value ~=1 then return 0 end
+    if command==device_commands.CMFD1OSS1 or command==device_commands.CMFD2OSS1 then 
+        current_edit_data.exit(false)
+    elseif command==device_commands.CMFD1OSS2 or command==device_commands.CMFD2OSS2 then 
+        current_edit_data.clear()
+    elseif command==device_commands.CMFD1OSS3 or command==device_commands.CMFD2OSS3 then 
+        current_edit_data.exit(true)
+    elseif command==device_commands.CMFD1OSS7 or command==device_commands.CMFD2OSS7 then 
+        if current_edit_data.enter_data then current_edit_data.enter_data(6) end
+    elseif command==device_commands.CMFD1OSS8 or command==device_commands.CMFD2OSS8 then 
+        if current_edit_data.enter_data then current_edit_data.enter_data(7) end
+    elseif command==device_commands.CMFD1OSS9 or command==device_commands.CMFD2OSS9 then 
+        if current_edit_data.enter_data then current_edit_data.enter_data(8) end
+    elseif command==device_commands.CMFD1OSS10 or command==device_commands.CMFD2OSS10 then 
+        if current_edit_data.enter_data then current_edit_data.enter_data(9) end
+    elseif command==device_commands.CMFD1OSS11 or command==device_commands.CMFD2OSS11 then 
+        if current_edit_data.enter_data then current_edit_data.enter_data(0) end
+    elseif command==device_commands.CMFD1OSS28 or command==device_commands.CMFD2OSS28 then 
+        if current_edit_data.enter_data then current_edit_data.enter_data(1) end
+    elseif command==device_commands.CMFD1OSS27 or command==device_commands.CMFD2OSS27 then 
+        if current_edit_data.enter_data then current_edit_data.enter_data(2) end
+    elseif command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26 then 
+        if current_edit_data.enter_data then current_edit_data.enter_data(3) end
+    elseif command==device_commands.CMFD1OSS25 or command==device_commands.CMFD2OSS25 then 
+        if current_edit_data.enter_data then current_edit_data.enter_data(4) end
+    elseif command==device_commands.CMFD1OSS24 or command==device_commands.CMFD2OSS24 then 
+        if current_edit_data.enter_data then current_edit_data.enter_data(5) end
+    end
 end
 
 local function SetCommandSmsAg(command,value, CMFD)
@@ -205,20 +263,23 @@ local function SetCommandSmsAg(command,value, CMFD)
             end
         elseif command==device_commands.CMFD1OSS2 or command==device_commands.CMFD2OSS2 then
             sms_mode = SMS_MODE_IDS.CD
-            -- if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R  then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCRP)
-            -- elseif master_mode == AVIONICS_MASTER_MODE_ID.CCRP then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DTOS)
-            -- elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.MAN)
-            -- elseif master_mode == AVIONICS_MASTER_MODE_ID.MAN then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
-            -- end
+        elseif command==device_commands.CMFD1OSS7 or command==device_commands.CMFD2OSS7 then 
+            CallEditFormat(sms_sd_data)
         elseif command==device_commands.CMFD1OSS9 or command==device_commands.CMFD2OSS9 then 
             SMS_FUSE_SEL:set((SMS_FUSE_SEL:get() + 1)% 4)
         elseif command==device_commands.CMFD1OSS10 or command==device_commands.CMFD2OSS10 then 
         elseif command==device_commands.CMFD1OSS11 or command==device_commands.CMFD2OSS11 then 
             -- SMS_TIME_ALT_SEL:set((SMS_TIME_ALT_SEL:get() + 1)% 3)
         elseif command==device_commands.CMFD1OSS24 or command==device_commands.CMFD2OSS24 then 
-            -- SMS_IS_UNIT:set((SMS_IS_UNIT:get() + 1)% 2)
+            local weapon_type = WPN_SELECTED_WEAPON_TYPE:get()
+            if weapon_type == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET then 
+                CallEditFormat(sms_is_time_data)
+            elseif weapon_type == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then 
+                CallEditFormat(sms_is_dist_data)
+            end
         elseif command==device_commands.CMFD1OSS25 or command==device_commands.CMFD2OSS25 then 
             -- SMS_BR_RR_SEL:set((SMS_BR_RR_SEL:get() + 1)% 2)
+            CallEditFormat(sms_rp_data)
         elseif command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26 then 
             if not get_avionics_master_mode_ag_gun() then 
                 weapons:performClickableAction(device_commands.WPN_AG_LAUNCH_OP_STEP, 1, true)
@@ -264,12 +325,14 @@ local function SetCommandSmsSafe(command,value, CMFD)
     end
 end
 
+
 function SetCommandSms(command,value, CMFD)
     if sms_mode == SMS_MODE_IDS.SAFE then SetCommandSmsSafe(command, value, CMFD)
     elseif sms_mode == SMS_MODE_IDS.SJ then SetCommandSmsSj(command, value, CMFD)
     elseif sms_mode == SMS_MODE_IDS.AA then SetCommandSmsAa(command, value, CMFD)
     elseif sms_mode == SMS_MODE_IDS.AG or sms_mode == SMS_MODE_IDS.CD then SetCommandSmsAg(command, value, CMFD)
     elseif sms_mode == SMS_MODE_IDS.EJ then set_avionics_master_mode(get_avionics_master_mode_last())
+    elseif sms_mode == SMS_MODE_IDS.RP then SetCommandEdit(command, value)
     end
 
     if value == 1 then 

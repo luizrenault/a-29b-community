@@ -1,3 +1,6 @@
+dofile(LockOn_Options.script_path.."Systems/engine_api.lua")
+
+
 local EICAS_TQ = get_param_handle("EICAS_TQ")
 local EICAS_TQ_ROT = get_param_handle("EICAS_TQ_ROT")
 local EICAS_TQ_REQ_ROT = get_param_handle("EICAS_TQ_REQ_ROT")
@@ -62,9 +65,9 @@ local EICAS_SPD_BRK_TXT = get_param_handle("EICAS_SPD_BRK_TXT")
 
 local EICAS_INIT = get_param_handle("EICAS_INIT")
 
-local fuel_init = 300;
+fuel_init = 300;
 
-local fuel_joker = 200;
+fuel_joker = 200;
 
 local torque_tempo = -1
 local np_tempo = -1
@@ -308,7 +311,9 @@ function update_eicas()
     if bat_amp <= 400 then bat_amp_cor = 0 
     else bat_amp_cor = 1 end
 
-    local bat_volt = 28.8
+    local bat_volt = 24
+    if get_generator_on() and get_engine_on() then bat_volt = 28.8 end
+
     bat_volt = round_to(bat_volt,0.1)
     if bat_volt < 0 then bat_volt = 0 end
     if bat_volt > 40 then bat_volt = 40 end
@@ -482,7 +487,7 @@ function update_eicas()
         EICAS_SPD_BRK_TXT:set("CLOSED")
     else 
         EICAS_SPD_BRK:set(1)
-        EICEICAS_SPD_BRK_TXTAS_FLAP_TXT:set("OPEN")
+        EICAS_SPD_BRK_TXT:set("OPEN")
     end
 end
 

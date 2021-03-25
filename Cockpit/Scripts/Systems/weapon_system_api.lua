@@ -104,6 +104,15 @@ WPN_CCIP_PIPER_AZIMUTH = get_param_handle("WPN_CCIP_PIPER_AZIMUTH")
 WPN_CCIP_PIPER_AVAILABLE = get_param_handle("WPN_CCIP_PIPER_AVAILABLE")
 
 WPN_SELECTED_WEAPON_TYPE = get_param_handle("WPN_SELECTED_WEAPON_TYPE")
+WPN_RP = get_param_handle("WPN_RP")
+WPN_RP_TOTAL = get_param_handle("WPN_RP_TOTAL")
+WPN_IS_M = get_param_handle("WPN_IS_M")
+WPN_IS_TIME = get_param_handle("WPN_IS_TIME")
+WPN_SD = get_param_handle("WPN_SD")
+WPN_GUNS_L_SEL = get_param_handle("WPN_GUNS_L_SEL")
+WPN_GUNS_R_SEL = get_param_handle("WPN_GUNS_R_SEL")
+
+WPN_VENTRAL_FREE = get_param_handle("WPN_VENTRAL_FREE")
 
 
 function get_wpn_aa_sel()
@@ -179,7 +188,6 @@ function get_wpn_ag_ready()
     return get_avionics_master_mode_ag() and not get_avionics_master_mode_ag_gun() and not get_avionics_onground() and (get_wpn_mass() == WPN_MASS_IDS.LIVE and get_wpn_latearm() == WPN_LATEARM_IDS.ON and WPN_AG_SEL:get() ~= 0)
 end
 
-
 function get_wpn_aa_msl_sim_ready()
     return get_avionics_master_mode_aa() and get_wpn_aa_sel() > 0 and get_wpn_mass() == WPN_MASS_IDS.SIM and get_wpn_latearm() == WPN_LATEARM_IDS.ON and not get_avionics_onground()
 end
@@ -206,4 +214,8 @@ function get_wpn_guns_sim_ready()
     local master_mode = get_avionics_master_mode()
     return (master_mode == AVIONICS_MASTER_MODE_ID.DGFT_B or master_mode == AVIONICS_MASTER_MODE_ID.DGFT_L or get_avionics_master_mode_ag_gun(master_mode)) and
     get_wpn_latearm() == WPN_LATEARM_IDS.ON and get_wpn_mass() == WPN_MASS_IDS.SIM and (WPN_GUNS_L:get() + WPN_GUNS_R:get()) > 0 and not get_avionics_onground()
+end
+
+function get_wpn_ventral_free()
+    return WPN_VENTRAL_FREE:get() == 1
 end

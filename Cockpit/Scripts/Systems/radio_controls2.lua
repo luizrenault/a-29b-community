@@ -61,7 +61,7 @@ local arc51_freq_xxxXX = 0
 local uhf_radio_device = nil
 
 local arc51_radio_presets
-if get_aircraft_mission_data ~= nil then
+if get_aircraft_mission_data ~= nil and get_aircraft_mission_data("Radio") and get_aircraft_mission_data("Radio")[1] then
     arc51_radio_presets = get_aircraft_mission_data("Radio")[1].channels
 end
 

@@ -21,7 +21,7 @@ local sms_search_sequence = {
     {4, 3, 1, 5, 2},
     {1, 5, 2, 4, 3},
     {3, 1, 5, 2, 4},
-    {2, 4, 3, 1, 5}
+    {2, 4, 3, 1, 5},
 }
 
 local ir_missile_lock_param = get_param_handle("WS_IR_MISSILE_LOCK")
@@ -85,6 +85,8 @@ local iCommandPlaneFire = 84
 local iCommandPlaneFireOff = 85
 
 WPN_MSL_CAGED:set(2)
+WPN_RP:set(1)
+WPN_IS_M:set(12)
 
 function wpn_get_weapon_type(station)
 
@@ -97,6 +99,9 @@ local function update_storages()
         local wname = get_wpn_weapon_name(station_info["CLSID"])
         wpn_sto_name[i+1] = wname
         wpn_sto_count[i+1] = station_info["count"]
+        
+        if i==2 then WPN_VENTRAL_FREE:set(station_info["count"] == 0 and 1 or 0) end
+        
         if wname ~= nil then 
             wpn_sto_total_count[wname] = (wpn_sto_total_count[wname] or 0) + station_info["count"]
         end
@@ -122,9 +127,13 @@ local function update_storages()
             wname = ""
         end
         --------------- mixed with CMFD SMS
-        local param = get_param_handle("SMS_POS_"..tostring(i+1).."_TEXT")
+        local param = get_param_handle("WPN_POS_"..tostring(i+1).."_TEXT")
         param:set(wname)
         -----------------------------------
+    end
+    if wpn_ag_sel > 0 then 
+        wpn_ag_name = wpn_sto_name[wpn_ag_sel] or ""
+        wpn_ag_qty = wpn_sto_total_count[wpn_ag_name] or 0
     end
     WPN_GUNS_L:set(wpn_guns_l)
     WPN_GUNS_R:set(wpn_guns_r)
@@ -133,47 +142,59 @@ end
 local function update_ag_sel_next(byname)
     local master_mode = get_avionics_master_mode()
     local name = ""
+    local lauch_op = WPN_LAUNCH_OP:get()
+
     if wpn_ag_sel ~= 0  then 
-        local station = dev:get_station_info(wpn_ag_sel - 1)
-        name = station["CLSID"]
+        name = wpn_sto_name[wpn_ag_sel]
+    else 
+        name = wpn_ag_name
     end
-    local sequence = sms_search_sequence[wpn_ag_sel + 1]
-    for k, pos in pairs(sequence) do
-        local station = dev:get_station_info(pos - 1)
-        if (station.weapon.level2 == wsType_Bomb or station.weapon.level2 == wsType_NURS or station.weapon.level3 == wsType_AS_Missile)  and (station["count"] > 0) then
-            -- log.info("name=".. (get_wpn_weapon_name(name) or " ") .." sms_name=" .. (get_wpn_weapon_name(station["CLSID"]) or " ") .. " "..tostring(byname).." "..tostring(not byname))
-            if (not byname) or name == station["CLSID"] or (byname and name == "" and wpn_ag_name ~= "" and wpn_ag_name == get_wpn_weapon_name(station["CLSID"])) then
-                wpn_ag_sel = pos
-                set_wpn_ag_sel(wpn_ag_sel)
-                wpn_ag_name = get_wpn_weapon_name(station["CLSID"])
-                wpn_ag_qty = wpn_sto_total_count[wpn_ag_name] or 0
-                dev:select_station(wpn_ag_sel-1)
-                WPN_SELECTED_WEAPON_TYPE:set(wpn_sto_type[wpn_ag_sel])
-                if  wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET and (master_mode == AVIONICS_MASTER_MODE_ID.DTOS or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R or master_mode == AVIONICS_MASTER_MODE_ID.CCRP) then
-                    if master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then 
-                        set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP_R)
-                    else
-                        set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
-                    end
-                end
-                return 0
+    if byname and name == "" then return 0 end
+    if not byname then
+        local sequence = sms_search_sequence[wpn_ag_sel + 1]
+        for k, pos in pairs(sequence) do
+            if wpn_sto_name[k] ~= name and wpn_sto_type[k] >= WPN_WEAPON_TYPE_IDS.AG_WEAPON_BEG and wpn_sto_type[k] <= WPN_WEAPON_TYPE_IDS.AG_WEAPON_END then
+                name = wpn_sto_name[k]
+                break
             end
-        elseif (station.weapon.level2 == wsType_Bomb or station.weapon.level2 == wsType_NURS or station.weapon.level3 == wsType_AS_Missile)  and (byname and station["count"] == 0) then
-            wpn_ag_sel = 0
-            set_wpn_ag_sel(wpn_ag_sel)
-            wpn_ag_qty = 0
-            dev:select_station(wpn_ag_sel-1)
-            WPN_SELECTED_WEAPON_TYPE:set(WPN_WEAPON_TYPE_IDS.NO_WEAPON)
-            return 0
         end
     end
-    if wpn_ag_sel ~= 0 then 
-        wpn_ag_sel = 0
+
+    local pos = 0
+    for i=1, 5 do
+        if wpn_sto_name[i] == name then
+            if wpn_sto_name[6-i] == name and wpn_sto_count[6-i] > wpn_sto_count[i] then
+                pos = 6-i
+            elseif wpn_sto_count[i] > 0 then
+                pos = i
+            end
+            if pos > 0 then break end
+        end
+    end
+    if pos > 0 then
+        wpn_ag_sel = pos
         set_wpn_ag_sel(wpn_ag_sel)
-        wpn_ag_name = ""
-        wpn_ag_qty = -1
-        WPN_SELECTED_WEAPON_TYPE:set(WPN_WEAPON_TYPE_IDS.NO_WEAPON)
+        wpn_ag_name = wpn_sto_name[wpn_ag_sel]
+        wpn_ag_qty = wpn_sto_total_count[wpn_ag_name] or 0
         dev:select_station(wpn_ag_sel-1)
+        WPN_SELECTED_WEAPON_TYPE:set(wpn_sto_type[wpn_ag_sel])
+        if  wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET and (master_mode == AVIONICS_MASTER_MODE_ID.DTOS or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R or master_mode == AVIONICS_MASTER_MODE_ID.CCRP) then
+            if master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then 
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP_R)
+            else
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+            end
+        end
+        return 0
+    else
+        if wpn_ag_sel ~= 0 then 
+            wpn_ag_sel = 0
+            set_wpn_ag_sel(wpn_ag_sel)
+            -- wpn_ag_name = ""
+            -- wpn_ag_qty = -1
+            WPN_SELECTED_WEAPON_TYPE:set(WPN_WEAPON_TYPE_IDS.NO_WEAPON)
+            dev:select_station(wpn_ag_sel-1)
+        end
     end
 end
 
@@ -273,10 +294,139 @@ local function update_master_mode_changed()
 end
 
 
+local WPN = {
+    TD_AZIMUTH = get_param_handle("WPN_TD_AZIMUTH"),
+    TD_ELEVATION = get_param_handle("WPN_TD_ELEVATION"),
+    TD_AVAILABLE = get_param_handle("WPN_TD_AVAILABLE"),
+    CCRP_TIME = get_param_handle("WPN_CCRP_TIME"),
+    CCRP_TIME_MAX_RANGE = get_param_handle("WPN_CCRP_TIME_MAX_RANGE"),
+    WEAPON_RELEASE = get_param_handle("WPN_WEAPON_RELEASE"),
+}
 
+local CMFD = {
+    NAV_FYT_LAT_M = get_param_handle("CMFD_NAV_FYT_LAT_M"),
+    NAV_FYT_LON_M = get_param_handle("CMFD_NAV_FYT_LON_M"),
+    NAV_FYT_ALT_M = get_param_handle("CMFD_NAV_FYT_ALT_M"),
+
+    NAV_FYT_OAP_AZIMUTH = get_param_handle("CMFD_NAV_FYT_OAP_AZIMUTH"),
+    NAV_FYT_OAP_ELEVATION = get_param_handle("CMFD_NAV_FYT_OAP_ELEVATION"),
+    NAV_FYT_OAP_DIST = get_param_handle("CMFD_NAV_FYT_OAP_DIST"),
+}
 
 local Ralt_last = 1600
 local Balt_last = 1600
+
+local wpn_target
+
+
+local function calculate_ccip_max_range()
+    local t, Vx0, Vy0, Vz0, g, h0
+    local pitch = sensor_data.getPitch()
+    g = -9.82 -- m/s2
+    local Ralt = sensor_data.getRadarAltitude()
+    local Balt = sensor_data.getBarometricAltitude()
+    if Ralt < 1600 then 
+        Ralt_last = Ralt
+        Balt_last = Balt
+    end
+    h0 = (Ralt_last + Balt - Balt_last) * math.cos(math.abs(pitch)) * math.cos(math.abs(sensor_data.getRoll())) -- vertical distance travelled by weapon
+
+    if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.GUN then
+        h0 = CMFD_NAV_FYT_OAP_ELV:get() / 3.28084
+    end
+
+    Vx0, Vy0, Vz0 = sensor_data.getSelfVelocity()
+    local vel_temp = math.sqrt(Vx0 * Vx0 + Vy0 * Vy0 + Vz0 * Vz0)
+    Vy0 = vel_temp / math.sqrt(2)
+
+    local delta = Vy0 * Vy0 - 2 * g * h0
+    t = (-Vy0  - math.sqrt(delta))/g                -- time to impact
+
+    local Vx = Vy0                                  -- horizontal weapon velocity
+    local Sx = Vx * t                               -- horizontal distance travelled by weapon
+    return Sx, t, h0
+end
+
+local function calculate_ccip_impact()
+    local t, Vx0, Vy0, Vz0, g, h0
+    local pitch = sensor_data.getPitch()
+    g = -9.82 -- m/s2
+    local Ralt = sensor_data.getRadarAltitude()
+    local Balt = sensor_data.getBarometricAltitude()
+    if Ralt < 1600 then 
+        Ralt_last = Ralt
+        Balt_last = Balt
+    end
+    h0 = (Ralt_last + Balt - Balt_last) * math.cos(math.abs(pitch)) * math.cos(math.abs(sensor_data.getRoll())) -- vertical distance travelled by weapon
+
+    if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.GUN then
+        h0 = CMFD_NAV_FYT_OAP_ELV:get() / 3.28084
+    end
+
+    Vx0, Vy0, Vz0 = sensor_data.getSelfVelocity()
+
+    if master_mode == AVIONICS_MASTER_MODE_ID.GUN or master_mode == AVIONICS_MASTER_MODE_ID.GUN_R then
+        local vel_temp = math.sqrt(Vx0 * Vx0 + Vy0 * Vy0 + Vz0 * Vz0)
+        Vx0 = Vx0 + 890 * Vx0 / vel_temp
+        Vy0 = Vy0 + 890 * Vy0 / vel_temp
+        Vz0 = Vz0 + 890 * Vz0 / vel_temp
+    elseif wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
+    elseif wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET then
+        local vel_temp = math.sqrt(Vx0 * Vx0 + Vy0 * Vy0 + Vz0 * Vz0)
+        Vx0 = Vx0 + 890 * Vx0 / vel_temp
+        Vy0 = Vy0 + 890 * Vy0 / vel_temp
+        Vz0 = Vz0 + 890 * Vz0 / vel_temp
+        -- g=-0.5
+    end
+    local delta = Vy0 * Vy0 - 2 * g * h0
+    t = (-Vy0  - math.sqrt(delta))/g                -- time to impact
+
+    local Vx = math.sqrt(Vx0*Vx0 + Vz0 * Vz0)       -- horizontal weapon velocity
+    local Sx = Vx * t                               -- horizontal distance travelled by weapon
+
+    local angle = math.atan(h0/Sx) + pitch
+    local roll = sensor_data.getRoll()
+    local azimuth = angle * math.sin(roll)
+    local elevation = -angle * math.cos(roll)
+    return Sx, t, h0
+
+end
+
+local function  update_ccrp()
+    if master_mode == AVIONICS_MASTER_MODE_ID.CCRP and wpn_ag_sel > 0 and wpn_sto_count[wpn_ag_sel]>0  then
+        local Sx, t, h0 = calculate_ccip_impact()
+        wpn_target = {}
+        wpn_target.lat_m = CMFD.NAV_FYT_LAT_M:get()
+        wpn_target.lon_m = CMFD.NAV_FYT_LON_M:get()
+        wpn_target.alt_m = CMFD.NAV_FYT_ALT_M:get()
+        local x, y, z = sensor_data.getSelfCoordinates()
+
+        local max_range = calculate_ccip_max_range()
+
+        local target_dist = math.sqrt(math.pow(wpn_target.lat_m - x, 2) +  math.pow(wpn_target.lon_m - z, 2))
+        local ccrp_dif = target_dist - Sx
+        local ccrp_time
+        if ccrp_dif >= 0 then 
+            ccrp_time = ccrp_dif / get_avionics_gs()
+        else
+            ccrp_time = 0
+        end
+
+        local time_to_max_range = (target_dist - max_range) / get_avionics_gs()
+
+        WPN.CCRP_TIME:set(ccrp_time)
+        WPN.CCRP_TIME_MAX_RANGE:set(time_to_max_range)
+
+        WPN.TD_AVAILABLE:set(1)
+        WPN.TD_AZIMUTH:set(CMFD.NAV_FYT_OAP_AZIMUTH:get())
+        WPN.TD_ELEVATION:set(CMFD.NAV_FYT_OAP_ELEVATION:get())
+    else 
+        WPN.CCRP_TIME:set(-1)
+        WPN.TD_AZIMUTH:set(0)
+        WPN.TD_ELEVATION:set(0)
+        WPN.TD_AVAILABLE:set(0)
+    end
+end
 local function  update_ccip()
     local master_mode = get_avionics_master_mode()
     if ((master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R) and wpn_ag_sel > 0 and wpn_sto_count[wpn_ag_sel]>0) or (master_mode == AVIONICS_MASTER_MODE_ID.GUN or master_mode == AVIONICS_MASTER_MODE_ID.GUN_R)  then
@@ -303,7 +453,11 @@ local function  update_ccip()
             Vz0 = Vz0 + 890 * Vz0 / vel_temp
         elseif wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
         elseif wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET then
-            g=-0.1
+            local vel_temp = math.sqrt(Vx0 * Vx0 + Vy0 * Vy0 + Vz0 * Vz0)
+            Vx0 = Vx0 + 890 * Vx0 / vel_temp
+            Vy0 = Vy0 + 890 * Vy0 / vel_temp
+            Vz0 = Vz0 + 890 * Vz0 / vel_temp
+            -- g=-0.5
         end
         local delta = Vy0 * Vy0 - 2 * g * h0
         t = (-Vy0  - math.sqrt(delta))/g
@@ -327,28 +481,126 @@ local function  update_ccip()
     return 0, 0, 0, 0, 0
 end
 
-local function update_ag()
+
+
+local wpn_is_m_last
+local wpn_is_time_last
+local function update_ag_sel_wpn()
     if wpn_ag_sel == 0 or (wpn_ag_sel ~= 0 and ((wpn_sto_count[wpn_ag_sel] <=0 or wpn_sto_type[wpn_ag_sel] < WPN_WEAPON_TYPE_IDS.AG_WEAPON_BEG or wpn_sto_type[wpn_ag_sel] > WPN_WEAPON_TYPE_IDS.AG_WEAPON_END))) then 
         update_ag_sel_next(true)
     end
-
     if get_wpn_ag_ready() or get_wpn_guns_ready() then  WPN_READY:set(1) else  WPN_READY:set(0) end
     if get_wpn_ag_sim_ready() or get_wpn_guns_sim_ready() then WPN_SIM_READY:set(1) else WPN_SIM_READY:set(0) end
     if WPN_LAUNCH_OP:get() == WPN_LAUNCH_OP_IDS.SALVO and wpn_ag_sel > 0 and wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then WPN_LAUNCH_OP:set(0) end
+    for i=1, 5 do
+        local param = get_param_handle("WPN_POS_"..tostring(i).."_SEL")
+        local lauch_op = WPN_LAUNCH_OP:get()
 
+        if not get_avionics_master_mode_ag_gun() and (wpn_ag_sel == i or 
+        (lauch_op == WPN_LAUNCH_OP_IDS.PAIR and (6-wpn_ag_sel) == i and wpn_sto_name[i] == wpn_sto_name[wpn_ag_sel] and wpn_sto_count[i] > 0) or 
+        (lauch_op == WPN_LAUNCH_OP_IDS.SALVO and wpn_sto_name[i] == wpn_sto_name[wpn_ag_sel] and wpn_sto_count[i] > 0)) then
+            if get_wpn_ag_ready() then
+                param:set(1)
+            else 
+                param:set(2)
+            end
+        else
+            param:set(0)
+        end
+    end
+    if get_avionics_master_mode_ag_gun() then
+        if get_wpn_guns_ready() then
+            WPN_GUNS_L_SEL:set(1)
+            WPN_GUNS_R_SEL:set(1)
+        else
+            WPN_GUNS_L_SEL:set(2)
+            WPN_GUNS_R_SEL:set(2)
+        end
+    else
+        WPN_GUNS_L_SEL:set(0)
+        WPN_GUNS_R_SEL:set(0)
+    end
     if wpn_ag_sel > 0 then 
         WPN_SELECTED_WEAPON_TYPE:set(wpn_sto_type[wpn_ag_sel])
     else
         WPN_SELECTED_WEAPON_TYPE:set(WPN_WEAPON_TYPE_IDS.NO_WEAPON)
     end
+    local wpn_rp = WPN_RP:get()
+    local wpn_rp_total = wpn_rp
+    local sel_qty = 0
+    for i=1,5 do
+        local param = get_param_handle("WPN_POS_"..tostring(i).."_SEL")
+        if param:get() > 0 then sel_qty = sel_qty + 1 end
+    end
+    wpn_rp_total = wpn_rp * sel_qty
+    if wpn_ag_name ~= "" and wpn_rp_total > wpn_sto_total_count[wpn_ag_name] then wpn_rp_total = wpn_sto_total_count[wpn_ag_name] end
 
+    WPN_RP_TOTAL:set(wpn_rp_total)
 
-    update_ccip()
+    local wpn_is_m = WPN_IS_M:get()
+    local wpn_is_time = WPN_IS_TIME:get()
+    if WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
+        if wpn_is_m < 12 then wpn_is_m = 12
+        elseif wpn_is_m > 999 then wpn_is_m = 999 
+        end
+    elseif WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET then
+        if wpn_is_time < 0 then wpn_is_time = 0
+        elseif wpn_is_time > 9999 then wpn_is_time = 9999
+        end
+    end
 
+    if wpn_is_m_last ~= wpn_is_m then
+        wpn_is_m_last = wpn_is_m
+        WPN_IS_M:set(wpn_is_m)
+    --     wpn_is_time = wpn_is_m * 10
+    --     wpn_is_time_last = wpn_is_time
+    --     WPN_IS_TIME:set(wpn_is_time_last)
+    elseif wpn_is_time_last ~= wpn_is_time then
+        wpn_is_time_last = wpn_is_time
+        WPN_IS_TIME:set(wpn_is_time)
+        -- wpn_is_m = wpn_is_time / 10
+        -- wpn_is_m_last = wpn_is_m
+        -- WPN_IS_M:set(wpn_is_m)
+    end
     WPN_AG_QTY:set(wpn_ag_qty)
     WPN_AG_NAME:set(wpn_ag_name)
     WPN_AA_INTRG_QTY:set(wpn_guns_l + wpn_guns_r)
+
 end
+
+local function update_ag()
+    update_ag_sel_wpn()
+    update_ccip()
+    update_ccrp()
+end
+
+local function update_aa_sel_wpn()
+    for i=1, 5 do
+        local param = get_param_handle("WPN_POS_"..tostring(i).."_SEL")
+        if wpn_aa_sel == i then
+            if get_wpn_aa_msl_ready() then
+                param:set(1)
+            else 
+                param:set(2)
+            end
+        else
+            param:set(0)
+        end
+    end
+    if master_mode == AVIONICS_MASTER_MODE_ID.DGFT_B or master_mode == AVIONICS_MASTER_MODE_ID.DGFT_L then
+        if get_wpn_guns_ready() then
+            WPN_GUNS_L_SEL:set(1)
+            WPN_GUNS_R_SEL:set(1)
+        else
+            WPN_GUNS_L_SEL:set(2)
+            WPN_GUNS_R_SEL:set(2)
+        end
+    else
+        WPN_GUNS_L_SEL:set(0)
+        WPN_GUNS_R_SEL:set(0)
+    end
+end
+
 
 local function update_aa()
     check_sidewinder()
@@ -356,7 +608,7 @@ local function update_aa()
     if get_wpn_aa_msl_ready() or get_wpn_guns_ready() then WPN_READY:set(1) else WPN_READY:set(0) end
     if get_wpn_aa_msl_sim_ready() or get_wpn_guns_sim_ready() then WPN_SIM_READY:set(1) else WPN_SIM_READY:set(0) end
 
-
+    update_aa_sel_wpn()
 
     if get_avionics_master_mode() == AVIONICS_MASTER_MODE_ID.DGFT_B then
         local range = WS_TARGET_RANGE:get()
@@ -441,31 +693,77 @@ local function update_ej()
             end
         end
     end
+    WPN_READY:set(0)
+    WPN_GUNS_L_SEL:set(0)
+    WPN_GUNS_R_SEL:set(0)
 end    
 
 local function update_sj()
     for i=1,5 do
         local wpn_sj_sel = get_param_handle("WPN_SJ_STO"..tostring(i).."_SEL")
         if wpn_sto_count[i] == 0 and not wpn_sto_container[i] then wpn_sj_sel:set(0) end
+        param = get_param_handle("WPN_POS_"..tostring(i).."_SEL")
+        if wpn_sj_sel:get() == 1 then
+            if get_wpn_mass() ~= WPN_MASS_IDS.LIVE or get_wpn_latearm() ~= WPN_LATEARM_IDS.ON or get_avionics_onground() then
+                param:set(2)
+            else 
+                param:set(1)
+            end
+        else
+            param:set(0)
+        end
     end
+    WPN_GUNS_L_SEL:set(0)
+    WPN_GUNS_R_SEL:set(0)
+    WPN_READY:set(0)
 end
+
+local wpn_ripple_count = 0
+local wpn_ripple_interval = 0
+local wpn_ripple_elapsed = 0
 
 function update()
     update_storages()
     update_master_mode_changed()
-    if get_avionics_master_mode_aa() then 
-        update_aa()
-    elseif get_avionics_master_mode_ag() then 
-        update_ag()
+    if get_avionics_master_mode_aa() then update_aa()
+    elseif get_avionics_master_mode_ag() then update_ag()
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.SJ then  update_sj()
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.EJ then  update_ej()
     else
         WPN_READY:set(0)
         WPN_SELECTED_WEAPON_TYPE:set(WPN_WEAPON_TYPE_IDS.NO_WEAPON)
+        for i=1,5 do
+            param = get_param_handle("WPN_POS_"..tostring(i).."_SEL")
+            param:set(0)
+        end
+        WPN_GUNS_L_SEL:set(0)
+        WPN_GUNS_R_SEL:set(0)
     end
-    
-    if master_mode == AVIONICS_MASTER_MODE_ID.SJ then 
-        update_sj()
-    elseif master_mode == AVIONICS_MASTER_MODE_ID.EJ then 
-        update_ej()
+
+
+    if wpn_ripple_count > 0 then
+        local ccrp_time = WPN.CCRP_TIME:get()
+        if master_mode == AVIONICS_MASTER_MODE_ID.CCRP and ccrp_time > 0 then
+        else
+            wpn_ripple_elapsed = wpn_ripple_elapsed + update_time_step
+            while wpn_ripple_elapsed >= wpn_ripple_interval and wpn_ripple_count > 0 do
+                wpn_ripple_elapsed = wpn_ripple_elapsed - wpn_ripple_interval
+                wpn_ripple_count = wpn_ripple_count - 1
+                local lauch_op = WPN_LAUNCH_OP:get()
+                if lauch_op == WPN_LAUNCH_OP_IDS.SALVO or lauch_op == WPN_LAUNCH_OP_IDS.PAIR then
+                    for i=1,5 do
+                        local param = get_param_handle("WPN_POS_"..i.."_SEL")
+                        if param:get() == 1 then
+                            dev:launch_station(i-1)
+                        end
+                    end
+                else 
+                    dev:launch_station(wpn_ag_sel-1)
+                end
+                update_storages()
+                update_ag_sel_next(true)
+            end
+        end
     end
 
     if wpn_guns_on then
@@ -575,7 +873,7 @@ function SetCommand(command,value)
         if value == 1 and not get_avionics_onground() then
             wpn_ej_timeout = 0.5;
             for i=1,5 do
-                local param = get_param_handle("SMS_POS_"..tostring(i).."_SEL")
+                local param = get_param_handle("WPN_POS_"..tostring(i).."_SEL")
                 local station = dev:get_station_info(i-1)
                 if station.weapon.level3 ~= wsType_AA_Missile and (station.count > 0 or station.container) then
                     set_wpn_sto_jet(i,1)
@@ -592,6 +890,11 @@ function SetCommand(command,value)
             end
         end
     elseif command == Keys.WeaponRelease then
+        if value == 1 then
+            WPN.WEAPON_RELEASE:set(1)
+        elseif value == 0 then 
+            WPN.WEAPON_RELEASE:set(0)
+        end
         if get_wpn_aa_msl_ready() and value == 1 then 
             dev:launch_station(wpn_aa_sel-1)
             WPN_RELEASE:set(1)
@@ -599,24 +902,35 @@ function SetCommand(command,value)
             wpn_release_elapsed = 0.5
         end
         if get_wpn_ag_ready() and not get_avionics_master_mode_ag_gun() and value == 1 then
-            local lauch_op = WPN_LAUNCH_OP:get()
-            if lauch_op == WPN_LAUNCH_OP_IDS.SALVO then
-                for i=1, wpn_sto_count[wpn_ag_sel] do
+            wpn_ripple_count = WPN_RP:get()-1
+            if wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET or (wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB and get_avionics_master_mode() == AVIONICS_MASTER_MODE_ID.MAN) then
+                wpn_ripple_interval = WPN_IS_TIME:get() / 1000
+            elseif wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
+                wpn_ripple_interval = WPN_IS_M:get() / (get_avionics_gs() or 100)
+            end
+            wpn_ripple_elapsed = 0
+            if master_mode == AVIONICS_MASTER_MODE_ID.CCRP then
+                wpn_ripple_count = wpn_ripple_count + 1
+            else
+                local lauch_op = WPN_LAUNCH_OP:get()
+                if lauch_op == WPN_LAUNCH_OP_IDS.SALVO or lauch_op == WPN_LAUNCH_OP_IDS.PAIR then
+                    for i=1,5 do
+                        local param = get_param_handle("WPN_POS_"..i.."_SEL")
+                        if param:get() == 1 then
+                            dev:launch_station(i-1)
+                        end
+                    end
+                else 
                     dev:launch_station(wpn_ag_sel-1)
                 end
-            elseif lauch_op == WPN_LAUNCH_OP_IDS.PAIR then
-                dev:launch_station(wpn_ag_sel-1)
-                if wpn_sto_name[wpn_ag_sel] == wpn_sto_name[6-wpn_ag_sel] then 
-                    dev:launch_station(4-(wpn_ag_sel-1))
-                end
-            else 
-                dev:launch_station(wpn_ag_sel-1)
+                update_storages()
+                update_ag_sel_next(true)
             end
-            update_storages()
-            update_ag_sel_next(true)
             WPN_RELEASE:set(1)
             wpn_release = true
             wpn_release_elapsed = 0.5
+        elseif wpn_ripple_count > 0 and get_wpn_ag_ready() and not get_avionics_master_mode_ag_gun() and value == 0 then
+            wpn_ripple_count = 0
         end
         if value == 0 and wpn_release  then
             if wpn_release_elapsed == -1 then WPN_RELEASE:set(0) end
@@ -845,3 +1159,72 @@ need_to_be_closed = false -- close lua state after initialization
 -- STO5["weapon"]["level1"] = 4
 -- STO5["weapon"]["level4"] = 145
 -- STO5["weapon"]["level2"] = 7
+
+
+
+
+-- //type of GOS homing head:
+-- const int InfraredSeeker = 1; / / thermal IR (infrared finder)
+-- const int ActiveRadar = 2; / / active-radar (active radar (AR) (+ins))
+-- const int AntiRadar = 3; / / antiradar (passive radar +ins)
+-- const int Laserhooming = 4; / / laser illumination (+ins)
+-- const int Autopilot = 5; / / Autonomous (ins + map, GPS, TV, IIR...)
+-- constant int SemiActiveRadar = 6; / / semi-active-radar semi-active radar (SAR) - radio light
+-- const int SemiAutoAT = 7; / / semi-automatic control from the platform for ATGM, fly to wopoint, wopoint coordinates are changed by the platform.
+
+-- struct WEAPONS_API Rocket_Const // Rocket constants and settings for control laws.
+-- // Characteristics of the missile
+-- unsigned char Name_; // name of the rocket
+-- int Escort_; / / escort: 0-No, 1-La launch, 2-other La, 3-C ground
+-- int Head_Type_; / / type of homing head (GOS) (CM above)
+-- Sigma = {x, y, z}, maximum aiming error in meters, in target coordinates. X-longitudinal axis of the target, y-axis virtualna purpose, Z - axis, transverse target
+-- float M_; / / gross weight in kg
+-- float H_max_; / / maximum flight altitude.
+-- float H_min_; / / minimum flight height.
+-- float Diam_; / / case Diameter in mm
+-- int Cx_pil; / / Cx as suspension
+-- float D_max_; / / maximum launch range at low altitude
+-- float D_min_; / / minimum launch range
+-- bool Head_Form_;/ / false - hemispherical head shape,
+-- //True-animate (~conic)
+-- float Life_time;// lifetime (self-destruct timer), sec
+-- double Nr_max_; / / Maximum overload during u
+--turns -- float v_min_; / / Minimum speed.
+-- float v_mid_; / / Average speed
+-- float Mach_max_; / / Maximum Mach number.
+-- float t_b_; / / engine start time
+-- t_acc_ float; // time of operation of the accelerator
+-- float t_marsh_; / / operating time in marching mode
+-- float Range_max_;/ / maximum launch range at maximum altitude
+-- float H_min_t_; / / minimum height of the target above the terrain, m.
+-- float Fi_start_; / / angle of tracking and sighting at launch
+-- float Fi_rak_; / / acceptable angle of view of the target (rad)
+-- float Fi_excort_; / / angle of tracking (sight) of the target by the missile.
+-- float Fi_search_;// limit angle of free search
+-- float OmViz_max_;// maximum line-of-sight speed
+-- float Damage_;/ / damage caused by a direct hit
+-- / * int Engine_Type_; / / engine type: 1-solid fuel;
+-- // 2 - Liquid Rocket engine(RD) (LRE);
+-- // 3 - Ramjet air RD ;
+-- // 4 - accelerator-1 + LRE.
+-- // 5 - turbojet
+-- // 6 - turbojet + accelerator
+-- int Stage_; / / number of steps.* /
+-- float X_back_; / / coordinates of the nozzle center in the rocket axes
+-- y_back float_;
+-- z_back float_;
+-- float X_back_acc_; / / coordinates of the accelerator nozzle center in the rocket axes
+-- float Y_back_acc_;
+-- float Z_back_acc_;
+-- float reflection; / / effective radio reflection surface, square meters
+
+-- //Kill distances - this distance is used to start the fuse
+-- double the distance of murder;
+
+-- // These are warheads used to simulate explosions
+-- // Due to the blocksim architecture, we have to use two schemes -
+-- //one for the server object (which actually does damage), and the other for
+-- //client object (which does not cause any damage)
+
+-- Instantaneous angle of view of missiles:
+-- IR GOS + - 1 degree

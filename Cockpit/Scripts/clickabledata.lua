@@ -21,9 +21,6 @@ elements["PNT_129"] = default_2_position_tumb("Canopy", devices.CANOPY, Keys.Can
 elements["PNT_129"].animated        = {true, true}
 elements["PNT_129"].animation_speed = {2, 2} 
 
-elements["PNT_132"] = default_movable_axis("Flaps Control Handle", devices.FLAPS, device_commands.flaps, 132, 0.0,-0.17, true, false)
-
-
 
 
 
@@ -76,7 +73,7 @@ elements["PNT_871"] = default_3_position_tumb("Fuel/Hydraulic/Bleed Shutoff (Ope
 
 -- THROTTLE
 elements["PNT_911"] = default_movable_axis("Throttle",                                          devices.EXTANIM, device_commands.Throttle,       911, 0.0,0.1, true, false)
-elements["PNT_912"] = default_2_position_tumb("Flaps (Up/Stop/Down)",                           devices.EXTANIM, device_commands.Flaps,          912,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_912"] = default_2_position_tumb("Flaps (Up/Down)",     		                    devices.FLAPS, 	 device_commands.flaps,          912,TOGGLECLICK_MID_FWD)
 elements["PNT_913"] = default_movable_axis("Friction",                                          devices.EXTANIM, device_commands.Friction,       913, 0.0,0.1, true, false)
 
 -- TRIMS

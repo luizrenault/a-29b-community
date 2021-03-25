@@ -222,7 +222,17 @@ function addFillBox(name, sideX, sideY, align, pos, parent, controllers, materia
 
 	local halfSideX	= sideX / 2
 	local halfSideY	= sideY / 2
-	box.vertices	= {{-halfSideX, -halfSideY}, {-halfSideX, halfSideY}, {halfSideX, halfSideY}, {halfSideX, -halfSideY}}
+	if align == "LeftCenter" then
+		box.vertices	= {{0, halfSideY}, {2*halfSideX, halfSideY}, {2*halfSideX, -halfSideY}, {0, -halfSideY}}
+	elseif align == "RightCenter" then
+		box.vertices	= {{-2*halfSideX, halfSideY}, {0, halfSideY}, {0, -halfSideY}, {-2*halfSideX, -halfSideY}}
+	elseif align == "CenterTop" then
+		box.vertices	= {{-halfSideX, 0}, {halfSideX, 0}, {halfSideX, -2*halfSideY}, {-halfSideX, -2*halfSideY}}
+	elseif align == "CenterBottom" then
+		box.vertices	= {{-halfSideX, 2*halfSideY}, {halfSideX, 2*halfSideY}, {halfSideX, 0}, {-halfSideX, 0}}
+	else 
+		box.vertices	= {{-halfSideX, halfSideY}, {halfSideX, halfSideY}, {halfSideX, -halfSideY}, {-halfSideX, -halfSideY}}
+	end
 	box.indices		= default_box_indices
 
 	Add(box)

@@ -42,10 +42,12 @@ A_29B =  {
     -- add model draw args for network transmitting to this draw_args table (32 limit)
     net_animation ={
         0, -- front gear
-        1, -- front gear suspension
+        -- 1, -- front gear suspension
 		2, -- nose wheel steering
 		3, -- main gear
-        4, -- main gear suspension
+        -- 4, -- main gear suspension
+		5, -- main gear
+		-- 6, -- main gear suspension
         9, -- right flap
         10, -- left flap
         11, -- right aileron
@@ -53,18 +55,37 @@ A_29B =  {
         15, -- right elevator
         16, -- left elevator
         17, -- rudder
+		21, -- speadbreak
         38, -- canopy
-		39, -- pilots heads
-		49, -- nav lights
-		50, -- pilots
-		51, -- landing lights
-		77, -- wheel rollAngle
-		83, -- strobe lights
-		324, -- proppellerer
-		350, -- Guns
-		802, -- other lights
-		407,
-		475,
+		-- 39, -- pilots heads
+		-- 49, -- nav lights
+		50, -- pilots fron eject
+		-- 51, -- landing lights
+		-- 77, -- wheel rollAngle
+		83, -- formation lights
+		-- 99, -- front pilot up down
+		101, -- wheel rolling
+		102, -- wheel rolling
+		103, -- wheel rolling
+		-- 114, -- canopy
+		190, -- nav light
+		191, -- nav light
+		192, -- strobe light
+		193, -- landing light
+		-- 198, -- beacon light
+		200, -- beacon light
+		201, -- beacon rotation
+		208, -- taxi light
+		209, -- search light
+		308, -- pylons
+		309, -- pylons
+		310, -- pylons
+		311, -- pylons
+		312, -- pylons
+		-- 337, -- back pilot head left right
+		-- 399, -- back pilot head up down
+		407, -- propellerer
+		472, -- back pilot disapear
     },
 
 	mapclasskey 		= "P0091000024",
@@ -87,12 +108,12 @@ A_29B =  {
 
 		average_fuel_consumption 	= 0.009042, -- this is highly relative, but good estimates are 36-40l/min = 28-31kg/min = 0.47-0.52kg/s -- 45l/min = 35kg/min = 0.583kg/s
 		CAS_min 					= 56, -- if this is not OVERAL FLIGHT TIME, but jus LOITER TIME, than it sholud be 10-15 minutes.....CAS capability in minute (for AI)
-		V_opt 						= 67,-- Cruise speed (for AI) –- Assume Mach 0.80 at 20000 ft as optimal. See -- http://www.nasa.gov/centers/dryden/pdf/87789main_H-636.pdf and		–- http://www.hochwarth.com/misc/AviationCalculator.html 		–- Mach 0.8 at 20000 = XXX kts TAS = XXX m / s
-		V_take_off 					= 28, -- Take off speed in m/s (for AI)
-		V_land 						= 46, -- Land speed in m/s (for AI)
+		V_opt 						= 123,-- Cruise speed (for AI) –- Assume Mach 0.80 at 20000 ft as optimal. See -- http://www.nasa.gov/centers/dryden/pdf/87789main_H-636.pdf and		–- http://www.hochwarth.com/misc/AviationCalculator.html 		–- Mach 0.8 at 20000 = XXX kts TAS = XXX m / s
+		V_take_off 					= 62, -- Take off speed in m/s (for AI)
+		V_land 						= 62, -- Land speed in m/s (for AI)
 		V_max_sea_level 			= 165, -- Max speed at sea level in m/s (for AI)
-		V_max_h 					= 75, -- Max speed at max altitude in m/s (for AI)
-		Vy_max 						= 15, -- Max climb speed in m/s (for AI)
+		V_max_h 					= 145, -- Max speed at max altitude in m/s (for AI)
+		Vy_max 						= 75, -- Max climb speed in m/s (for AI)
 		Mach_max 					= 0.562, -- Max speed in Mach (for AI)
 		Ny_min 						= -4, -- Min G (for AI)
 		Ny_max 						= 8.0,  -- Max G (for AI)
@@ -104,9 +125,22 @@ A_29B =  {
 		has_speedbrake 				= true, -- Speedbrake yes/no
 		has_differential_stabilizer	= false, -- differential stabilizers
 
-		main_gear_pos 				= 	{-1,	-2.03,	2.},
-		nose_gear_pos 				= 	{2.808,	-2.09,	0},
+		main_gear_pos 				= 	{-0.66,	-2.13,	1.813}, --{-1,	-2.03,	2.},
+		nose_gear_pos 				= 	{2.544, -2.184,  -0.011}, --{2.808,	-2.09,	0},
 		tand_gear_max				=	0.363970234, -- tangent of degrees of rotation max of nose wheel steering
+
+		nose_gear_amortizer_direct_stroke        = 0.00,    -- down from nose_gear_pos !!!
+		nose_gear_amortizer_reversal_stroke      = -0.156,   -- up
+		nose_gear_amortizer_normal_weight_stroke = -0.056,   
+		main_gear_amortizer_direct_stroke        = 0.00,     -- down from main_gear_pos !!!
+		main_gear_amortizer_reversal_stroke      = -0.156,   -- up
+		main_gear_amortizer_normal_weight_stroke = -0.056,   
+
+		nose_gear_wheel_diameter	=	0.433, --in m
+		main_gear_wheel_diameter	=	0.563, -- in m
+	
+	
+
 		wing_area 					= 19.4, -- wing area in m2
 		wing_span 					= 11.135, -- wing spain in m
 		wing_type 					= 0,
@@ -121,8 +155,6 @@ A_29B =  {
 		IR_emission_coeff 			= 0.1, -- Normal engine -- IR_emission_coeff = 1 is Su-27 without afterburner. It is reference.
 		IR_emission_coeff_ab 		= 0.1, -- With afterburner
 		wing_tip_pos 				= {-0.82, -0.250,     5.5}, -- wingtip coords for visual effects
-		nose_gear_wheel_diameter	=	0.754, --in m
-		main_gear_wheel_diameter	=	0.972, -- in m
 		brakeshute_name 			= 0, -- Landing - brake chute visual shape after separation
 		
 		-- The following is used for graphical AB effects
@@ -131,7 +163,7 @@ A_29B =  {
 		{
 			[1] = 
 			{
-				pos 		=  {1.624990,0.047866,-0.56}, -- nozzle coords
+				pos 		=  {2.427,-0.565,0.563}, -- nozzle coords
 				elevation   =  0, -- AFB cone elevation –- for engines mounted at an angle to fuselage, change elevation
 				diameter	 = 0*0.1, -- AFB cone diameter
 				exhaust_length_ab   = -3.0, -- lenght in m
@@ -142,7 +174,7 @@ A_29B =  {
 	
 			[2] = 
 			{
-				pos 		=  {1.624990,0.047866,0.56}, -- nozzle coords
+				pos 		=  {2.427,-0.565,-0.563}, -- nozzle coords
 				elevation   =  0, -- AFB cone elevation
 				diameter	 = 0*0.1, -- AFB cone diameter
 				exhaust_length_ab   = -3.0, -- lenght in m
@@ -254,114 +286,128 @@ A_29B =  {
 		}, -- end of chaff_flare_dispenser
 
 		Pylons =     {
-			pylon(1, 0, -0.200, -0.90, -3.230000,
+			pylon(1, 0, -0.200, -0.90, -3.273,
 				{
-					-- arg = 308 ,arg_value = 0,
+					connector = 'pylon1', arg = 308 ,arg_value = 0,
 					use_full_connector_position = false,
 				},
 				{
 					{ CLSID = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}" }, -- AIM-9P
 								
 					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
-					{ CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
-					{ CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
+					-- { CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
+					-- { CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 					{ CLSID = "{5335D97A-35A5-4643-9D9B-026C75961E52}" }, -- CBU-97
 	
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
 					{ CLSID = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}" }, -- LAU-61 - 19
 	
-					{ CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
+					-- { CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
 	
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
 	
-					{ CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+					-- { CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+					
+					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
 				}
 			),
-			pylon(2, 0, -0.200, -1.0, -2.3900,
+			pylon(2, 0, -0.200, -1.0, -2.437,
 				{
+					connector = 'pylon2', arg = 309 ,arg_value = 0,
 					use_full_connector_position = false,
 				},
 				{
 					{ CLSID = "{A-29B TANK}" },
 	
 					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
-					{ CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
-					{ CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
+					-- { CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
+					-- { CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 					{ CLSID = "{5335D97A-35A5-4643-9D9B-026C75961E52}" }, -- CBU-97
 
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
 					{ CLSID = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}" }, -- LAU-61 - 19
 	
-					{ CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
+					-- { CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
 	
 	
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
 	
 	
 					{ CLSID = "{CBU_105}" ,arg_increment = 0.0}, -- CBU-105	
-					{ CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+					-- { CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+
+					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
 				}
 			),
-			pylon(3, 0, -0.66, -1.2000, 0,
+			pylon(3, 0, -0.66, -1.236, -0.012,
 				{
+					connector = 'pylon3', arg = 310 ,arg_value = 0,
 					use_full_connector_position = false,
 				},
 				{
 					{ CLSID = "{A-29B TANK}" },
 					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
-					{ CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+					-- { CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+
+					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
 	
 				}
 			),
-			pylon(4, 0, -0.200, -1.0, 2.39,
+			pylon(4, 0, -0.200, -1.0, 2.415,
 				{
+					connector = 'pylon4', arg = 311 ,arg_value = 0,
 					use_full_connector_position = false,
 				 },
 				{
 					{ CLSID = "{A-29B TANK}" },
 	
 					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
-					{ CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
-					{ CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
+					-- { CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
+					-- { CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 					{ CLSID = "{5335D97A-35A5-4643-9D9B-026C75961E52}" }, -- CBU-97
 	
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
 					{ CLSID = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}" }, -- LAU-61 - 19
 	
-					{ CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
+					-- { CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
 	
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
 	
 	
 					{ CLSID = "{CBU_105}" ,arg_increment = 0.0}, -- CBU-105	
-					{ CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+					-- { CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+
+					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
 				}
 			),
-			pylon(5, 0, -0.20, -0.9, 3.23,
+			pylon(5, 0, -0.20, -0.9, 3.251,
 				{
+					connector = 'pylon5', arg = 312 ,arg_value = 0,
 					use_full_connector_position = false,
 				 },
 				{
 					{ CLSID = "{6CEB49FC-DED8-4DED-B053-E1F033FF72D3}" }, -- AIM-9P
 	
 					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
-					{ CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
-					{ CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
+					-- { CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
+					-- { CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 					{ CLSID = "{5335D97A-35A5-4643-9D9B-026C75961E52}" }, -- CBU-97
 	
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
 					{ CLSID = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}" }, -- LAU-61 - 19
 	
-					{ CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
+					-- { CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
 									
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
-					{ CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+					-- { CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
+
+					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
 				}
 			),
-			pylon(6, 0.1, 2.0, -0.5, 0.88,
+			pylon(6, 0, 2.427, -0.565, 0.563,
 				{
-					use_full_connector_position = false,
+					use_full_connector_position = true,
 					connector 		= "SmokeWhite",
 				    DisplayName 	= "Smoke",
 				 },
@@ -395,16 +441,16 @@ A_29B =  {
 	SFM_Data = {
 		aerodynamics = 
 		{
-			Cy0	=	0.1, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
+			Cy0	=	0.045, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
 			Mzalfa	=	4.355, -- Horizontal tail pitch coefficient
-			Mzalfadt	=	1,  -- Wing pitch coefficient
-			kjx = 2.95, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
+			Mzalfadt	=	0.8,  -- Wing pitch coefficient
+			kjx = 2.25, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
 			kjz = 0.00125,  -- Unknown pitch constant. All planes use 0.00125 -- -- Inertia parametre Z - Dimension (clean) airframe drag coefficient at Z (Front) Simply the wing area in square meters (as that is a major factor in drag calculations)
-			Czbe = -0.016, -- Directional stability coefficient  -- coefficient, along Z axis (perpendicular), affects yaw, negative value means force orientation in FC coordinate system
-			cx_gear = 0.0277, -- Additional coefficient of drag for gear extended
-			cx_flap = 0.095, -- Additional coefficient of drag for flap extended
-			cy_flap = 0.31, -- Additional coefficient of lift for flap extended
-			cx_brk = 0.06, -- Additional coefficient of drag for air brakes
+			Czbe = -0.056, -- Directional stability coefficient  -- coefficient, along Z axis (perpendicular), affects yaw, negative value means force orientation in FC coordinate system
+			cx_gear = 0.3, -- Additional coefficient of drag for gear extended
+			cx_flap = 0.055, -- Additional coefficient of drag for flap extended
+			cy_flap = 0.38, -- Additional coefficient of lift for flap extended
+			cx_brk = 0.065, -- Additional coefficient of drag for air brakes
 			
 			-- Hi guys. I try to calculate the rollrate, or maxrollrate (omxmax) for a plane and I've got the measurements of the plane, Cl (rolling moment coefficient) and Clp.
 			-- I've found a formula for Rollrate which looks like this:
@@ -413,13 +459,14 @@ A_29B =  {
 			-- If it Rolls to fast then decrease Omxmax. If The rollaccelleration is to quick, lower kjx.
 			table_data = 
 			{
-			-- Cx0 - Coefficient of drag for zero lift
-			-- Cya - Coefficient of lift for angle of attack
-			-- B - Induced drag factor
-			-- B4 - Viscous drag factor
-			-- Omxmax - Roll rate
-			-- Aldop - Visual effects settings for stability / controlability
-			-- Cymax - Maximum coefficient of lift, corresponding to αstall
+			-- M - Mach number
+			-- Cx0 - Coefficient of drag for zero lift -- Coefficient, drag, profile, of the airplane
+			-- Cya - Coefficient of lift for angle of attack -- Normal force coefficient of the wing and body of the aircraft in the normal direction to that of flight. Inversely proportional to the available G-loading at any Mach value. (lower the Cya value, higher G available) per 1 degree AOA
+			-- B - Induced drag factor -- Polar quad coeff
+			-- B4 - Viscous drag factor --Polar 4th power coeff
+			-- Omxmax - Roll rate - roll rate, rad/s
+			-- Aldop - Visual effects settings for stability / controlability -- Alfadop Max AOA at current M - departure threshold
+			-- Cymax - Maximum coefficient of lift, corresponding to αstall -- Coefficient, lift, maximum possible (ignores other calculations if current Cy > Cymax)
 			-- 
 
 			-- The variables "B" and "B4" in the SFM of DCS are "modifiers" of the variable "drag at zero Lift" aka Cx0 to make those values fit the Lift/Drag (or Drag/Lift)-Polars, 
@@ -445,19 +492,44 @@ A_29B =  {
 			-- more efficient. The shorter, thicker the wing, the more unefficient (I would say/guess or whatever)...or you can calculate it (see above) which looks like a 
 			-- nicely spent weekend to me
 			--      M	    Cx0		 Cya		    B		 B4	     Omxmax	    Aldop	    Cymax
-					{-0.1,	0.0187,	0.0746*2,		0.052,	0.012,	0.79,		22.0,		1.45*2,	},
-					{0.0,	0.0187,	0.0746*2,		0.052,	0.012,	0.79,		22.0,		1.45*2,	},
-					{0.2,	0.0187,	0.0746*2,		0.052,	0.012,	2.796144,	22.0,		1.45*2,   },
-					{0.3,	0.0187,	0.0722*2,		0.052,	0.015,	4.24,		19.0,		1.2*2,    },
-					{0.5,	0.0187,	0.0798*2,		0.045,	0.025,	4.323,		17.0,		1.08*2,   },
-					{0.59,	0.0187,	0.084*2,		0.047,	0.026,	4.129077,	17.0,		1.07*2,   },
-					{0.67,	0.0187,	0.0907*2,		0.047,	0.021,	3.943,		14.5,		0.98*2,   },
-					{0.74,	0.0227,	0.0855*2,		0.08,	0.16,	3.675,		10.0,	  	0.72*2,   },
-					{0.76,	0.032,	0.078*2,		0.1,	0.25,	2.577,		9.0,  		0.6*2,    },
-					{0.8,	0.063,	0.072*2,		0.2,	0.36,	1.456,		6.0,	    0.4*2,	},
-					{0.83,	0.1,	0.0725*2,		0.34,	2.4,	0.32,		4.5,		0.3*2,	},
-					{0.9,	0.126,	0.073*2,		0.56,	3.0,	0.076,		3.0,	    0.2*2,	},
-					{1.1,	0.16,	0.03*2,			0.56,	3.0,	0.076,		1.0,		0.3*2		},
+					{-0.1,	0.0187,	0.0146,		    0.052,	0.012,	  2.7,		22.0,		0.0*2,	},
+					{0.00,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.01,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.02,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.03,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.04,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.05,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.06,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.1*2,	},
+					{0.07,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.2*2,	},
+					{0.08,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.3*2,	},
+					{0.09,	0.0100,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.4*2,	},							
+					{0.10,	0.0100,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.7*2,	},
+					{0.11,	0.0100,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
+					{0.12,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
+					{0.13,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
+					{0.14,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
+					{0.15,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.0*2,	},
+					{0.16,	0.0110,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.20*2,	},
+					{0.17,	0.0125,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.30*2,	},
+					{0.18,	0.0255,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.45*2,	},
+					{0.19,	0.0275,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.45*2,	},
+					{0.2,	0.0355,	0.055,		    0.01,	0.012,	  2.7,     	22.0,		1.45*2,   },
+					{0.3,	0.0265,	0.055,		    0.1,	0.092,	  2.7,		19.0,		1.45*2,    },
+					{0.31,	0.0205,	0.055,		    0.05,	0.072,	  2.7,		19.0,		1.45*2,    },
+					{0.33,	0.0215,	0.055,		    0.05,	0.042,	  2.7,		19.0,		1.45*2,    },
+					{0.36,	0.0235,	0.055,		    0.05,	0.022,	  2.7,		19.0,		1.45*2,    },
+					{0.37,	0.0175,	0.055,		    0.05,	0.012,	  2.7,		19.0,		1.45*2,    },
+					{0.38,	0.0145,	0.055,		    0.05,	0.012,	  2.7,		19.0,		1.45*2,    },
+					{0.39,	0.0155,	0.055,		    0.09,	0.012,	  2.7,		19.0,		1.45*2,    },
+					{0.5,	0.0787,	0.055,	    	0.99,	0.099,	  2.7,		17.0,		1.45*2,   },
+					{0.59,	0.0787,	0.0540*2,		0.99,	0.099,	  2.7,	    17.0,		1.45*2,   },
+					{0.67,	0.0487,	0.0707*2,		0.99,	0.091,	  2.7,		14.5,		0.98*2,   },
+					{0.74,	0.0427,	0.0855*2,		0.1,	0.16,	  2.7,		10.0,	  	0.72*2,   },
+					{0.76,	0.032,	0.078*2,		0.1,	0.25,	  2.7,      9.0,  		0.6*2,    },
+					{0.8,	0.063,	0.072*2,		0.2,	0.36,	  2.456,	6.0,	    0.4*2,	},
+					{0.83,	0.1,	0.0725*2,		0.34,	2.4,	  0.32,		4.5,		0.3*2,	},
+					{0.9,	0.126,	0.073*2,		0.56,	3.0,	  0.076,	3.0,	    0.2*2,	},
+					{1.1,	0.16,	0.03*2,			0.56,	3.0,	  0.076,	1.0,		0.3*2		},
 			}
 		}, -- end of aerodynamics
 		engine = 
@@ -469,26 +541,28 @@ A_29B =  {
 			ForsRUD	=	1, -- .91 for afterburning, 1 for non-afterburning -- Afterburner state of the throttle
 			typeng	=	3, -- E_TURBOJET = 0, E_TURBOJET_AB = 1, E_PISTON = 2, E_TURBOPROP = 3,	E_TURBOFAN    = 4,	E_TURBOSHAFT = 5
 			hMaxEng	=	19.5, -- maximum operating altitude for the engine in km -- typically higher than service ceiling of the aircraft
-			dcx_eng	=	0.0114, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
-			cemax	=	0.0225, -- kg / sec - fuel consumption for a single engine in dry configuration
-			cefor	=	0.0225, -- kg / sec - fuel consumption for a single engine in afterburner configuration
-			dpdh_m	=	1800, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
-			dpdh_f	=	1800, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			dcx_eng	=	0.095, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
+			cemax	=	0.005, -- kg / sec - fuel consumption for a single engine in dry configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
+			cefor	=	0.005, -- kg / sec - fuel consumption for a single engine in afterburner configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
+			dpdh_m	=	1700, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			dpdh_f	=	2000, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			table_data = {
 			-- Pmax - total thrust in Newtons (kN * 1000) for all engines
 			-- Pfor - total thrust in Newtons (kN * 1000) for all engines
 			--   M		Pmax		 Pfor
-				{0.0,		16620.0},
-				{0.1,		15600.0},
-				{0.2,		14340.0},
-				{0.3,		13320.0},
-				{0.4,		12230.0},
-				{0.5,		11300.0},
-				{0.6,		10600.0},
-				{0.7,		10050.0},
-				{0.8,		 9820.0},
+				{0.0,		18000.0},
+				{0.1,		18000.0},
+				{0.2,		18000.0},
+				{0.3,		18000.0},
+				{0.31,		18000.0},
+				{0.39,		17000.0},
+				{0.4,		17000.0},
+				{0.5,		10000.0},
+				{0.6,		10000.0},
+				{0.7,		 9050.0},
+				{0.8,		 9020.0},
 				{0.9,		 5902.0},
-				{1.0,		 3469.0}
+				{1.0,		 3469.0},
 			}                 
 		}, -- end of engine
 		-- thrust_max = -- thrust interpolation table by altitude and mach number, 2d table.  Modified for carrier takeoffs at/around 71 foot deck height
@@ -555,6 +629,10 @@ A_29B =  {
             weightWhenOn = -80,
             wCtrl = 150,
         },
+		{ id = "LaserCode100",  control = 'spinbox',  label = _('Laser code for GBUs, 1x11'), defValue = 6, min = 1, max = 8, dimension = ' ' },
+        { id = "LaserCode10",   control = 'spinbox',  label = _('Laser code for GBUs, 11x1'), defValue = 8, min = 1, max = 8, dimension = ' ' },
+        { id = "LaserCode1",    control = 'spinbox',  label = _('Laser code for GBUs, 111x'), defValue = 8, min = 1, max = 8, dimension = ' ' },
+
         -- {
         --     id = 'PropellorType',
         --     control = 'comboList',
@@ -636,39 +714,45 @@ A_29B =  {
 	lights_data = {
         typename = "collection",
         lights = {
-        [1] = { typename = "collection",
-                lights = {
-                    -- Top Anticollision Light (red)
-                    --[1] = { typename = "strobelight", connector = "RED_BEACON_T", argument = 198, color = {1, 0, 0}, period = 1.2, phase_shift = 0 },
-                    [1] = { typename = "strobelight", connector = "RED_BEACON_T", color = {1, 0, 0}, period = 1.2, phase_shift = 0 },
-                    -- Bottom Anticollision Light (red)
-                    --[2] = { typename = "strobelight", connector = "RED_BEACON_B", argument = 199, color = {1, 0, 0}, period = 1.2, phase_shift = 0 },
-                    [2] = { typename = "strobelight", connector = "RED_BEACON_B", color = {1, 0, 0}, period = 1.2, phase_shift = 0 },
-                    }
-              },
-        [2] = { typename = "collection",
-                lights = {
-                    -- Taxi Light
-                    --[1] = { typename = "spotlight", connector = "MAIN_SPOT_PTR_01", argument = 208, dir_correction = {elevation = math.rad( 3)} },
-                    [1] = { typename = "spotlight", connector = "MAIN_SPOT_PTR_01", dir_correction = {elevation = math.rad( 3)} },
-                    }
-              },
-        [3] = { typename = "collection",
-                lights = { --[[
-                    -- Left Position Light (red)
-                    [1] = { typename = "omnilight", connector = "RED_NAV_L", color = {1, 0, 0}, pos_correction  = {0.0, 0, -0.2}, argument  = 190 },
-                    -- Right Position Light (green)
-                    [2] = { typename = "omnilight", connector = "GREEN_NAV_R", color = {0, 1, 0}, pos_correction = {0.0, 0, 0.2}, argument  = 191 },
-                    -- Tail Position Light (white)
-                    [3] = { typename = "omnilight", connector = "WHITE_NAV_T", color = {1, 1, 1}, pos_correction  = {0, 0, 0}, argument  = 192 },   --]]
-                    -- Left Position Light (red)
-                    [1] = { typename = "omnilight", connector = "RED_NAV_L", color = {1, 0, 0}, pos_correction  = {0.0, 0, -0.2} },
-                    -- Right Position Light (green)
-                    [2] = { typename = "omnilight", connector = "GREEN_NAV_R", color = {0, 1, 0}, pos_correction = {0.0, 0, 0.2} },
-                    -- Tail Position Light (white)
-                    [3] = { typename = "omnilight", connector = "WHITE_NAV_T", color = {1, 1, 1}, pos_correction  = {0, 0, 0} },
-                    }
-              },
+			[WOLALIGHT_STROBES]	= {
+				typename	=	"collection",
+				lights 		= {
+					{ typename = "argnatostrobelight", argument = 83, period = 1.2},		-- beacon lights
+				},
+			},--must be collection
+			[WOLALIGHT_LANDING_LIGHTS]	= {
+				typename	= 	"collection",
+				lights		= {
+					{ typename  = "argumentlight",	argument  = 51, },
+				},
+			},--must be collection
+			[WOLALIGHT_TAXI_LIGHTS]	= {
+				typename	= 	"collection",
+				lights		= {
+					{ typename  = "argumentlight",	argument  = 208, },
+				},
+			},--must be collection
+			[WOLALIGHT_NAVLIGHTS]	= {
+				typename 	= "collection",
+				lights 		= {
+					{ typename  = "argumentlight", argument  = 49, },				-- red
+				},
+			},--must be collection
+			[WOLALIGHT_FORMATION_LIGHTS] = {
+				typename	= "collection",
+				lights		= {
+					{ typename  = "argumentlight",	argument  = 88, },
+				},		-- green bars
+			},--must be collection
+
+			-- STROBE / ANTI-COLLISION
+			[WOLALIGHT_BEACONS] = {
+				typename = "collection",
+				lights = {
+					-- 0 -- Anti-collision strobe
+					{ typename = "argnatostrobelight", argument = 200, period = 0.4, flash_time = 0.1, },
+				},
+			},
         }
     },
 
@@ -708,9 +792,9 @@ A_29B =  {
 
 	passivCounterm = {
 		CMDS_Edit = true,
-		SingleChargeTotal = 2000,
-		chaff = {default = 1000, increment = 1, chargeSz = 1},
-		flare = {default = 1000,  increment = 1, chargeSz = 1},
+		SingleChargeTotal = 60,
+		chaff = {default = 30, increment = 1, chargeSz = 1},
+		flare = {default = 30,  increment = 1, chargeSz = 1},
 	},
 
 	chaff_flare_dispenser 	= {
@@ -725,9 +809,9 @@ A_29B =  {
 	mapclasskey = "P0091000024",
 
 	Guns = {
-		MG_20({muzzle_pos = {0.96,-0.68, 2.32},_connector =  "Point_Gun_01_R",rates = {1025},effect_arg_number = 350,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 0,supply_position = {4.5,0.22, 0.3}}),-- MITRAIL AVR 1 
-		MG_20({muzzle_pos = {0.96, -0.68, -2.32},_connector =  "Point_Gun_01_L",rates = {1025},effect_arg_number = 436,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 0,supply_position = {2.0, -0.25, 0.8}}),-- MITRAIL AVR 2 B
-	},
+		MG_20({muzzle_pos = {0.82,-0.705, 2.326},_connector =  "Point_Gun_01_R",rates = {1025},effect_arg_number = 350,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 0,supply_position = {4.5,0.22, 0.3}}),-- MITRAIL AVR 1 
+		MG_20({muzzle_pos = {0.82, -0.705, -2.326},_connector =  "Point_Gun_01_L",rates = {1025},effect_arg_number = 436,mixes = {{1,2,2,3,3}},azimuth_initial = 0.0,elevation_initial = 0,supply_position = {2.0, -0.25, 0.8}}),-- MITRAIL AVR 2 B
+	}, -- 3dsmax X, Z, -Y
 }
 
 add_aircraft(A_29B)

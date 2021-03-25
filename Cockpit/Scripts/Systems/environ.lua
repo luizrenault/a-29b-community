@@ -30,7 +30,7 @@ function post_initialize()
     elseif birth=="GROUND_COLD" then
         dev:performClickableAction(device_commands.EnvTemp, 0.5, true)
         dev:performClickableAction(device_commands.EnvAC, 0, true)
-        dev:performClickableAction(device_commands.EnvECS, 1, true)
+        dev:performClickableAction(device_commands.EnvECS, 0, true)
         dev:performClickableAction(device_commands.EnvRecFan, 0, true)
     end
     startup_print("environ: postinit end")

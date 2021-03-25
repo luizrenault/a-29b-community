@@ -28,9 +28,9 @@ join(res.keyCommands,{
 {pressed = iCommandPlaneTrimRightRudder,up = iCommandPlaneTrimStop, name = _('Trim: Rudder Right'),		category = _('Flight Control')},
 
 -- Systems
-{down = iCommandPlaneAirBrake,				name = _('Airbrake'),					category = _('Systems') , features = {"airbrake"}},
-{down = iCommandPlaneAirBrakeOn,			name = _('Airbrake On'),				category = _('Systems') , features = {"airbrake"}},
-{down = iCommandPlaneAirBrakeOff,			name = _('Airbrake Off'),				category = _('Systems') , features = {"airbrake"}},
+{down = iCommandPlaneAirBrake,				name = _('Airbrake'),					category = _('Systems')},
+{down = iCommandPlaneAirBrakeOn, up = iCommandPlaneAirBrakeOn,				name = _('Airbrake On'),							category = _('Systems'), value_down =  1.0,		value_up = 0.0},
+{down = iCommandPlaneAirBrakeOff,up = iCommandPlaneAirBrakeOff,			    name = _('Airbrake Off'),							category = _('Systems'), value_down =  1.0,		value_up = 0.0},
 {down = iCommandPlaneWingtipSmokeOnOff,		name = _('Smoke'),						category = _('Systems')},
 {down = iCommandPlaneCockpitIllumination,	name = _('Illumination Cockpit'),		category = _('Systems')},
 {down = iCommandPlaneLightsOnOff,			name = _('Navigation lights'),			category = _('Systems')},
@@ -46,8 +46,8 @@ join(res.keyCommands,{
 {down = iCommandPlaneResetMasterWarning,	name = _('Audible Warning Reset'),		category = _('Systems')},
 {down = iCommandPlaneJettisonWeapons,up = iCommandPlaneJettisonWeaponsUp,	name = _('Weapons Jettison'),	category = _('Systems')},
 {down = iCommandPlaneEject,					name = _('Eject (3 times)'),			category = _('Systems')},
-{pressed = iCommandHUDBrightnessUp,			name = _('HUD Brightness up'),			category = _('Systems') , features = {"HUDbrightness"}},
-{pressed = iCommandHUDBrightnessDown,		name = _('HUD Brightness down'),		category = _('Systems') , features = {"HUDbrightness"}},
+{pressed = iCommandHUDBrightnessUp,			name = _('HUD Brightness up'),			category = _('Systems')},
+{pressed = iCommandHUDBrightnessDown,		name = _('HUD Brightness down'),		category = _('Systems')},
 
 -- Stick
 {pressed = iCommandPlaneTrimUp,			up = iCommandPlaneTrimStop, name = _('Trim: Nose Up'),			category = {_('Stick'), _('HOTAS')}},
@@ -189,10 +189,11 @@ join(res.keyCommands,{
 
 -- joystick axes 
 join(res.axisCommands,{
-    {combos = defaultDeviceAssignmentFor("roll"),	action = iCommandPlaneRoll,			name = _('Roll')},
-    {combos = defaultDeviceAssignmentFor("pitch"),	action = iCommandPlanePitch,		name = _('Pitch')},
-    {combos = defaultDeviceAssignmentFor("rudder"),	action = iCommandPlaneRudder,		name = _('Rudder')},
-    {combos = defaultDeviceAssignmentFor("thrust"),	action = iCommandPlaneThrustCommon, name = _('Thrust')},
+    {                                               action = iCommandPlaneRoll,			name = _('Roll')},
+    {                                               action = iCommandPlanePitch,		name = _('Pitch')},
+    {                                               action = iCommandPlaneRudder,		name = _('Rudder')},
+    {                                               action = iCommandPlaneThrustCommon, name = _('Thrust')},
+    {                                               action = Keys.AirBrake,             name = _('Airbrake')},
     {                                               action = iCommandWheelBrake,		name = _('Wheel Brake'),		category = {_('Systems')}},
     {												action = iCommandLeftWheelBrake,	name = _('Wheel Brake Left'),	category = {_('Systems')}},
     {												action = iCommandRightWheelBrake,	name = _('Wheel Brake Right'),	category = {_('Systems')}},

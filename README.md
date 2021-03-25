@@ -10,23 +10,90 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 # Download
 
 [Latest Release](https://github.com/luizrenault/a-29b-community/releases/latest)
+[Livery pack](https://mega.nz/file/tNpkyLCa#iC9aOTzc8liAfFGqfyLN2zmaNfXmtkmYDqIGjH2y3Bg)
 
 # Tutorial videos 
 
-(Pt-BR by [Lucas Orsi](https://www.youtube.com/user/lucaoorsi))
+(Pt-BR by [Lucas Orsi](https://www.youtube.com/user/lucaoorsi)) - English subtitles now available.
 - [Startup](https://www.youtube.com/watch?v=9XkSzbTcajE&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=1)
 - [Taxi, takeoff and navigation](https://www.youtube.com/watch?v=zL0vY9_0fGU&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=3)
 - [Visual landing](https://www.youtube.com/watch?v=0UId68gH33M&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=4)
 - [Cutoff](https://www.youtube.com/watch?v=RPF_G8d9tMI&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=2)
+- [Waypoints](https://www.youtube.com/watch?v=ZrFa4Mv7TUA&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=5&t=3s)
+- [A/G Attack](https://www.youtube.com/watch?v=TyX-CzaA5FM)
+- [A/A Attack](https://www.youtube.com/watch?v=m_SypnfGmYI&t=84s)
+- [Selective Jettison](https://www.youtube.com/watch?v=TpYuuaqGLNk&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=9)
+- [Manual Waypoint Navigation](https://www.youtube.com/watch?v=-cCLETzwebo&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=10&t=9s)
+- [CCRP A/G Mode](https://www.youtube.com/watch?v=pwJYzBodbko&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=11)
+- [CCRP A/G Mode CBU-97](https://www.youtube.com/watch?v=pQjlXoj7K1I&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=11)
+- [HUD Modes](https://www.youtube.com/watch?v=VxT5uo5PYAg&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=12)
 
+(En by [Grim Reapers](https://www.youtube.com/channel/UCZuXjkFY00p1ga3UyCBbR2w))
+- [Install, Setup, Startup, Cockpit, Pages, Nav & Weapons Guide](https://youtu.be/gATHRMtI_vM)
+
+(En by [311Gryphon](https://www.youtube.com/channel/UCR0ojtQ0Srh2y2O4pelFrDA))
+- [Startup](https://www.youtube.com/watch?v=QbKsh-kPhIA)
+- [Adding Waypoints via UFCP](https://www.youtube.com/watch?v=w6eE9TJt06U&list=PLo5YmN6D-iCADAvM0M1KvUKSfJjQYg4gF&index=2)
+- [Selective Jettison](https://www.youtube.com/watch?v=OTM4-N1nNzE&list=PLo5YmN6D-iCADAvM0M1KvUKSfJjQYg4gF&index=3)
+- [Air to Air Weapons](https://www.youtube.com/watch?v=TumUprFdE6M&list=PLo5YmN6D-iCADAvM0M1KvUKSfJjQYg4gF&index=4)
+- [CCIP Weapons](https://www.youtube.com/watch?v=-2gN9zJngLE&list=PLo5YmN6D-iCADAvM0M1KvUKSfJjQYg4gF&index=5)
+
+# ED Forum
+
+[A-29 Super Tucano](https://forums.eagle.ru/topic/265017-a-29-super-tucano/)
 
 # Changelog
  
-All notable changes to this project will be documented in this file.
+## Version 0.1.7b - 24 March 2021
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+### Added
+- A/G CCRP mode.
+- A/G Ripple Pulses (RP) and Impact Separation (IS)
+- UFCP, throttle handle and stick textures.
+- UFCP VV/VAH format.
+- UFCP VV/VAH now syncs with CMFD ADHSI.
+- Livery template (by Cubeboy)
+- Argentina liveries (by GOA -_Max_)
+- Several UFCP format placeholders
+- Livery pack (by Urbi, gheoss)
+- Coldstart training mission (by Rudel_chw)
+- Pylons are now removable
+- New external 3d model with new animations
+- New propeller animation
+- New suspension parameters
+- New external lights (working with AI)
+- Speedbreak now working
+- Livery pack download link included
 
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### Changed
+- A/G Weapon selection order (External Pylons > Internal Pylons > Ventral Pylon. Left first.)
+- Roll rate reduced.
+- VV/VAH default state is now off.
+- Cold Start ECS switch default position to MAN.
+- Cold Start Avionics Master switch default position to Off.
+- Cold Start Emer Speed Break switch default position to Normal.
+- Cold Start Flaps switch default position to Down.
+- Cold Start Rec switch default position to Stop.
+- Cold Start UFCP Brightness knob default position to Max Brt.
+- Cold Start EGI switch default position to Off.
+- Hot Air/Ground EGI switch default position to Nav.
+- Gear drag increased.
+- SFM parameters according to pilot feedbacks (PaKo, Leno, Malamem, EDAV, and others).
+
+### Fixes
+- FYT 0 selected when no route is pre-loaded on mission.
+- Warn and Caut lights now turns off when pressed.
+- UFCP Increase Brightness knob rotation to CW.
+- UFCP power source is now avionics master main dc bus.
+- BFI power source is now the backup battery.
+- Rearm / Refuel now sets Fuel Init quantity.
+- Battery and gererator voltages.
+- Gear down mapping now working.
+- SJ JET and A/A or A/G RDY overlap.
+- CHMD NAV A/C TRK no loger oscillates when stopped.
+- FYT out of screen side.
+- UFCP joystick interaction points.
+- E/W buttons for coordinates.
 
 ## Version 0.1.6b - 07 March 2021
 
@@ -256,7 +323,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Throttle and Stick are inconsistent with the real ones;
 
 ### Contributors
-- Renault, Milaré, Athos, Malamem, PaKo, Dino, Jorge Rodrigues, Paoladelf and many others.
+- Renault, Milaré, PaKo, Malamem, Athos, Dino, Jorge Rodrigues, Paoladelf, Farias, Skypork, EDAV, and many others.
 
 
 ### Changed

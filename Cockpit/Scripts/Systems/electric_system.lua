@@ -180,7 +180,12 @@ function update()
         elec_main_bar_ok:set(1)
         if elec_emergency_ok:get() == 0 then set_caution(CAUTION_ID.EMER_BUS,0) end
         elec_emergency_ok:set(1)
-        elec_emergency_reserve_ok:set(1)
+        
+        if get_batt_on() and get_cockpit_draw_argument_value(964) == 1 then 
+            elec_emergency_reserve_ok:set(1) 
+        else 
+            elec_emergency_reserve_ok:set(0) 
+        end
 
         elec_avionics_ok:set(get_avionics_on() and get_elec_main_bar_ok() and 1 or 0)
         elec_avionics_emergency_ok:set(get_avionics_on() and get_elec_emergency_ok() and 1 or 0)
@@ -192,7 +197,7 @@ function update()
         elec_emergency_ok:set(0)
         if sensor_data.getWOW_LeftMainLandingGear() > 0 then  elec_emergency_reserve_ok:set(0) end
     end
-    if sensor_data.getWOW_LeftMainLandingGear == 0 then
+    if sensor_data.getWOW_LeftMainLandingGear() == 0 then
         elec_emergency_reserve_ok:set(1)
     end
 
@@ -242,8 +247,10 @@ function post_initialize()
 
     if birth=="GROUND_HOT" or birth=="AIR_HOT" then
         dev:performClickableAction(device_commands.ElecBatt, 0, true)
+        dev:performClickableAction(device_commands.AviMst, 1, true)
     elseif birth=="GROUND_COLD" then
         dev:performClickableAction(device_commands.ElecBatt, -1, true)
+        dev:performClickableAction(device_commands.AviMst, 0, true)
     end
 
     dev:performClickableAction(device_commands.ElecExtPwr, 0, true)
@@ -251,7 +258,6 @@ function post_initialize()
     dev:performClickableAction(device_commands.ElecAcftIntc, -1, true)
     dev:performClickableAction(device_commands.AviVuhf, 0, true)
 
-    dev:performClickableAction(device_commands.AviMst, 1, true)
     dev:performClickableAction(device_commands.AviMdp1, 1, true)
     dev:performClickableAction(device_commands.AviMdp2, 1, true)
     dev:performClickableAction(device_commands.ElecBkp, 1, true)
