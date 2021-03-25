@@ -201,10 +201,11 @@ function update()
 
     -- UPDATE DRIFT C/O MODE
     -- if ufcp_drift_co or get_avionics_master_mode_ag() then
-    --     UFCP_DRIFT_CO:set(1)
-    -- else
-    --     UFCP_DRIFT_CO:set(0)
-    -- end
+    if ufcp_drift_co then
+        UFCP_DRIFT_CO:set(1)
+    else
+        UFCP_DRIFT_CO:set(0)
+    end
 
     UFCP_NAV_MODE:set(ufcp_nav_mode)
     UFCP_NAV_TIME:set(ufcp_nav_time)
