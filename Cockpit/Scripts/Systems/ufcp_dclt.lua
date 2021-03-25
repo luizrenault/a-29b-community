@@ -8,9 +8,11 @@ ufcp_dclt = false;
 function update_dclt()
     local text = ""
     text = text .. "DCLT\n\n"
-    text = text .. "*ATT/FPM*"
+    if not ufcp_dclt then text = text .. "*ATT/FPM*" else text = text .. "*DCLT   *" end
+    
     text = text .. "\n\n"
-    if not ufcp_dclt then text = replace_pos(text, 7); text = replace_pos(text, 15) end
+    text = replace_pos(text, 7)
+    text = replace_pos(text, 15)
 
     if ufcp_dclt then
         HUD_DCLT:set(1)
@@ -22,7 +24,7 @@ function update_dclt()
 end
 
 function SetCommandDclt(command,value)
-    if command == device_commands.UFCP_0 and value == 1 then
+    if command == device_commands.UFCP_JOY_RIGHT and value == 1 then
         ufcp_dclt = not ufcp_dclt
     end
 end
