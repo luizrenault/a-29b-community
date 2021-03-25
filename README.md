@@ -10,6 +10,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 # Download
 
 [Latest Release](https://github.com/luizrenault/a-29b-community/releases/latest)
+[Livery pack](https://mega.nz/file/tNpkyLCa#iC9aOTzc8liAfFGqfyLN2zmaNfXmtkmYDqIGjH2y3Bg)
 
 # Tutorial videos 
 
@@ -62,6 +63,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - New suspension parameters
 - New external lights (working with AI)
 - Speedbreak now working
+- Livery pack download link included
 
 ### Changed
 - A/G Weapon selection order (External Pylons > Internal Pylons > Ventral Pylon. Left first.)
