@@ -21,12 +21,21 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - [Waypoints](https://www.youtube.com/watch?v=ZrFa4Mv7TUA&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=5&t=3s)
 - [A/G Attack](https://www.youtube.com/watch?v=TyX-CzaA5FM)
 - [A/A Attack](https://www.youtube.com/watch?v=m_SypnfGmYI&t=84s)
+- [Selective Jettison](https://www.youtube.com/watch?v=TpYuuaqGLNk&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=9)
+- [Manual Waypoint Navigation](https://www.youtube.com/watch?v=-cCLETzwebo&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=10&t=9s)
+- [CCRP A/G Mode](https://www.youtube.com/watch?v=pwJYzBodbko&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=11)
+- [CCRP A/G Mode CBU-97](https://www.youtube.com/watch?v=pQjlXoj7K1I&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=11)
+- [HUD Modes](https://www.youtube.com/watch?v=VxT5uo5PYAg&list=PL-ajZ7qxQPDTFGGIr4x7eqEffvYifZbfA&index=12)
 
 (En by [Grim Reapers](https://www.youtube.com/channel/UCZuXjkFY00p1ga3UyCBbR2w))
 - [Install, Setup, Startup, Cockpit, Pages, Nav & Weapons Guide](https://youtu.be/gATHRMtI_vM)
 
 (En by [311Gryphon](https://www.youtube.com/channel/UCR0ojtQ0Srh2y2O4pelFrDA))
 - [Startup](https://www.youtube.com/watch?v=QbKsh-kPhIA)
+- [Adding Waypoints via UFCP](https://www.youtube.com/watch?v=w6eE9TJt06U&list=PLo5YmN6D-iCADAvM0M1KvUKSfJjQYg4gF&index=2)
+- [Selective Jettison](https://www.youtube.com/watch?v=OTM4-N1nNzE&list=PLo5YmN6D-iCADAvM0M1KvUKSfJjQYg4gF&index=3)
+- [Air to Air Weapons](https://www.youtube.com/watch?v=TumUprFdE6M&list=PLo5YmN6D-iCADAvM0M1KvUKSfJjQYg4gF&index=4)
+- [CCIP Weapons](https://www.youtube.com/watch?v=-2gN9zJngLE&list=PLo5YmN6D-iCADAvM0M1KvUKSfJjQYg4gF&index=5)
 
 # ED Forum
 
@@ -34,7 +43,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
  
-## Version 0.1.7b - 23 March 2021
+## Version 0.1.7b - 24 March 2021
 
 ### Added
 - A/G CCRP mode.
@@ -80,6 +89,9 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Gear down mapping now working.
 - SJ JET and A/A or A/G RDY overlap.
 - CHMD NAV A/C TRK no loger oscillates when stopped.
+- FYT out of screen side.
+- UFCP joystick interaction points.
+- E/W buttons for coordinates.
 
 ## Version 0.1.6b - 07 March 2021
 

@@ -47,12 +47,12 @@ end
 function default_2_position_tumb(hint_, device_, command_, arg_, sound_, animation_speed_)
     local animation_speed_ = animation_speed_ or anim_speed_default
     return {
-        class           = {class_type.TUMB, class_type.TUMB},
+        class           = {class_type.BTN, class_type.BTN},
         hint            = hint_,
         device          = device_,
         action          = {command_, command_},
         arg             = {arg_, arg_},
-        arg_value       = {1, -1},
+        arg_value       = {-1, 1},
         arg_lim         = {{0, 1}, {0, 1}},
         updatable       = true,
         use_OBB         = true,

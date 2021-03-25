@@ -108,12 +108,12 @@ A_29B =  {
 
 		average_fuel_consumption 	= 0.009042, -- this is highly relative, but good estimates are 36-40l/min = 28-31kg/min = 0.47-0.52kg/s -- 45l/min = 35kg/min = 0.583kg/s
 		CAS_min 					= 56, -- if this is not OVERAL FLIGHT TIME, but jus LOITER TIME, than it sholud be 10-15 minutes.....CAS capability in minute (for AI)
-		V_opt 						= 67,-- Cruise speed (for AI) –- Assume Mach 0.80 at 20000 ft as optimal. See -- http://www.nasa.gov/centers/dryden/pdf/87789main_H-636.pdf and		–- http://www.hochwarth.com/misc/AviationCalculator.html 		–- Mach 0.8 at 20000 = XXX kts TAS = XXX m / s
-		V_take_off 					= 28, -- Take off speed in m/s (for AI)
-		V_land 						= 46, -- Land speed in m/s (for AI)
+		V_opt 						= 123,-- Cruise speed (for AI) –- Assume Mach 0.80 at 20000 ft as optimal. See -- http://www.nasa.gov/centers/dryden/pdf/87789main_H-636.pdf and		–- http://www.hochwarth.com/misc/AviationCalculator.html 		–- Mach 0.8 at 20000 = XXX kts TAS = XXX m / s
+		V_take_off 					= 62, -- Take off speed in m/s (for AI)
+		V_land 						= 62, -- Land speed in m/s (for AI)
 		V_max_sea_level 			= 165, -- Max speed at sea level in m/s (for AI)
-		V_max_h 					= 75, -- Max speed at max altitude in m/s (for AI)
-		Vy_max 						= 15, -- Max climb speed in m/s (for AI)
+		V_max_h 					= 145, -- Max speed at max altitude in m/s (for AI)
+		Vy_max 						= 75, -- Max climb speed in m/s (for AI)
 		Mach_max 					= 0.562, -- Max speed in Mach (for AI)
 		Ny_min 						= -4, -- Min G (for AI)
 		Ny_max 						= 8.0,  -- Max G (for AI)
