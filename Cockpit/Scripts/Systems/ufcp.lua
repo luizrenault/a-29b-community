@@ -28,6 +28,9 @@ ufcp_edit_pos = 0
 ufcp_edit_lim = 0
 ufcp_edit_string = ""
 ufcp_edit_validate = nil
+ufcp_edit_field_info = nil
+ufcp_edit_invalid = false
+ufcp_edit_backspace = false
 
 ufcp_cmfd_ref = nil
 
@@ -47,6 +50,62 @@ function ufcp_edit_clear()
     ufcp_edit_lim = 0
     ufcp_edit_string = ""
     ufcp_edit_validate = nil
+    ufcp_edit_field_info = nil
+    ufcp_edit_invalid = false
+    ufcp_edit_backspace = false
+end
+
+function ufcp_print_edit(rtl)
+    -- This method returns a string of blank characters to 'fill' the remaining characters available
+    -- for ufcp_edit_string, based on ufcp_edit_lim and ufcp_edit_pos
+    local available = ufcp_edit_lim - ufcp_edit_pos + 1
+    local blank = ""
+    for i = 1,available do blank = blank .. " " end
+
+    -- if rtl, it will align the input to the right
+    local text = ""
+    if rtl then text = ufcp_edit_string .. blank else text = blank .. ufcp_edit_string end
+
+    if ufcp_edit_invalid then text = blink_text(text,1,text:len()) end
+    return text 
+end
+
+function ufcp_undo_edit()
+    if ufcp_edit_pos > 0 then
+        if ufcp_edit_backspace or ufcp_edit_invalid then
+            -- Erase everything
+            ufcp_edit_clear()
+        else
+            -- Erase a single digit
+            ufcp_edit_backspace = true
+            ufcp_edit_string = ufcp_edit_string:sub(1, ufcp_edit_pos-1)
+            ufcp_edit_pos = ufcp_edit_string:len()
+        end
+    end
+end
+
+function ufcp_continue_edit(text, field_info, save)
+    -- field_info should be an array, the first value being the total amount of characters
+    -- the input should have, and the second one being a method to validate that input,
+    -- with a 'text' string and an optional 'save' bool as parameters.
+    -- Example: field_info = {3, ufcp_xpdr_code_validate}
+
+    -- Hasn't started editing yet
+    if ufcp_edit_field_info ~= field_info then
+        ufcp_edit_clear()
+        ufcp_edit_field_info = field_info
+        ufcp_edit_lim = field_info[1] or 1  -- set the total of characters
+        ufcp_edit_validate = field_info[2]  -- set the validate method
+    end
+
+    local available = ufcp_edit_lim - ufcp_edit_pos -- how many characters are left
+    ufcp_edit_string = ufcp_edit_string .. text -- add the character to edit string
+    ufcp_edit_backspace = false -- resets the CLR button
+    
+    if ufcp_edit_validate then 
+        ufcp_edit_string = ufcp_edit_validate(ufcp_edit_string, save)    -- try to validate the input
+    end  
+    ufcp_edit_pos = ufcp_edit_string:len()  -- update the cursor position
 end
 
 function replace_text(text, c_start, c_size)
@@ -69,6 +128,25 @@ function replace_text(text, c_start, c_size)
         elseif val == string.byte(":") then val = val - 30
         end
         text_copy = text_copy .. string.char(val)
+    end
+    text_copy = text_copy .. text:sub(c_start + c_size)
+    return text_copy
+end
+
+function blink_text(text, c_start, c_size)
+    local text_copy = text:sub(1,c_start-1)
+    local text_new = text:sub(c_start, c_start+c_size-1)
+
+    -- Todo this interval should be shorter, but I don't know if I can get current milliseconds
+    -- The ideal would be to blink off and on again every 1 second?
+    local interval = math.floor(get_absolute_model_time() % 2)
+
+    for i=1, c_size do
+        if interval == 0 then
+            text_copy = text_copy .. string.char(string.byte(text_new,i))
+        else
+            text_copy = text_copy .. string.char(string.byte(" "))
+        end
     end
     text_copy = text_copy .. text:sub(c_start + c_size)
     return text_copy
