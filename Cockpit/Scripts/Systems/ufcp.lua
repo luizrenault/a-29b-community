@@ -53,13 +53,11 @@ function has_value (tab, val)
 end
 
 function is_com_frequency(frequency)
-    local decimal = (frequency * 1000) % 100
     if frequency < 108 then return false
     elseif frequency >= 174 and frequency < 225 then return false
     elseif frequency >= 400 then return false
     elseif (frequency < 118 or frequency >= 137) and (frequency * 1000) % 25 > 0 then return false
     elseif frequency >= 118 and frequency < 137 and not has_value({0,8,16,25,33,41}, (frequency * 1000) % 50) then return false
-    
     else return true
     end
 end
