@@ -32,28 +32,6 @@ for i = 1,ufcp_com1_max_channel+1 do ufcp_com1_channels[i] = 118 end
 
 -- Methods
 
-local function has_value (tab, val)
-    for index, value in ipairs(tab) do
-        if value == val then
-            return true
-        end
-    end
-
-    return false
-end
-
-local function is_frequency_within_range(frequency)
-    local decimal = (frequency * 1000) % 100
-    if frequency < 108 then return false
-    elseif frequency >= 174 and frequency < 225 then return false
-    elseif frequency >= 400 then return false
-    elseif (frequency < 118 or frequency >= 137) and (frequency * 1000) % 25 > 0 then return false
-    elseif frequency >= 118 and frequency < 137 and not has_value({0,8,16,25,33,41}, (frequency * 1000) % 50) then return false
-    
-    else return true
-    end
-end
-
 local function ufcp_com1_channel_validate(text, save)
     if text:len() >= ufcp_edit_lim or save then
         local number = tonumber(text)
@@ -84,7 +62,7 @@ local function ufcp_com1_frequency_man_validate(text, save)
 
     if text:len() >= ufcp_edit_lim or save then
         local number = tonumber(text)
-        if number ~= nil and is_frequency_within_range(number) then
+        if number ~= nil and is_com_frequency(number) then
             ufcp_com1_frequency_manual = number
             if ufcp_com1_frequency_sel ~= UFCP_COM_FREQUENCY_SEL_IDS.PRST then
                 ufcp_com1_frequency = number
@@ -111,7 +89,7 @@ local function ufcp_com1_frequency_prst_validate(text, save)
 
     if text:len() >= ufcp_edit_lim or save then
         local number = tonumber(text)
-        if number ~= nil and is_frequency_within_range(number) then
+        if number ~= nil and is_com_frequency(number) then
             ufcp_com1_channels[ufcp_com1_channel + 1] = number
             if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
                 ufcp_com1_frequency = number
@@ -138,7 +116,7 @@ local function ufcp_com1_frequency_next_validate(text, save)
 
     if text:len() >= ufcp_edit_lim or save then
         local number = tonumber(text)
-        if number ~= nil and is_frequency_within_range(number) then
+        if number ~= nil and is_com_frequency(number) then
             ufcp_com1_frequency_next = number
 
             ufcp_edit_clear()
@@ -268,11 +246,11 @@ function SetCommandCom1(command,value)
     elseif command == device_commands.UFCP_JOY_UP and ufcp_edit_pos == 0 and value == 1 then
         sel = (sel - 1) % 8
     elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
-        if sel == SEL_IDS.POWER and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+        if sel == SEL_IDS.POWER then
             ufcp_com1_power = (ufcp_com1_power + 1) % 3
-        elseif sel == SEL_IDS.MODULATION and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+        elseif sel == SEL_IDS.MODULATION then
             ufcp_com1_modulation = (ufcp_com1_modulation + 1) % 2
-        elseif sel == SEL_IDS.MODE and command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+        elseif sel == SEL_IDS.MODE then
             ufcp_com1_mode = (ufcp_com1_mode + 1) % 3
         end
     elseif command == device_commands.UFCP_UP and value == 1 then
@@ -302,20 +280,34 @@ function SetCommandCom1(command,value)
             ufcp_continue_edit("3", FIELD_INFO[sel], false)
         end
     elseif command == device_commands.UFCP_4 and value == 1 then
-        ufcp_continue_edit("4", FIELD_INFO[sel], false)
+        if sel == SEL_IDS.MAN_FREQUENCY or sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY or sel == SEL_IDS.NEXT_FREQUENCY then
+            ufcp_continue_edit("4", FIELD_INFO[sel], false)
+        end
     elseif command == device_commands.UFCP_5 and value == 1 then
-        ufcp_continue_edit("5", FIELD_INFO[sel], false)
+        if sel == SEL_IDS.MAN_FREQUENCY or sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY or sel == SEL_IDS.NEXT_FREQUENCY then
+            ufcp_continue_edit("5", FIELD_INFO[sel], false)
+        end
     elseif command == device_commands.UFCP_6 and value == 1 then
-        ufcp_continue_edit("6", FIELD_INFO[sel], false)
+        if sel == SEL_IDS.MAN_FREQUENCY or sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY or sel == SEL_IDS.NEXT_FREQUENCY then
+            ufcp_continue_edit("6", FIELD_INFO[sel], false)
+        end
     elseif command == device_commands.UFCP_7 and value == 1 then
-        ufcp_continue_edit("7", FIELD_INFO[sel], false)
+        if sel == SEL_IDS.MAN_FREQUENCY or sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY or sel == SEL_IDS.NEXT_FREQUENCY then
+            ufcp_continue_edit("7", FIELD_INFO[sel], false)
+        end
     elseif command == device_commands.UFCP_8 and value == 1 then
-        ufcp_continue_edit("8", FIELD_INFO[sel], false)
+        if sel == SEL_IDS.MAN_FREQUENCY or sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY or sel == SEL_IDS.NEXT_FREQUENCY then
+            ufcp_continue_edit("8", FIELD_INFO[sel], false)
+        end
     elseif command == device_commands.UFCP_9 and value == 1 then
-        ufcp_continue_edit("9", FIELD_INFO[sel], false)
+        if sel == SEL_IDS.MAN_FREQUENCY or sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY or sel == SEL_IDS.NEXT_FREQUENCY then
+            ufcp_continue_edit("9", FIELD_INFO[sel], false)
+        end
     elseif command == device_commands.UFCP_0 and value == 1 then
         if ufcp_edit_pos > 0 then
-            ufcp_continue_edit("0", FIELD_INFO[sel], false)
+            if sel == SEL_IDS.MAN_FREQUENCY or sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY or sel == SEL_IDS.NEXT_FREQUENCY then
+                ufcp_continue_edit("0", FIELD_INFO[sel], false)
+            end
         elseif sel == SEL_IDS.MAN_FREQUENCY then
             ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
             ufcp_com1_frequency = ufcp_com1_frequency_manual
@@ -335,7 +327,9 @@ function SetCommandCom1(command,value)
             ufcp_com1_sql = not ufcp_com1_sql
         end
     elseif command == device_commands.UFCP_ENTR and value == 1 then
-        ufcp_continue_edit("", FIELD_INFO[sel], true)
+        if sel == SEL_IDS.MAN_FREQUENCY or sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY or sel == SEL_IDS.NEXT_FREQUENCY then
+            ufcp_continue_edit("", FIELD_INFO[sel], true)
+        end
     elseif command == device_commands.UFCP_CLR and value == 1 then
         ufcp_undo_edit()
     end
