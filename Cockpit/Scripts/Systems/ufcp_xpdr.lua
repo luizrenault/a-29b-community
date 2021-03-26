@@ -36,7 +36,6 @@ local function ufcp_xpdr_code_validate(text, save)
             ufcp_edit_clear()
             text = ""
         else
-            -- TODO In case it's invalid, it should start blinking until the user presses CLR
             ufcp_edit_invalid = true
         end
     end
@@ -75,7 +74,6 @@ function update_xpdr()
     -- Code
     text = text .. "CODE "
     if sel == SEL_IDS.CODE then text = text .. "*" else text = text .. " " end
-
     if sel == SEL_IDS.CODE and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit() else text = text .. ufcp_xpdr_code end
     if sel == SEL_IDS.CODE then text = text .. "*" else text = text .. " " end
 
@@ -107,9 +105,6 @@ function update_xpdr()
         text = replace_pos(text, 65)
         text = replace_pos(text, 76)
     end
-
-    --if ufcp_edit_pos > 0 then text = blink_text(text, 32, 4) end
-
 
     UFCP_TEXT:set(text)
 end
