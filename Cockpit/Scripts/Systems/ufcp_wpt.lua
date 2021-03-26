@@ -122,8 +122,8 @@ local function ufcp_wpt_lat_lon_input_validade(text, save)
     if text:len() == 1 then
         if     ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LAT and text == "2" then text = "N "
         elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LAT and text == "8" then text = "S "
-        elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LON and text == "4" then text = "E"
-        elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LON and text == "6" then text = "W"
+        elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LON and text == "4" then text = "W"
+        elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LON and text == "6" then text = "E"
         else
             text=""
         end

@@ -108,12 +108,12 @@ A_29B =  {
 
 		average_fuel_consumption 	= 0.009042, -- this is highly relative, but good estimates are 36-40l/min = 28-31kg/min = 0.47-0.52kg/s -- 45l/min = 35kg/min = 0.583kg/s
 		CAS_min 					= 56, -- if this is not OVERAL FLIGHT TIME, but jus LOITER TIME, than it sholud be 10-15 minutes.....CAS capability in minute (for AI)
-		V_opt 						= 67,-- Cruise speed (for AI) –- Assume Mach 0.80 at 20000 ft as optimal. See -- http://www.nasa.gov/centers/dryden/pdf/87789main_H-636.pdf and		–- http://www.hochwarth.com/misc/AviationCalculator.html 		–- Mach 0.8 at 20000 = XXX kts TAS = XXX m / s
-		V_take_off 					= 28, -- Take off speed in m/s (for AI)
-		V_land 						= 46, -- Land speed in m/s (for AI)
+		V_opt 						= 123,-- Cruise speed (for AI) –- Assume Mach 0.80 at 20000 ft as optimal. See -- http://www.nasa.gov/centers/dryden/pdf/87789main_H-636.pdf and		–- http://www.hochwarth.com/misc/AviationCalculator.html 		–- Mach 0.8 at 20000 = XXX kts TAS = XXX m / s
+		V_take_off 					= 62, -- Take off speed in m/s (for AI)
+		V_land 						= 62, -- Land speed in m/s (for AI)
 		V_max_sea_level 			= 165, -- Max speed at sea level in m/s (for AI)
-		V_max_h 					= 75, -- Max speed at max altitude in m/s (for AI)
-		Vy_max 						= 15, -- Max climb speed in m/s (for AI)
+		V_max_h 					= 145, -- Max speed at max altitude in m/s (for AI)
+		Vy_max 						= 75, -- Max climb speed in m/s (for AI)
 		Mach_max 					= 0.562, -- Max speed in Mach (for AI)
 		Ny_min 						= -4, -- Min G (for AI)
 		Ny_max 						= 8.0,  -- Max G (for AI)
@@ -441,16 +441,16 @@ A_29B =  {
 	SFM_Data = {
 		aerodynamics = 
 		{
-			Cy0	=	0.155, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
+			Cy0	=	0.045, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
 			Mzalfa	=	4.355, -- Horizontal tail pitch coefficient
 			Mzalfadt	=	0.8,  -- Wing pitch coefficient
 			kjx = 2.25, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
 			kjz = 0.00125,  -- Unknown pitch constant. All planes use 0.00125 -- -- Inertia parametre Z - Dimension (clean) airframe drag coefficient at Z (Front) Simply the wing area in square meters (as that is a major factor in drag calculations)
 			Czbe = -0.056, -- Directional stability coefficient  -- coefficient, along Z axis (perpendicular), affects yaw, negative value means force orientation in FC coordinate system
 			cx_gear = 0.3, -- Additional coefficient of drag for gear extended
-			cx_flap = 0.095, -- Additional coefficient of drag for flap extended
-			cy_flap = 0.31, -- Additional coefficient of lift for flap extended
-			cx_brk = 0.6, -- Additional coefficient of drag for air brakes
+			cx_flap = 0.055, -- Additional coefficient of drag for flap extended
+			cy_flap = 0.38, -- Additional coefficient of lift for flap extended
+			cx_brk = 0.065, -- Additional coefficient of drag for air brakes
 			
 			-- Hi guys. I try to calculate the rollrate, or maxrollrate (omxmax) for a plane and I've got the measurements of the plane, Cl (rolling moment coefficient) and Clp.
 			-- I've found a formula for Rollrate which looks like this:
@@ -492,42 +492,45 @@ A_29B =  {
 			-- more efficient. The shorter, thicker the wing, the more unefficient (I would say/guess or whatever)...or you can calculate it (see above) which looks like a 
 			-- nicely spent weekend to me
 			--      M	    Cx0		 Cya		    B		 B4	     Omxmax	    Aldop	    Cymax
-					{-0.1,	0.0187,	0.0746,		    0.052,	0.012,	  2.7,		22.0,		0.0*2,	},
-					{0.00,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.01,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.02,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.03,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.04,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.05,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.06,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.1*2,	},
-					{0.07,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.2*2,	},
-					{0.08,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.3*2,	},
-					{0.09,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.4*2,	},							
-					{0.10,	0.0287,	0.0746,		    0.1,	0.092,	  2.7,		22.0,		0.5*2,	},
-					{0.11,	0.0287,	0.0146*2,		0.1,	0.092,	  2.7,		22.0,		0.6*2,	},
-					{0.12,	0.0287,	0.0146*2,		0.1,	0.092,	  2.7,		22.0,		0.6*2,	},
-					{0.13,	0.0287,	0.0146*2,		0.1,	0.092,	  2.7,		22.0,		0.7*2,	},
-					{0.14,	0.0287,	0.0146*2,		0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
-					{0.15,	0.0287,	0.0146*2,		0.1,	0.092,	  2.7,		22.0,		1.0*2,	},
-					{0.16,	0.0287,	0.0246*2,		0.1,	0.092,	  2.7,		22.0,		1.1*2,	},
-					{0.17,	0.0287,	0.046*2,		0.1,	0.092,	  2.7,		22.0,		1.15*2,	},
-					{0.18,	0.0287,	0.0646*2,		0.1,	0.092,	  2.7,		22.0,		1.20*2,	},
-					{0.19,	0.0287,	0.0746*2,		0.1,	0.092,	  2.7,		22.0,		1.45*2,	},
-					{0.2,	0.0187,	0.0746*2,		0.01,	0.012,	  2.7,     	22.0,		1.45*2,   },
-					{0.3,	0.0297,	0.0652*2,		0.1,	0.092,	  2.7,		19.0,		1.45*2,    },
-					{0.31,	0.0287,	0.0650*2,		0.1,	0.092,	  2.7,		19.0,		1.45*2,    },
-					{0.38,	0.0187,	0.0650*2,		0.01,	0.012,	  2.7,		19.0,		1.45*2,    },
-					{0.39,	0.0420,	0.0522*2,		0.1,	0.092,	  2.7,		19.0,		1.45*2,    },
-					{0.5,	0.0587,	0.0598*2,		0.1,	0.099,	  2.7,		17.0,		1.45*2,   },
-					{0.59,	0.0587,	0.0540*2,		0.1,	0.099,	  2.7,	    17.0,		1.45*2,   },
-					{0.67,	0.0487,	0.0707*2,		0.1,	0.091,	  2.7,		14.5,		0.98*2,   },
+					{-0.1,	0.0187,	0.0146,		    0.052,	0.012,	  2.7,		22.0,		0.0*2,	},
+					{0.00,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.01,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.02,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.03,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.04,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.05,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
+					{0.06,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.1*2,	},
+					{0.07,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.2*2,	},
+					{0.08,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.3*2,	},
+					{0.09,	0.0100,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.4*2,	},							
+					{0.10,	0.0100,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.7*2,	},
+					{0.11,	0.0100,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
+					{0.12,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
+					{0.13,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
+					{0.14,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
+					{0.15,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.0*2,	},
+					{0.16,	0.0110,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.20*2,	},
+					{0.17,	0.0125,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.30*2,	},
+					{0.18,	0.0255,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.45*2,	},
+					{0.19,	0.0275,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.45*2,	},
+					{0.2,	0.0355,	0.055,		    0.01,	0.012,	  2.7,     	22.0,		1.45*2,   },
+					{0.3,	0.0265,	0.055,		    0.1,	0.092,	  2.7,		19.0,		1.45*2,    },
+					{0.31,	0.0205,	0.055,		    0.05,	0.072,	  2.7,		19.0,		1.45*2,    },
+					{0.33,	0.0215,	0.055,		    0.05,	0.042,	  2.7,		19.0,		1.45*2,    },
+					{0.36,	0.0235,	0.055,		    0.05,	0.022,	  2.7,		19.0,		1.45*2,    },
+					{0.37,	0.0175,	0.055,		    0.05,	0.012,	  2.7,		19.0,		1.45*2,    },
+					{0.38,	0.0145,	0.055,		    0.05,	0.012,	  2.7,		19.0,		1.45*2,    },
+					{0.39,	0.0155,	0.055,		    0.09,	0.012,	  2.7,		19.0,		1.45*2,    },
+					{0.5,	0.0787,	0.055,	    	0.99,	0.099,	  2.7,		17.0,		1.45*2,   },
+					{0.59,	0.0787,	0.0540*2,		0.99,	0.099,	  2.7,	    17.0,		1.45*2,   },
+					{0.67,	0.0487,	0.0707*2,		0.99,	0.091,	  2.7,		14.5,		0.98*2,   },
 					{0.74,	0.0427,	0.0855*2,		0.1,	0.16,	  2.7,		10.0,	  	0.72*2,   },
 					{0.76,	0.032,	0.078*2,		0.1,	0.25,	  2.7,      9.0,  		0.6*2,    },
 					{0.8,	0.063,	0.072*2,		0.2,	0.36,	  2.456,	6.0,	    0.4*2,	},
 					{0.83,	0.1,	0.0725*2,		0.34,	2.4,	  0.32,		4.5,		0.3*2,	},
 					{0.9,	0.126,	0.073*2,		0.56,	3.0,	  0.076,	3.0,	    0.2*2,	},
 					{1.1,	0.16,	0.03*2,			0.56,	3.0,	  0.076,	1.0,		0.3*2		},
-	}
+			}
 		}, -- end of aerodynamics
 		engine = 
 		{

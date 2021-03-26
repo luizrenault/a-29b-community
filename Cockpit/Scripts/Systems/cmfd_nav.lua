@@ -301,8 +301,10 @@ function update_nav()
         if plane_hdg < 0 then plane_hdg = 360 + plane_hdg end
         plane_hdg = plane_hdg % 360
         
-        local azimuth 
-        azimuth = math.rad(hdg - plane_hdg)
+        local azimuth = hdg - plane_hdg
+        if azimuth <= -180 then azimuth = azimuth + 360 end
+        if azimuth >   180 then azimuth = azimuth - 360 end
+        azimuth = math.rad(azimuth)
         local elevation = -math.atan( y /  math.sqrt(x*x + z*z) )
         local roll = sensor_data.getRoll()
         local pitch = sensor_data.getPitch()
