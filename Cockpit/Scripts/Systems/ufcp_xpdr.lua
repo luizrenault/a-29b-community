@@ -27,7 +27,7 @@ ufcp_xpdr_emer = false
 UFCP_XPDR_CODE:set(ufcp_xpdr_code)
 
 local function ufcp_xpdr_code_validate(text, save)
-    if text:len() > ufcp_edit_lim then
+    if text:len() >= ufcp_edit_lim then
         local number = tonumber(text)
         if number ~= nil and tonumber(text:sub(1,1)) < 8 and tonumber(text:sub(2,2)) < 8 and tonumber(text:sub(3,3)) < 8 and tonumber(text:sub(4,4)) < 8 then
             ufcp_xpdr_code = text
@@ -43,7 +43,7 @@ local function ufcp_xpdr_code_validate(text, save)
 end
 
 local FIELD_INFO = {
-    [SEL_IDS.CODE] = {3, ufcp_xpdr_code_validate},
+    [SEL_IDS.CODE] = {4, ufcp_xpdr_code_validate},
 }
 
 local sel = 0
