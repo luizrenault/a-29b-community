@@ -1,5 +1,6 @@
 local CMFD_NAV_FYT = get_param_handle("CMFD_NAV_FYT")
 local EICAS_FUEL_INIT = get_param_handle("EICAS_FUEL_INIT")
+local UFCP_XPDR_CODE = get_param_handle("UFCP_XPDR_CODE")
 
 -- Constants
 local SEL_IDS = {
@@ -83,7 +84,7 @@ function update_main()
 
     -- Line 5
     local ufcp_total_fuel = EICAS_FUEL_INIT:get()
-    local ufcp_xpdr = 2000
+    local ufcp_xpdr = UFCP_XPDR_CODE:get()
     text = text .. string.format("%04.0fKG      %04.0f  ", ufcp_total_fuel, ufcp_xpdr)
     if ufcp_ident and ufcp_ident_blink then text = text .. "IDNT" else text = text .. "    " end
 

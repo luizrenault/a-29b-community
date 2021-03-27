@@ -8,15 +8,16 @@ ufcp_drift_co = false;
 function update_drft()
     local text = ""
     text = text .. "DRIFT\n\n"
-    text = text .. "*DRIFT C/O*"
+    if not ufcp_drift_co then text = text .. "*NORM     *" else text = text .. "*DRIFT C/O*" end
     text = text .. "\n\n"
-    if ufcp_drift_co then text = replace_pos(text, 8); text = replace_pos(text, 18) end
+    text = replace_pos(text, 8)
+    text = replace_pos(text, 18)
 
     UFCP_TEXT:set(text)
 end
 
 function SetCommandDrft(command,value)
-    if command == device_commands.UFCP_0 and value == 1 then
+    if command == device_commands.UFCP_JOY_RIGHT and value == 1 then
         ufcp_drift_co = not ufcp_drift_co
     end
 end
