@@ -20,9 +20,9 @@ local iCommandRightWheelBrake = 2113
 -- "below velocity v, use brake ratio x"
 
 local brake_table = {
-    {5,10, 14, 20, 30,  45, 999},     -- velocity in m/s
+    {5,10, 15, 20, 30,  45, 999},     -- velocity in m/s
     {1, 4,  3,  3,  2,   1,   1},     -- numerator of brake power ratio
-    {1, 5,  5,  5,  5,   3,   4},     -- denominator of brake power ratio
+    {2, 10,  10,  10,  10,   6,   8},     -- denominator of brake power ratio
 }
 
 local function get_brake_ratio(v)

@@ -193,6 +193,10 @@ A_29B =  {
 					ejection_seat_name	=	17,
 					drop_canopy_name	=	'A-29B CANOPY',
 					pos = 	{0,	0.3,	0},
+					can_be_playable 	 = true,
+					role 				 = "pilot",
+					role_display_name    = _("Pilot"),
+					ejection_order      = 0,
 				}, -- end of [1]
 				
 				[2] = 
@@ -200,6 +204,11 @@ A_29B =  {
 					ejection_seat_name	=	17,
 					drop_canopy_name	=	0,
 					pos = 	{-1.4,	0.5,	0},
+					pilot_body_arg      = 472,
+					can_be_playable 	 = true,
+					role 				 = "instructor",
+					role_display_name    = _("Instructor pilot"),
+					ejection_order      = 1,
 				}, -- end of [2]
 		}, -- end of crew_members
 	
@@ -405,7 +414,7 @@ A_29B =  {
 					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
 				}
 			),
-			pylon(6, 0, 2.427, -0.565, 0.563,
+			pylon(6, 0, 1.664, -0.933, 0.715,
 				{
 					use_full_connector_position = true,
 					connector 		= "SmokeWhite",
@@ -492,44 +501,27 @@ A_29B =  {
 			-- more efficient. The shorter, thicker the wing, the more unefficient (I would say/guess or whatever)...or you can calculate it (see above) which looks like a 
 			-- nicely spent weekend to me
 			--      M	    Cx0		 Cya		    B		 B4	     Omxmax	    Aldop	    Cymax
-					{-0.1,	0.0187,	0.0146,		    0.052,	0.012,	  2.7,		22.0,		0.0*2,	},
-					{0.00,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.01,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.02,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.03,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.04,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.05,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.06,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.1*2,	},
-					{0.07,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.2*2,	},
-					{0.08,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.3*2,	},
-					{0.09,	0.0100,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.4*2,	},							
-					{0.10,	0.0100,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.7*2,	},
-					{0.11,	0.0100,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
-					{0.12,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
-					{0.13,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
-					{0.14,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
-					{0.15,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.0*2,	},
-					{0.16,	0.0110,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.20*2,	},
-					{0.17,	0.0125,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.30*2,	},
-					{0.18,	0.0255,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.45*2,	},
-					{0.19,	0.0275,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.45*2,	},
-					{0.2,	0.0355,	0.055,		    0.01,	0.012,	  2.7,     	22.0,		1.45*2,   },
-					{0.3,	0.0265,	0.055,		    0.1,	0.092,	  2.7,		19.0,		1.45*2,    },
-					{0.31,	0.0205,	0.055,		    0.05,	0.072,	  2.7,		19.0,		1.45*2,    },
-					{0.33,	0.0215,	0.055,		    0.05,	0.042,	  2.7,		19.0,		1.45*2,    },
-					{0.36,	0.0235,	0.055,		    0.05,	0.022,	  2.7,		19.0,		1.45*2,    },
-					{0.37,	0.0175,	0.055,		    0.05,	0.012,	  2.7,		19.0,		1.45*2,    },
-					{0.38,	0.0145,	0.055,		    0.05,	0.012,	  2.7,		19.0,		1.45*2,    },
-					{0.39,	0.0155,	0.055,		    0.09,	0.012,	  2.7,		19.0,		1.45*2,    },
-					{0.5,	0.0787,	0.055,	    	0.99,	0.099,	  2.7,		17.0,		1.45*2,   },
-					{0.59,	0.0787,	0.0540*2,		0.99,	0.099,	  2.7,	    17.0,		1.45*2,   },
-					{0.67,	0.0487,	0.0707*2,		0.99,	0.091,	  2.7,		14.5,		0.98*2,   },
-					{0.74,	0.0427,	0.0855*2,		0.1,	0.16,	  2.7,		10.0,	  	0.72*2,   },
-					{0.76,	0.032,	0.078*2,		0.1,	0.25,	  2.7,      9.0,  		0.6*2,    },
-					{0.8,	0.063,	0.072*2,		0.2,	0.36,	  2.456,	6.0,	    0.4*2,	},
-					{0.83,	0.1,	0.0725*2,		0.34,	2.4,	  0.32,		4.5,		0.3*2,	},
-					{0.9,	0.126,	0.073*2,		0.56,	3.0,	  0.076,	3.0,	    0.2*2,	},
-					{1.1,	0.16,	0.03*2,			0.56,	3.0,	  0.076,	1.0,		0.3*2		},
+				{0.0,	   0.038,	0.09,		  0.051,	0.0065,	 0.15,	     22,	    1.40,	},
+				{0.01,	   0.038,	0.09,		  0.051,	0.0065,	 0.20,	     22,	    1.40,	},
+				{0.02,	   0.038,	0.09,		  0.051,	0.0065,	 0.22,	     22,	    1.40,	},
+				{0.03,	   0.038,	0.09,		  0.051,	0.0065,	 0.30,	     22,	    1.40,	},
+				{0.04,	   0.038,	0.09,		  0.051,	0.0065,	 0.33,	     22,	    1.40,	},
+				{0.05,	   0.038,	0.09,		  0.051,	0.0065,	 0.40,	     22,	    1.40,	},
+				{0.06,	   0.038,	0.09,		  0.051,	0.0065,	 0.44,	     22,	    1.40,	},
+				{0.07,	   0.038,	0.09,		  0.051,	0.0065,	 0.50,	     22,	    1.40,	},
+				{0.08,	   0.038,	0.09,		  0.051,	0.0065,	 0.55,	     22,	    1.40,	},
+				{0.09,	   0.038,	0.09,		  0.051,	0.0065,	 0.60,	     22,	    1.40,	},
+				{0.10,	   0.038,	0.09,		  0.051,	0.0065,	 0.65,	     22,	    1.40,	},
+				{0.11,	   0.038,	0.09,		  0.051,	0.0065,	 0.90,	     22,	    2.0,	},
+				{0.15,	   0.038,	0.09,		  0.051,	0.0065,	 1.0,	     22,	    2.0,	},
+				{0.2,	   0.038,	0.09,		  0.051,	0.0065,	 1.2,	     22,	    2.0,	},
+				{0.3,	   0.038,	0.09,		  0.051,	0.009,	 1.6,	     22,	    2.0,	},
+				{0.4,	   0.038,	0.09,		  0.051,	0.009,	 2.1,	     19,	    2.0,	},
+				{0.5,	   0.038,	0.09,		  0.051,	0.009,	 2.6,	     18,	    2.3,	},
+				{0.6,	   0.040,	0.09,		  0.059,	0.016,	 3.1,	     11,	    1.14,	},
+				{0.7,	   0.052,	0.09,		  0.072,	0.03,	 3.5,	     8,	 	    0.9,	},
+				{0.8,	   0.082,	0.09,		  0.180,	0.06,	 3.5,	     3,	 	    0.5,   },
+				{1.1,	   0.160,	0.09,		  0.200,	0.08,	 3.5,	     1,	 	    0.3    },
 			}
 		}, -- end of aerodynamics
 		engine = 
@@ -563,7 +555,33 @@ A_29B =  {
 				{0.8,		 9020.0},
 				{0.9,		 5902.0},
 				{1.0,		 3469.0},
-			}                 
+				}, -- end of table_data
+			-- M - Mach number
+			-- Pmax - Engine thrust at military power
+			-- Pfor - Engine thrust at AFB
+
+            extended =
+                {
+                
+                    thrust_max = -- thrust interpolation table by altitude and mach number, 2d table
+                        { -- Minimum thrust 2000 kN, maximum thrust 16700 kN
+                            M 		 = {0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9},
+                            H		 = {0,3048,6096,9144,10500,12192},
+                            thrust	 = {-- M 0         0.1      0.2      0.3      0.4     0.5     0.6     0.7      0.8      0.9
+                                        {    17000,   17000,   17000,   17000,   17000,  17000,  17000,  17000,   16925,  17259 },--H = 0 (sea level)
+                                        {    17000,   17000,   17000,   17000,   17000,  16250,  12722,  12855,   12989,  13656 },--H = 3048 (10kft)
+                                        {    17000,   17000,   17000,   17000,   17000,  17000,   9786,   10053,   10320,  10765 },--H = 6096 (20kft)
+                                        {    17000,   17000,   17000,   17000,   17000,  17000,   7184,   7440,    7695,   8062 	},--H = 9144 (30kft)
+                                        {    6939,    6294,    5649,    5638,    5627,   5749,   5872,   6094,    6316,   6628 	},--H = 10500 (34kft)
+										{    3327,    2782,    2237,    2248,    2260,   2349,   2438,   2627,    2816,   3071 	},--H = 12192 (40kft)
+                                        
+                            },
+                        },
+		
+
+                }, -- end of extended data
+
+           
 		}, -- end of engine
 		-- thrust_max = -- thrust interpolation table by altitude and mach number, 2d table.  Modified for carrier takeoffs at/around 71 foot deck height
         --         {
@@ -628,24 +646,20 @@ A_29B =  {
             defValue = false,
             weightWhenOn = -80,
             wCtrl = 150,
-        },
-		{ id = "LaserCode100",  control = 'spinbox',  label = _('Laser code for GBUs, 1x11'), defValue = 6, min = 1, max = 8, dimension = ' ' },
-        { id = "LaserCode10",   control = 'spinbox',  label = _('Laser code for GBUs, 11x1'), defValue = 8, min = 1, max = 8, dimension = ' ' },
-        { id = "LaserCode1",    control = 'spinbox',  label = _('Laser code for GBUs, 111x'), defValue = 8, min = 1, max = 8, dimension = ' ' },
+		},
+		{ id = "NetCrewControlPriority" , control = 'comboList', label = _('Aircraft Control Priority'), playerOnly = true,
+			values = {{id =  0, dispName = _("Pilot")},
+					 {id =  1, dispName = _("Instructor")},
+					 {id = -1, dispName = _("Ask Always")},
+					 {id = -2, dispName = _("Equally Responsible")}},
+			defValue  = 1,
+			wCtrl     = 150
+		},
 
-        -- {
-        --     id = 'PropellorType',
-        --     control = 'comboList',
-        --     label ="Propellor Movement",
-        --     defValue = 20,
-        --     arg = 324,
-        --     values = {
-        --         {id = 0, dispName = "Stopped"},
-        --         {id = 1, dispName = "Rotating"},
-        --     },
-        --     wCtrl = 150,
-        -- },
-		{ id = "RotatingProp" , control = 'checkbox', label = 'Rotating propellor', defValue = true, weight = 0, arg = 324},
+		{ id = "LGB1000", control = 'spinbox',  label = _('Laser Code 1st Digit'), defValue = 1, min = 1, max = 1, dimension = ' ', playerOnly = true}, -- only for completeness
+        { id = "LGB100", control = 'spinbox',  label = _('Laser Code 2nd Digit'), defValue = 6, min = 5, max = 7, dimension = ' ', playerOnly = true},
+        { id = "LGB10", control = 'spinbox',  label = _('Laser Code 3rd Digit'), defValue = 8, min = 1, max = 8, dimension = ' ', playerOnly = true},
+        { id = "LGB1", control = 'spinbox',  label = _('Laser Code 4th Digit'), defValue = 8, min = 1, max = 8, dimension = ' ', playerOnly = true},
 
     },
 	--damage , index meaning see in  Scripts\Aircrafts\_Common\Damage.lua

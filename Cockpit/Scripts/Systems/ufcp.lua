@@ -231,6 +231,28 @@ dofile(LockOn_Options.script_path.."Systems/ufcp_dl.lua")
 
 function update()
     local ufcp_bright = get_cockpit_draw_argument_value(480)
+    
+    UFCP_COM1_FREQ:set(ufcp_com1_frequency)
+    UFCP_COM1_MOD:set(ufcp_com1_modulation)
+    UFCP_COM1_SQL:set(ufcp_com1_sql and 1 or 0)
+    UFCP_COM1_PWR:set(ufcp_com1_power)
+    if get_elec_emergency_ok() then 
+        UFCP_COM1_MODE:set(ufcp_com1_mode)
+    else
+        UFCP_COM1_MODE:set(0)
+    end    
+
+    UFCP_COM2_FREQ:set(ufcp_com2_frequency)
+    UFCP_COM2_MOD:set(ufcp_com2_modulation)
+    UFCP_COM2_SQL:set(ufcp_com2_sql and 1 or 0)
+    UFCP_COM2_PWR:set(ufcp_com2_power)
+    if get_elec_avionics_ok() then
+        UFCP_COM2_MODE:set(ufcp_com2_mode)
+    else
+        UFCP_COM2_MODE:set(0)
+    end    
+
+
     if ufcp_on() then 
         UFCP_BRIGHT:set(ufcp_bright) 
     else  

@@ -11,7 +11,17 @@ local SEL_IDS = {
     MODE = 7,
 }
 
+UFCP_COM1_FREQ = get_param_handle("UFCP_COM1_FREQ")
+UFCP_COM1_MOD = get_param_handle("UFCP_COM1_MOD")
+UFCP_COM1_SQL = get_param_handle("UFCP_COM1_SQL")
+UFCP_COM1_PWR = get_param_handle("UFCP_COM1_PWR")
+UFCP_COM1_MODE = get_param_handle("UFCP_COM1_MODE")
 
+UFCP_COM2_FREQ = get_param_handle("UFCP_COM2_FREQ")
+UFCP_COM2_MOD = get_param_handle("UFCP_COM2_MOD")
+UFCP_COM2_SQL = get_param_handle("UFCP_COM2_SQL")
+UFCP_COM2_PWR = get_param_handle("UFCP_COM2_PWR")
+UFCP_COM2_MODE = get_param_handle("UFCP_COM2_MODE")
 
 -- Inits
 ufcp_com1_mode = UFCP_COM_MODE_IDS.TR

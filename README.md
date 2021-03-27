@@ -10,7 +10,11 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 # Download
 
 [Latest Release](https://github.com/luizrenault/a-29b-community/releases/latest)
+
 [Livery pack](https://mega.nz/file/tNpkyLCa#iC9aOTzc8liAfFGqfyLN2zmaNfXmtkmYDqIGjH2y3Bg)
+
+[SRS Script](https://1drv.ms/u/s!Arl6nHiJ8ZUai8te1MoMez1jnNUTZQ?e=CCLSVl)
+Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing file.
 
 # Tutorial videos 
 
@@ -43,7 +47,19 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 [A-29 Super Tucano](https://forums.eagle.ru/topic/265017-a-29-super-tucano/)
 
 # Changelog
- 
+
+## Version 0.1.8b - 28 March 2021
+
+### Added
+- SRS Integration capability.
+- COM 1 and COM 2 UFCP menus.
+- COM 1, COM 2, COM 3 volume knobs working.
+- UFCP Backlight.
+
+### Changed
+- Brakes efficiency reduced.
+- New Throttle and Stick texture.
+
 ## Version 0.1.7b - 24 March 2021
 
 ### Added

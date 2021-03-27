@@ -181,6 +181,12 @@ GearHandleLight.input      	 	= {0,1}
 GearHandleLight.output     	 	= {0,1}
 GearHandleLight.parameter_name	= "GEAR_HANDLE_LIGHT"
 
+UFCPLight	           		= CreateGauge("parameter")
+UFCPLight.arg_number 	 	= 489
+UFCPLight.input      	 	= {0,1}
+UFCPLight.output     	 	= {0,1}
+UFCPLight.parameter_name	= "UFCP_BRIGHT"
+
 need_to_be_closed = true -- close lua state after initialization
 
 Z_test =
