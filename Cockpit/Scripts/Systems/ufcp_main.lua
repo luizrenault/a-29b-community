@@ -10,7 +10,19 @@ local SEL_IDS = {
     TIME = 3,
 }
 
+local TIME_TYPE_IDS = {
+    LC = 0,
+    RT = 1,
+    SW = 2.
+}
+TIME_TYPE_IDS[TIME_TYPE_IDS.LC] = "LC"
+TIME_TYPE_IDS[TIME_TYPE_IDS.RT] = "RT"
+TIME_TYPE_IDS[TIME_TYPE_IDS.SW] = "SW"
+
 -- Variables
+ufcp_main_time_type =  TIME_TYPE_IDS.RT
+ufcp_main_stopwatch = 0
+ufcp_main_stopwatch_running = false
 
 -- Methods
 
@@ -64,20 +76,30 @@ function update_main()
     text = text .. "\n"
 
     -- Line 4
-    text = text .. UFCP_TIME_TYPE_IDS[ufcp_time_type]
+    text = text .. TIME_TYPE_IDS[ufcp_main_time_type]
     if ufcp_main_sel == SEL_IDS.TIME then text = text .. "^" else text = text .. " " end 
-    local time = get_absolute_model_time()
-    local time_secs = math.floor(time % 60)
-    local time_mins = math.floor((time / 60) % 60)
-    local time_hours =  math.floor(time / 3600)
+    if ufcp_main_time_type == TIME_TYPE_IDS.LC then
+        local time = get_absolute_model_time()
+        local time_secs = math.floor(time % 60)
+        local time_mins = math.floor((time / 60) % 60)
+        local time_hours =  math.floor(time / 3600)
 
-    if time_hours >= 100 then
-        time_secs = 59
-        time_mins = 59
-        time_hours =  99
+        if time_hours >= 100 then
+            time_secs = 59
+            time_mins = 59
+            time_hours =  99
+        end
+    
+        text = text .. string.format(" %02.0f:%02.0f:%02.0f       ", time_hours, time_mins, time_secs)
+    elseif ufcp_main_time_type == TIME_TYPE_IDS.RT then
+        if ufcp_time_run > 0 then text = text .. " " end
+        text = text .. seconds_to_string(ufcp_time_run)
+        text = text .. "       "
+    else
+        text = text .. " "
+        text = text .. seconds_to_string(ufcp_main_stopwatch)
+        text = text .. "       "
     end
-
-    text = text .. string.format("%02.0f:%02.0f:%02.0f        ", time_hours, time_mins, time_secs)
 
     if ufcp_com2_por then text = text .. "POR" else text = text .. "   " end
     text = text .. "\n"
@@ -160,6 +182,22 @@ function SetCommandMain(command,value)
             else
                 ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
                 ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
+            end
+        end
+    elseif ufcp_main_sel == SEL_IDS.TIME then
+        if command == device_commands.UFCP_0 and value == 1 then
+            if ufcp_main_time_type ~= TIME_TYPE_IDS.SW then
+                ufcp_main_time_type = 1 - ufcp_main_time_type
+            end
+        elseif command == device_commands.UFCP_UP and value == 1 then 
+            ufcp_main_stopwatch = 0
+            ufcp_main_stopwatch_running = true
+            ufcp_main_time_type = TIME_TYPE_IDS.SW
+        elseif command == device_commands.UFCP_DOWN and value == 1 then
+            if not ufcp_main_stopwatch_running then
+                ufcp_main_time_type = TIME_TYPE_IDS.RT -- TODO selecionar o último modo entre LC e RT
+            else
+                ufcp_main_stopwatch_running = false
             end
         end
     end
