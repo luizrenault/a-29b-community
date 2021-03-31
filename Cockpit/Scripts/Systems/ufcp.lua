@@ -21,6 +21,7 @@ local sensor_data = get_base_data()
 
 local UFCP_BRIGHT = get_param_handle("UFCP_BRIGHT")
 local ADHSI_VV = get_param_handle("ADHSI_VV")
+local TIME_RUN = get_param_handle("UFCP_TIME_RUN")
 
 -- Variables
 ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
@@ -34,7 +35,6 @@ ufcp_edit_backspace = false
 
 ufcp_cmfd_ref = nil
 
-ufcp_time_type =  UFCP_TIME_TYPE_IDS.LC
 ufcp_ident = false
 ufcp_ident_blink = false
 elapsed = 0
@@ -193,6 +193,23 @@ function replace_pos(text, c_pos)
     return text_copy
 end
 
+function seconds_to_string(time)
+    local time_sign = ""
+    if time < 0 then time_sign = "-"; time = -time end
+        
+    local time_secs = math.floor(time % 60)
+    local time_mins = math.floor((time / 60) % 60)
+    local time_hours =  math.floor(time / 3600)
+
+    if time_hours >= 100 then
+        time_secs = 59
+        time_mins = 59
+        time_hours = 99
+    end
+
+    return time_sign .. string.format("%02.0f:%02.0f:%02.0f", time_hours, time_mins, time_secs)
+end
+
 dofile(LockOn_Options.script_path.."Systems/ufcp_main.lua")
 dofile(LockOn_Options.script_path.."Systems/ufcp_com1.lua")
 dofile(LockOn_Options.script_path.."Systems/ufcp_com2.lua")
@@ -325,6 +342,14 @@ function update()
         UFCP_VAH:set(0)
         ADHSI_VV:set(0)
     end
+
+    -- UPDATE TIME MODE
+    local interval = get_absolute_model_time() - ufcp_time
+    ufcp_time = ufcp_time + interval
+    ufcp_time_run = ufcp_time_run + interval
+    if ufcp_main_stopwatch_running then ufcp_main_stopwatch = ufcp_main_stopwatch + interval end
+    if ufcp_time_run >= 86400 then ufcp_time_run = ufcp_time_run - 86400 end
+    TIME_RUN:set(math.floor(ufcp_time)) -- TODO DT should be calculated using this instead of get_absolute_model_time()
 
     -- UPDATE DRIFT C/O MODE
     -- if ufcp_drift_co or get_avionics_master_mode_ag() then

@@ -9,30 +9,24 @@ local CMFD_NAV_SET_LAT = get_param_handle("CMFD_NAV_SET_LAT")
 local CMFD_NAV_SET_LON = get_param_handle("CMFD_NAV_SET_LON")
 local CMFD_NAV_SET_ELV = get_param_handle("CMFD_NAV_SET_ELV")
 local CMFD_NAV_SET_TIME = get_param_handle("CMFD_NAV_SET_TIME")
+local CMFD_NAV_FYT = get_param_handle("CMFD_NAV_FYT")
 
 -- Constants
 
-UFCP_WPT_TYPE_IDS = {
-    FYT = 0,
-    WP = 1,
-}
-UFCP_WPT_TYPE_IDS[UFCP_WPT_TYPE_IDS.FYT] = "FYT"
-UFCP_WPT_TYPE_IDS[UFCP_WPT_TYPE_IDS.WP] = " WP"
-
 UFCP_WPT_SEL_IDS = {
     FYT_WP = 0,
-    -- GEO_UTM = 1,
     LAT = 1,
     LON = 2,
     ELV = 3,
     TOFT = 4,
+    GEO_UTM = 5,
 
-    END = 5,
+    END = 6,
 }
 
 -- Variables
 
-ufcp_wpt_type = UFCP_WPT_TYPE_IDS.FYT
+ufcp_wpt_fyt = true
 ufcp_wpt_fyt_num_last = -1
 ufcp_wpt_fyt_num = 0
 ufcp_wpt_lat = 0
@@ -191,11 +185,16 @@ function update_wpt()
     ufcp_wpt_save()
     ufcp_wpt_load()
 
+    -- Make sure we have the current FYT
+    if ufcp_wpt_fyt then
+        ufcp_wpt_fyt_num = CMFD_NAV_FYT:get()
+    end
+
     local text = ""
 
     -- Line 1
     text = text .. "        FYT/WPT "
-    text = text .. UFCP_WPT_TYPE_IDS[ufcp_wpt_type]
+    if ufcp_wpt_fyt then text = text .. "FYT" else text = text .. " WP" end
     if ufcp_wpt_sel ==  UFCP_WPT_SEL_IDS.FYT_WP then text = text .. "*" else text = text .. " " end
     text = text .. string.format("%02.0f", ufcp_wpt_fyt_num)
     if ufcp_wpt_sel ==  UFCP_WPT_SEL_IDS.FYT_WP then text = text .. "*^" else text = text .. "  " end
@@ -276,9 +275,19 @@ function SetCommandWpt(command,value)
     elseif command == device_commands.UFCP_0 and value == 1 then
         ufcp_wpt_continue_edit("0")
     elseif command == device_commands.UFCP_UP and value == 1 then
-        if ufcp_wpt_sel == UFCP_WPT_SEL_IDS.FYT_WP  and ufcp_cmfd_ref ~= nil then ufcp_wpt_fyt_num = (ufcp_wpt_fyt_num + 1) % 100 end
+        if ufcp_wpt_sel == UFCP_WPT_SEL_IDS.FYT_WP and ufcp_cmfd_ref ~= nil then 
+            ufcp_wpt_fyt_num = (ufcp_wpt_fyt_num + 1) % 100
+            if ufcp_wpt_fyt then
+                ufcp_cmfd_ref:performClickableAction(device_commands.NAV_INC_FYT, 1, true)
+            end
+        end
     elseif command == device_commands.UFCP_DOWN and value == 1 then
-        if ufcp_wpt_sel == UFCP_WPT_SEL_IDS.FYT_WP  and ufcp_cmfd_ref ~= nil then ufcp_wpt_fyt_num = (ufcp_wpt_fyt_num - 1) % 100 end
+        if ufcp_wpt_sel == UFCP_WPT_SEL_IDS.FYT_WP and ufcp_cmfd_ref ~= nil then
+            ufcp_wpt_fyt_num = (ufcp_wpt_fyt_num - 1) % 100
+            if ufcp_wpt_fyt then
+                ufcp_cmfd_ref:performClickableAction(device_commands.NAV_DEC_FYT, 1, true)
+            end
+        end
     elseif command == device_commands.UFCP_JOY_UP and value == 1 then
         ufcp_wpt_sel = (ufcp_wpt_sel - 1) % UFCP_WPT_SEL_IDS.END
         ufcp_edit_clear()
@@ -286,6 +295,17 @@ function SetCommandWpt(command,value)
         ufcp_wpt_sel = (ufcp_wpt_sel + 1) % UFCP_WPT_SEL_IDS.END
         ufcp_edit_clear()
     elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
+        if ufcp_wpt_sel == UFCP_WPT_SEL_IDS.GEO_UTM then
+            
+        elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.FYT_WP then
+            ufcp_wpt_fyt = not ufcp_wpt_fyt
+            if ufcp_wpt_fyt then
+                -- TODO set current FYT to ufcp_wpt_fyt_num
+
+                -- gotta update local variable nav_fyt from cmfd_nav
+                -- after every cmd_nav update, it updates param CMFD_NAV_FYT to it
+            end
+        end
     elseif command == device_commands.UFCP_CLR and value == 1 then
         ufcp_edit_clear()
     elseif command == device_commands.UFCP_ENTR and value == 1 then
