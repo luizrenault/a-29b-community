@@ -14,7 +14,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 [Livery pack](https://mega.nz/file/tNpkyLCa#iC9aOTzc8liAfFGqfyLN2zmaNfXmtkmYDqIGjH2y3Bg)
 
 [SRS Script](https://1drv.ms/u/s!Arl6nHiJ8ZUai8te1MoMez1jnNUTZQ?e=CCLSVl)
-Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing file.
+Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing file. Will be incluided in next SRS Update (thanks to ciribob).
 
 # Tutorial videos 
 
@@ -70,6 +70,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 ### Fixes
 - Salvo button now changes to SMS EJ format on CMFD 1.
 - Gear Switch LMB/RMB behavior.
+- CMFD EICAS Brightness ajustment.
 
 
 ## Version 0.1.7b - 24 March 2021
