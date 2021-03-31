@@ -58,14 +58,18 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Night vision goggles (some lights are not compatible yet).
 - Autopilot R/P and Alt modes.
 - Coldstart, Waypoint navigation and VFR Landing training missions (by Rudel_chw)
+- UFCP DA/H and Time menus.
+- RT and SW time modes on UFCP Main format.
 
 ### Changed
 - Brakes efficiency now working as it should, based on velocity and pedal position.
 - New Throttle and Stick texture.
 - Altitude and Baro adjustments syncronized with DCS.
+- UFCP WPT menu can edit data as WP or FYT.
 
 ### Fixes
 - Salvo button now changes to SMS EJ format on CMFD 1.
+- Gear Switch LMB/RMB behavior.
 
 
 ## Version 0.1.7b - 24 March 2021
