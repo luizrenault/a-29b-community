@@ -10,86 +10,123 @@ join(res.keyCommands,{
 
 
 
--- Flight Control
-{combos = {{key = 'Up'}},		down = iCommandPlaneUpStart,			up = iCommandPlaneUpStop,			name = _('Aircraft Pitch Down'),	category = _('Flight Control')},
-{combos = {{key = 'Down'}},		down = iCommandPlaneDownStart,			up = iCommandPlaneDownStop,			name = _('Aircraft Pitch Up'),		category = _('Flight Control')},
-{combos = {{key = 'Left'}},		down = iCommandPlaneLeftStart,			up = iCommandPlaneLeftStop,			name = _('Aircraft Bank Left'),		category = _('Flight Control')},
-{combos = {{key = 'Right'}},	down = iCommandPlaneRightStart,			up = iCommandPlaneRightStop,		name = _('Aircraft Bank Right'),	category = _('Flight Control')},
-{combos = {{key = 'Z'}},		down = iCommandPlaneLeftRudderStart,	up = iCommandPlaneLeftRudderStop,	name = _('Aircraft Rudder Left'),	category = _('Flight Control')},
-{combos = {{key = 'X'}},		down = iCommandPlaneRightRudderStart,	up = iCommandPlaneRightRudderStop,	name = _('Aircraft Rudder Right'),	category = _('Flight Control')},
+-- Flight Control               
+{combos = {{key = 'Up'}},		                                        down = iCommandPlaneUpStart,			            up = iCommandPlaneUpStop,			        name = _('Aircraft Pitch Down'),	                            category = _('Flight Control')},
+{combos = {{key = 'Down'}},		                                        down = iCommandPlaneDownStart,			            up = iCommandPlaneDownStop,			        name = _('Aircraft Pitch Up'),		                            category = _('Flight Control')},
+{combos = {{key = 'Left'}},		                                        down = iCommandPlaneLeftStart,			            up = iCommandPlaneLeftStop,			        name = _('Aircraft Bank Left'),		                            category = _('Flight Control')},
+{combos = {{key = 'Right'}},	                                        down = iCommandPlaneRightStart,			            up = iCommandPlaneRightStop,		        name = _('Aircraft Bank Right'),	                            category = _('Flight Control')},
+{combos = {{key = 'Z'}},		                                        down = iCommandPlaneLeftRudderStart,	            up = iCommandPlaneLeftRudderStop,	        name = _('Aircraft Rudder Left'),	                            category = _('Flight Control')},
+{combos = {{key = 'X'}},		                                        down = iCommandPlaneRightRudderStart,	            up = iCommandPlaneRightRudderStop,	        name = _('Aircraft Rudder Right'),	                            category = _('Flight Control')},
 
 
-{combos = {{key = 'Num+'}}, 						pressed = iCommandThrottleIncrease,		up = iCommandThrottleStop,  name = _('Throttle Up'),		category = _('Flight Control')},
-{combos = {{key = 'Num-'}}, 						pressed = iCommandThrottleDecrease,		up = iCommandThrottleStop,  name = _('Throttle Down'),		category = _('Flight Control')},
+{combos = {{key = 'Num+'}}, 						                    pressed = iCommandThrottleIncrease,		            up = iCommandThrottleStop,                  name = _('Throttle Up'),		                                category = _('Flight Control')},
+{combos = {{key = 'Num-'}}, 						                    pressed = iCommandThrottleDecrease,		            up = iCommandThrottleStop,                  name = _('Throttle Down'),		                                category = _('Flight Control')},
 
-{combos = {{key = 'PageUp'}},							down = iCommandPlaneAUTIncreaseRegime,		name = _('Throttle Step Up'),			category = _('Flight Control')},
-{combos = {{key = 'PageDown'}},							down = iCommandPlaneAUTDecreaseRegime,		name = _('Throttle Step Down'),			category = _('Flight Control')},
+{combos = {{key = 'PageUp'}},							                down = iCommandPlaneAUTIncreaseRegime,	            	                                        name = _('Throttle Step Up'),			                        category = _('Flight Control')},
+{combos = {{key = 'PageDown'}},							                down = iCommandPlaneAUTDecreaseRegime,	            	                                        name = _('Throttle Step Down'),			                        category = _('Flight Control')},
 
-{combos = {{key = 'Z', reformers = {'RCtrl'}}},	pressed = iCommandPlaneTrimLeftRudder,	up = iCommandPlaneTrimStop, name = _('Trim: Rudder Left'),		category = _('Flight Control')},
-{combos = {{key = 'X', reformers = {'RCtrl'}}},	pressed = iCommandPlaneTrimRightRudder,	up = iCommandPlaneTrimStop, name = _('Trim: Rudder Right'),		category = _('Flight Control')},
+{combos = {{key = 'Z', reformers = {'RCtrl'}}},	                        pressed = iCommandPlaneTrimLeftRudder,	            up = iCommandPlaneTrimStop,                 name = _('Trim: Rudder Left'),		                            category = _('Flight Control')},
+{combos = {{key = 'X', reformers = {'RCtrl'}}},	                        pressed = iCommandPlaneTrimRightRudder,	            up = iCommandPlaneTrimStop,                 name = _('Trim: Rudder Right'),		                            category = _('Flight Control')},
 
--- Systems
-{combos = {{key = 'B'}},							down = iCommandPlaneAirBrake,				name = _('Airbrake'),								category = _('Systems')},
-{combos = {{key = 'B', reformers = {'LShift'}}},	down = iCommandPlaneAirBrakeOn, up = iCommandPlaneAirBrakeOn,				name = _('Airbrake On'),							category = _('Systems'), value_down =  1.0,		value_up = 0.0},
-{combos = {{key = 'B', reformers = {'LCtrl'}}},		down = iCommandPlaneAirBrakeOff,up = iCommandPlaneAirBrakeOff,			    name = _('Airbrake Off'),							category = _('Systems'), value_down =  1.0,		value_up = 0.0},
-{combos = {{key = 'T'}},							down = iCommandPlaneWingtipSmokeOnOff,		name = _('Smoke'),									category = _('Systems')},
-{combos = {{key = 'L'}},							down = iCommandPlaneCockpitIllumination,	name = _('Illumination Cockpit'),					category = _('Systems')},
-{combos = {{key = 'L', reformers = {'RCtrl'}}},		down = iCommandPlaneLightsOnOff,			name = _('Navigation lights'),						category = _('Systems')},
-{combos = {{key = 'L', reformers = {'RAlt'}}},		down = iCommandPlaneHeadLightOnOff,			name = _('Gear Light Near/Far/Off'),				category = _('Systems')},
-{combos = {{key = 'F'}},							down = iCommandPlaneFlaps,					name = _('Flaps Up/Down'),							category = _('Systems')},
-{combos = {{key = 'F', reformers = {'LShift'}}},	down = iCommandPlaneFlapsOn,				name = _('Flaps Landing Position'),					category = _('Systems')},
-{combos = {{key = 'F', reformers = {'LCtrl'}}},		down = iCommandPlaneFlapsOff,				name = _('Flaps Up'),								category = _('Systems')},
-{combos = {{key = 'G'}},							down = iCommandPlaneGear,					name = _('Landing Gear Up/Down'),					category = _('Systems')},
-{combos = {{key = 'G', reformers = {'LCtrl'}}},		down = iCommandPlaneGearUp,					name = _('Landing Gear Up'),						category = _('Systems')},
-{combos = {{key = 'G', reformers = {'LShift'}}},	down = iCommandPlaneGearDown,				name = _('Landing Gear Down'),						category = _('Systems')},
-{combos = {{key = 'W'}},							down = iCommandPlaneWheelBrakeOn, up = iCommandPlaneWheelBrakeOff, name = _('Wheel Brake On'),	category = _('Systems')},
-{combos = {{key = 'C', reformers = {'LCtrl'}}},		down = iCommandPlaneFonar,					name = _('Canopy Open/Close'),						category = _('Systems')},
-{combos = {{key = 'N', reformers = {'RShift'}}},	down = iCommandPlaneResetMasterWarning,		name = _('Audible Warning Reset'),					category = _('Systems')},
-{combos = {{key = 'W', reformers = {'LCtrl'}}},		down = iCommandPlaneJettisonWeapons,up = iCommandPlaneJettisonWeaponsUp, name = _('Weapons Jettison'), category = _('Systems')},
-{combos = {{key = 'E', reformers = {'LCtrl'}}},		down = iCommandPlaneEject,					name = _('Eject (3 times)'),						category = _('Systems')},
-{combos = {{key = 'H', reformers = {'RCtrl','RShift'}}}, pressed = iCommandHUDBrightnessUp,		name = _('HUD Brightness up'),						category = _('Systems')},
-{combos = {{key = 'H', reformers = {'RShift','RAlt'}}}, pressed = iCommandHUDBrightnessDown,	name = _('HUD Brightness down'),					category = _('Systems')},
+-- Systems                      
+{combos = {{key = 'B'}},							                    down = iCommandPlaneAirBrake,				                                                    name = _('Airbrake'),							                category = _('Systems')},
+{combos = {{key = 'B', reformers = {'LShift'}}},	                    down = iCommandPlaneAirBrakeOn,                     up = iCommandPlaneAirBrakeOn,		        name = _('Airbrake On'),						                category = _('Systems'),                        value_down =  1.0,		value_up = 0.0},
+{combos = {{key = 'B', reformers = {'LCtrl'}}},		                    down = iCommandPlaneAirBrakeOff,                    up = iCommandPlaneAirBrakeOff,		        name = _('Airbrake Off'),						                category = _('Systems'),                        value_down =  1.0,		value_up = 0.0},
+{combos = {{key = 'T'}},							                    down = iCommandPlaneWingtipSmokeOnOff,		                                                    name = _('Smoke'),								                category = _('Systems')},
+{combos = {{key = 'L'}},							                    down = iCommandPlaneCockpitIllumination,	                                                    name = _('Illumination Cockpit'),				                category = _('Systems')},
+{combos = {{key = 'L', reformers = {'RCtrl'}}},		                    down = iCommandPlaneLightsOnOff,			                                                    name = _('Navigation lights'),					                category = _('Systems')},
+{combos = {{key = 'L', reformers = {'RAlt'}}},		                    down = iCommandPlaneHeadLightOnOff,			                                                    name = _('Gear Light Near/Far/Off'),			                category = _('Systems')},
+{combos = {{key = 'F'}},							                    down = iCommandPlaneFlaps,					                                                    name = _('Flaps Up/Down'),						                category = _('Systems')},
+{combos = {{key = 'F', reformers = {'LShift'}}},	                    down = iCommandPlaneFlapsOn,				                                                    name = _('Flaps Landing Position'),				                category = _('Systems')},
+{combos = {{key = 'F', reformers = {'LCtrl'}}},		                    down = iCommandPlaneFlapsOff,				                                                    name = _('Flaps Up'),							                category = _('Systems')},
+{combos = {{key = 'G'}},							                    down = iCommandPlaneGear,					                                                    name = _('Landing Gear Up/Down'),				                category = _('Systems')},
+{combos = {{key = 'G', reformers = {'LCtrl'}}},		                    down = iCommandPlaneGearUp,					                                                    name = _('Landing Gear Up'),					                category = _('Systems')},
+{combos = {{key = 'G', reformers = {'LShift'}}},	                    down = iCommandPlaneGearDown,				                                                    name = _('Landing Gear Down'),					                category = _('Systems')},
+{                                                                       down = iCommandPlaneGearUp,					        up = iCommandPlaneGearDown,                 name = _('Landing Gear Down else Up'),		                    category = _('Systems')},
+{combos = {{key = 'W'}},							                    down = iCommandPlaneWheelBrakeOn,                   up = iCommandPlaneWheelBrakeOff,            name = _('Wheel Brake On'),	                                    category = _('Systems')},
+-- {combos = {{key = 'W',	reformers = {'LCtrl'}}},	                    down = iCommandPlaneWheelBrakeLeftOn,	            up = iCommandPlaneWheelBrakeLeftOff,		name = _('Wheel Brake Left - ON/OFF'),		                    category = {_('Systems')}},
+-- {combos = {{key = 'W',	reformers = {'LAlt'}}},		                    down = iCommandPlaneWheelBrakeRightOn,	            up = iCommandPlaneWheelBrakeRightOff,		name = _('Wheel Brake Right - ON/OFF'),		                    category = {_('Systems')}},
+{combos = {{key = 'C', reformers = {'LCtrl'}}},		                    down = iCommandPlaneFonar,					                                                    name = _('Canopy Open/Close'),					                category = _('Systems')},
+{combos = {{key = 'N', reformers = {'RShift'}}},	                    down = iCommandPlaneResetMasterWarning,		                                                    name = _('Audible Warning Reset'),				                category = _('Systems')},
+{                                                                       down = Keys.JettisonWeapons,                        up = Keys.JettisonWeapons,                  name = _('Weapons Jettison'),                                   category = _('Systems'),                        value_down =  1.0,		value_up = 0.0},
+{combos = {{key = 'E', reformers = {'LCtrl'}}},		                    down = iCommandPlaneEject,					                                                    name = _('Eject (3 times)'),					                category = _('Systems')},
 
--- Stick
-{combos = {{key = '.', reformers = {'RCtrl'}}},	pressed = iCommandPlaneTrimUp,			up = iCommandPlaneTrimStop, name = _('Trim: Nose Up'),			category = {_('Stick'), _('HOTAS')}},
-{combos = {{key = ';', reformers = {'RCtrl'}}},	pressed = iCommandPlaneTrimDown,		up = iCommandPlaneTrimStop, name = _('Trim: Nose Down'),		category = {_('Stick'), _('HOTAS')}},
-{combos = {{key = ',', reformers = {'RCtrl'}}},	pressed = iCommandPlaneTrimLeft,		up = iCommandPlaneTrimStop, name = _('Trim: Left Wing Down'),	category = {_('Stick'), _('HOTAS')}},
-{combos = {{key = '/', reformers = {'RCtrl'}}},	pressed = iCommandPlaneTrimRight,		up = iCommandPlaneTrimStop, name = _('Trim: Right Wing Down'),	category = {_('Stick'), _('HOTAS')}},
+{combos = {{key = 'H', reformers = {'RCtrl','RShift'}}},                pressed = iCommandHUDBrightnessUp,		                                                        name = _('HUD Brightness up'),					                category = _('Systems')},
+{combos = {{key = 'H', reformers = {'RShift','RAlt'}}},                 pressed = iCommandHUDBrightnessDown,	                                                        name = _('HUD Brightness down'),				                category = _('Systems')},
 
-{combos = {{key = 'D'}},	                        down = Keys.StickStep,	            up = Keys.StickStep,        name = _('Step'),		            category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
-{combos = {{key = 'Enter'}},	                    down = Keys.StickDesignate,	        up = Keys.StickDesignate,   name = _('Designate'),              category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
-{combos = {{key = 'Enter', reformers = {'RShift'}}},down = Keys.StickUndesignate,	    up = Keys.StickUndesignate, name = _('Undesignate'),	        category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+-- {													                    down = iCommandPilotSeatAdjustmentUp,	            up = iCommandPilotSeatAdjustmentStop,		name = _('SEAT ADJ Switch - UP/OFF'),		                    category = {_('Systems')}},
+-- {													                    down = iCommandPilotSeatAdjustmentDown,	            up = iCommandPilotSeatAdjustmentStop,		name = _('SEAT ADJ Switch - DOWN/OFF'),		                    category = {_('Systems')}},
 
-{combos = {{key = '1'}},                            down = Keys.MasterModeSw,	            up = Keys.MasterModeSw,       name = _('Main Mode Switch - NAV'),     category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
-{combos = {{key = '2'}},                            down = Keys.MasterModeSw,	            up = Keys.MasterModeSw,       name = _('Main Mode Switch - A/G'),     category = {_('Stick'), _('HOTAS')}, value_down =  2.0,		value_up = 0.0},
-{combos = {{key = '3'}},                            down = Keys.MasterModeSw,	            up = Keys.MasterModeSw,       name = _('Main Mode Switch - A/A INT'),	category = {_('Stick'), _('HOTAS')}, value_down =  3.0,		value_up = 0.0},
-{combos = {{key = '4'}},                            down = Keys.MasterModeSw,	            up = Keys.MasterModeSw,       name = _('Main Mode Switch - A/A DGFT'),category = {_('Stick'), _('HOTAS')}, value_down =  4.0,		value_up = 0.0},
+{combos = {{key = '=', reformers = {'RShift'}}},                        pressed = iCommandAltimeterPressureIncrease,	    up = iCommandAltimeterPressureStop,         name = _('Altimeter Pressure Increase'),                        category = _('Systems')},
+{combos = {{key = '-', reformers = {'RShift'}}},                        pressed = iCommandAltimeterPressureDecrease,        up = iCommandAltimeterPressureStop,         name = _('Altimeter Pressure Decrease'),                        category = _('Systems')},
 
-{                                                   down = Keys.APDisengage,            up = Keys.APDisengage,      name = _('Autopilot Disengage'),        category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
-{                                                   down = Keys.APOvrd,                 up = Keys.APOvrd,           name = _('Autopilot Override'),         category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+-- Stick                
+{combos = {{key = '.', reformers = {'RCtrl'}}},	                        pressed = iCommandPlaneTrimUp,			            up = iCommandPlaneTrimStop,                 name = _('Trim: Nose Up'),			                            category = {_('Stick'), _('HOTAS')}},
+{combos = {{key = ';', reformers = {'RCtrl'}}},	                        pressed = iCommandPlaneTrimDown,		            up = iCommandPlaneTrimStop,                 name = _('Trim: Nose Down'),		                            category = {_('Stick'), _('HOTAS')}},
+{combos = {{key = ',', reformers = {'RCtrl'}}},	                        pressed = iCommandPlaneTrimLeft,		            up = iCommandPlaneTrimStop,                 name = _('Trim: Left Wing Down'),	                            category = {_('Stick'), _('HOTAS')}},
+{combos = {{key = '/', reformers = {'RCtrl'}}},	                        pressed = iCommandPlaneTrimRight,		            up = iCommandPlaneTrimStop,                 name = _('Trim: Right Wing Down'),	                            category = {_('Stick'), _('HOTAS')}},
 
-{                                                   down = Keys.Call,	                up = Keys.Call,             name = _('Call'),                       category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+{combos = {{key = 'D'}},	                                            down = Keys.StickStep,	                            up = Keys.StickStep,                        name = _('Step'),		                                        category = {_('Stick'), _('HOTAS')},            value_down =  1.0,		value_up = 0.0},
+{combos = {{key = 'Enter'}},	                                        down = Keys.StickDesignate,	                        up = Keys.StickDesignate,                   name = _('Designate'),                                          category = {_('Stick'), _('HOTAS')},            value_down =  1.0,		value_up = 0.0},
+{combos = {{key = 'Enter', reformers = {'RShift'}}},                    down = Keys.StickUndesignate,	                    up = Keys.StickUndesignate,                 name = _('Undesignate'),	                                    category = {_('Stick'), _('HOTAS')},            value_down =  1.0,		value_up = 0.0},
 
-{                                                   down = Keys.Trigger,	            up = Keys.Trigger,          name = _('Gun Trigger First Detent'),   category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
-{combos = {{key = 'Space'}},                        down = Keys.Trigger,	            up = Keys.Trigger,          name = _('Gun Trigger Second Detent'),  category = {_('Stick'), _('HOTAS')}, value_down =  2.0,		value_up = 0.0},
-{combos = {{key = 'Space',	reformers = {'RAlt'}}},	down = Keys.WeaponRelease,	        up = Keys.WeaponRelease,	name = _('Weapon Release Button (WRB)'),category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+{combos = {{key = '1'}},                                                down = Keys.MasterModeSw,	                        up = Keys.MasterModeSw,                     name = _('Main Mode Switch - NAV'),                             category = {_('Stick'), _('HOTAS')},            value_down =  1.0,		value_up = 0.0},
+{combos = {{key = '2'}},                                                down = Keys.MasterModeSw,	                        up = Keys.MasterModeSw,                     name = _('Main Mode Switch - A/G'),                             category = {_('Stick'), _('HOTAS')},            value_down =  2.0,		value_up = 0.0},
+{combos = {{key = '3'}},                                                down = Keys.MasterModeSw,	                        up = Keys.MasterModeSw,                     name = _('Main Mode Switch - A/A INT'),	                        category = {_('Stick'), _('HOTAS')},            value_down =  3.0,		value_up = 0.0},
+{combos = {{key = '4'}},                                                down = Keys.MasterModeSw,	                        up = Keys.MasterModeSw,                     name = _('Main Mode Switch - A/A DGFT'),                        category = {_('Stick'), _('HOTAS')},            value_down =  4.0,		value_up = 0.0},
 
-{                                                   down = Keys.DisplayMngt,            up = Keys.DisplayMngt,      name = _('DMS Fwd - HUD'),              category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
-{                                                   down = Keys.DisplayMngt,            up = Keys.DisplayMngt,      name = _('DMS Aft - No Function'),      category = {_('Stick'), _('HOTAS')}, value_down =  2.0,		value_up = 0.0},
-{                                                   down = Keys.DisplayMngt,            up = Keys.DisplayMngt,      name = _('DMS Left - CMFD #1'),         category = {_('Stick'), _('HOTAS')}, value_down =  3.0,		value_up = 0.0},
-{                                                   down = Keys.DisplayMngt,            up = Keys.DisplayMngt,      name = _('DMS Right - CMFD #2'),        category = {_('Stick'), _('HOTAS')}, value_down =  4.0,		value_up = 0.0},
-{                                                   down = Keys.DisplayMngt,            up = Keys.DisplayMngt,      name = _('DMS Depress - Autopilot'),    category = {_('Stick'), _('HOTAS')}, value_down =  5.0,		value_up = 0.0},
+{                                                                       down = Keys.APDisengage,                            up = Keys.APDisengage,                      name = _('Autopilot Disengage'),                                category = {_('Stick'), _('HOTAS')},            value_down =  1.0,		value_up = 0.0},
+{                                                                       down = Keys.APOvrd,                                 up = Keys.APOvrd,                           name = _('Autopilot Override'),                                 category = {_('Stick'), _('HOTAS')},            value_down =  1.0,		value_up = 0.0},
+
+{                                                                       down = Keys.Call,	                                up = Keys.Call,                             name = _('Call'),                                               category = {_('Stick'), _('HOTAS')},            value_down =  1.0,		value_up = 0.0},
+
+{                                                                       down = Keys.Trigger,	                            up = Keys.Trigger,                          name = _('Gun Trigger First Detent'),                           category = {_('Stick'), _('HOTAS')},            value_down =  1.0,		value_up = 0.0},
+{combos = {{key = 'Space'}},                                            down = Keys.Trigger,	                            up = Keys.Trigger,                          name = _('Gun Trigger Second Detent'),                          category = {_('Stick'), _('HOTAS')},            value_down =  2.0,		value_up = 0.0},
+{combos = {{key = 'Space',	reformers = {'RAlt'}}},	                    down = Keys.WeaponRelease,	                        up = Keys.WeaponRelease,	                name = _('Weapon Release Button (WRB)'),                        category = {_('Stick'), _('HOTAS')},            value_down =  1.0,		value_up = 0.0},
+
+{                                                                       down = Keys.DisplayMngt,                            up = Keys.DisplayMngt,                      name = _('DMS Fwd - HUD'),                                      category = {_('Stick'), _('HOTAS')},            value_down =  1.0,		value_up = 0.0},
+{                                                                       down = Keys.DisplayMngt,                            up = Keys.DisplayMngt,                      name = _('DMS Aft - No Function'),                              category = {_('Stick'), _('HOTAS')},            value_down =  2.0,		value_up = 0.0},
+{                                                                       down = Keys.DisplayMngt,                            up = Keys.DisplayMngt,                      name = _('DMS Left - CMFD #1'),                                 category = {_('Stick'), _('HOTAS')},            value_down =  3.0,		value_up = 0.0},
+{                                                                       down = Keys.DisplayMngt,                            up = Keys.DisplayMngt,                      name = _('DMS Right - CMFD #2'),                                category = {_('Stick'), _('HOTAS')},            value_down =  4.0,		value_up = 0.0},
+{                                                                       down = Keys.DisplayMngt,                            up = Keys.DisplayMngt,                      name = _('DMS Depress - Autopilot'),                            category = {_('Stick'), _('HOTAS')},            value_down =  5.0,		value_up = 0.0},
 
 
-{                                                   down = Keys.GunSelDist,            up = Keys.GunSelDist,        name = _('Machine Gun Selection'),      category = {_('Throttle'), _('HOTAS')}, value_down =  -1.0,		value_up = 0.0},
-{                                                   down = Keys.GunSelDist,            up = Keys.GunSelDist,        name = _('Machine Gun Distance'),       category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
-{                                                   down = Keys.GunRearm,              up = Keys.GunRearm,          name = _('Machine Gun Rearm'),          category = {_('Throttle'), _('HOTAS')}, value_down =  -1.0,		value_up = 0.0},
-{                                                   down = Keys.Cage,                  up = Keys.Cage,              name = _('Cage / Uncage'),              category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
-{                                                   down = Keys.TDCX,                  up = Keys.TDCX,              name = _('TDC Slew Left'),              category = {_('Throttle'), _('HOTAS')}, value_down =  -1.0,		value_up = 0.0},
-{                                                   down = Keys.TDCX,                  up = Keys.TDCX,              name = _('TDC Slew Right'),             category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
-{                                                   down = Keys.TDCY,                  up = Keys.TDCY,              name = _('TDC Slew Up'),                category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
-{                                                   down = Keys.TDCY,                  up = Keys.TDCY,              name = _('TDC Slew Down'),              category = {_('Throttle'), _('HOTAS')}, value_down =  -1.0,		value_up = 0.0},
+{                                                                       down = Keys.GunSelDist,                             up = Keys.GunSelDist,                       name = _('Machine Gun Selection'),                              category = {_('Throttle'), _('HOTAS')},         value_down =  -1.0,		value_up = 0.0},
+{                                                                       down = Keys.GunSelDist,                             up = Keys.GunSelDist,                       name = _('Machine Gun Distance'),                               category = {_('Throttle'), _('HOTAS')},         value_down =  1.0,		value_up = 0.0},
+{                                                                       down = Keys.GunRearm,                               up = Keys.GunRearm,                         name = _('Machine Gun Rearm'),                                  category = {_('Throttle'), _('HOTAS')},         value_down =  -1.0,		value_up = 0.0},
+{                                                                       down = Keys.Cage,                                   up = Keys.Cage,                             name = _('Cage / Uncage'),                                      category = {_('Throttle'), _('HOTAS')},         value_down =  1.0,		value_up = 0.0},
+{                                                                       down = Keys.TDCX,                                   up = Keys.TDCX,                             name = _('TDC Slew Left'),                                      category = {_('Throttle'), _('HOTAS')},         value_down =  -1.0,		value_up = 0.0},
+{                                                                       down = Keys.TDCX,                                   up = Keys.TDCX,                             name = _('TDC Slew Right'),                                     category = {_('Throttle'), _('HOTAS')},         value_down =  1.0,		value_up = 0.0},
+{                                                                       down = Keys.TDCY,                                   up = Keys.TDCY,                             name = _('TDC Slew Up'),                                        category = {_('Throttle'), _('HOTAS')},         value_down =  1.0,		value_up = 0.0},
+{                                                                       down = Keys.TDCY,                                   up = Keys.TDCY,                             name = _('TDC Slew Down'),                                      category = {_('Throttle'), _('HOTAS')},         value_down =  -1.0,		value_up = 0.0},
 
+--NightVision               
+{combos = {{key = 'H', reformers = {'RShift'}}}		   ,                down    = iCommandViewNightVisionGogglesOn   ,                                                  name = _('Toggle goggles')   ,                                  category = _('Sensors')},
+{combos = {{key = 'H', reformers = {'RShift','RCtrl'}}},                pressed = iCommandPlane_Helmet_Brightess_Up  ,                                                  name = _('Gain goggles up')  ,                                  category = _('Sensors')},
+{combos = {{key = 'H', reformers = {'RShift','RAlt'}}} ,                pressed = iCommandPlane_Helmet_Brightess_Down,                                                  name = _('Gain goggles down'),                                  category = _('Sensors')},
+
+
+-- Autopilot
+-- {combos = {{key = 'A'}},                                                down = iCommandPlaneAutopilot,                                                                  name = _('Autopilot'),                                          category = _('Autopilot')},
+-- {combos = {{key = 'J'}},                                                down = iCommandPlaneAUTOnOff,                                                                   name = _('Autothrust'),                                         category = _('Autopilot')},
+-- {combos = {{key = 'H'}},                                                down = iCommandPlaneSAUHBarometric,                                                             name = _('Autopilot - Barometric Altitude Hold \'H\''),         category = _('Autopilot')},
+-- {combos = {{key = '1', reformers = {'LAlt'}}},                          down = iCommandPlaneStabTangBank,                                                               name = _('Autopilot - Attitude Hold'),                          category = _('Autopilot')},
+-- {combos = {{key = '2', reformers = {'LAlt'}}},                          down = iCommandPlaneStabHbarBank,                                                               name = _('Autopilot - Altitude And Roll Hold'),                 category = _('Autopilot')},
+-- {combos = {{key = '3', reformers = {'LAlt'}}},                          down = iCommandPlaneStabHorizon,	                                                            name = _('Autopilot - Transition To Level Flight Control'),     category = _('Autopilot')},
+-- {combos = {{key = '4', reformers = {'LAlt'}}},                          down = iCommandPlaneStabHbar,                                                                   name = _('Autopilot - Barometric Altitude Hold'),               category = _('Autopilot')},
+-- {combos = {{key = '5', reformers = {'LAlt'}}},                          down = iCommandPlaneStabHrad,                                                                   name = _('Autopilot - Radar Altitude Hold'),                    category = _('Autopilot')},
+-- {combos = {{key = '6', reformers = {'LAlt'}}},                          down = iCommandPlaneRouteAutopilot,                                                             name = _('Autopilot - \'Route following\''),                    category = _('Autopilot')},
+-- {combos = {{key = '9', reformers = {'LAlt'}}},                          down = iCommandPlaneStabCancel,                                                                 name = _('Autopilot Disengage'),                                category = _('Autopilot')},
+-- {combos = {{key = 'J'}},                                                   down = iCommandPlaneAutopilotOverrideOn, up = iCommandPlaneAutopilotOverrideOff, name = _('Autopilot override'), category = _('Autopilot')},
+
+
+-- Countermeasures
+-- {combos = {{key = 'Q', reformers = {'LShift'}}},	                    down = iCommandPlaneDropSnar,			                                                        name = _('Countermeasures Continuously Dispense'),				category = _('Countermeasures') , features = {"Countermeasures"}},
+-- {combos = {{key = 'Q'}},							                    down = iCommandPlaneDropSnarOnce,                   up = iCommandPlaneDropSnarOnceOff,          name = _('Countermeasures Release'),	                        category = _('Countermeasures') , features = {"Countermeasures"}},
+{combos = {{key = 'Delete'}},						                    down = iCommandPlaneDropFlareOnce,		                                                        name = _('Countermeasures Flares Dispense'),					category = _('Countermeasures') , features = {"Countermeasures"}},
+{combos = {{key = 'Insert'}},						                    down = iCommandPlaneDropChaffOnce,		                                                        name = _('Countermeasures Chaff Dispense'),						category = _('Countermeasures') , features = {"Countermeasures"}},
+
+-- UFCP 
 
 -- {combos = {{key = 'Space'}},							down = hotas_commands.STICK_TRIGGER_2ND_DETENT,		up = hotas_commands.STICK_TRIGGER_2ND_DETENT,		cockpit_device_id = devices.HOTAS,	value_down =  1.0,		value_up = 0.0,	name = _('Gun Trigger - SECOND DETENT (Press to shoot)'),				category = {_('Stick'), _('HOTAS')}},
 -- {combos = {{key = ';',		reformers = {'RCtrl'}}},	pressed = hotas_commands.STICK_TRIMMER_DOWN,		up = hotas_commands.STICK_TRIMMER_DOWN,				cockpit_device_id = devices.HOTAS,	value_pressed =  1.0,	value_up = 0.0,	name = _('Trimmer Switch - PUSH(DESCEND)'),								category = {_('Stick'), _('Flight Control'), _('HOTAS')}},
@@ -113,11 +150,6 @@ join(res.keyCommands,{
 -- {									down = cpt_commands.StickHide,		cockpit_device_id = devices.CPT_MECHANICS,	value_down =  0.0,	name = _('Control Stick - SHOW'),			category = {_('Stick'), _('HOTAS')}},
 -- {combos = {{key = 'Back'}},	down = cpt_commands.StickHide_EXT,	cockpit_device_id = devices.CPT_MECHANICS,	value_down =  1.0,	name = _('Control Stick - HIDE/SHOW'),		category = {_('Stick'), _('HOTAS')}},
 
--- Countermeasures
--- {combos = {{key = 'Q', reformers = {'LShift'}}},	down = iCommandPlaneDropSnar,			name = _('Countermeasures Continuously Dispense'),					category = _('Countermeasures') , features = {"Countermeasures"}},
--- {combos = {{key = 'Q'}},							down = iCommandPlaneDropSnarOnce, up = iCommandPlaneDropSnarOnceOff, name = _('Countermeasures Release'),	category = _('Countermeasures') , features = {"Countermeasures"}},
--- {combos = {{key = 'Delete'}},						down = iCommandPlaneDropFlareOnce,		name = _('Countermeasures Flares Dispense'),						category = _('Countermeasures') , features = {"Countermeasures"}},
--- {combos = {{key = 'Insert'}},						down = iCommandPlaneDropChaffOnce,		name = _('Countermeasures Chaff Dispense'),							category = _('Countermeasures') , features = {"Countermeasures"}},
 -- {combos = {{key = 'E'}},							down = iCommandActiveJamming,			name = _('ECM'),													category = _('Countermeasures') , features = {"ECM"}},
 
 
@@ -125,39 +157,6 @@ join(res.keyCommands,{
 
 
 
-
-
-
-
-
-    -- {combos = {{key = '=', reformers = {'RShift'}}}, pressed = iCommandAltimeterPressureIncrease,	up = iCommandAltimeterPressureStop, name = _('Altimeter Pressure Increase'), category = _('Systems')},
--- {combos = {{key = '-', reformers = {'RShift'}}}, pressed = iCommandAltimeterPressureDecrease, up = iCommandAltimeterPressureStop, name = _('Altimeter Pressure Decrease'), category = _('Systems')},
-
--- -- Autopilot
--- {combos = {{key = 'A'}}, down = iCommandPlaneAutopilot, name = _('Autopilot'), category = _('Autopilot')},
--- {combos = {{key = 'J'}}, down = iCommandPlaneAUTOnOff, name = _('Autothrust'), category = _('Autopilot')},
--- {combos = {{key = 'H'}}, down = iCommandPlaneSAUHBarometric, name = _('Autopilot - Barometric Altitude Hold \'H\''), category = _('Autopilot')},
--- {combos = {{key = '1', reformers = {'LAlt'}}}, down = iCommandPlaneStabTangBank, name = _('Autopilot - Attitude Hold'), category = _('Autopilot')},
--- {combos = {{key = '2', reformers = {'LAlt'}}}, down = iCommandPlaneStabHbarBank, name = _('Autopilot - Altitude And Roll Hold'), category = _('Autopilot')},
--- {combos = {{key = '3', reformers = {'LAlt'}}}, down = iCommandPlaneStabHorizon,	name = _('Autopilot - Transition To Level Flight Control'), category = _('Autopilot')},
--- {combos = {{key = '4', reformers = {'LAlt'}}}, down = iCommandPlaneStabHbar, name = _('Autopilot - Barometric Altitude Hold'), category = _('Autopilot')},
--- {combos = {{key = '5', reformers = {'LAlt'}}}, down = iCommandPlaneStabHrad, name = _('Autopilot - Radar Altitude Hold'), category = _('Autopilot')},
--- {combos = {{key = '6', reformers = {'LAlt'}}}, down = iCommandPlaneRouteAutopilot, name = _('Autopilot - \'Route following\''), category = _('Autopilot')},
--- {combos = {{key = '9', reformers = {'LAlt'}}}, down = iCommandPlaneStabCancel, name = _('Autopilot Disengage'), category = _('Autopilot')},
-
--- -- Systems
--- {combos = {{key = 'R', reformers = {'LCtrl'}}}, down = iCommandPlaneAirRefuel, name = _('Refueling Boom'), category = _('Systems')},
--- {combos = {{key = 'G', reformers = {'LAlt'}}}, down = iCommandPlaneHook, name = _('Tail Hook'), category = _('Systems')},
--- {combos = {{key = 'P', reformers = {'RCtrl'}}}, down = iCommandPlanePackWing, name = _('Folding Wings'), category = _('Systems')},
-
--- -- Modes
--- {combos = {{key = '2'}}, down = iCommandPlaneModeBVR, name = _('(2) Beyond Visual Range Mode'), category = _('Modes')},
--- {combos = {{key = '3'}}, down = iCommandPlaneModeVS, name = _('(3) Close Air Combat Vertical Scan Mode'), category = _('Modes')},
--- {combos = {{key = '4'}}, down = iCommandPlaneModeBore, name = _('(4) Close Air Combat Bore Mode'), category = _('Modes')},
--- {combos = {{key = '5'}}, down = iCommandPlaneModeHelmet, name = _('(5) Close Air Combat HMD Helmet Mode'), category = _('Modes')},
--- {combos = {{key = '6'}}, down = iCommandPlaneModeFI0, name = _('(6) Longitudinal Missile Aiming Mode'), category = _('Modes')},
--- {combos = {{key = '7'}}, down = iCommandPlaneModeGround, name = _('(7) Air-To-Ground Mode'), category = _('Modes')},
--- {combos = {{key = '8'}}, down = iCommandPlaneModeGrid, name = _('(8) Gunsight Reticle Switch'), category = _('Modes')},
 
 -- -- Flight Control
 -- {combos = {{key = 'T', reformers = {'LCtrl'}}}, down = iCommandPlaneTrimCancel, name = _('Trim Reset'), category = _('Flight Control')},

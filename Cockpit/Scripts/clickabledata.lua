@@ -107,6 +107,7 @@ elements["PNT_834"] = default_2_position_tumb("Recirculating Fan (On/Off)",     
 
 -- LANDING GEAR
 elements["PNT_821"] = default_2_position_tumb("Landing Gear (Up/Down)",                         devices.GEAR,    device_commands.LndGear,        821,TOGGLECLICK_MID_FWD)
+elements["PNT_821"].arg_value = {1, -1}
 elements["PNT_822"] = default_button("Beep Supress",                                            devices.GEAR,    device_commands.LndGearBeep,    822)
 elements["PNT_823"] = default_button("Down Lock Override",                                      devices.GEAR,    device_commands.LndGearOvr,     823)
 elements["PNT_851"] = default_2_position_tumb("Gear Emergency Down (Emergency Down/Normal)",    devices.GEAR,    device_commands.LndGearEmer, 851,TOGGLECLICK_MID_FWD)
@@ -274,6 +275,14 @@ elements["PNT_488"] = default_button("Down",												devices.UFCP, device_com
 elements["PNT_441"] = default_button("Warning",												devices.ALARM, device_commands.WARNING_PRESS,  		441)
 elements["PNT_442"] = default_button("Caution",												devices.ALARM, device_commands.CAUTION_PRESS,  	 	442)
 
+elements["PNT_431"] = default_button("AP Roll/Pitch",										devices.AUTOPILOT, device_commands.AP_RP,  				431)
+-- elements["PNT_432"] = default_button("AP Heading",											devices.AUTOPILOT, device_commands.AP_HDG,  	 		432)
+elements["PNT_433"] = default_button("AP Altitude",											devices.AUTOPILOT, device_commands.AP_ALT,  	 		433)
+-- elements["PNT_434"] = default_button("AP Test",												devices.AUTOPILOT, device_commands.AP_TEST,  	 		434)
+-- elements["PNT_435"] = default_button("AP Nav",												devices.AUTOPILOT, device_commands.AP_NAV,  	 		435)
+-- elements["PNT_436"] = default_button("AP Approach",											devices.AUTOPILOT, device_commands.AP_APR,  	 		436)
+-- elements["PNT_437"] = default_button("AP GS",												devices.AUTOPILOT, device_commands.AP_GS,  	 			437)
+elements["PNT_438"] = default_button("AP",													devices.AUTOPILOT, device_commands.AP_ON,  		 		438)
 
 
 

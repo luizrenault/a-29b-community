@@ -187,6 +187,87 @@ UFCPLight.input      	 	= {0,1}
 UFCPLight.output     	 	= {0,1}
 UFCPLight.parameter_name	= "UFCP_BRIGHT"
 
+local object = CreateGauge("parameter")
+object.arg_number 	 	= 213
+object.input      	 	= {0,1}
+object.output     	 	= {0,1}
+object.parameter_name	= "AP_RP"
+
+object = CreateGauge("parameter")
+object.arg_number 	 	= 214
+object.input      	 	= {0,1}
+object.output     	 	= {0,1}
+object.parameter_name	= "AP_HDG"
+
+object = CreateGauge("parameter")
+object.arg_number 	 	= 215
+object.input      	 	= {0,1}
+object.output     	 	= {0,1}
+object.parameter_name	= "AP_ALT"
+
+object = CreateGauge("parameter")
+object.arg_number 	 	= 216
+object.input      	 	= {0,1}
+object.output     	 	= {0,1}
+object.parameter_name	= "AP_TEST"
+
+object = CreateGauge("parameter")
+object.arg_number 	 	= 217
+object.input      	 	= {0,1}
+object.output     	 	= {0,1}
+object.parameter_name	= "AP_TEST_ERROR"
+
+object = CreateGauge("parameter")
+object.arg_number 	 	= 218
+object.input      	 	= {0,1}
+object.output     	 	= {0,1}
+object.parameter_name	= "AP_NAV"
+
+object = CreateGauge("parameter")
+object.arg_number 	 	= 219
+object.input      	 	= {0,1}
+object.output     	 	= {0,1}
+object.parameter_name	= "AP_NAV_ERROR"
+
+object = CreateGauge("parameter")
+object.arg_number 	 	= 220
+object.input      	 	= {0,1}
+object.output     	 	= {0,1}
+object.parameter_name	= "AP_APR"
+
+object = CreateGauge("parameter")
+object.arg_number 	 	= 221
+object.input      	 	= {0,1}
+object.output     	 	= {0,1}
+object.parameter_name	= "AP_APR_ERROR"
+
+object = CreateGauge("parameter")
+object.arg_number 	 	= 222
+object.input      	 	= {0,1}
+object.output     	 	= {0,1}
+object.parameter_name	= "AP_GS"
+
+object = CreateGauge("parameter")
+object.arg_number 	 	= 223
+object.input      	 	= {0,1}
+object.output     	 	= {0,1}
+object.parameter_name	= "AP_GS_ERROR"
+
+object = CreateGauge("parameter")
+object.arg_number 	 	= 224
+object.input      	 	= {0,1}
+object.output     	 	= {0,1}
+object.parameter_name	= "AP_ON"
+
+object = CreateGauge("parameter")
+object.arg_number 	 	= 225
+object.input      	 	= {0,1}
+object.output     	 	= {0,1}
+object.parameter_name	= "AP_ERROR"
+
+
+
+
 need_to_be_closed = true -- close lua state after initialization
 
 Z_test =

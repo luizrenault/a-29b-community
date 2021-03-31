@@ -55,10 +55,18 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - COM 1 and COM 2 UFCP menus.
 - COM 1, COM 2, COM 3 volume knobs working.
 - UFCP Backlight.
+- Night vision goggles (some lights are not compatible yet).
+- Autopilot R/P and Alt modes.
+- Coldstart, Waypoint navigation and VFR Landing training missions (by Rudel_chw)
 
 ### Changed
-- Brakes efficiency reduced.
+- Brakes efficiency now working as it should, based on velocity and pedal position.
 - New Throttle and Stick texture.
+- Altitude and Baro adjustments syncronized with DCS.
+
+### Fixes
+- Salvo button now changes to SMS EJ format on CMFD 1.
+
 
 ## Version 0.1.7b - 24 March 2021
 
@@ -339,7 +347,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Throttle and Stick are inconsistent with the real ones;
 
 ### Contributors
-- Renault, Milaré, PaKo, Malamem, Athos, Dino, Jorge Rodrigues, Paoladelf, Farias, Skypork, EDAV, and many others.
+- Renault, Milaré, PaKo, Malamem, Athos, Dino, Jorge Rodrigues, Paoladelf, Farias, Skypork, EDAV, Rudel_chw, and many others.
 
 
 ### Changed
