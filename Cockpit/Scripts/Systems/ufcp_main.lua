@@ -133,6 +133,8 @@ function SetCommandMain(command,value)
     elseif command == device_commands.UFCP_ENTR and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.DL_MENU
     elseif command == device_commands.UFCP_7 and value == 1 then
+        ufcp_mark_mode = UFCP_MARK_MODE_IDS.ONTOP
+        mark()
         ufcp_sel_format = UFCP_FORMAT_IDS.MARK
     elseif command == device_commands.UFCP_8 and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.FIX

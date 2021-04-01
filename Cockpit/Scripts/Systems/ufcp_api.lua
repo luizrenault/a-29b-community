@@ -110,3 +110,9 @@ UFCP_VVVAH_MODE_IDS = {
     OFF = 1,
     VV_VAH = 2,
 }
+
+UFCP_MARK_MODE_IDS = {
+    ONTOP = 0,
+    HUD = 1,
+    FLIR = 2,
+}

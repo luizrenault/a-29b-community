@@ -17,7 +17,8 @@ local hud
 update_time_step = 0.02 --update will be called 50 times per second
 make_default_activity(update_time_step)
 
-local sensor_data = get_base_data()
+sensor_data = get_base_data()
+Terrain = require('terrain')
 
 local UFCP_BRIGHT = get_param_handle("UFCP_BRIGHT")
 local ADHSI_VV = get_param_handle("ADHSI_VV")
