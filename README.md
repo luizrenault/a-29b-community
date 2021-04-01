@@ -9,11 +9,11 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Download
 
-[![Download](https://img.shields.io/github/downloads/luizrenault/a-29b-community/total?label=Download%20Latest%20Release)](https://github.com/luizrenault/a-29b-community/archive/refs/heads/main.zip)
+[![Download](https://img.shields.io/github/downloads/luizrenault/a-29b-community/total?label=Download%20Latest%20Release)](https://github.com/luizrenault/a-29b-community/releases)
 
-[![Download](https://img.shields.io/github/downloads/luizrenault/a-29b-community/total?label=Download%20Latest%20Devel)](https://github.com/luizrenault/a-29b-community/archive/refs/heads/devel.zip)
+[Download Latest Devel](https://github.com/luizrenault/a-29b-community/archive/refs/heads/devel.zip)
 
-[![Livery Pack](https://img.shields.io/github/downloads/luizrenault/a-29b-community/total?label=Livery%20Pack)](https://mega.nz/file/tNpkyLCa#iC9aOTzc8liAfFGqfyLN2zmaNfXmtkmYDqIGjH2y3Bg)
+[Livery Pack](https://mega.nz/file/tNpkyLCa#iC9aOTzc8liAfFGqfyLN2zmaNfXmtkmYDqIGjH2y3Bg)
 
 [SRS Script](https://1drv.ms/u/s!Arl6nHiJ8ZUai8te1MoMez1jnNUTZQ?e=CCLSVl)
 Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing file. Will be included in next SRS Update (thanks to ciribob).
