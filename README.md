@@ -60,6 +60,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Coldstart, Waypoint navigation and VFR Landing training missions (by Rudel_chw)
 - UFCP DA/H and Time menus.
 - RT and SW time modes on UFCP Main format.
+- New UFCP textures.
 
 ### Changed
 - Brakes efficiency now working as it should, based on velocity and pedal position.

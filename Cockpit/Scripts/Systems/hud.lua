@@ -399,7 +399,7 @@ local hud_warning = get_param_handle("HUD_WARNING")
 function update()
     local master_mode = get_avionics_master_mode()
     local hud_on = get_elec_avionics_ok() and 1 or 0
-    local hud_bright = get_cockpit_draw_argument_value(483)
+    local hud_bright = 1-get_cockpit_draw_argument_value(483)
     if get_cockpit_draw_argument_value(476) == -1 then hud_bright = hud_bright * 0.5 end
 
     if (get_avionics_master_mode_ag() or get_avionics_master_mode_aa()) and WPN_READY:get() == 1 then HUD_RDY:set(1) 
@@ -649,7 +649,7 @@ function post_initialize()
     elseif birth=="AIR_HOT" then
     elseif birth=="GROUND_COLD" then
     end
-    dev:performClickableAction(device_commands.UFCP_HUD_BRIGHT,1,true)
+    dev:performClickableAction(device_commands.UFCP_HUD_BRIGHT,0,true)
     startup_print("hud: postinit end")
 end
 
@@ -665,11 +665,11 @@ function SetCommand(command,value)
             max_accel = 0
         end        
     elseif command == iCommandHUDBrightnessUp then
-        value = get_cockpit_draw_argument_value(483) + 0.05
+        value = get_cockpit_draw_argument_value(483) - 0.05
         if value > 1 then value = 1 end
         dev:performClickableAction(device_commands.UFCP_HUD_BRIGHT, value, true)
     elseif command == iCommandHUDBrightnessDown then
-        value = get_cockpit_draw_argument_value(483) - 0.05
+        value = get_cockpit_draw_argument_value(483) + 0.05
         if value < 0 then value = 0 end
         dev:performClickableAction(device_commands.UFCP_HUD_BRIGHT, value, true)
     end

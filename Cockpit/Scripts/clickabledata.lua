@@ -264,8 +264,8 @@ elements["PNT_479"] = multiposition_switch_limited("EGI Nav/Align/Storage Headin
 elements["PNT_480"] = default_axis_limited("UFC BRT/OFF",									devices.UFCP , device_commands.UFCP_UFC,          	480, 0, 0.15)
 elements["PNT_481"] = default_2_position_tumb("HUD Test",									devices.UFCP, device_commands.UFCP_HUD_TEST,      	481)
 elements["PNT_482"] = default_2_position_tumb("SBS On",										devices.UFCP, device_commands.UFCP_SBS_ON,      	482)
-elements["PNT_483"] = default_axis_limited("HUD Britghness",								devices.HUD, device_commands.UFCP_HUD_BRIGHT,     	483)
-elements["PNT_484"] = default_axis_limited("SBS Adjust",	   								devices.UFCP, device_commands.UFCP_SBS_ADJUST,   	484)
+elements["PNT_483"] = default_axis_limited("HUD Britghness",								devices.HUD, device_commands.UFCP_HUD_BRIGHT,     	483, 1, -0.15)
+elements["PNT_484"] = default_axis_limited("SBS Adjust",	   								devices.UFCP, device_commands.UFCP_SBS_ADJUST,   	484, 1, -0.15)
 
 elements["PNT_485"] = default_button("Right",												devices.UFCP, device_commands.UFCP_JOY_RIGHT,   	485)
 elements["PNT_486"] = default_button("Left",												devices.UFCP, device_commands.UFCP_JOY_LEFT,  	 	486)
