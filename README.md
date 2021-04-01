@@ -1,6 +1,6 @@
 # DCS World A-29B Super Tucano
 
-This is a free, opensource, SFM, A-29B independent module for DCS World. By independent it is meant that it does not require any other modules to work.
+This is a free, open source, SFM, A-29B independent module for DCS World. By independent it is meant that it does not require any other modules to work.
 
 The development is in a very early stage, but the author has decided on releasing it in hopes it will help others on the implementation of modern aircraft systems using SFM.
 
@@ -14,7 +14,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 [Livery pack](https://mega.nz/file/tNpkyLCa#iC9aOTzc8liAfFGqfyLN2zmaNfXmtkmYDqIGjH2y3Bg)
 
 [SRS Script](https://1drv.ms/u/s!Arl6nHiJ8ZUai8te1MoMez1jnNUTZQ?e=CCLSVl)
-Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing file. Will be incluided in next SRS Update (thanks to ciribob).
+Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing file. Will be included in next SRS Update (thanks to ciribob).
 
 # Tutorial videos 
 
@@ -42,6 +42,9 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - [Air to Air Weapons](https://www.youtube.com/watch?v=TumUprFdE6M&list=PLo5YmN6D-iCADAvM0M1KvUKSfJjQYg4gF&index=4)
 - [CCIP Weapons](https://www.youtube.com/watch?v=-2gN9zJngLE&list=PLo5YmN6D-iCADAvM0M1KvUKSfJjQYg4gF&index=5)
 
+(En by [sidekick65](https://www.youtube.com/channel/UC4kJt_8Jw9ByL10ar6b8rQg))
+- [First Impressions](https://www.youtube.com/watch?v=c6yp--xPpaA)
+
 # ED Forum
 
 [A-29 Super Tucano](https://forums.eagle.ru/topic/265017-a-29-super-tucano/)
@@ -57,21 +60,22 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - UFCP Backlight.
 - Night vision goggles (some lights are not compatible yet).
 - Autopilot R/P and Alt modes.
-- Coldstart, Waypoint navigation and VFR Landing training missions (by Rudel_chw)
+- Cold start, Waypoint navigation and VFR Landing training missions (by Rudel_chw)
 - UFCP DA/H and Time menus.
 - RT and SW time modes on UFCP Main format.
 - New UFCP textures.
+- UFCP and CMFD key bindings.
 
 ### Changed
 - Brakes efficiency now working as it should, based on velocity and pedal position.
 - New Throttle and Stick texture.
-- Altitude and Baro adjustments syncronized with DCS.
+- Altitude and Baro adjustments synchronized with DCS.
 - UFCP WPT menu can edit data as WP or FYT.
 
 ### Fixes
 - Salvo button now changes to SMS EJ format on CMFD 1.
 - Gear Switch LMB/RMB behavior.
-- CMFD EICAS Brightness ajustment.
+- CMFD EICAS Brightness adjustment.
 
 
 ## Version 0.1.7b - 24 March 2021
@@ -86,13 +90,13 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Argentina liveries (by GOA -_Max_)
 - Several UFCP format placeholders
 - Livery pack (by Urbi, gheoss)
-- Coldstart training mission (by Rudel_chw)
+- Cold start training mission (by Rudel_chw)
 - Pylons are now removable
 - New external 3d model with new animations
 - New propeller animation
 - New suspension parameters
 - New external lights (working with AI)
-- Speedbreak now working
+- Speed break now working
 - Livery pack download link included
 
 ### Changed
@@ -117,10 +121,10 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - UFCP power source is now avionics master main dc bus.
 - BFI power source is now the backup battery.
 - Rearm / Refuel now sets Fuel Init quantity.
-- Battery and gererator voltages.
+- Battery and generator voltages.
 - Gear down mapping now working.
 - SJ JET and A/A or A/G RDY overlap.
-- CHMD NAV A/C TRK no loger oscillates when stopped.
+- CHMD NAV A/C TRK no longer oscillates when stopped.
 - FYT out of screen side.
 - UFCP joystick interaction points.
 - E/W buttons for coordinates.
@@ -129,7 +133,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 
 ### Added
 - CMFD SMS A/G format partially implemented.
-- A/G lauch options SGL, PAIR and SALVO.
+- A/G launch options SGL, PAIR and SALVO.
 - HUD A/G Gun piper.
 
 ### Fixes
@@ -142,7 +146,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 
 ### Added
 - UFCP MENU and NAV formats. Now can set NAV MODE and time to destination display mode.
-- HUD speed cue for ETA and DT time to destination modes and time to dastination for ETA, DT or TTD modes.
+- HUD speed cue for ETA and DT time to destination modes and time to destination for ETA, DT or TTD modes.
 - NAV MODE AUTO.
 
 ### Fixes
@@ -232,7 +236,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 
 ### Changed
 - CMFD library.
-- Instant action mission detais.
+- Instant action mission details.
 
 ### Fixed
 - External lights behavior.
@@ -245,7 +249,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Warning, Caution, Fire and Parking Brakes lights
 - Warning, Caution and Advice messages on EICAS.
 - Alarm API for warning, caution and advice status update.
-- HUD brightness ajdust knob working.
+- HUD brightness adjust knob working.
 - Windshield Deice working
 
 ### Changed
@@ -291,7 +295,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 ### Changed
 - BFI background color from blue to black.
 - ASI, VSI, BFI, Throttle, Warning, Caution, Fire and Brake indicators 3D models by new ones.
-- Fligh model tunning but far from ideal.
+- Flight model tunning but far from ideal.
 - Flaps with only two positions UP and DOWN (20 deg).
 
 ### Deprecated
@@ -320,7 +324,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Basic textures for new cockpit instruments.
 - Basic aircraft controls working - Aileron, Elevator, Throttle, Flaps, Gear, Brakes, Parking Brakes.
 - Ground Cold, Ground Hot or Air Hot start modes working correctly.
-- Simplified startup procerure: Batt -> On; Main Fuel Pump -> Auto; PMU -> Auto; Ignition -> Auto; Fuel Shutoff -> Off; Starter -> On.
+- Simplified startup procedure: Batt -> On; Main Fuel Pump -> Auto; PMU -> Auto; Ignition -> Auto; Fuel Shutoff -> Off; Starter -> On.
 - External lights are working but with wrong visual representations.
 - Internal lights are working but maybe with wrong colors.
 - BFI (Basic Flight Instruments) partially implemented.
