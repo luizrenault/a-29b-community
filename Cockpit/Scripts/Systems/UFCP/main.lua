@@ -123,7 +123,10 @@ function SetCommandMain(command,value)
     elseif command == device_commands.UFCP_2 and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.DA_H
     elseif command == device_commands.UFCP_3 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.F_ACK
+        -- TODO show/hide PFL page on CMFD
+        -- If the AVIONICS alarm is ON, the PFL page will show up for 5 seconds
+        -- unless OSS 2, 4 or 5 are pressed before. It will return to the last
+        -- page.
     elseif command == device_commands.UFCP_4 and value == 1 then
         ufcp_wpt_enter()
     elseif command == device_commands.UFCP_5 and value == 1 then
@@ -137,6 +140,8 @@ function SetCommandMain(command,value)
         mark()
         ufcp_sel_format = UFCP_FORMAT_IDS.MARK
     elseif command == device_commands.UFCP_8 and value == 1 then
+        ufcp_fix_mode = UFCP_MARK_MODE_IDS.ONTOP
+        fix()
         ufcp_sel_format = UFCP_FORMAT_IDS.FIX
     elseif command == device_commands.UFCP_9 and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.TIP
