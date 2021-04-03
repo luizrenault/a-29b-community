@@ -121,7 +121,5 @@ function SetCommandDAH(command,value)
         end
     elseif command == device_commands.UFCP_ENTR and value == 1 then
         ufcp_continue_edit("", FIELD_INFO[sel], true)
-    elseif command == device_commands.UFCP_CLR and value == 1 then
-        ufcp_undo_edit()
     end
 end

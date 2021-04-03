@@ -341,7 +341,5 @@ function SetCommandCom2(command,value)
         if sel == SEL_IDS.MAN_FREQUENCY or sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY or sel == SEL_IDS.NEXT_FREQUENCY then
             ufcp_continue_edit("", FIELD_INFO[sel], true)
         end
-    elseif command == device_commands.UFCP_CLR and value == 1 then
-        ufcp_undo_edit()
     end
 end

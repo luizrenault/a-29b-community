@@ -26,6 +26,12 @@ local TIME_RUN = get_param_handle("UFCP_TIME_RUN")
 
 -- Variables
 ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+ufcp_ident = false
+ufcp_ident_blink = false
+elapsed = 0
+local ufcp_overriden_format = UFCP_FORMAT_IDS.MAIN
+
+-- Data insertion
 ufcp_edit_pos = 0
 ufcp_edit_lim = 0
 ufcp_edit_string = ""
@@ -36,13 +42,10 @@ ufcp_edit_backspace = false
 
 ufcp_cmfd_ref = nil
 
-ufcp_ident = false
-ufcp_ident_blink = false
-elapsed = 0
-
 
 -- METHODS
 
+-- Check if an array has a specific element.
 function has_value (tab, val)
     for index, value in ipairs(tab) do
         if value == val then
@@ -53,6 +56,7 @@ function has_value (tab, val)
     return false
 end
 
+-- Used by COM1 and COM2 formats
 function is_com_frequency(frequency)
     if frequency < 108 then return false
     elseif frequency >= 174 and frequency < 225 then return false
@@ -67,6 +71,7 @@ local function ufcp_on()
     return get_elec_avionics_ok() and get_cockpit_draw_argument_value(480) > 0
 end
 
+-- Clears the data being inserted.
 function ufcp_edit_clear()
     ufcp_edit_pos = 0
     ufcp_edit_lim = 0
@@ -77,10 +82,8 @@ function ufcp_edit_clear()
     ufcp_edit_backspace = false
 end
 
+-- Returns the inputed data plus blank spaces to fill the size limit
 function ufcp_print_edit(rtl)
-    -- This method returns a string of blank characters to 'fill' the remaining characters available
-    -- for ufcp_edit_string, based on ufcp_edit_lim and ufcp_edit_pos
-
     local available = ufcp_edit_lim - ufcp_edit_pos
     local blank = ""
     for i = 1,available do blank = blank .. " " end
@@ -93,6 +96,7 @@ function ufcp_print_edit(rtl)
     return text
 end
 
+-- Called by the CLR button. Pressing once erases the last digit. Pressing again clears everything.
 function ufcp_undo_edit()
     if ufcp_edit_pos > 0 then
         if ufcp_edit_backspace or ufcp_edit_invalid then
@@ -211,40 +215,40 @@ function seconds_to_string(time)
     return time_sign .. string.format("%02.0f:%02.0f:%02.0f", time_hours, time_mins, time_secs)
 end
 
-dofile(LockOn_Options.script_path.."Systems/ufcp_main.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_com1.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_com2.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_navaids.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_vvvah.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_dah.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_wpt.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_xpdr.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_time.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_mark.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_fix.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_tip.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_menu.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_lmt.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_dtk.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_bal.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_acal.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_nav.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_ws.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_egi.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_fuel.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_tac.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_mode.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_oap.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_cf.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_para.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_fti.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_dclt.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_crus.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_drft.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_tkl.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_strm.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_flir.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_dl.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/main.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/ufcp_com1.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/ufcp_com2.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/navaids.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/vvvah.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/dah.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/wpt.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/xpdr.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/time.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/mark.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/fix.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/tip.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/menu.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/lmt.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/dtk.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/bal.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/acal.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/nav.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/ws.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/egi.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/fuel.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/tac.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/mode.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/oap.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/cf.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/para.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/fti.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/dclt.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/crus.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/drft.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/tkl.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/strm.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/flir.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/dl.lua")
 
 
 function update()
@@ -391,7 +395,16 @@ dev:listen_command(device_commands.UFCP_4)
 dev:listen_command(device_commands.UFCP_BARO_RALT)
 
 function SetCommandCommon(command, value)
+    -- Control keys
+    if command == device_commands.UFCP_CLR and value == 1 then
+        ufcp_undo_edit()
+    elseif command == device_commands.UFCP_ENTR and value == 1 then
 
+    elseif command == device_commands.UFCP_UP and value == 1 then
+        -- TODO holding INC or DEC, the value increases or decreases 3 units per second.
+    elseif command == device_commands.UFCP_DOWN and value == 1 then
+
+    end
 end
 
 function SetCommand(command,value)
@@ -400,26 +413,50 @@ function SetCommand(command,value)
     if command==device_commands.UFCP_WARNRST and value == 1 then
         alarm:SetCommand(command, value)
         hud:SetCommand(command, value)
+
+    -- Override keys
+    -- Pressing these buttons when the formats are already shown returns to the last format.
     elseif command == device_commands.UFCP_COM1 and value == 1 then
-        if ufcp_sel_format ~= UFCP_FORMAT_IDS.COM1 then ufcp_edit_clear() end
-        ufcp_sel_format = UFCP_FORMAT_IDS.COM1
+        if ufcp_sel_format ~= UFCP_FORMAT_IDS.COM1 then 
+            ufcp_edit_clear() 
+            ufcp_overriden_format = ufcp_sel_format
+            ufcp_sel_format = UFCP_FORMAT_IDS.COM1
+        else
+            ufcp_sel_format = ufcp_overriden_format
+        end
     elseif command == device_commands.UFCP_COM2 and value == 1 then
-        if ufcp_sel_format ~= UFCP_FORMAT_IDS.COM2 then ufcp_edit_clear() end
-        ufcp_sel_format = UFCP_FORMAT_IDS.COM2
+        if ufcp_sel_format ~= UFCP_FORMAT_IDS.COM2 then 
+            ufcp_edit_clear() 
+            ufcp_overriden_format = ufcp_sel_format
+            ufcp_sel_format = UFCP_FORMAT_IDS.COM2
+        else
+            ufcp_sel_format = ufcp_overriden_format
+        end
     elseif command == device_commands.UFCP_NAVAIDS and value == 1 then
-        if ufcp_sel_format ~= UFCP_FORMAT_IDS.NAV_AIDS then ufcp_edit_clear() end
-        ufcp_sel_format = UFCP_FORMAT_IDS.NAV_AIDS
+        if ufcp_sel_format ~= UFCP_FORMAT_IDS.NAV_AIDS then 
+            ufcp_edit_clear() 
+            ufcp_overriden_format = ufcp_sel_format
+            ufcp_sel_format = UFCP_FORMAT_IDS.NAV_AIDS
+        else
+            ufcp_sel_format = ufcp_overriden_format
+        end
+    -- Master mode keys
     elseif command == device_commands.UFCP_A_G and value == 1 then
+        -- TODO select CCIP or CCIP R depending on the last selection
         set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
     elseif command == device_commands.UFCP_A_A and value == 1 then
         set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DGFT_B)
     elseif command == device_commands.UFCP_NAV and value == 1 then
         set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.NAV)
+
+
     elseif command == device_commands.UFCP_UFC then
+
     elseif command == device_commands.UFCP_JOY_LEFT and value == 1 then
         ufcp_edit_clear()
         ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
     elseif command == device_commands.UFCP_BARO_RALT and value == 1 then
+        -- TODO the system should remember the selected mode
         local master_mode = get_avionics_master_mode()
         local master_mode_last = master_mode
         if master_mode == AVIONICS_MASTER_MODE_ID.GUN then master_mode = AVIONICS_MASTER_MODE_ID.GUN_R 
@@ -445,6 +482,8 @@ function SetCommand(command,value)
             ufcp_vvvah_mode = UFCP_VVVAH_MODE_IDS.VV_VAH
         end
     end
+
+    SetCommandCommon(command, value)
 
     if ufcp_sel_format == UFCP_FORMAT_IDS.MAIN then SetCommandMain(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM1 then SetCommandCom1(command, value)
