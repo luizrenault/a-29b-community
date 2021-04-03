@@ -41,3 +41,5 @@ init_pageID = PAGE_ID
 --     render_target_always      = true
 -- end
 
+dofile(LockOn_Options.common_script_path.."ViewportHandling.lua")
+try_find_assigned_viewport("A29B_UFCP")

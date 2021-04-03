@@ -513,7 +513,7 @@ function update()
     end
 
     local fpm_cross = 0        
-    angleh, anglev, fpm_cross = limit_xy(angleh, anglev - pitch, hud_limit.x, hud_limit.y)
+    angleh, anglev, fpm_cross = limit_xy(angleh, anglev - pitch, hud_limit.x, hud_limit.y*1.3)
     anglev = anglev + pitch
    
     local pl_slide = angleh + (anglev-pitch) * math.tan(roll)

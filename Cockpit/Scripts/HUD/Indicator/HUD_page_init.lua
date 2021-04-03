@@ -60,3 +60,4 @@ color_sensitive_materials      = mat_tbl
 is_colored   = true
 day_color    = {0, 1.0, 0}
 night_color  = {0, 0.5, 0}
+

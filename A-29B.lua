@@ -109,16 +109,16 @@ A_29B =  {
 		average_fuel_consumption 	= 0.009042, -- this is highly relative, but good estimates are 36-40l/min = 28-31kg/min = 0.47-0.52kg/s -- 45l/min = 35kg/min = 0.583kg/s
 		CAS_min 					= 56, -- if this is not OVERAL FLIGHT TIME, but jus LOITER TIME, than it sholud be 10-15 minutes.....CAS capability in minute (for AI)
 		V_opt 						= 123,-- Cruise speed (for AI) –- Assume Mach 0.80 at 20000 ft as optimal. See -- http://www.nasa.gov/centers/dryden/pdf/87789main_H-636.pdf and		–- http://www.hochwarth.com/misc/AviationCalculator.html 		–- Mach 0.8 at 20000 = XXX kts TAS = XXX m / s
-		V_take_off 					= 62, -- Take off speed in m/s (for AI)
-		V_land 						= 62, -- Land speed in m/s (for AI)
+		V_take_off 					= 60, -- Take off speed in m/s (for AI)
+		V_land 						= 60, -- Land speed in m/s (for AI)
 		V_max_sea_level 			= 165, -- Max speed at sea level in m/s (for AI)
 		V_max_h 					= 145, -- Max speed at max altitude in m/s (for AI)
-		Vy_max 						= 75, -- Max climb speed in m/s (for AI)
+		Vy_max 						= 12, -- Max climb speed in m/s (for AI)
 		Mach_max 					= 0.562, -- Max speed in Mach (for AI)
 		Ny_min 						= -4, -- Min G (for AI)
 		Ny_max 						= 8.0,  -- Max G (for AI)
 		Ny_max_e 					= 8.0,  -- Max G (for AI)
-		AOA_take_off 				= 0.14, -- AoA in take off (for AI)
+		AOA_take_off 				= 0.17, -- AoA in take off (for AI) -- in radians
 		bank_angle_max 				= 60, -- Max bank angle (for AI)
 	
 		has_afteburner 				= false, -- AFB yes/no
@@ -145,11 +145,11 @@ A_29B =  {
 		wing_span 					= 11.135, -- wing spain in m
 		wing_type 					= 0,
 
-		thrust_sum_max 				= 16000, -- thrust in kg (44kN)
-		thrust_sum_ab 				= 16000, -- thrust inkg (71kN)
+		thrust_sum_max 				= 16620, -- thrust in kg (44kN)
+		thrust_sum_ab 				= 16620, -- thrust inkg (71kN)
 		length 						= 11.332, -- full lenght in m
 		height 						= 3.974, -- height in m
-		flaps_maneuver 				= 0.5, -- Max flaps in take-off and maneuver (0.5 = 1st stage; 1.0 = 2nd stage) (for AI)
+		flaps_maneuver 				= 1.0, -- Max flaps in take-off and maneuver (0.5 = 1st stage; 1.0 = 2nd stage) (for AI)
 		range 						= 1568, -- Max range in km (for AI)
 		RCS 						= 2.5, -- Radar Cross Section m2
 		IR_emission_coeff 			= 0.1, -- Normal engine -- IR_emission_coeff = 1 is Su-27 without afterburner. It is reference.
@@ -450,15 +450,17 @@ A_29B =  {
 	SFM_Data = {
 		aerodynamics = 
 		{
-			Cy0	=	0.045, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
+			Cy0	=	0.2, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
 			Mzalfa	=	4.355, -- Horizontal tail pitch coefficient
 			Mzalfadt	=	0.8,  -- Wing pitch coefficient
 			kjx = 2.25, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
 			kjz = 0.00125,  -- Unknown pitch constant. All planes use 0.00125 -- -- Inertia parametre Z - Dimension (clean) airframe drag coefficient at Z (Front) Simply the wing area in square meters (as that is a major factor in drag calculations)
+
 			Czbe = -0.056, -- Directional stability coefficient  -- coefficient, along Z axis (perpendicular), affects yaw, negative value means force orientation in FC coordinate system
+			
 			cx_gear = 0.3, -- Additional coefficient of drag for gear extended
 			cx_flap = 0.055, -- Additional coefficient of drag for flap extended
-			cy_flap = 0.38, -- Additional coefficient of lift for flap extended
+			cy_flap = 0.23, -- Additional coefficient of lift for flap extended
 			cx_brk = 0.065, -- Additional coefficient of drag for air brakes
 			
 			-- Hi guys. I try to calculate the rollrate, or maxrollrate (omxmax) for a plane and I've got the measurements of the plane, Cl (rolling moment coefficient) and Clp.
@@ -476,7 +478,12 @@ A_29B =  {
 			-- Omxmax - Roll rate - roll rate, rad/s
 			-- Aldop - Visual effects settings for stability / controlability -- Alfadop Max AOA at current M - departure threshold
 			-- Cymax - Maximum coefficient of lift, corresponding to αstall -- Coefficient, lift, maximum possible (ignores other calculations if current Cy > Cymax)
-			-- 
+
+			-- Cold start sound.
+			-- Park breaking lights.
+			-- NP 100%
+			-- AP entra em R/P
+			-- Guns piper baixo 5 mils
 
 			-- The variables "B" and "B4" in the SFM of DCS are "modifiers" of the variable "drag at zero Lift" aka Cx0 to make those values fit the Lift/Drag (or Drag/Lift)-Polars, 
 			-- where at the same mach-speed different values of drag (CD) are possible due to different angles of attack "AoA" (see above chart in post at 15h18 07.02.2021). 
@@ -501,28 +508,30 @@ A_29B =  {
 			-- more efficient. The shorter, thicker the wing, the more unefficient (I would say/guess or whatever)...or you can calculate it (see above) which looks like a 
 			-- nicely spent weekend to me
 			--      M	    Cx0		 Cya		    B		 B4	     Omxmax	    Aldop	    Cymax
-				{0.0,	   0.038,	0.09,		  0.051,	0.0065,	 0.15,	     22,	    1.40,	},
-				{0.01,	   0.038,	0.09,		  0.051,	0.0065,	 0.20,	     22,	    1.40,	},
-				{0.02,	   0.038,	0.09,		  0.051,	0.0065,	 0.22,	     22,	    1.40,	},
-				{0.03,	   0.038,	0.09,		  0.051,	0.0065,	 0.30,	     22,	    1.40,	},
-				{0.04,	   0.038,	0.09,		  0.051,	0.0065,	 0.33,	     22,	    1.40,	},
-				{0.05,	   0.038,	0.09,		  0.051,	0.0065,	 0.40,	     22,	    1.40,	},
-				{0.06,	   0.038,	0.09,		  0.051,	0.0065,	 0.44,	     22,	    1.40,	},
-				{0.07,	   0.038,	0.09,		  0.051,	0.0065,	 0.50,	     22,	    1.40,	},
-				{0.08,	   0.038,	0.09,		  0.051,	0.0065,	 0.55,	     22,	    1.40,	},
-				{0.09,	   0.038,	0.09,		  0.051,	0.0065,	 0.60,	     22,	    1.40,	},
-				{0.10,	   0.038,	0.09,		  0.051,	0.0065,	 0.65,	     22,	    1.40,	},
-				{0.11,	   0.038,	0.09,		  0.051,	0.0065,	 0.90,	     22,	    2.0,	},
-				{0.15,	   0.038,	0.09,		  0.051,	0.0065,	 1.0,	     22,	    2.0,	},
-				{0.2,	   0.038,	0.09,		  0.051,	0.0065,	 1.2,	     22,	    2.0,	},
-				{0.3,	   0.038,	0.09,		  0.051,	0.009,	 1.6,	     22,	    2.0,	},
-				{0.4,	   0.038,	0.09,		  0.051,	0.009,	 2.1,	     19,	    2.0,	},
-				{0.5,	   0.038,	0.09,		  0.051,	0.009,	 2.6,	     18,	    2.3,	},
-				{0.6,	   0.040,	0.09,		  0.059,	0.016,	 3.1,	     11,	    1.14,	},
-				{0.7,	   0.052,	0.09,		  0.072,	0.03,	 3.5,	     8,	 	    0.9,	},
-				{0.8,	   0.082,	0.09,		  0.180,	0.06,	 3.5,	     3,	 	    0.5,   },
-				{1.1,	   0.160,	0.09,		  0.200,	0.08,	 3.5,	     1,	 	    0.3    },
-			}
+		{0  /666.739,	   0.022,	0.010,		  0.051,	0.0065,	 0.15,	     22,    	1.40,	},
+		{10 /666.739,	   0.022,	0.020,		  0.051,	0.0065,	 0.20,	     22,    	1.40,	},
+		{30 /666.739,	   0.022,	0.040,		  0.051,	0.0065,	 0.30,	     22,    	1.40,	},
+		{50 /666.739,	   0.022,	0.070,		  0.051,	0.0065,	 0.40,	     22,	    1.40,	},
+		{70 /666.739,	   0.022,	0.090,		  0.051,	0.0065,	 0.50,	     22,	    1.40,	},
+		{80 /666.739,	   0.022,	0.100,		  0.051,	0.0065,	 0.55,	     22,	    1.40,	},
+		{90 /666.739,	   0.022,	0.110,		  0.051,	0.0065,	 0.60,	     22,	    1.40,	},
+		{100/666.739,	   0.022,	0.120,		  0.051,	0.0065,	 0.65,	     22,	    2.0,	},
+		{110/666.739,	   0.022,	0.100,		  0.051,	0.0065,	 0.70,	     22,	    2.0,	},
+		{130/666.739,	   0.022,	0.075,		  0.051,	0.0065,	 0.90,	     22,	    2.0,	},
+		{150/666.739,	   0.022,	0.073,		  0.051,	0.0065,	 1.2,	     22,	    2.0,	},
+		{170/666.739,	   0.022,	0.073,		  0.051,	0.0065,	 1.2,	     22,	    2.0,	},
+		{190/666.739,	   0.022,	0.072,		  0.051,	0.0090,	 1.6,	     22,	    2.0,	},
+		{210/666.739,	   0.022,	0.070,		  0.051,	0.0090,	 2.1,	     19,	    2.0,	},
+		{220/666.739,	   0.022,	0.070,		  0.051,	0.0090,	 2.1,	     19,	    2.0,	},
+		{230/666.739,	   0.025,	0.070,		  0.051,	0.0090,	 2.1,	     19,	    2.0,	},
+		{240/666.739,	   0.047,	0.070,		  0.051,	0.0090,	 2.6,	     18,	    2.3,	},
+		{250/666.739,	   0.089,	0.070,		  0.051,	0.0090,	 2.6,	     18,	    2.3,	},
+		{270/666.739,	   0.089,	0.065,		  0.055,	0.0160,	 2.6,	     18,	    2.3,	},
+		{290/666.739,	   0.089,	0.065,		  0.065,	0.0160,	 3.1,	     11,	    1.14,	},
+		{310/666.739,	   0.089,	0.065,		  0.080,	0.0300,	 3.5,	     8,	 	    0.9,	},
+		{360/666.739,	   0.089,	0.065,		  0.100,	0.0800,	 3.5,	     1,	 	    0.3     },
+		{600/666.739,	   0.089,	0.065,		  0.200,	0.0800,	 3.5,	     1,	 	    0.3     },
+		}
 		}, -- end of aerodynamics
 		engine = 
 		{
@@ -534,28 +543,26 @@ A_29B =  {
 			typeng	=	3, -- E_TURBOJET = 0, E_TURBOJET_AB = 1, E_PISTON = 2, E_TURBOPROP = 3,	E_TURBOFAN    = 4,	E_TURBOSHAFT = 5
 			hMaxEng	=	19.5, -- maximum operating altitude for the engine in km -- typically higher than service ceiling of the aircraft
 			dcx_eng	=	0.095, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
-			cemax	=	0.005, -- kg / sec - fuel consumption for a single engine in dry configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
-			cefor	=	0.005, -- kg / sec - fuel consumption for a single engine in afterburner configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
-			dpdh_m	=	1700, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
-			dpdh_f	=	2000, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			cemax	=	0.05, -- kg / sec - fuel consumption for a single engine in dry configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
+			cefor	=	0.05, -- kg / sec - fuel consumption for a single engine in afterburner configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
+			dpdh_m	=	3000, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			dpdh_f	=	3000, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			table_data = {
-			-- Pmax - total thrust in Newtons (kN * 1000) for all engines
-			-- Pfor - total thrust in Newtons (kN * 1000) for all engines
+			-- Pmax - total thrust in Mil Pwr in Newtons for all engines
+			-- Pfor - total thrust in AB in Newtons for all engines
 			--   M		Pmax		 Pfor
-				{0.0,		18000.0},
-				{0.1,		18000.0},
-				{0.2,		18000.0},
-				{0.3,		18000.0},
-				{0.31,		18000.0},
-				{0.39,		17000.0},
-				{0.4,		17000.0},
-				{0.5,		10000.0},
-				{0.6,		10000.0},
-				{0.7,		 9050.0},
-				{0.8,		 9020.0},
-				{0.9,		 5902.0},
-				{1.0,		 3469.0},
-				}, -- end of table_data
+			{0.0,		16620.0},
+			{0.1,		15600.0},
+			{0.2,		14340.0},
+			{0.3,		13320.0},
+			{0.4,		12230.0},
+			{0.5,		11300.0},
+			{0.6,		10600.0},
+			{0.7,		10050.0},
+			{0.8,		 9820.0},
+			{0.9,		 5902.0},
+			{1.0,		 3469.0}
+		}, -- end of table_data
 			-- M - Mach number
 			-- Pmax - Engine thrust at military power
 			-- Pfor - Engine thrust at AFB
