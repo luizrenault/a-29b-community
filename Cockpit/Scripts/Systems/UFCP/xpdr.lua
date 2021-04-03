@@ -147,8 +147,6 @@ function SetCommandXPDR(command,value)
             ufcp_continue_edit("9", FIELD_INFO[SEL_IDS.CODE], false)
         elseif command == device_commands.UFCP_0 and value == 1 then
             ufcp_continue_edit("0", FIELD_INFO[SEL_IDS.CODE], false)
-        elseif command == device_commands.UFCP_CLR and value == 1 then
-            ufcp_undo_edit()
         end
     end
 end

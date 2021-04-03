@@ -327,7 +327,5 @@ function SetCommandNavAids(command,value)
         if sel == SEL_IDS.ILS or sel == SEL_IDS.VOR or sel == SEL_IDS.ADF or sel == SEL_IDS.ADF_NEXT or sel == SEL_IDS.CRS then
             ufcp_continue_edit("", FIELD_INFO[sel], true)
         end
-    elseif command == device_commands.UFCP_CLR and value == 1 then
-        ufcp_undo_edit()
     end
 end
