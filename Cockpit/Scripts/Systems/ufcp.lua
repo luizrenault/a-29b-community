@@ -377,7 +377,7 @@ function post_initialize()
     hud = GetDevice(devices.HUD)
     if birth=="GROUND_HOT" or birth=="AIR_HOT" then
         dev:performClickableAction(device_commands.UFCP_EGI, 1, true)
-        dev:performClickableAction(device_commands.UFCP_DVR, 0, true)
+        dev:performClickableAction(device_commands.UFCP_DVR, 1, true)
         dev:performClickableAction(device_commands.UFCP_RALT, 1, true)
     elseif birth=="GROUND_COLD" then
         dev:performClickableAction(device_commands.UFCP_EGI, 0.15, true)
