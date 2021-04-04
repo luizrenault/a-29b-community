@@ -67,6 +67,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - RT and SW time modes on UFCP Main format.
 - New UFCP textures.
 - UFCP and CMFD key bindings.
+- Engine will cut off randomly from 60 to 90kg of fuel.
 
 ### Changed
 - Brakes efficiency now working as it should, based on velocity and pedal position.
@@ -80,6 +81,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Gear Switch LMB/RMB behavior.
 - CMFD EICAS Brightness adjustment.
 - Fuel flow now more realistic.
+- AI can take off, perform mission and land.
 
 
 ## Version 0.1.7b - 24 March 2021

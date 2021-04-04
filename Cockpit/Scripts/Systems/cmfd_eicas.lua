@@ -66,7 +66,7 @@ local EICAS_SPD_BRK_TXT = get_param_handle("EICAS_SPD_BRK_TXT")
 local EICAS_INIT = get_param_handle("EICAS_INIT")
 
 fuel_init = 300;
-
+fuel_random = 60 + os.time()%30
 fuel_joker = 200;
 
 local torque_tempo = -1
@@ -352,9 +352,9 @@ function update_eicas()
         fuel_joker_rot = (60.5- 152/1300* (fuel_joker-305))*math.pi/180
     end
 
-    local fuel = sensor_data.getTotalFuelWeight()
+    local fuel = sensor_data.getTotalFuelWeight() + fuel_random
     if fuel < 0 then fuel = 0 end
-    if fuel > 500 then fuel = 500 end
+    if fuel > 495 then fuel = 495 end
     local fuel_left = fuel / 2 -- simple model
     if fuel_left < 0 then fuel_left = 0 end
     if fuel_left > 245 then fuel_left = 245 end
@@ -511,6 +511,6 @@ function post_initialize_eicas()
     elseif birth=="GROUND_COLD" then
         EICAS_INIT:set(1)
     end
-    fuel_init=round_to(sensor_data.getTotalFuelWeight(),5)
+    fuel_init=round_to(sensor_data.getTotalFuelWeight() + fuel_random,5)
     fuel_joker=round_to(fuel_init/2,5)
 end

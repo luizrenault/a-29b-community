@@ -103,7 +103,7 @@ A_29B =  {
 	    M_empty									=	3356,  -- kg
 		M_nominal								=	3900,  -- kg  -- kg ~ %50 fuel, combat load
 		M_max									=	5400,  -- kg
-		M_fuel_max								=   495, -- utilizável --509 + 239 + 249*2 + 231,   -- kg Asas, Fuselage, Subalar, Ventral,
+		M_fuel_max								=   435, -- utilizável --509 + 239 + 249*2 + 231,   -- kg Asas, Fuselage, Subalar, Ventral,
 		H_max									=	10668 , -- m
 
 		average_fuel_consumption 	= 0.009042, -- this is highly relative, but good estimates are 36-40l/min = 28-31kg/min = 0.47-0.52kg/s -- 45l/min = 35kg/min = 0.583kg/s
