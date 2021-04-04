@@ -57,11 +57,17 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 
 ### Added
 - BARO / RALT submode now remembered with mode changes.
+- Cabin Altitude pressurized down to 7000 ft. 
+- New External normal map (by Urbi).
+- New CMFD Texture.
+- FIX, TIP, LMT, WS, and DTK UFCP formats.
 
 ### Changed
 - NVG Switch only disables storm light.
 - Wingtip position for animation.
 - Rockets and Guns CCIP doesn't take wind into consideration.
+- Np around 100% when NG > 64%.
+- T5 adjustments.
 
 ### Fixes
 - UFCP WYPT menu minor bugs.
@@ -72,7 +78,11 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - A/G Profiles
 - A/G mode select with Stick Step button.
 - A/G select different weapons
-
+- FIX is only cosmetic because currently there is only pure EGI/GPS navigation.
+- Create the alarms for the parameters in the LMT format.
+- Move the FYT in HUD according to the DTK position.
+- Show the DTK information in ADHSI.
+- Set the AA DGFT piper size relative to UFCP_WS (target wingspan in metres)
 
 ## Version 0.1.8b - 04 April 2021 - Happy Easter
 
@@ -384,7 +394,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Throttle and Stick are inconsistent with the real ones;
 
 ### Contributors
-- Renault, Milaré, PaKo, Malamem, Athos, Dino, Jorge Rodrigues, Paoladelf, Farias, Skypork, EDAV, Rudel_chw, and many others.
+- Renault, Milaré, PaKo, Malamem, Athos, Dino, Jorge Rodrigues, Paoladelf, Farias, Skypork, EDAV, Rudel_chw, Urbi, and many others.
 
 
 ### Changed

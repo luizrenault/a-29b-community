@@ -135,14 +135,14 @@ function update_eicas()
     local torque_opt_rot = - (torque_opt -70) * math.pi / 60
 
     ----------------- mostrador de temperatura entre turbinas t5
-    local t5 = sensor_data.getEngineLeftTemperatureBeforeTurbine() * 1.12
+    local t5 = sensor_data.getEngineLeftTemperatureBeforeTurbine() * 1.067
     if t5 < -50 then t5 = -50 end
     if t5 > 1200 then t5 = 1200 end
 
     -- ponteiro de t5
     local t5_rot = t5
     if t5_rot < 200 then t5_rot = 200 end
-    if t5_rot > 1200 then tr_rot = 1200 end
+    if t5_rot > 1200 then t5_rot = 1200 end
     t5_rot = - (t5_rot -700) * math.pi / 600
 
     t5=round_to(t5, 10)
@@ -155,8 +155,14 @@ function update_eicas()
     end
 
     ------------------- pressão de óleo
-    local oil_press=sensor_data.getEngineLeftRPM()*2
-    if oil_press > 120 then oil_press = 120 end --simulação
+    local oil_press=sensor_data.getEngineLeftRPM()
+    if oil_press > 45 then oil_press = 99+(oil_press-45)/20*13
+    elseif oil_press > 35 then oil_press = 92+(oil_press-35)/10*7
+    elseif oil_press > 28 then oil_press = 64+(oil_press-28)/7*28
+    elseif oil_press > 16 then oil_press = (oil_press-16)/12*64
+    else oil_press = 0
+    end
+    if oil_press > 112 then oil_press = 112 end --simulação
 
     if oil_press < 0 then oil_press = 0 end
     if oil_press > 200 then oil_press = 200 end
@@ -207,6 +213,20 @@ function update_eicas()
     
     ------------------- rotação da hélice %
     local np = sensor_data.getEngineLeftRPM()
+
+    if get_avionics_onground() then
+        if np > 70 then np = 100
+        elseif np > 64.8 then np = 50 + (np-64.8)/5.2 * 50
+        elseif np > 55 then np = (np-55)/9.8 * 50
+        else np = 0
+        end
+    else
+        if np > 64 then np = 99 + (np-64)/36 * 2
+        elseif np > 55 then np = (np-55)/10 * 50
+        else np = 0
+        end
+    end
+
     if np < 0 then np = 0 end
     if np > 130 then np = 130 end
 
@@ -285,6 +305,9 @@ function update_eicas()
 
     ------------------- indicador digital de pressão cabine
     local cabin_press = sensor_data.getBarometricAltitude()*3.28084
+    
+    if cabin_press > 7000 and get_aircraft_draw_argument_value(38) == 0 then cabin_press = 7000 end
+
     if cabin_press < -7000 then cabin_press = -7000 end
     if cabin_press > 40000 then cabin_press = 40000 end
     cabin_press = round_to(cabin_press, 500)
