@@ -545,8 +545,8 @@ A_29B =  {
 			dcx_eng	=	0.095, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
 			cemax	=	0.05, -- kg / sec - fuel consumption for a single engine in dry configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
 			cefor	=	0.05, -- kg / sec - fuel consumption for a single engine in afterburner configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
-			dpdh_m	=	3000, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
-			dpdh_f	=	3000, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			dpdh_m	=	5000, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			dpdh_f	=	5000, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			table_data = {
 			-- Pmax - total thrust in Mil Pwr in Newtons for all engines
 			-- Pfor - total thrust in AB in Newtons for all engines
@@ -570,21 +570,35 @@ A_29B =  {
             extended =
                 {
                 
-                    thrust_max = -- thrust interpolation table by altitude and mach number, 2d table
+                    	thrust_max = -- thrust interpolation table by altitude and mach number, 2d table
                         { -- Minimum thrust 2000 kN, maximum thrust 16700 kN
-                            M 		 = {0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9},
+                            M 		 = {0*666.739,100*666.739,120*666.739,140*666.739,160*666.739,200*666.739,220*666.739,280*666.739,320*666.739,400*666.739},
                             H		 = {0,3048,6096,9144,10500,12192},
                             thrust	 = {-- M 0         0.1      0.2      0.3      0.4     0.5     0.6     0.7      0.8      0.9
                                         {    17000,   17000,   17000,   17000,   17000,  17000,  17000,  17000,   16925,  17259 },--H = 0 (sea level)
                                         {    17000,   17000,   17000,   17000,   17000,  16250,  12722,  12855,   12989,  13656 },--H = 3048 (10kft)
                                         {    17000,   17000,   17000,   17000,   17000,  17000,   9786,   10053,   10320,  10765 },--H = 6096 (20kft)
-                                        {    17000,   17000,   17000,   17000,   17000,  17000,   7184,   7440,    7695,   8062 	},--H = 9144 (30kft)
+                                        {    17000,   17000,   17000,   17000,   17000,  17000,   7184,   7440,    7695,   8062 },--H = 9144 (30kft)
                                         {    6939,    6294,    5649,    5638,    5627,   5749,   5872,   6094,    6316,   6628 	},--H = 10500 (34kft)
 										{    3327,    2782,    2237,    2248,    2260,   2349,   2438,   2627,    2816,   3071 	},--H = 12192 (40kft)
                                         
                             },
                         },
-		
+						TSFC_max =  -- thrust specific fuel consumption by altitude and Mach number for RPM  100%, 2d table
+						{			-- factor = kg/h /2000
+                            M 		 = {0/666.739, 140/666.739, 160/666.739, 200/666.739, 220/666.739, 260/666.739, 300/666.739},
+							H		 = {0, 1524, 3048, 4572, 6096, 7620, 9144},
+							TSFC	 = {-- KT 0      	140     	160			200     	220 		260		300--0.1264
+										{   150/1800,  195/1800,  205/1800,    243/1800,  271/1800, 347/1800, 380/1800},--H = 0       -- SL
+										{   140/1800,  180/1800,  188/1800,    218/1800,  240/1800, 300/1800, 360/1800},--H = 1524    -- 5000' 
+										{   130/1800,  152/1800,  175/1800,    195/1800,  215/1800, 268/1800, 330/1800},--H = 3048    -- 10000'
+										{   120/1800,  120/1800,  160/1800,    177/1800,  191/1800, 234/1800, 285/1800},--H = 4572    -- 15000'
+										{   115/1800,  115/1800,  135/1800,    165/1800,  175/1800, 210/1800, 250/1800},--H = 6096    -- 20000'
+										{   110/1800,  110/1800,  110/1800,    160/1800,  165/1800, 195/1800, 210/1800},--H = 7620    -- 25000'
+										{   110/1800,  110/1800,  110/1800,    152/1800,  165/1800, 175/1800, 175/1800},--H = 9144    -- 30000'
+							}
+						},
+
 
                 }, -- end of extended data
 
@@ -624,24 +638,6 @@ A_29B =  {
 		-- 			  },
 		--   },
 		-- }, -- end of Cx0
-	
-		-- 	extended = -- added new abilities for engine performance setup. thrust data now can be specified as 2d table by Mach number and altitude. thrust specific fuel consumption tuning added as well
-		-- 	{
-		-- 		-- matching TSFC to mil thrust consumption at altitude at mach per NATOPS navy trials
-		-- 		TSFC_max =  -- thrust specific fuel consumption by altitude and Mach number for RPM  100%, 2d table
-		-- 		{
-		-- 			M 		 = {0, 0.5, 0.8, 0.9, 1.0},
-		-- 			H		 = {0, 3048, 6096, 9144, 12192},
-		-- 			TSFC	 = {-- M 0      0.5     0.8       0.9     1.0
-		-- 						{   0.86,  0.92,  1.012,    1.012,  1.003},--H = 0       -- SL
-		-- 						{   0.86,  0.99,  1.025,    1.025,  1.016},--H = 3048    -- 10000'
-		-- 						{   0.86,  0.96,  1.008,    1.008,  0.999},--H = 6096    -- 20000'
-		-- 						{   0.86,  0.95,  0.984,    0.984,  0.974},--H = 9144    -- 30000'
-		-- 						{   0.86,  0.94,  0.976,    0.976,  0.967},--H = 12192   -- 40000'
-		-- 			}
-		-- 		},
-		-- },              
-
 
 	},
 

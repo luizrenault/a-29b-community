@@ -73,11 +73,13 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - New Throttle and Stick texture.
 - Altitude and Baro adjustments synchronized with DCS.
 - UFCP WPT menu can edit data as WP or FYT.
+- New FM according to specs for AoA vs KTAS.
 
 ### Fixes
 - Salvo button now changes to SMS EJ format on CMFD 1.
 - Gear Switch LMB/RMB behavior.
 - CMFD EICAS Brightness adjustment.
+- Fuel flow now more realistic.
 
 
 ## Version 0.1.7b - 24 March 2021

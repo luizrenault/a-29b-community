@@ -79,6 +79,7 @@ local propMaxRPM		= 2000
 local bfi_bright = 1
 function update()
 	--Test set anim argument
+	-- IAS_param:set(sensor_data.getTrueAirSpeed()*MPS_TO_KNOTS)
 	IAS_param:set(sensor_data.getIndicatedAirSpeed()*MPS_TO_KNOTS)
 	BFI_ROLL_param:set(sensor_data.getRoll())
 	BFI_PITCH_param:set(sensor_data.getPitch())
