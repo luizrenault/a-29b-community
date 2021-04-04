@@ -1,5 +1,6 @@
--- Methods
+local UFCP_DTK_ENABLED = get_param_handle("ADHSI_DTK")
 
+-- Methods
 
 function update_menu()
     local text = ""
@@ -7,6 +8,10 @@ function update_menu()
     text = text .. "1LMT 2DTK  3BAL C ACAL\n"
     text = text .. "4NAV 5WS   6EGI E FUEL\n"
     text = text .. "7TAC 8MODE 9OAP O MISC\n"
+
+    if UFCP_DTK_ENABLED:get() == 1 then
+        text = replace_pos(text, 10)
+    end
     UFCP_TEXT:set(text)
 end
 

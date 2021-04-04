@@ -41,6 +41,8 @@ local CMFD_NAV_AC_TEXT = get_param_handle("CMFD_NAV_AC_TEXT")
 local CMFD_NAV_AFLD_TEXT = get_param_handle("CMFD_NAV_AFLD_TEXT")
 local CMFD_NAV_MARK_TEXT = get_param_handle("CMFD_NAV_MARK_TEXT")
 
+local UFCP_TIP_DIR = get_param_handle("UFCP_TIP_DIR") -- -1Left 0Disabled 1Right
+
 local nav_format = CMFD_NAV_FORMAT_IDS.AC
 local nav_fyt = 1
 local nav_fyt_last = -1
@@ -105,6 +107,8 @@ local function cmfd_nav_sel_next_wpt()
             break 
         end
     end
+
+    UFCP_TIP_DIR:set(0) -- Disable TIP when changing waypoints
     return nav_fyt_next
 end
 
@@ -119,6 +123,8 @@ local function cmfd_nav_sel_prev_wpt()
             break 
         end
     end
+
+    UFCP_TIP_DIR:set(0) -- Disable TIP when changing waypoints
     return nav_fyt_prev
 end
 

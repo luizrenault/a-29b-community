@@ -197,13 +197,13 @@ function update_nav_aids()
     -- ADF
     text = text .. " ADF"
     if sel == SEL_IDS.ADF then text = text .. "*" else text = text .. " " end
-    if sel == SEL_IDS.ADF and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit() else text = text .. string.format("%06.1f", ufcp_navaids_adf) end
+    if sel == SEL_IDS.ADF and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit() else text = text .. string.format("%6.1f", ufcp_navaids_adf) end
     if sel == SEL_IDS.ADF then text = text .. "*" else text = text .. " " end
 
     -- ADF next
     text = text .. "NEXT"
     if sel == SEL_IDS.ADF_NEXT then text = text .. "*" else text = text .. " " end
-    if sel == SEL_IDS.ADF_NEXT and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit() else text = text .. string.format("%06.1f", ufcp_navaids_adf_next) end
+    if sel == SEL_IDS.ADF_NEXT and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit() else text = text .. string.format("%6.1f", ufcp_navaids_adf_next) end
     if sel == SEL_IDS.ADF_NEXT then text = text .. "*" else text = text .. " " end
 
     text = text .. "\n"

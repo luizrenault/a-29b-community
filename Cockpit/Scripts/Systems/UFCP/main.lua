@@ -144,6 +144,7 @@ function SetCommandMain(command,value)
         fix()
         ufcp_sel_format = UFCP_FORMAT_IDS.FIX
     elseif command == device_commands.UFCP_9 and value == 1 then
+        ufcp_tip_reset_cursor_timer()
         ufcp_sel_format = UFCP_FORMAT_IDS.TIP
     elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.MENU

@@ -35,7 +35,6 @@ ufcp_wpt_elv = 0
 ufcp_wpt_time = 0
 ufcp_wpt_sel = UFCP_WPT_SEL_IDS.FYT_WP
 
-local Terrain = require('terrain')
 local ufcp_wpt_save_now = false
 
 -- Methods
