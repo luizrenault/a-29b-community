@@ -323,10 +323,7 @@ function SetCommand(command,value)
         SetCommandSms(command, value, CMFD[cmfdnumber])
         CMFD1Format:set(CMFD1Sel:get())
         return 0
-    elseif command == device_commands.NAV_INC_FYT then
-        SetCommandNav(command, value)
-        return 0
-    elseif command == device_commands.NAV_DEC_FYT then
+    elseif command == device_commands.NAV_INC_FYT or command == device_commands.NAV_DEC_FYT or command == device_commands.NAV_SET_FYT then
         SetCommandNav(command, value)
         return 0
     end

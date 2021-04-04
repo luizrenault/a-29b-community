@@ -456,23 +456,7 @@ function SetCommand(command,value)
         ufcp_edit_clear()
         ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
     elseif command == device_commands.UFCP_BARO_RALT and value == 1 then
-        -- TODO the system should remember the selected mode
-        local master_mode = get_avionics_master_mode()
-        local master_mode_last = master_mode
-        if master_mode == AVIONICS_MASTER_MODE_ID.GUN then master_mode = AVIONICS_MASTER_MODE_ID.GUN_R 
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.GUN_R then master_mode = AVIONICS_MASTER_MODE_ID.GUN 
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP then master_mode = AVIONICS_MASTER_MODE_ID.CCIP_R
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R then master_mode = AVIONICS_MASTER_MODE_ID.CCIP
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS then master_mode = AVIONICS_MASTER_MODE_ID.DTOS_R
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then master_mode = AVIONICS_MASTER_MODE_ID.DTOS
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.FIX then master_mode = AVIONICS_MASTER_MODE_ID.FIX_R
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.FIX_R then master_mode = AVIONICS_MASTER_MODE_ID.FIX
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.MARK then master_mode = AVIONICS_MASTER_MODE_ID.MARK_R
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.MARK_R then master_mode = AVIONICS_MASTER_MODE_ID.MARK
-        end
-        if master_mode ~= master_mode_last then
-            set_avionics_master_mode(master_mode)
-        end
+        WPN_RALT:set((WPN_RALT:get() + 1) % 2)
     -- TODO is this still used? Yes, because has to monitor changes from CMFD.
     elseif command == device_commands.UFCP_VV and value == 1 then
         if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VV_VAH then 

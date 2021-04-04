@@ -154,7 +154,7 @@ A_29B =  {
 		RCS 						= 2.5, -- Radar Cross Section m2
 		IR_emission_coeff 			= 0.1, -- Normal engine -- IR_emission_coeff = 1 is Su-27 without afterburner. It is reference.
 		IR_emission_coeff_ab 		= 0.1, -- With afterburner
-		wing_tip_pos 				= {-0.82, -0.250,     5.5}, -- wingtip coords for visual effects
+		wing_tip_pos 				= {-0.39, -0.412,     5.591}, -- wingtip coords for visual effects
 		brakeshute_name 			= 0, -- Landing - brake chute visual shape after separation
 		
 		-- The following is used for graphical AB effects

@@ -111,6 +111,7 @@ WPN_IS_TIME = get_param_handle("WPN_IS_TIME")
 WPN_SD = get_param_handle("WPN_SD")
 WPN_GUNS_L_SEL = get_param_handle("WPN_GUNS_L_SEL")
 WPN_GUNS_R_SEL = get_param_handle("WPN_GUNS_R_SEL")
+WPN_RALT = get_param_handle("WPN_RALT")
 
 WPN_VENTRAL_FREE = get_param_handle("WPN_VENTRAL_FREE")
 
