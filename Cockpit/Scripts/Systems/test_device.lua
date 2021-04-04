@@ -54,7 +54,7 @@ function post_initialize()
     end
     -- print_message_to_user("Dumped!")
     -- dump1("Params\n", list_cockpit_params())
-    dump1("get_mission_route", get_mission_route())
+    -- dump1("get_mission_route", get_mission_route())
     startup_print("test: postinit end")
 end
 
@@ -116,19 +116,19 @@ function SetCommand(command,value)
         -- WS_DLZ_MAX:set(1500)
         -- WS_DLZ_MIN:set(1100)
         -- print_message_to_user("Ralt: " .. sensor_data.getRadarAltitude())
-         print_message_to_user("WS_DLZ_MIN:" .. WS_DLZ_MIN:get().. "\t WS_DLZ_MAX:"..WS_DLZ_MAX:get())
+        --  print_message_to_user("WS_DLZ_MIN:" .. WS_DLZ_MIN:get().. "\t WS_DLZ_MAX:"..WS_DLZ_MAX:get())
 
         -- for i=1,5 do
         --     local text = dump("STO"..i, wpn:get_station_info(i-1))
         --     -- print_message_to_user(text)
         --     log.info(text)
         -- end
-        -- -- print_message_to_user("Dumped!")
-        -- local text = dump("Params\n", list_cockpit_params())
-        -- text = strsplit("\n", text)
-        -- for key, value in pairs(text) do
-        --     log.info(value)
-        -- end
+        print_message_to_user("Dumped!")
+        local text = dump("Params\n", list_cockpit_params())
+        text = strsplit("\n", text)
+        for key, value in pairs(text) do
+            log.info(value)
+        end
         -- dispatch_action(nil,iPlaneAirBrakeOn)
     end
 end
@@ -992,7 +992,8 @@ avSidewinderSeeker fails
 
 avSimpleAirspeedIndicator
 
-avSimpleAltimeter
+avSimpleAltimeter       Crashes
+2021-03-29 02:18:33.295 ERROR   COCKPITBASE: devices_keeper::link_all: unable to find link source 'FM_Proxy' for device 'TEST'
 
 avSimpleElectricSystem
 GetSelf meta["__index"]["get_DC_Bus_1_voltage"] = function: 00000000CD4E73D0

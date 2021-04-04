@@ -83,6 +83,7 @@ Keys =
     Trigger      	     = __custom_counter(),
     WeaponRelease			    	 = __custom_counter(),
     DisplayMngt        	     = __custom_counter(),
+    JettisonWeapons         =   __custom_counter(),
 
     -- Throttle
     GunSelDist        	     = __custom_counter(),
@@ -522,11 +523,29 @@ device_commands =
     NAV_DEC_FYT                    = __counter(),
     
     
-    AAA                    = __counter(),
-    AAA                    = __counter(),
-    AAA                    = __counter(),
-    AAA                    = __counter(),
-    AAA                    = __counter(),
+    AUDIO_COM1_VOL                    = __counter(),
+    AUDIO_COM2_VOL                    = __counter(),
+    AUDIO_COM3_VOL                    = __counter(),
+    AUDIO_COM4_VOL                    = __counter(),
+    AUDIO_ADF_VOL                    = __counter(),
+    AUDIO_NAV_VOL                    = __counter(),
+    AUDIO_MSL_VOL                    = __counter(),
+    AUDIO_MKR_VOL                    = __counter(),
+    AUDIO_VOL                    = __counter(),
+    AUDIO_VOX                    = __counter(),
+    AUDIO_INPH                    = __counter(),
+
+    AP_RP                    = __counter(),
+    AP_HDG                    = __counter(),
+    AP_ALT                    = __counter(),
+    AP_TEST                    = __counter(),
+    AP_NAV                    = __counter(),
+    AP_APR                    = __counter(),
+    AP_GS                    = __counter(),
+    AP_ON                    = __counter(),
+
+
+
     AAA                    = __counter(),
 
     STICK_WEAPON_RELEASE_OFF                = __counter(),

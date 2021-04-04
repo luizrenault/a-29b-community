@@ -399,8 +399,8 @@ local hud_warning = get_param_handle("HUD_WARNING")
 function update()
     local master_mode = get_avionics_master_mode()
     local hud_on = get_elec_avionics_ok() and 1 or 0
-    local hud_bright = get_cockpit_draw_argument_value(483)
-    if get_cockpit_draw_argument_value(476) == 0 then hud_bright = hud_bright * 0.5 end
+    local hud_bright = 1-get_cockpit_draw_argument_value(483)
+    if get_cockpit_draw_argument_value(476) == -1 then hud_bright = hud_bright * 0.5 end
 
     if (get_avionics_master_mode_ag() or get_avionics_master_mode_aa()) and WPN_READY:get() == 1 then HUD_RDY:set(1) 
     elseif (get_avionics_master_mode_ag() or get_avionics_master_mode_aa()) and WPN_SIM_READY:get() == 1 then HUD_RDY:set(2)
@@ -513,7 +513,7 @@ function update()
     end
 
     local fpm_cross = 0        
-    angleh, anglev, fpm_cross = limit_xy(angleh, anglev - pitch, hud_limit.x, hud_limit.y)
+    angleh, anglev, fpm_cross = limit_xy(angleh, anglev - pitch, hud_limit.x, hud_limit.y*1.3)
     anglev = anglev + pitch
    
     local pl_slide = angleh + (anglev-pitch) * math.tan(roll)
@@ -649,14 +649,14 @@ function post_initialize()
     elseif birth=="AIR_HOT" then
     elseif birth=="GROUND_COLD" then
     end
-    dev:performClickableAction(device_commands.UFCP_HUD_BRIGHT,1,true)
+    dev:performClickableAction(device_commands.UFCP_HUD_BRIGHT,0,true)
     startup_print("hud: postinit end")
 end
 
--- dev:listen_command(device_commands.IcePropeller)
--- dev:listen_command(device_commands.IceWindshield)
--- dev:listen_command(device_commands.IcePitotPri)
--- dev:listen_command(device_commands.IcePitotSec)
+local iCommandHUDBrightnessUp = 746
+local iCommandHUDBrightnessDown = 747
+dev:listen_command(iCommandHUDBrightnessUp)
+dev:listen_command(iCommandHUDBrightnessDown)
 
 function SetCommand(command,value)
     debug_message_to_user("environ: command "..tostring(command).." = "..tostring(value))
@@ -664,9 +664,14 @@ function SetCommand(command,value)
         if get_hud_warning() == 0 and value == 1 then 
             max_accel = 0
         end        
-    elseif command == iCommandEnginesStart then
-    elseif command == iCommandEnginesStop then
-        -- dev:performClickableAction(device_commands.EngineStart, 0, true)
+    elseif command == iCommandHUDBrightnessUp then
+        value = get_cockpit_draw_argument_value(483) - 0.05
+        if value > 1 then value = 1 end
+        dev:performClickableAction(device_commands.UFCP_HUD_BRIGHT, value, true)
+    elseif command == iCommandHUDBrightnessDown then
+        value = get_cockpit_draw_argument_value(483) + 0.05
+        if value < 0 then value = 0 end
+        dev:performClickableAction(device_commands.UFCP_HUD_BRIGHT, value, true)
     end
 end
 

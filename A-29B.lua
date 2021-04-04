@@ -103,22 +103,22 @@ A_29B =  {
 	    M_empty									=	3356,  -- kg
 		M_nominal								=	3900,  -- kg  -- kg ~ %50 fuel, combat load
 		M_max									=	5400,  -- kg
-		M_fuel_max								=   495, -- utilizável --509 + 239 + 249*2 + 231,   -- kg Asas, Fuselage, Subalar, Ventral,
+		M_fuel_max								=   435, -- utilizável --509 + 239 + 249*2 + 231,   -- kg Asas, Fuselage, Subalar, Ventral,
 		H_max									=	10668 , -- m
 
 		average_fuel_consumption 	= 0.009042, -- this is highly relative, but good estimates are 36-40l/min = 28-31kg/min = 0.47-0.52kg/s -- 45l/min = 35kg/min = 0.583kg/s
 		CAS_min 					= 56, -- if this is not OVERAL FLIGHT TIME, but jus LOITER TIME, than it sholud be 10-15 minutes.....CAS capability in minute (for AI)
 		V_opt 						= 123,-- Cruise speed (for AI) –- Assume Mach 0.80 at 20000 ft as optimal. See -- http://www.nasa.gov/centers/dryden/pdf/87789main_H-636.pdf and		–- http://www.hochwarth.com/misc/AviationCalculator.html 		–- Mach 0.8 at 20000 = XXX kts TAS = XXX m / s
-		V_take_off 					= 62, -- Take off speed in m/s (for AI)
-		V_land 						= 62, -- Land speed in m/s (for AI)
+		V_take_off 					= 60, -- Take off speed in m/s (for AI)
+		V_land 						= 60, -- Land speed in m/s (for AI)
 		V_max_sea_level 			= 165, -- Max speed at sea level in m/s (for AI)
 		V_max_h 					= 145, -- Max speed at max altitude in m/s (for AI)
-		Vy_max 						= 75, -- Max climb speed in m/s (for AI)
+		Vy_max 						= 12, -- Max climb speed in m/s (for AI)
 		Mach_max 					= 0.562, -- Max speed in Mach (for AI)
 		Ny_min 						= -4, -- Min G (for AI)
 		Ny_max 						= 8.0,  -- Max G (for AI)
 		Ny_max_e 					= 8.0,  -- Max G (for AI)
-		AOA_take_off 				= 0.14, -- AoA in take off (for AI)
+		AOA_take_off 				= 0.17, -- AoA in take off (for AI) -- in radians
 		bank_angle_max 				= 60, -- Max bank angle (for AI)
 	
 		has_afteburner 				= false, -- AFB yes/no
@@ -145,11 +145,11 @@ A_29B =  {
 		wing_span 					= 11.135, -- wing spain in m
 		wing_type 					= 0,
 
-		thrust_sum_max 				= 16000, -- thrust in kg (44kN)
-		thrust_sum_ab 				= 16000, -- thrust inkg (71kN)
+		thrust_sum_max 				= 16620, -- thrust in kg (44kN)
+		thrust_sum_ab 				= 16620, -- thrust inkg (71kN)
 		length 						= 11.332, -- full lenght in m
 		height 						= 3.974, -- height in m
-		flaps_maneuver 				= 0.5, -- Max flaps in take-off and maneuver (0.5 = 1st stage; 1.0 = 2nd stage) (for AI)
+		flaps_maneuver 				= 1.0, -- Max flaps in take-off and maneuver (0.5 = 1st stage; 1.0 = 2nd stage) (for AI)
 		range 						= 1568, -- Max range in km (for AI)
 		RCS 						= 2.5, -- Radar Cross Section m2
 		IR_emission_coeff 			= 0.1, -- Normal engine -- IR_emission_coeff = 1 is Su-27 without afterburner. It is reference.
@@ -193,6 +193,10 @@ A_29B =  {
 					ejection_seat_name	=	17,
 					drop_canopy_name	=	'A-29B CANOPY',
 					pos = 	{0,	0.3,	0},
+					can_be_playable 	 = true,
+					role 				 = "pilot",
+					role_display_name    = _("Pilot"),
+					ejection_order      = 0,
 				}, -- end of [1]
 				
 				[2] = 
@@ -200,6 +204,11 @@ A_29B =  {
 					ejection_seat_name	=	17,
 					drop_canopy_name	=	0,
 					pos = 	{-1.4,	0.5,	0},
+					pilot_body_arg      = 472,
+					can_be_playable 	 = true,
+					role 				 = "instructor",
+					role_display_name    = _("Instructor pilot"),
+					ejection_order      = 1,
 				}, -- end of [2]
 		}, -- end of crew_members
 	
@@ -405,7 +414,7 @@ A_29B =  {
 					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
 				}
 			),
-			pylon(6, 0, 2.427, -0.565, 0.563,
+			pylon(6, 0, 1.664, -0.933, 0.715,
 				{
 					use_full_connector_position = true,
 					connector 		= "SmokeWhite",
@@ -441,15 +450,17 @@ A_29B =  {
 	SFM_Data = {
 		aerodynamics = 
 		{
-			Cy0	=	0.045, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
+			Cy0	=	0.2, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
 			Mzalfa	=	4.355, -- Horizontal tail pitch coefficient
 			Mzalfadt	=	0.8,  -- Wing pitch coefficient
 			kjx = 2.25, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
 			kjz = 0.00125,  -- Unknown pitch constant. All planes use 0.00125 -- -- Inertia parametre Z - Dimension (clean) airframe drag coefficient at Z (Front) Simply the wing area in square meters (as that is a major factor in drag calculations)
+
 			Czbe = -0.056, -- Directional stability coefficient  -- coefficient, along Z axis (perpendicular), affects yaw, negative value means force orientation in FC coordinate system
+			
 			cx_gear = 0.3, -- Additional coefficient of drag for gear extended
 			cx_flap = 0.055, -- Additional coefficient of drag for flap extended
-			cy_flap = 0.38, -- Additional coefficient of lift for flap extended
+			cy_flap = 0.23, -- Additional coefficient of lift for flap extended
 			cx_brk = 0.065, -- Additional coefficient of drag for air brakes
 			
 			-- Hi guys. I try to calculate the rollrate, or maxrollrate (omxmax) for a plane and I've got the measurements of the plane, Cl (rolling moment coefficient) and Clp.
@@ -467,7 +478,12 @@ A_29B =  {
 			-- Omxmax - Roll rate - roll rate, rad/s
 			-- Aldop - Visual effects settings for stability / controlability -- Alfadop Max AOA at current M - departure threshold
 			-- Cymax - Maximum coefficient of lift, corresponding to αstall -- Coefficient, lift, maximum possible (ignores other calculations if current Cy > Cymax)
-			-- 
+
+			-- Cold start sound.
+			-- Park breaking lights.
+			-- NP 100%
+			-- AP entra em R/P
+			-- Guns piper baixo 5 mils
 
 			-- The variables "B" and "B4" in the SFM of DCS are "modifiers" of the variable "drag at zero Lift" aka Cx0 to make those values fit the Lift/Drag (or Drag/Lift)-Polars, 
 			-- where at the same mach-speed different values of drag (CD) are possible due to different angles of attack "AoA" (see above chart in post at 15h18 07.02.2021). 
@@ -492,45 +508,30 @@ A_29B =  {
 			-- more efficient. The shorter, thicker the wing, the more unefficient (I would say/guess or whatever)...or you can calculate it (see above) which looks like a 
 			-- nicely spent weekend to me
 			--      M	    Cx0		 Cya		    B		 B4	     Omxmax	    Aldop	    Cymax
-					{-0.1,	0.0187,	0.0146,		    0.052,	0.012,	  2.7,		22.0,		0.0*2,	},
-					{0.00,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.01,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.02,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.03,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.04,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.05,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.0*2,	},
-					{0.06,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.1*2,	},
-					{0.07,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.2*2,	},
-					{0.08,	0.0185,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.3*2,	},
-					{0.09,	0.0100,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.4*2,	},							
-					{0.10,	0.0100,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.7*2,	},
-					{0.11,	0.0100,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
-					{0.12,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
-					{0.13,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
-					{0.14,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		0.9*2,	},
-					{0.15,	0.0090,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.0*2,	},
-					{0.16,	0.0110,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.20*2,	},
-					{0.17,	0.0125,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.30*2,	},
-					{0.18,	0.0255,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.45*2,	},
-					{0.19,	0.0275,	0.055,		    0.1,	0.092,	  2.7,		22.0,		1.45*2,	},
-					{0.2,	0.0355,	0.055,		    0.01,	0.012,	  2.7,     	22.0,		1.45*2,   },
-					{0.3,	0.0265,	0.055,		    0.1,	0.092,	  2.7,		19.0,		1.45*2,    },
-					{0.31,	0.0205,	0.055,		    0.05,	0.072,	  2.7,		19.0,		1.45*2,    },
-					{0.33,	0.0215,	0.055,		    0.05,	0.042,	  2.7,		19.0,		1.45*2,    },
-					{0.36,	0.0235,	0.055,		    0.05,	0.022,	  2.7,		19.0,		1.45*2,    },
-					{0.37,	0.0175,	0.055,		    0.05,	0.012,	  2.7,		19.0,		1.45*2,    },
-					{0.38,	0.0145,	0.055,		    0.05,	0.012,	  2.7,		19.0,		1.45*2,    },
-					{0.39,	0.0155,	0.055,		    0.09,	0.012,	  2.7,		19.0,		1.45*2,    },
-					{0.5,	0.0787,	0.055,	    	0.99,	0.099,	  2.7,		17.0,		1.45*2,   },
-					{0.59,	0.0787,	0.0540*2,		0.99,	0.099,	  2.7,	    17.0,		1.45*2,   },
-					{0.67,	0.0487,	0.0707*2,		0.99,	0.091,	  2.7,		14.5,		0.98*2,   },
-					{0.74,	0.0427,	0.0855*2,		0.1,	0.16,	  2.7,		10.0,	  	0.72*2,   },
-					{0.76,	0.032,	0.078*2,		0.1,	0.25,	  2.7,      9.0,  		0.6*2,    },
-					{0.8,	0.063,	0.072*2,		0.2,	0.36,	  2.456,	6.0,	    0.4*2,	},
-					{0.83,	0.1,	0.0725*2,		0.34,	2.4,	  0.32,		4.5,		0.3*2,	},
-					{0.9,	0.126,	0.073*2,		0.56,	3.0,	  0.076,	3.0,	    0.2*2,	},
-					{1.1,	0.16,	0.03*2,			0.56,	3.0,	  0.076,	1.0,		0.3*2		},
-			}
+		{0  /666.739,	   0.022,	0.010,		  0.051,	0.0065,	 0.15,	     22,    	1.40,	},
+		{10 /666.739,	   0.022,	0.020,		  0.051,	0.0065,	 0.20,	     22,    	1.40,	},
+		{30 /666.739,	   0.022,	0.040,		  0.051,	0.0065,	 0.30,	     22,    	1.40,	},
+		{50 /666.739,	   0.022,	0.070,		  0.051,	0.0065,	 0.40,	     22,	    1.40,	},
+		{70 /666.739,	   0.022,	0.090,		  0.051,	0.0065,	 0.50,	     22,	    1.40,	},
+		{80 /666.739,	   0.022,	0.100,		  0.051,	0.0065,	 0.55,	     22,	    1.40,	},
+		{90 /666.739,	   0.022,	0.110,		  0.051,	0.0065,	 0.60,	     22,	    1.40,	},
+		{100/666.739,	   0.022,	0.120,		  0.051,	0.0065,	 0.65,	     22,	    2.0,	},
+		{110/666.739,	   0.022,	0.100,		  0.051,	0.0065,	 0.70,	     22,	    2.0,	},
+		{130/666.739,	   0.022,	0.075,		  0.051,	0.0065,	 0.90,	     22,	    2.0,	},
+		{150/666.739,	   0.022,	0.073,		  0.051,	0.0065,	 1.2,	     22,	    2.0,	},
+		{170/666.739,	   0.022,	0.073,		  0.051,	0.0065,	 1.2,	     22,	    2.0,	},
+		{190/666.739,	   0.022,	0.072,		  0.051,	0.0090,	 1.6,	     22,	    2.0,	},
+		{210/666.739,	   0.022,	0.070,		  0.051,	0.0090,	 2.1,	     19,	    2.0,	},
+		{220/666.739,	   0.022,	0.070,		  0.051,	0.0090,	 2.1,	     19,	    2.0,	},
+		{230/666.739,	   0.025,	0.070,		  0.051,	0.0090,	 2.1,	     19,	    2.0,	},
+		{240/666.739,	   0.047,	0.070,		  0.051,	0.0090,	 2.6,	     18,	    2.3,	},
+		{250/666.739,	   0.089,	0.070,		  0.051,	0.0090,	 2.6,	     18,	    2.3,	},
+		{270/666.739,	   0.089,	0.065,		  0.055,	0.0160,	 2.6,	     18,	    2.3,	},
+		{290/666.739,	   0.089,	0.065,		  0.065,	0.0160,	 3.1,	     11,	    1.14,	},
+		{310/666.739,	   0.089,	0.065,		  0.080,	0.0300,	 3.5,	     8,	 	    0.9,	},
+		{360/666.739,	   0.089,	0.065,		  0.100,	0.0800,	 3.5,	     1,	 	    0.3     },
+		{600/666.739,	   0.089,	0.065,		  0.200,	0.0800,	 3.5,	     1,	 	    0.3     },
+		}
 		}, -- end of aerodynamics
 		engine = 
 		{
@@ -542,28 +543,66 @@ A_29B =  {
 			typeng	=	3, -- E_TURBOJET = 0, E_TURBOJET_AB = 1, E_PISTON = 2, E_TURBOPROP = 3,	E_TURBOFAN    = 4,	E_TURBOSHAFT = 5
 			hMaxEng	=	19.5, -- maximum operating altitude for the engine in km -- typically higher than service ceiling of the aircraft
 			dcx_eng	=	0.095, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
-			cemax	=	0.005, -- kg / sec - fuel consumption for a single engine in dry configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
-			cefor	=	0.005, -- kg / sec - fuel consumption for a single engine in afterburner configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
-			dpdh_m	=	1700, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
-			dpdh_f	=	2000, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			cemax	=	0.05, -- kg / sec - fuel consumption for a single engine in dry configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
+			cefor	=	0.05, -- kg / sec - fuel consumption for a single engine in afterburner configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
+			dpdh_m	=	5000, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			dpdh_f	=	5000, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
 			table_data = {
-			-- Pmax - total thrust in Newtons (kN * 1000) for all engines
-			-- Pfor - total thrust in Newtons (kN * 1000) for all engines
+			-- Pmax - total thrust in Mil Pwr in Newtons for all engines
+			-- Pfor - total thrust in AB in Newtons for all engines
 			--   M		Pmax		 Pfor
-				{0.0,		18000.0},
-				{0.1,		18000.0},
-				{0.2,		18000.0},
-				{0.3,		18000.0},
-				{0.31,		18000.0},
-				{0.39,		17000.0},
-				{0.4,		17000.0},
-				{0.5,		10000.0},
-				{0.6,		10000.0},
-				{0.7,		 9050.0},
-				{0.8,		 9020.0},
-				{0.9,		 5902.0},
-				{1.0,		 3469.0},
-			}                 
+			{0.0,		16620.0},
+			{0.1,		15600.0},
+			{0.2,		14340.0},
+			{0.3,		13320.0},
+			{0.4,		12230.0},
+			{0.5,		11300.0},
+			{0.6,		10600.0},
+			{0.7,		10050.0},
+			{0.8,		 9820.0},
+			{0.9,		 5902.0},
+			{1.0,		 3469.0}
+		}, -- end of table_data
+			-- M - Mach number
+			-- Pmax - Engine thrust at military power
+			-- Pfor - Engine thrust at AFB
+
+            extended =
+                {
+                
+                    	thrust_max = -- thrust interpolation table by altitude and mach number, 2d table
+                        { -- Minimum thrust 2000 kN, maximum thrust 16700 kN
+                            M 		 = {0*666.739,100*666.739,120*666.739,140*666.739,160*666.739,200*666.739,220*666.739,280*666.739,320*666.739,400*666.739},
+                            H		 = {0,3048,6096,9144,10500,12192},
+                            thrust	 = {-- M 0         0.1      0.2      0.3      0.4     0.5     0.6     0.7      0.8      0.9
+                                        {    17000,   17000,   17000,   17000,   17000,  17000,  17000,  17000,   16925,  17259 },--H = 0 (sea level)
+                                        {    17000,   17000,   17000,   17000,   17000,  16250,  12722,  12855,   12989,  13656 },--H = 3048 (10kft)
+                                        {    17000,   17000,   17000,   17000,   17000,  17000,   9786,   10053,   10320,  10765 },--H = 6096 (20kft)
+                                        {    17000,   17000,   17000,   17000,   17000,  17000,   7184,   7440,    7695,   8062 },--H = 9144 (30kft)
+                                        {    6939,    6294,    5649,    5638,    5627,   5749,   5872,   6094,    6316,   6628 	},--H = 10500 (34kft)
+										{    3327,    2782,    2237,    2248,    2260,   2349,   2438,   2627,    2816,   3071 	},--H = 12192 (40kft)
+                                        
+                            },
+                        },
+						TSFC_max =  -- thrust specific fuel consumption by altitude and Mach number for RPM  100%, 2d table
+						{			-- factor = kg/h /2000
+                            M 		 = {0/666.739, 140/666.739, 160/666.739, 200/666.739, 220/666.739, 260/666.739, 300/666.739},
+							H		 = {0, 1524, 3048, 4572, 6096, 7620, 9144},
+							TSFC	 = {-- KT 0      	140     	160			200     	220 		260		300--0.1264
+										{   150/1800,  195/1800,  205/1800,    243/1800,  271/1800, 347/1800, 380/1800},--H = 0       -- SL
+										{   140/1800,  180/1800,  188/1800,    218/1800,  240/1800, 300/1800, 360/1800},--H = 1524    -- 5000' 
+										{   130/1800,  152/1800,  175/1800,    195/1800,  215/1800, 268/1800, 330/1800},--H = 3048    -- 10000'
+										{   120/1800,  120/1800,  160/1800,    177/1800,  191/1800, 234/1800, 285/1800},--H = 4572    -- 15000'
+										{   115/1800,  115/1800,  135/1800,    165/1800,  175/1800, 210/1800, 250/1800},--H = 6096    -- 20000'
+										{   110/1800,  110/1800,  110/1800,    160/1800,  165/1800, 195/1800, 210/1800},--H = 7620    -- 25000'
+										{   110/1800,  110/1800,  110/1800,    152/1800,  165/1800, 175/1800, 175/1800},--H = 9144    -- 30000'
+							}
+						},
+
+
+                }, -- end of extended data
+
+           
 		}, -- end of engine
 		-- thrust_max = -- thrust interpolation table by altitude and mach number, 2d table.  Modified for carrier takeoffs at/around 71 foot deck height
         --         {
@@ -599,24 +638,6 @@ A_29B =  {
 		-- 			  },
 		--   },
 		-- }, -- end of Cx0
-	
-		-- 	extended = -- added new abilities for engine performance setup. thrust data now can be specified as 2d table by Mach number and altitude. thrust specific fuel consumption tuning added as well
-		-- 	{
-		-- 		-- matching TSFC to mil thrust consumption at altitude at mach per NATOPS navy trials
-		-- 		TSFC_max =  -- thrust specific fuel consumption by altitude and Mach number for RPM  100%, 2d table
-		-- 		{
-		-- 			M 		 = {0, 0.5, 0.8, 0.9, 1.0},
-		-- 			H		 = {0, 3048, 6096, 9144, 12192},
-		-- 			TSFC	 = {-- M 0      0.5     0.8       0.9     1.0
-		-- 						{   0.86,  0.92,  1.012,    1.012,  1.003},--H = 0       -- SL
-		-- 						{   0.86,  0.99,  1.025,    1.025,  1.016},--H = 3048    -- 10000'
-		-- 						{   0.86,  0.96,  1.008,    1.008,  0.999},--H = 6096    -- 20000'
-		-- 						{   0.86,  0.95,  0.984,    0.984,  0.974},--H = 9144    -- 30000'
-		-- 						{   0.86,  0.94,  0.976,    0.976,  0.967},--H = 12192   -- 40000'
-		-- 			}
-		-- 		},
-		-- },              
-
 
 	},
 
@@ -628,24 +649,20 @@ A_29B =  {
             defValue = false,
             weightWhenOn = -80,
             wCtrl = 150,
-        },
-		{ id = "LaserCode100",  control = 'spinbox',  label = _('Laser code for GBUs, 1x11'), defValue = 6, min = 1, max = 8, dimension = ' ' },
-        { id = "LaserCode10",   control = 'spinbox',  label = _('Laser code for GBUs, 11x1'), defValue = 8, min = 1, max = 8, dimension = ' ' },
-        { id = "LaserCode1",    control = 'spinbox',  label = _('Laser code for GBUs, 111x'), defValue = 8, min = 1, max = 8, dimension = ' ' },
+		},
+		{ id = "NetCrewControlPriority" , control = 'comboList', label = _('Aircraft Control Priority'), playerOnly = true,
+			values = {{id =  0, dispName = _("Pilot")},
+					 {id =  1, dispName = _("Instructor")},
+					 {id = -1, dispName = _("Ask Always")},
+					 {id = -2, dispName = _("Equally Responsible")}},
+			defValue  = 1,
+			wCtrl     = 150
+		},
 
-        -- {
-        --     id = 'PropellorType',
-        --     control = 'comboList',
-        --     label ="Propellor Movement",
-        --     defValue = 20,
-        --     arg = 324,
-        --     values = {
-        --         {id = 0, dispName = "Stopped"},
-        --         {id = 1, dispName = "Rotating"},
-        --     },
-        --     wCtrl = 150,
-        -- },
-		{ id = "RotatingProp" , control = 'checkbox', label = 'Rotating propellor', defValue = true, weight = 0, arg = 324},
+		{ id = "LGB1000", control = 'spinbox',  label = _('Laser Code 1st Digit'), defValue = 1, min = 1, max = 1, dimension = ' ', playerOnly = true}, -- only for completeness
+        { id = "LGB100", control = 'spinbox',  label = _('Laser Code 2nd Digit'), defValue = 6, min = 5, max = 7, dimension = ' ', playerOnly = true},
+        { id = "LGB10", control = 'spinbox',  label = _('Laser Code 3rd Digit'), defValue = 8, min = 1, max = 8, dimension = ' ', playerOnly = true},
+        { id = "LGB1", control = 'spinbox',  label = _('Laser Code 4th Digit'), defValue = 8, min = 1, max = 8, dimension = ' ', playerOnly = true},
 
     },
 	--damage , index meaning see in  Scripts\Aircrafts\_Common\Damage.lua

@@ -64,15 +64,6 @@ UFCP_COM_FREQUENCY_SEL_IDS = {
     PRST = 1,
 }
 
-UFCP_TIME_TYPE_IDS = {
-    LC = 0,
-    RT = 1,
-    SW = 2.
-}
-UFCP_TIME_TYPE_IDS[UFCP_TIME_TYPE_IDS.LC] = "LC"
-UFCP_TIME_TYPE_IDS[UFCP_TIME_TYPE_IDS.RT] = "RT"
-UFCP_TIME_TYPE_IDS[UFCP_TIME_TYPE_IDS.SW] = "SW"
-
 UFCP_NAV_MODE_IDS = {
     MAN = 0,
     AUTO = 1,
@@ -118,4 +109,10 @@ UFCP_VVVAH_MODE_IDS = {
     VAH = 0,
     OFF = 1,
     VV_VAH = 2,
+}
+
+UFCP_MARK_MODE_IDS = {
+    ONTOP = 0,
+    HUD = 1,
+    FLIR = 2,
 }

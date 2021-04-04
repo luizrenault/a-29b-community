@@ -811,6 +811,13 @@ function post_initialize()
 end
 
 
+
+local iCommandPlaneDropFlareOnce = 357
+local iCommandPlaneDropChaffOnce = 358
+
+dev:listen_command(iCommandPlaneDropFlareOnce)
+dev:listen_command(iCommandPlaneDropChaffOnce)
+
 dev:listen_command(device_commands.Mass)
 dev:listen_command(device_commands.LateArm)
 dev:listen_command(device_commands.Salvo)
@@ -824,8 +831,7 @@ dev:listen_command(Keys.GunRearm)
 dev:listen_command(Keys.Cage)
 dev:listen_command(Keys.TDCX)
 dev:listen_command(Keys.TDCY)
-
-dev:listen_command(74)
+dev:listen_command(Keys.JettisonWeapons)
 
 
 function SetCommand(command,value)
@@ -869,6 +875,8 @@ function SetCommand(command,value)
         WPN_MASS:set(value)
     elseif command == device_commands.LateArm then
         WPN_LATEARM:set(value)
+    elseif command == Keys.JettisonWeapons then
+        dev:performClickableAction(device_commands.Salvo, value, true)
     elseif command == device_commands.Salvo then
         if value == 1 and not get_avionics_onground() then
             wpn_ej_timeout = 0.5;
@@ -974,12 +982,14 @@ function SetCommand(command,value)
             end
             dev:set_target_range(range)
         end
-    elseif command==74 then
-
-    elseif command == 136 then
-        dev:drop_flare()
-    elseif command == 79 then
-        dev:drop_chaff()
+    elseif command == iCommandPlaneDropFlareOnce then
+        if dev:get_flare_count() > 1 then 
+            dev:drop_flare()
+        end
+    elseif command == iCommandPlaneDropChaffOnce then
+        if dev:get_chaff_count() > 1 then 
+            dev:drop_chaff()
+        end
     end
 end
 

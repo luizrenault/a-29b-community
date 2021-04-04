@@ -503,7 +503,7 @@ function CockpitEvent(command,val)
     --         print_message_to_user(v)
     --     end
     -- end
-    fuel_init=round_to(sensor_data.getTotalFuelWeight(),5)
+    fuel_init=round_to(sensor_data.getTotalFuelWeight() + fuel_random,5)
     fuel_joker=round_to(fuel_init/2,5)
 end
 

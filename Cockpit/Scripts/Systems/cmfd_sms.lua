@@ -57,6 +57,7 @@ local sms_sd_data = {mode=SMS_MODE_IDS.RP, title="SIGHT\nMR:       ", desc="SELE
     end
 }
 
+local cmfd_page_last
 local function update_master_mode_changed()
     master_mode = get_avionics_master_mode()
     if master_mode == master_mode_last then return 0 end
@@ -66,6 +67,12 @@ local function update_master_mode_changed()
         sms_mode = SMS_MODE_IDS.AG
     elseif master_mode == AVIONICS_MASTER_MODE_ID.EJ then
         sms_mode = SMS_MODE_IDS.EJ
+        local CMFD1Format=get_param_handle("CMFD1Format")
+        cmfd_page_last = CMFD1Format:get()
+        CMFD1Format:set(SUB_PAGE_ID.SMS)
+    elseif master_mode_last == AVIONICS_MASTER_MODE_ID.EJ then
+        local CMFD1Format=get_param_handle("CMFD1Format")
+        CMFD1Format:set(cmfd_page_last)
     elseif master_mode == AVIONICS_MASTER_MODE_ID.SJ then
         sms_mode = SMS_MODE_IDS.SJ
     else 

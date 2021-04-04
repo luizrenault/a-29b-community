@@ -31,3 +31,5 @@ devices["UFCP"]			=counter()
 
 devices["TEST"]             = counter()
 devices["ALARM"]             = counter()
+devices["HELMET_DEVICE"]     = counter()
+devices["AUTOPILOT"]     = counter()

@@ -1,5 +1,6 @@
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
+dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
 
 startup_print("brakes: load")
 
@@ -16,19 +17,23 @@ local iCommandPlaneWheelBrakeOff = 75
 local iCommandWheelBrake = 2101
 local iCommandLeftWheelBrake = 2112
 local iCommandRightWheelBrake = 2113
-
+local iCommandPlaneWheelBrakeLeftOn = 961
+local iCommandPlaneWheelBrakeLeftOff = 962
+local iCommandPlaneWheelBrakeRightOn = 963
+local iCommandPlaneWheelBrakeRightOff = 964
 -- "below velocity v, use brake ratio x"
 
 local brake_table = {
-    {5,10, 14, 20, 30,  45, 999},     -- velocity in m/s
-    {1, 4,  3,  3,  2,   1,   1},     -- numerator of brake power ratio
-    {1, 5,  5,  5,  5,   3,   4},     -- denominator of brake power ratio
+    {5,10, 15, 20, 30,  45, 999},     -- velocity in m/s
+    {1, 0.8,  0.7,  0.6,  0.5, 0.4, 0.3},     -- Brake efficiency
 }
 
-local function get_brake_ratio(v)
+local function get_brake_ratio(v, value)
     for i = 1,#brake_table[1] do
         if v <= brake_table[1][i] then
-            return brake_table[2][i],brake_table[3][i]
+            local val = brake_table[2][i] * (value + 1)/2
+            if val > 1 then val = 1 end
+            return math.floor(val*10+0.5) , 10
         end
     end
     return 1,7
@@ -60,7 +65,7 @@ function update()
             wheelbrake_axis_value = right_wheelbrake_AXIS_value
         end
 
-        if wheelbrake_axis_value > -0.95 or wheelbrake_toggle_state == true then
+        if (wheelbrake_axis_value > -0.95 or wheelbrake_toggle_state == true) and get_avionics_onground() then
             brakes_on = true
         else
             brakes_on = false
@@ -71,7 +76,7 @@ function update()
 
         if brakes_on then
             --local x,y = get_brake_ratio(vel_xz_brakes())
-            local x,y = get_brake_ratio(wheelbrake_axis_value)
+            local x,y = get_brake_ratio(get_avionics_gs(), wheelbrake_axis_value)
             -- brake_now cycles from 1 to y
             -- brakes are enabled if brake_now <= x
             -- adjust ratios in brake_table above
@@ -83,7 +88,6 @@ function update()
             end
     
             brake_eff:set(100*x/y)
-    
             brake_now = brake_now + 1
             if brake_now > y then
                 brake_now = 1
@@ -116,8 +120,10 @@ function post_initialize()
     dev:performClickableAction(iCommandWheelBrake, -1, true)
     dev:performClickableAction(iCommandLeftWheelBrake, -1, true)
     dev:performClickableAction(iCommandRightWheelBrake, -1, true)
+    
     startup_print("brakes: postinit end")
 end
+
 
 dev:listen_command(device_commands.EmerParkBrake)
 dev:listen_command(iCommandPlaneWheelBrakeOn)
@@ -125,6 +131,10 @@ dev:listen_command(iCommandPlaneWheelBrakeOff)
 dev:listen_command(iCommandWheelBrake)
 dev:listen_command(iCommandLeftWheelBrake)
 dev:listen_command(iCommandRightWheelBrake)
+dev:listen_command(iCommandPlaneWheelBrakeLeftOn)
+dev:listen_command(iCommandPlaneWheelBrakeLeftOff)
+dev:listen_command(iCommandPlaneWheelBrakeRightOn)
+dev:listen_command(iCommandPlaneWheelBrakeRightOff)
 
 local pbrake_light = get_param_handle("PBRAKE_LIGHT")
 
@@ -141,7 +151,6 @@ function SetCommand(command,value)
     elseif command == iCommandPlaneWheelBrakeOff then
         dev:performClickableAction(device_commands.EmerParkBrake, -1, true)
     elseif command == iCommandPlaneWheelBrakeOn then
-
     elseif command == iCommandWheelBrake then
 		single_wheelbrake_axis_value = value
     elseif command == iCommandLeftWheelBrake then

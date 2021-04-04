@@ -17,36 +17,127 @@ local hud
 update_time_step = 0.02 --update will be called 50 times per second
 make_default_activity(update_time_step)
 
-local sensor_data = get_base_data()
+sensor_data = get_base_data()
+Terrain = require('terrain')
 
 local UFCP_BRIGHT = get_param_handle("UFCP_BRIGHT")
 local ADHSI_VV = get_param_handle("ADHSI_VV")
+local TIME_RUN = get_param_handle("UFCP_TIME_RUN")
 
 -- Variables
 ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+ufcp_ident = false
+ufcp_ident_blink = false
+elapsed = 0
+local ufcp_overriden_format = UFCP_FORMAT_IDS.MAIN
+
+-- Data insertion
 ufcp_edit_pos = 0
 ufcp_edit_lim = 0
 ufcp_edit_string = ""
 ufcp_edit_validate = nil
+ufcp_edit_field_info = nil
+ufcp_edit_invalid = false
+ufcp_edit_backspace = false
 
 ufcp_cmfd_ref = nil
 
-ufcp_time_type =  UFCP_TIME_TYPE_IDS.LC
-ufcp_ident = false
-ufcp_ident_blink = false
-elapsed = 0
-
 
 -- METHODS
+
+-- Check if an array has a specific element.
+function has_value (tab, val)
+    for index, value in ipairs(tab) do
+        if value == val then
+            return true
+        end
+    end
+
+    return false
+end
+
+-- Used by COM1 and COM2 formats
+function is_com_frequency(frequency)
+    if frequency < 108 then return false
+    elseif frequency >= 174 and frequency < 225 then return false
+    elseif frequency >= 400 then return false
+    elseif (frequency < 118 or frequency >= 137) and (frequency * 1000) % 25 > 0 then return false
+    elseif frequency >= 118 and frequency < 137 and not has_value({0,8,16,25,33,41}, (frequency * 1000) % 50) then return false
+    else return true
+    end
+end
+
 local function ufcp_on()
     return get_elec_avionics_ok() and get_cockpit_draw_argument_value(480) > 0
 end
 
+-- Clears the data being inserted.
 function ufcp_edit_clear()
     ufcp_edit_pos = 0
     ufcp_edit_lim = 0
     ufcp_edit_string = ""
     ufcp_edit_validate = nil
+    ufcp_edit_field_info = nil
+    ufcp_edit_invalid = false
+    ufcp_edit_backspace = false
+end
+
+-- Returns the inputed data plus blank spaces to fill the size limit
+function ufcp_print_edit(rtl)
+    local available = ufcp_edit_lim - ufcp_edit_pos
+    local blank = ""
+    for i = 1,available do blank = blank .. " " end
+
+    -- if rtl, it will align the input to the right
+    local text = ""
+    if rtl then text = blank .. ufcp_edit_string else text = ufcp_edit_string .. blank end
+
+    if ufcp_edit_invalid then text = blink_text(text,1,text:len()) end
+    return text
+end
+
+-- Called by the CLR button. Pressing once erases the last digit. Pressing again clears everything.
+function ufcp_undo_edit()
+    if ufcp_edit_pos > 0 then
+        if ufcp_edit_backspace or ufcp_edit_invalid then
+            -- Erase everything
+            ufcp_edit_clear()
+        else
+            -- Erase a single digit
+            ufcp_edit_backspace = true
+            ufcp_edit_string = ufcp_edit_string:sub(1, ufcp_edit_pos-1)
+            ufcp_edit_pos = ufcp_edit_string:len()
+        end
+    end
+end
+
+function ufcp_continue_edit(text, field_info, save)
+    -- field_info should be an array, the first value being the total amount of characters
+    -- the input should have, and the second one being a method to validate that input,
+    -- with a 'text' string and an optional 'save' bool as parameters.
+    -- Example: field_info = {3, ufcp_xpdr_code_validate}
+
+    if field_info == nil then   -- nothing to do here
+        return
+    end
+
+    -- Hasn't started editing yet
+    if ufcp_edit_field_info ~= field_info then
+        ufcp_edit_clear()
+        ufcp_edit_field_info = field_info
+        ufcp_edit_lim = field_info[1] or 1  -- set the total of characters
+        ufcp_edit_validate = field_info[2]  -- set the validate method
+    end
+
+    
+
+    local available = ufcp_edit_lim - ufcp_edit_pos -- how many characters are left
+    if available < text:len() then text=text:sub(1,available) end -- text cant be larger than available space
+    ufcp_edit_string = ufcp_edit_string .. text -- add the character to edit string
+    ufcp_edit_backspace = false -- resets the CLR button
+    if ufcp_edit_validate then ufcp_edit_string = ufcp_edit_validate(ufcp_edit_string, save) end    -- try to validate the input
+    if ufcp_edit_string:len() > ufcp_edit_lim then ufcp_edit_string = ufcp_edit_string:sub(1,ufcp_edit_lim) end -- text cant be larger than available space
+    ufcp_edit_pos = ufcp_edit_string:len()  -- update the cursor position
 end
 
 function replace_text(text, c_start, c_size)
@@ -74,6 +165,25 @@ function replace_text(text, c_start, c_size)
     return text_copy
 end
 
+function blink_text(text, c_start, c_size)
+    local text_copy = text:sub(1,c_start-1)
+    local text_new = text:sub(c_start, c_start+c_size-1)
+
+    -- Todo this interval should be shorter, but I don't know if I can get current milliseconds
+    -- The ideal would be to blink off and on again every 1 second?
+    local interval = math.floor(get_absolute_model_time() % 2)
+
+    for i=1, c_size do
+        if interval == 0 then
+            text_copy = text_copy .. string.char(string.byte(text_new,i))
+        else
+            text_copy = text_copy .. string.char(string.byte(" "))
+        end
+    end
+    text_copy = text_copy .. text:sub(c_start + c_size)
+    return text_copy
+end
+
 function replace_pos(text, c_pos)
     local text_copy = text:sub(1,c_pos-1)
     local val = string.byte(text,c_pos)
@@ -88,44 +198,83 @@ function replace_pos(text, c_pos)
     return text_copy
 end
 
-dofile(LockOn_Options.script_path.."Systems/ufcp_main.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_com1.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_com2.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_navaids.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_vvvah.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_dah.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_wpt.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_xpdr.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_time.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_mark.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_fix.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_tip.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_menu.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_lmt.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_dtk.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_bal.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_acal.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_nav.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_ws.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_egi.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_fuel.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_tac.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_mode.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_oap.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_cf.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_para.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_fti.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_dclt.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_crus.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_drft.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_tkl.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_strm.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_flir.lua")
-dofile(LockOn_Options.script_path.."Systems/ufcp_dl.lua")
+function seconds_to_string(time)
+    local time_sign = ""
+    if time < 0 then time_sign = "-"; time = -time end
+        
+    local time_secs = math.floor(time % 60)
+    local time_mins = math.floor((time / 60) % 60)
+    local time_hours =  math.floor(time / 3600)
+
+    if time_hours >= 100 then
+        time_secs = 59
+        time_mins = 59
+        time_hours = 99
+    end
+
+    return time_sign .. string.format("%02.0f:%02.0f:%02.0f", time_hours, time_mins, time_secs)
+end
+
+dofile(LockOn_Options.script_path.."Systems/UFCP/main.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/ufcp_com1.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/ufcp_com2.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/navaids.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/vvvah.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/dah.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/wpt.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/xpdr.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/time.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/mark.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/fix.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/tip.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/menu.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/lmt.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/dtk.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/bal.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/acal.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/nav.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/ws.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/egi.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/fuel.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/tac.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/mode.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/oap.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/cf.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/para.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/fti.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/dclt.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/crus.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/drft.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/tkl.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/strm.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/flir.lua")
+dofile(LockOn_Options.script_path.."Systems/UFCP/dl.lua")
 
 
 function update()
     local ufcp_bright = get_cockpit_draw_argument_value(480)
+    
+    UFCP_COM1_FREQ:set(ufcp_com1_frequency)
+    UFCP_COM1_MOD:set(ufcp_com1_modulation)
+    UFCP_COM1_SQL:set(ufcp_com1_sql and 1 or 0)
+    UFCP_COM1_PWR:set(ufcp_com1_power)
+    if get_elec_emergency_ok() then 
+        UFCP_COM1_MODE:set(ufcp_com1_mode)
+    else
+        UFCP_COM1_MODE:set(0)
+    end    
+
+    UFCP_COM2_FREQ:set(ufcp_com2_frequency)
+    UFCP_COM2_MOD:set(ufcp_com2_modulation)
+    UFCP_COM2_SQL:set(ufcp_com2_sql and 1 or 0)
+    UFCP_COM2_PWR:set(ufcp_com2_power)
+    if get_elec_avionics_ok() then
+        UFCP_COM2_MODE:set(ufcp_com2_mode)
+    else
+        UFCP_COM2_MODE:set(0)
+    end    
+
+
     if ufcp_on() then 
         UFCP_BRIGHT:set(ufcp_bright) 
     else  
@@ -199,12 +348,21 @@ function update()
         ADHSI_VV:set(0)
     end
 
+    -- UPDATE TIME MODE
+    local interval = get_absolute_model_time() - ufcp_time
+    ufcp_time = ufcp_time + interval
+    ufcp_time_run = ufcp_time_run + interval
+    if ufcp_main_stopwatch_running then ufcp_main_stopwatch = ufcp_main_stopwatch + interval end
+    if ufcp_time_run >= 86400 then ufcp_time_run = ufcp_time_run - 86400 end
+    TIME_RUN:set(math.floor(ufcp_time)) -- TODO DT should be calculated using this instead of get_absolute_model_time()
+
     -- UPDATE DRIFT C/O MODE
     -- if ufcp_drift_co or get_avionics_master_mode_ag() then
-    --     UFCP_DRIFT_CO:set(1)
-    -- else
-    --     UFCP_DRIFT_CO:set(0)
-    -- end
+    if ufcp_drift_co then
+        UFCP_DRIFT_CO:set(1)
+    else
+        UFCP_DRIFT_CO:set(0)
+    end
 
     UFCP_NAV_MODE:set(ufcp_nav_mode)
     UFCP_NAV_TIME:set(ufcp_nav_time)
@@ -237,12 +395,15 @@ dev:listen_command(device_commands.UFCP_4)
 dev:listen_command(device_commands.UFCP_BARO_RALT)
 
 function SetCommandCommon(command, value)
-    if command == device_commands.UFCP_COM1 and value == 1 then
-        ucfp_sel_format = UFCP_FORMAT_IDS.COM1
-    elseif command == device_commands.UFCP_COM2 and value == 1 then
-        ucfp_sel_format = UFCP_FORMAT_IDS.COM2
-    elseif command == device_commands.UFCP_NAVAIDS and value == 1 then
-        ucfp_sel_format = UFCP_FORMAT_IDS.NAV_AIDS
+    -- Control keys
+    if command == device_commands.UFCP_CLR and value == 1 then
+        ufcp_undo_edit()
+    elseif command == device_commands.UFCP_ENTR and value == 1 then
+
+    elseif command == device_commands.UFCP_UP and value == 1 then
+        -- TODO holding INC or DEC, the value increases or decreases 3 units per second.
+    elseif command == device_commands.UFCP_DOWN and value == 1 then
+
     end
 end
 
@@ -252,22 +413,50 @@ function SetCommand(command,value)
     if command==device_commands.UFCP_WARNRST and value == 1 then
         alarm:SetCommand(command, value)
         hud:SetCommand(command, value)
+
+    -- Override keys
+    -- Pressing these buttons when the formats are already shown returns to the last format.
     elseif command == device_commands.UFCP_COM1 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.COM1
+        if ufcp_sel_format ~= UFCP_FORMAT_IDS.COM1 then 
+            ufcp_edit_clear() 
+            ufcp_overriden_format = ufcp_sel_format
+            ufcp_sel_format = UFCP_FORMAT_IDS.COM1
+        else
+            ufcp_sel_format = ufcp_overriden_format
+        end
     elseif command == device_commands.UFCP_COM2 and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.COM2
+        if ufcp_sel_format ~= UFCP_FORMAT_IDS.COM2 then 
+            ufcp_edit_clear() 
+            ufcp_overriden_format = ufcp_sel_format
+            ufcp_sel_format = UFCP_FORMAT_IDS.COM2
+        else
+            ufcp_sel_format = ufcp_overriden_format
+        end
     elseif command == device_commands.UFCP_NAVAIDS and value == 1 then
-        ufcp_sel_format = UFCP_FORMAT_IDS.NAV_AIDS
+        if ufcp_sel_format ~= UFCP_FORMAT_IDS.NAV_AIDS then 
+            ufcp_edit_clear() 
+            ufcp_overriden_format = ufcp_sel_format
+            ufcp_sel_format = UFCP_FORMAT_IDS.NAV_AIDS
+        else
+            ufcp_sel_format = ufcp_overriden_format
+        end
+    -- Master mode keys
     elseif command == device_commands.UFCP_A_G and value == 1 then
+        -- TODO select CCIP or CCIP R depending on the last selection
         set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
     elseif command == device_commands.UFCP_A_A and value == 1 then
         set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DGFT_B)
     elseif command == device_commands.UFCP_NAV and value == 1 then
         set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.NAV)
+
+
     elseif command == device_commands.UFCP_UFC then
+
     elseif command == device_commands.UFCP_JOY_LEFT and value == 1 then
+        ufcp_edit_clear()
         ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
     elseif command == device_commands.UFCP_BARO_RALT and value == 1 then
+        -- TODO the system should remember the selected mode
         local master_mode = get_avionics_master_mode()
         local master_mode_last = master_mode
         if master_mode == AVIONICS_MASTER_MODE_ID.GUN then master_mode = AVIONICS_MASTER_MODE_ID.GUN_R 
@@ -293,6 +482,8 @@ function SetCommand(command,value)
             ufcp_vvvah_mode = UFCP_VVVAH_MODE_IDS.VV_VAH
         end
     end
+
+    SetCommandCommon(command, value)
 
     if ufcp_sel_format == UFCP_FORMAT_IDS.MAIN then SetCommandMain(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM1 then SetCommandCom1(command, value)
