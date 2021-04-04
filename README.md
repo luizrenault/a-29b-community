@@ -13,7 +13,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 [Download Latest Devel](https://github.com/luizrenault/a-29b-community/archive/refs/heads/devel.zip)
 
-[Livery Pack](https://mega.nz/file/tNpkyLCa#iC9aOTzc8liAfFGqfyLN2zmaNfXmtkmYDqIGjH2y3Bg)
+[Livery Pack](https://mega.nz/file/UAxUmYAY#0PyL3pO6i5x2QTrBWEkE5LsqeKFW5IuSJG_Er42PAas)
 
 [SRS Script](https://1drv.ms/u/s!Arl6nHiJ8ZUai8te1MoMez1jnNUTZQ?e=CCLSVl)
 Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing file. Will be included in next SRS Update (thanks to ciribob).
@@ -53,7 +53,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 
 # Changelog
 
-## Version 0.1.8b - 28 March 2021
+## Version 0.1.8b - 04 April 2021 - Happy Easter
 
 ### Added
 - SRS Integration capability.
