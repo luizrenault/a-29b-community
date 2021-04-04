@@ -53,6 +53,27 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 
 # Changelog
 
+## Version 0.1.9b - 05 April 2021
+
+### Added
+- BARO / RALT submode now remembered with mode changes.
+
+### Changed
+- NVG Switch only disables storm light.
+- Wingtip position for animation.
+- Rockets and Guns CCIP doesn't take wind into consideration.
+
+### Fixes
+- UFCP WYPT menu minor bugs.
+
+### TODO
+- Remember A/G Gun Selection
+- Thrust tables of FM
+- A/G Profiles
+- A/G mode select with Stick Step button.
+- A/G select different weapons
+
+
 ## Version 0.1.8b - 04 April 2021 - Happy Easter
 
 ### Added

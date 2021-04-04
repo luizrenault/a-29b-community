@@ -171,8 +171,7 @@ function update_nav()
     CMFD_NAV_FORMAT:set(nav_format)
     CMFD.NAV_FYT:set(nav_fyt)
 
-   
-    
+
     local get_index = CMFD_NAV_GET_INDEX:get()
     local get_rdy = CMFD_NAV_GET_RDY:get()
 
@@ -487,33 +486,35 @@ end
 
 dev:listen_command(device_commands.NAV_INC_FYT)
 dev:listen_command(device_commands.NAV_DEC_FYT)
+dev:listen_command(device_commands.NAV_SET_FYT)
 
 
 function SetCommandNav(command,value, CMFD)
-    if value == 1 then
-        if command==device_commands.CMFD1OSS1 or command==device_commands.CMFD2OSS1 then 
-                nav_format = CMFD_NAV_FORMAT_IDS.ROUT
-        elseif command==device_commands.CMFD1OSS2 or command==device_commands.CMFD2OSS2 then
-            if CMFD_NAV_FORMAT:get() == CMFD_NAV_FORMAT_IDS.ROUT and CMFD_NAV_PG_NEXT:get() == 1 then  cmfd_nav_page = cmfd_nav_page + 1 end
-        elseif command==device_commands.CMFD1OSS3 or command==device_commands.CMFD2OSS3 then 
-            if CMFD_NAV_FORMAT:get() == CMFD_NAV_FORMAT_IDS.ROUT and CMFD_NAV_PG_PREV:get() == 1 then  cmfd_nav_page = cmfd_nav_page - 1 end
-        elseif command==device_commands.CMFD1OSS4 or command==device_commands.CMFD2OSS4 then
-            nav_format = CMFD_NAV_FORMAT_IDS.FYT
-        elseif command==device_commands.CMFD1OSS5 or command==device_commands.CMFD2OSS5 then
-            nav_format = CMFD_NAV_FORMAT_IDS.MARK
-        elseif command==device_commands.CMFD1OSS7 or command==device_commands.CMFD2OSS7 then
-            nav_format = CMFD_NAV_FORMAT_IDS.AC
-        elseif (command==device_commands.CMFD1OSS27 or command==device_commands.CMFD2OSS27) and nav_format == CMFD_NAV_FORMAT_IDS.FYT then
-            nav_fyt = cmfd_nav_sel_next_wpt()
-        elseif (command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26) and nav_format == CMFD_NAV_FORMAT_IDS.FYT then
-            nav_fyt = cmfd_nav_sel_prev_wpt()
-        elseif command==device_commands.CMFD1OSS28 or command==device_commands.CMFD2OSS28 then 
-            nav_format = CMFD_NAV_FORMAT_IDS.AFLD
-        elseif command==device_commands.NAV_INC_FYT and value == 1 then 
-            nav_fyt = cmfd_nav_sel_next_wpt()
-        elseif command==device_commands.NAV_DEC_FYT and value == 1 then
-            nav_fyt = cmfd_nav_sel_prev_wpt()
-        end
+    if (command==device_commands.CMFD1OSS1 or command==device_commands.CMFD2OSS1) and value == 1 then 
+            nav_format = CMFD_NAV_FORMAT_IDS.ROUT
+    elseif (command==device_commands.CMFD1OSS2 or command==device_commands.CMFD2OSS2) and value == 1 then
+        if CMFD_NAV_FORMAT:get() == CMFD_NAV_FORMAT_IDS.ROUT and CMFD_NAV_PG_NEXT:get() == 1 then  cmfd_nav_page = cmfd_nav_page + 1 end
+    elseif (command==device_commands.CMFD1OSS3 or command==device_commands.CMFD2OSS3) and value == 1 then 
+        if CMFD_NAV_FORMAT:get() == CMFD_NAV_FORMAT_IDS.ROUT and CMFD_NAV_PG_PREV:get() == 1 then  cmfd_nav_page = cmfd_nav_page - 1 end
+    elseif (command==device_commands.CMFD1OSS4 or command==device_commands.CMFD2OSS4) and value == 1 then
+        nav_format = CMFD_NAV_FORMAT_IDS.FYT
+    elseif (command==device_commands.CMFD1OSS5 or command==device_commands.CMFD2OSS5) and value == 1 then
+        nav_format = CMFD_NAV_FORMAT_IDS.MARK
+    elseif (command==device_commands.CMFD1OSS7 or command==device_commands.CMFD2OSS7) and value == 1 then
+        nav_format = CMFD_NAV_FORMAT_IDS.AC
+    elseif (command==device_commands.CMFD1OSS27 or command==device_commands.CMFD2OSS27) and nav_format == CMFD_NAV_FORMAT_IDS.FYT and value == 1 then
+        nav_fyt = cmfd_nav_sel_next_wpt()
+    elseif (command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26) and nav_format == CMFD_NAV_FORMAT_IDS.FYT and value == 1 then
+        nav_fyt = cmfd_nav_sel_prev_wpt()
+    elseif (command==device_commands.CMFD1OSS28 or command==device_commands.CMFD2OSS28) and value == 1 then 
+        nav_format = CMFD_NAV_FORMAT_IDS.AFLD
+    elseif command==device_commands.NAV_INC_FYT and value == 1 then 
+        nav_fyt = cmfd_nav_sel_next_wpt()
+    elseif command==device_commands.NAV_DEC_FYT and value == 1 then
+        nav_fyt = cmfd_nav_sel_prev_wpt()
+    elseif command==device_commands.NAV_SET_FYT then
+        nav_fyt = value + 1
+        nav_fyt = cmfd_nav_sel_prev_wpt()
     end
 end
 

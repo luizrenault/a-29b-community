@@ -521,6 +521,7 @@ device_commands =
     STICK_PADDLE                    = __counter(),
     NAV_INC_FYT                    = __counter(),
     NAV_DEC_FYT                    = __counter(),
+    NAV_SET_FYT                    = __counter(),
     
     
     AUDIO_COM1_VOL                    = __counter(),

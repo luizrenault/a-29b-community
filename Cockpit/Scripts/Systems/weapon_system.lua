@@ -283,6 +283,22 @@ local master_mode_last = -1
 
 local function update_master_mode_changed()
     master_mode = get_avionics_master_mode()
+    if master_mode == AVIONICS_MASTER_MODE_ID.GUN and WPN_RALT:get() == 1 then master_mode = AVIONICS_MASTER_MODE_ID.GUN_R
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.GUN_R and WPN_RALT:get() == 0 then master_mode = AVIONICS_MASTER_MODE_ID.GUN
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP and WPN_RALT:get() == 1 then master_mode = AVIONICS_MASTER_MODE_ID.CCIP_R
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R and WPN_RALT:get() == 0 then master_mode = AVIONICS_MASTER_MODE_ID.CCIP
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS and WPN_RALT:get() == 1 then master_mode = AVIONICS_MASTER_MODE_ID.DTOS_R
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R and WPN_RALT:get() == 0 then master_mode = AVIONICS_MASTER_MODE_ID.DTOS
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.FIX and WPN_RALT:get() == 1 then master_mode = AVIONICS_MASTER_MODE_ID.FIX_R
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.FIX_R and WPN_RALT:get() == 0 then master_mode = AVIONICS_MASTER_MODE_ID.FIX
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.MARK and WPN_RALT:get() == 1 then master_mode = AVIONICS_MASTER_MODE_ID.MARK_R
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.MARK_R and WPN_RALT:get() == 0 then master_mode = AVIONICS_MASTER_MODE_ID.MARK
+    end
+
+    if master_mode ~= master_mode_last then
+        set_avionics_master_mode(master_mode)
+    end
+
     if master_mode == master_mode_last then return 0 end
     if get_avionics_master_mode_aa(master_mode_last) then
         check_sidewinder()
@@ -378,6 +394,7 @@ local function calculate_ccip_impact()
         Vz0 = Vz0 + 890 * Vz0 / vel_temp
         -- g=-0.5
     end
+    
     local delta = Vy0 * Vy0 - 2 * g * h0
     t = (-Vy0  - math.sqrt(delta))/g                -- time to impact
 

@@ -166,8 +166,13 @@ local function update_piper_ccip()
     local slide = HUD_FPM_SLIDE:get()
     local vert = HUD_FPM_VERT:get()
 
-    local az, el, limited
-    az, el, limited = limit_xy(WPN_CCIP_PIPER_AZIMUTH:get() + slide, WPN_CCIP_PIPER_ELEVATION:get(), hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
+    local az = WPN_CCIP_PIPER_AZIMUTH:get() 
+    local el = WPN_CCIP_PIPER_ELEVATION:get()
+    local limited
+
+    if WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then az = az + slide end
+
+    az, el, limited = limit_xy(az, el, hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
 
     HUD_CCIP_PIPER_AZIMUTH:set(az)
     HUD_CCIP_PIPER_ELEVATION:set(el)
