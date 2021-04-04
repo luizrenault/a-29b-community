@@ -80,6 +80,9 @@ local function clear()
 end
 
 function update_fix()
+    ufcp_nav_only()
+    ufcp_ins_only()
+    
     local text = ""
     text = text .. "  FIX *"
 

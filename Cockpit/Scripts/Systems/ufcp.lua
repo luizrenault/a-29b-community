@@ -169,9 +169,7 @@ function blink_text(text, c_start, c_size)
     local text_copy = text:sub(1,c_start-1)
     local text_new = text:sub(c_start, c_start+c_size-1)
 
-    -- Todo this interval should be shorter, but I don't know if I can get current milliseconds
-    -- The ideal would be to blink off and on again every 1 second?
-    local interval = math.floor(get_absolute_model_time() % 2)
+    local interval = math.floor(2 * get_absolute_model_time() % 2)
 
     for i=1, c_size do
         if interval == 0 then
@@ -213,6 +211,46 @@ function seconds_to_string(time)
     end
 
     return time_sign .. string.format("%02.0f:%02.0f:%02.0f", time_hours, time_mins, time_secs)
+end
+
+local return_to_main_time = -1.0
+-- Return to MAIN if current master mode is A/G or AA and the format only works in NAV.
+function ufcp_nav_only()
+    local master_mode = get_avionics_master_mode()
+    if get_avionics_master_mode_aa(master_mode) or get_avionics_master_mode_ag(master_mode) then
+        -- Return to MAIN after 0.5 seconds
+        if return_to_main_time == -1.0 then
+            return_to_main_time = ufcp_time + 0.5
+        end
+
+        if ufcp_time > return_to_main_time then
+            ufcp_edit_clear()
+            ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+            return_to_main_time = -1.0
+        end
+    else
+        return_to_main_time = -1.0
+    end
+end
+
+-- TODO Will do nothing until INS is implemented.
+-- Return to MAIN if current EGI mode is not INS and the format only works in INS.
+local return_to_main_time2 = -1.0
+function ufcp_ins_only()
+    if true then
+        -- Return to MAIN after 0.5 seconds
+        if return_to_main_time2 == -1.0 then
+            return_to_main_time2 = ufcp_time + 0.5
+        end
+
+        if ufcp_time > return_to_main_time2 then
+            ufcp_edit_clear()
+            ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+            return_to_main_time2 = -1.0
+        end
+    else
+        return_to_main_time2 = -1.0
+    end
 end
 
 dofile(LockOn_Options.script_path.."Systems/UFCP/main.lua")
