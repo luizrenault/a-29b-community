@@ -125,12 +125,12 @@ local WS_GUN_PIPER_AZIMUTH = get_param_handle("WS_GUN_PIPER_AZIMUTH")
 local WS_GUN_PIPER_ELEVATION = get_param_handle("WS_GUN_PIPER_ELEVATION")
 -- local WS_GUN_PIPER_SPAN = get_param_handle("WS_GUN_PIPER_SPAN")
 local WS_TARGET_RANGE = get_param_handle("WS_TARGET_RANGE")
-local CMFD_NAV_FYT_OAP_BRG = get_param_handle("CMFD_NAV_FYT_OAP_BRG")
-local CMFD_NAV_FYT_OAP_AZIMUTH = get_param_handle("CMFD_NAV_FYT_OAP_AZIMUTH")
-local CMFD_NAV_FYT_OAP_ELEVATION = get_param_handle("CMFD_NAV_FYT_OAP_ELEVATION")
-local CMFD_NAV_FYT_OAP_STT = get_param_handle("CMFD_NAV_FYT_OAP_STT")
-local CMFD_NAV_FYT_OAP_TTD = get_param_handle("CMFD_NAV_FYT_OAP_TTD")
-local CMFD_NAV_FYT_OAP_DT = get_param_handle("CMFD_NAV_FYT_OAP_DT")
+local CMFD_NAV_FYT_DTK_BRG = get_param_handle("CMFD_NAV_FYT_DTK_BRG")
+local CMFD_NAV_FYT_DTK_AZIMUTH = get_param_handle("CMFD_NAV_FYT_DTK_AZIMUTH")
+local CMFD_NAV_FYT_DTK_ELEVATION = get_param_handle("CMFD_NAV_FYT_DTK_ELEVATION")
+local CMFD_NAV_FYT_DTK_STT = get_param_handle("CMFD_NAV_FYT_DTK_STT")
+local CMFD_NAV_FYT_DTK_TTD = get_param_handle("CMFD_NAV_FYT_DTK_TTD")
+local CMFD_NAV_FYT_DTK_DT = get_param_handle("CMFD_NAV_FYT_DTK_DT")
 
 local function limit_xy(x, y, limit_x, limit_y, limit_x_down, limit_y_down) 
     limit_x_down = limit_x_down or -limit_x
@@ -328,7 +328,7 @@ local function update_td()
     local td_elevation = WPN.TD_ELEVATION:get()
     local td_angle = atan(td_elevation - math.rad(1.2), td_azimuth)
     
-    local hud_fyt_azimuth, hud_fyt_elevation, hud_fyt_os, hud_fyt_lim_x, hud_fyt_lim_y = limit_xy(CMFD_NAV_FYT_OAP_AZIMUTH:get(), CMFD_NAV_FYT_OAP_ELEVATION:get(), hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
+    local hud_fyt_azimuth, hud_fyt_elevation, hud_fyt_os, hud_fyt_lim_x, hud_fyt_lim_y = limit_xy(CMFD_NAV_FYT_DTK_AZIMUTH:get(), CMFD_NAV_FYT_DTK_ELEVATION:get(), hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
     HUD.FYT_AZIMUTH:set(hud_fyt_azimuth)
     HUD.FYT_ELEVATION:set(hud_fyt_elevation)
     HUD.FYT_OS:set(hud_fyt_os)
@@ -434,7 +434,7 @@ function update()
     local roll = sensor_data.getRoll()
     local hdg = get_avionics_hdg()
 
-    local hdg_des = CMFD_NAV_FYT_OAP_BRG:get()
+    local hdg_des = CMFD_NAV_FYT_DTK_BRG:get()
 
     if get_avionics_master_mode_aa() then hdg_des = -1 end
     local hdg_dif = (hdg_des - hdg)
@@ -532,7 +532,7 @@ function update()
 
     local ias_des = -1
     local nav_time = UFCP_NAV_TIME:get()
-    if nav_time == UFCP_NAV_TIME_IDS.DT or nav_time == UFCP_NAV_TIME_IDS.ETA then ias_des = CMFD_NAV_FYT_OAP_STT:get() end
+    if nav_time == UFCP_NAV_TIME_IDS.DT or nav_time == UFCP_NAV_TIME_IDS.ETA then ias_des = CMFD_NAV_FYT_DTK_STT:get() end
     if ias_des > 990 then ias_des = 990 end
 
     if master_mode == AVIONICS_MASTER_MODE_ID.LANDING then ias_des = -1 end
@@ -565,8 +565,8 @@ function update()
 
     local radar_alt = get_avionics_ralt()
     local time_text = ""
-    local ttd = CMFD_NAV_FYT_OAP_TTD:get()
-    local dt = CMFD_NAV_FYT_OAP_DT:get()
+    local ttd = CMFD_NAV_FYT_DTK_TTD:get()
+    local dt = CMFD_NAV_FYT_DTK_DT:get()
 
     local ccrp_time = WPN.CCRP_TIME:get()
     if  master_mode == AVIONICS_MASTER_MODE_ID.CCRP then 

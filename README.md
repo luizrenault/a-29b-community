@@ -61,6 +61,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - New External normal map (by Urbi).
 - New CMFD Texture.
 - FIX, TIP, LMT, WS, and DTK UFCP formats.
+- DTK - Desired Track.
 
 ### Changed
 - NVG Switch only disables storm light.
@@ -68,6 +69,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Rockets and Guns CCIP doesn't take wind into consideration.
 - Np around 100% when NG > 64%.
 - T5 adjustments.
+- Several EICAS transient values.
 
 ### Fixes
 - UFCP WYPT menu minor bugs.

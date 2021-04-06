@@ -47,7 +47,7 @@ local ADHSI_ADF_HDG = get_param_handle("ADHSI_ADF_HDG")
 
 local ADHSI_GPS_NAME = get_param_handle("ADHSI_GPS_NAME")
 
-local CMFD_NAV_FYT_OAP_DIST = get_param_handle("CMFD_NAV_FYT_OAP_DIST")
+local CMFD_NAV_FYT_DTK_DIST = get_param_handle("CMFD_NAV_FYT_DTK_DIST")
 
 ADHSI_COURSE:set(0)
 ADHSI_CDI_SHOW:set(1)
@@ -113,16 +113,12 @@ function update_adhsi()
     end 
     adhsi_turnrate = math.rad(adhsi_turnrate * 25 / 450)
 
-    adhsi_fyt_dtk_dist = CMFD_NAV_FYT_OAP_DIST:get()
+    adhsi_fyt_dtk_dist = CMFD_NAV_FYT_DTK_DIST:get()
     adhsi_fyt_dtk_dist = adhsi_fyt_dtk_dist / adhsi_rad_sel
     if adhsi_fyt_dtk_dist > 1.3 then adhsi_fyt_dtk_dist = 1.3 end
 
     if adhsi_ans_mode ~= AVIONICS_ANS_MODE_IDS.EGI or get_avionics_master_mode() ~= AVIONICS_MASTER_MODE_ID.NAV then 
-        adhsi_dtk = 0
-    end
-    if adhsi_dtk == 1 then 
-        adhsi_fyt_dtk_hdg = adhsi_dtk_hdg
-        adhsi_fyt_dtk_dist = adhsi_dtk_dist
+        ADHSI_DTK:set(0)
     end
 
     local adhsi_cdi_show_ovrd = adhsi_cdi_show
@@ -165,9 +161,7 @@ function SetCommandAdhsi(command,value, CMFD)
                 adhsi_hdg_sel = adhsi_hdg_sel - 1
             end
         elseif command==device_commands.CMFD1OSS14 or command==device_commands.CMFD2OSS14 then 
-            local master_mode = get_avionics_master_mode()
-            if not (get_avionics_master_mode_aa(master_mode) or get_avionics_master_mode_ag(master_mode)) then
-            --if adhsi_ans_mode == AVIONICS_ANS_MODE_IDS.EGI and get_avionics_master_mode() == AVIONICS_MASTER_MODE_ID.NAV then
+            if not (get_avionics_master_mode_aa() or get_avionics_master_mode_ag()) then
                 ADHSI_DTK:set(1 - ADHSI_DTK:get())
             end
         elseif command==device_commands.CMFD1OSS21 or command==device_commands.CMFD2OSS21 then 

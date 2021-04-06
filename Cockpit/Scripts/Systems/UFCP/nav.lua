@@ -1,4 +1,4 @@
-local CMFD_NAV_FYT_OAP_STT = get_param_handle("CMFD_NAV_FYT_OAP_STT")
+local CMFD_NAV_FYT_DTK_STT = get_param_handle("CMFD_NAV_FYT_DTK_STT")
 
 -- Constants
 
@@ -32,7 +32,7 @@ function update_nav()
         text = text .. "        \n"
         if ufcp_nav_time == UFCP_NAV_TIME_IDS.ETA or ufcp_nav_time == UFCP_NAV_TIME_IDS.DT then
             text = text .. "           FLY  "
-            local stt = CMFD_NAV_FYT_OAP_STT:get()
+            local stt = CMFD_NAV_FYT_DTK_STT:get()
             if stt > 0 then text = text .. string.format("%03.0f", stt) else text = text .. "XXX" end
             text = text .. " GS"
         end
