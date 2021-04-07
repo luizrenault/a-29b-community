@@ -18,9 +18,9 @@ startup_print("test: load")
 
 local dev = GetSelf()
 
-log.alert("----------------------------------")
-dump1("dev",dev)
-dump1("_dev", getmetatable(dev))
+-- log.alert("----------------------------------")
+-- dump1("dev",dev)
+-- dump1("_dev", getmetatable(dev))
 
 local update_time_step = 0.02 --update will be called 50 times per second
 if make_default_activity ~= nil then make_default_activity(update_time_step) end
@@ -123,12 +123,12 @@ function SetCommand(command,value)
         --     -- print_message_to_user(text)
         --     log.info(text)
         -- end
-        print_message_to_user("Dumped!")
-        local text = dump("Params\n", list_cockpit_params())
-        text = strsplit("\n", text)
-        for key, value in pairs(text) do
-            log.info(value)
-        end
+        -- print_message_to_user("Dumped!")
+        -- local text = dump("Params\n", list_cockpit_params())
+        -- text = strsplit("\n", text)
+        -- for key, value in pairs(text) do
+        --     log.info(value)
+        -- end
         -- dispatch_action(nil,iPlaneAirBrakeOn)
     end
 end

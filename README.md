@@ -53,15 +53,16 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 
 # Changelog
 
-## Version 0.1.9b - 05 April 2021
+## Version 0.1.9b - 06 April 2021
 
 ### Added
 - BARO / RALT submode now remembered with mode changes.
 - Cabin Altitude pressurized down to 7000 ft. 
-- New External normal map (by Urbi).
 - New CMFD Texture.
 - FIX, TIP, LMT, WS, and DTK UFCP formats.
 - DTK - Desired Track.
+- New Normal Map and RoughMet (by Cubeboy)
+- New experimental sounds for canopy, buttons, knobs and switches.
 
 ### Changed
 - NVG Switch only disables storm light.
@@ -73,6 +74,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 
 ### Fixes
 - UFCP WYPT menu minor bugs.
+- Guns reloads to 500 rounds upon rearm.
 
 ### TODO
 - Remember A/G Gun Selection
@@ -396,7 +398,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Throttle and Stick are inconsistent with the real ones;
 
 ### Contributors
-- Renault, Milaré, PaKo, Malamem, Athos, Dino, Jorge Rodrigues, Paoladelf, Farias, Skypork, EDAV, Rudel_chw, Urbi, and many others.
+- Renault, Milaré, PaKo, Malamem, Athos, Dino, Jorge Rodrigues, Paoladelf, Farias, Skypork, CubeBoy, Rudel_chw, EDAV, Urbi, and many others.
 
 
 ### Changed

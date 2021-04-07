@@ -205,7 +205,7 @@ function post_initialize()
     end
     dev:performClickableAction(device_commands.CMFD1ButtonOn,1)
     dev:performClickableAction(device_commands.CMFD2ButtonOn,1)
-post_initialize_sms()
+    post_initialize_sms()
     post_initialize_eicas()
     post_initialize_nav()
     startup_print("environ: postinit end")
@@ -481,8 +481,38 @@ dev:listen_event("WeaponRearmComplete")
 dev:listen_event("ReloadDone")
 dev:listen_event("RefuelDone")
 
+-- dev:listen_event("WeaponRearmFirstStep")
+-- dev:listen_event("GroundPowerOn")
+-- dev:listen_event("GroundPowerOff")
+-- dev:listen_event("DisableTurboGear")
+-- dev:listen_event("EnableTurboGear")
+-- dev:listen_event("switch_datalink")
+-- dev:listen_event("WeaponRearmSingleStepComplete")
+-- dev:listen_event("WheelChocksOn")
+-- dev:listen_event("WheelChocksOff")
+-- dev:listen_event("setup_HMS")
+-- dev:listen_event("setup_NVG")
+-- dev:listen_event("LinkNOPtoNet")
+-- dev:listen_event("UnlinkNOPfromNet")
+-- dev:listen_event("initChaffFlarePayload")
+-- dev:listen_event("OnNewNetPlane")
+-- dev:listen_event("Repair")
+-- dev:listen_event("UnlimitedWeaponStationRestore")
+-- dev:listen_event("GroundAirOff")
+-- dev:listen_event("GroundAirOn")
+-- dev:listen_event("EGI_TurnOff")
+-- dev:listen_event("EGI_TurnOn")
+-- dev:listen_event("RestoreEGIoperation")
+-- dev:listen_event("TISLmodeChange")
+-- dev:listen_event("cockpit_release")
+-- dev:listen_event("CanopyOpen")
+-- dev:listen_event("CanopyClose")
+dev:listen_event("refuel")
+-- dev:listen_event("refuelcomplete")
+-- dev:listen_event("refueldone")
+-- dev:listen_event("")
 
-function CockpitEvent(command,val)
+function CockpitEvent(command, val)
     -- val seems to mostly be empty table: {}
     -- log.alert("CockpitEvent event: "..tostring(command).."="..tostring(val))
     -- if val then
@@ -493,15 +523,21 @@ function CockpitEvent(command,val)
     --     end
     -- end
     -- print_message_to_user("CockpitEvent event: "..tostring(command).."="..tostring(val))
+    -- log.alert("CockpitEvent event: "..tostring(command).."="..tostring(val))
     -- if val then
     --     local str=dump("event",val)
     --     local lines=strsplit("\n",str)
     --     for k,v in ipairs(lines) do
+    --         log.alert(v)
     --         print_message_to_user(v)
     --     end
     -- end
-    fuel_init=round_to(sensor_data.getTotalFuelWeight() + fuel_random,5)
-    fuel_joker=round_to(fuel_init/2,5)
+    if command == "refuel" then 
+        fuel_init=round_to(sensor_data.getTotalFuelWeight() + fuel_random,5)
+    elseif command == "WeaponRearmComplete" then
+        fuel_joker=round_to(fuel_init/2,5)
+    end
+    
 end
 
 

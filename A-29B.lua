@@ -103,7 +103,7 @@ A_29B =  {
 	    M_empty									=	3356,  -- kg
 		M_nominal								=	3900,  -- kg  -- kg ~ %50 fuel, combat load
 		M_max									=	5400,  -- kg
-		M_fuel_max								=   435, -- utilizável --509 + 239 + 249*2 + 231,   -- kg Asas, Fuselage, Subalar, Ventral,
+		M_fuel_max								=   495, -- utilizável 495 --509 + 239 + 249*2 + 231,   -- kg Asas, Fuselage, Subalar, Ventral,
 		H_max									=	10668 , -- m
 
 		average_fuel_consumption 	= 0.009042, -- this is highly relative, but good estimates are 36-40l/min = 28-31kg/min = 0.47-0.52kg/s -- 45l/min = 35kg/min = 0.583kg/s
@@ -192,7 +192,7 @@ A_29B =  {
 				{	pilot_name            = "pilot_f86",
 					ejection_seat_name	=	17,
 					drop_canopy_name	=	'A-29B CANOPY',
-					pos = 	{0,	0.3,	0},
+					pos = 	{0,	0.3,	0}, -- location of your pilot ejecting,
 					can_be_playable 	 = true,
 					role 				 = "pilot",
 					role_display_name    = _("Pilot"),

@@ -44,13 +44,15 @@ local right_brake_pedal_param = get_param_handle("RIGHT_BRAKE_PEDAL")
 local brake_now = 0
 local brakes_on = false
 local brakes_on_last = brakes_on
-local brake_eff = get_param_handle("BRAKE_EFF")
 local single_wheelbrake_axis_value = -1
 local left_wheelbrake_AXIS_value = -1
 local right_wheelbrake_AXIS_value = -1
 local wheelbrake_axis_value = -1
 local wheelbrake_toggle_state = false
 
+
+function update1()
+end
 
 function update()
         -- calculate combined brake axis
@@ -87,7 +89,6 @@ function update()
                 dispatch_action(nil,iCommandPlaneWheelBrakeOff)
             end
     
-            brake_eff:set(100*x/y)
             brake_now = brake_now + 1
             if brake_now > y then
                 brake_now = 1
@@ -97,7 +98,6 @@ function update()
             -- brakes are not set again if the brakes are already off
             if brakes_on_last ~= brakes_on then  -- edge triggered
                 dispatch_action(nil,iCommandPlaneWheelBrakeOff)
-                brake_eff:set(0)
             end
         end
         brakes_on_last = brakes_on
@@ -117,9 +117,6 @@ function post_initialize()
     elseif birth=="GROUND_COLD" then
         dev:performClickableAction(device_commands.EmerParkBrake, 1, true)
     end
-    dev:performClickableAction(iCommandWheelBrake, -1, true)
-    dev:performClickableAction(iCommandLeftWheelBrake, -1, true)
-    dev:performClickableAction(iCommandRightWheelBrake, -1, true)
     
     startup_print("brakes: postinit end")
 end

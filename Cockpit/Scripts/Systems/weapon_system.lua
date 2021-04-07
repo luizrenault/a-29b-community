@@ -1010,6 +1010,13 @@ function SetCommand(command,value)
     end
 end
 
+dev:listen_event("WeaponRearmComplete")
+function CockpitEvent(command, val)
+    if command == "WeaponRearmComplete" then
+        wpn_guns_l = 250
+        wpn_guns_r = 250
+    end
+end
 
 startup_print("weapon: load end")
 need_to_be_closed = false -- close lua state after initialization
