@@ -10,7 +10,7 @@ dofile(LockOn_Options.script_path.."Systems/weapon_system_api.lua")
 
 startup_print("ufcs: load")
 
-local dev = GetSelf()
+dev = GetSelf()
 local alarm 
 local hud
 
@@ -291,7 +291,8 @@ dofile(LockOn_Options.script_path.."Systems/UFCP/dl.lua")
 
 function update()
     local ufcp_bright = get_cockpit_draw_argument_value(480)
-    
+    update_egir()
+
     UFCP_COM1_FREQ:set(ufcp_com1_frequency)
     UFCP_COM1_MOD:set(ufcp_com1_modulation)
     UFCP_COM1_SQL:set(ufcp_com1_sql and 1 or 0)
@@ -408,17 +409,16 @@ end
 
 function post_initialize()
     startup_print("ufcs: postinit start")
+    post_initialize_egi()
 
     ufcp_cmfd_ref = GetDevice(devices.CMFD)
     local birth = LockOn_Options.init_conditions.birth_place
     alarm = GetDevice(devices.ALARM)
     hud = GetDevice(devices.HUD)
     if birth=="GROUND_HOT" or birth=="AIR_HOT" then
-        dev:performClickableAction(device_commands.UFCP_EGI, 1, true)
         dev:performClickableAction(device_commands.UFCP_DVR, 1, true)
         dev:performClickableAction(device_commands.UFCP_RALT, 1, true)
     elseif birth=="GROUND_COLD" then
-        dev:performClickableAction(device_commands.UFCP_EGI, 0.15, true)
         dev:performClickableAction(device_commands.UFCP_DVR, -1, true)
         dev:performClickableAction(device_commands.UFCP_RALT, 0, true)
     end
@@ -549,6 +549,9 @@ function SetCommand(command,value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.DL_MSG then SetCommandDlMsg(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.DLWP then SetCommandDlwp(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.SNDP then SetCommandSndp(command, value)
+    end
+
+    if command == device_commands.UFCP_EGI then SetCommandEgi(command, value)
     end
 end
 

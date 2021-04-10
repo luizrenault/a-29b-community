@@ -153,8 +153,8 @@ local function update_ag_sel_next(byname)
     if not byname then
         local sequence = sms_search_sequence[wpn_ag_sel + 1]
         for k, pos in pairs(sequence) do
-            if wpn_sto_name[k] ~= name and wpn_sto_type[k] >= WPN_WEAPON_TYPE_IDS.AG_WEAPON_BEG and wpn_sto_type[k] <= WPN_WEAPON_TYPE_IDS.AG_WEAPON_END then
-                name = wpn_sto_name[k]
+            if wpn_sto_name[pos] ~= name and wpn_sto_type[pos] >= WPN_WEAPON_TYPE_IDS.AG_WEAPON_BEG and wpn_sto_type[pos] <= WPN_WEAPON_TYPE_IDS.AG_WEAPON_END and wpn_sto_count[pos] > 0 then
+                name = wpn_sto_name[pos]
                 break
             end
         end

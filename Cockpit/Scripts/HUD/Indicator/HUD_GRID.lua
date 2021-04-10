@@ -848,7 +848,7 @@ object = addStrokeText("HUD_EGIR_OFF", "OFF", STROKE_FNT_DFLT_120, "RightCenter"
 object.element_params = {"HUD_EGIR", "HUD_BRIGHT"}
 object.controllers = {{"parameter_compare_with_number", 0, 0}, {"opacity_using_parameter", 1}}
 
-object = addStrokeText("HUD_EGIR_ALIGN", "ALIGN", STROKE_FNT_DFLT_120, "RightCenter", {-65, -93})
+object = addStrokeText("HUD_EGIR_ALIGN", "ALGN", STROKE_FNT_DFLT_120, "RightCenter", {-65, -93})
 object.element_params = {"HUD_EGIR", "HUD_BRIGHT"}
 object.controllers = {{"parameter_compare_with_number", 0, 1}, {"opacity_using_parameter", 1}}
 

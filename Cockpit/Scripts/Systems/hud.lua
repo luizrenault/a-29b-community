@@ -59,6 +59,7 @@ local HUD = {
     SL_AZIMUTH = get_param_handle("HUD_SL_AZIMUTH"),
     SI_ELEVATION = get_param_handle("HUD_SI_ELEVATION"),
     SI_HIDE = get_param_handle("HUD_SI_HIDE"),
+    EGIR = get_param_handle("HUD_EGIR")
 }
 local WPN = {
     TD_AZIMUTH = get_param_handle("WPN_TD_AZIMUTH"),
@@ -397,11 +398,22 @@ UFCP_VAH:set(0)
 
 local max_accel = 0
 
-local hud_warn_period = 0.1
-local hud_warn_elapsed = 0
 local hud_warning = get_param_handle("HUD_WARNING")
 
+local time_elapsed = 0
+local function blinking(period, duty_cycle, offset)
+    period = period or 0.5
+    duty_cycle = duty_cycle or 0.5
+    offset = offset or 0
+
+    local period_elapsed = ((time_elapsed + offset) % period) / period
+    if period_elapsed > duty_cycle then return false
+    else return true end
+end
+
 function update()
+    time_elapsed = (time_elapsed + update_time_step) % 3600
+
     local master_mode = get_avionics_master_mode()
     local hud_on = get_elec_avionics_ok() and 1 or 0
     local hud_bright = 1-get_cockpit_draw_argument_value(483)
@@ -414,22 +426,8 @@ function update()
     update_fpm()
     update_td()
 
-    local hud_warn = get_hud_warning()
-    hud_warn_elapsed = hud_warn_elapsed + update_time_step
-    if hud_warn == 1 then
-        if hud_warn_elapsed > 2* hud_warn_period then
-            hud_warning:set(1)
-        elseif hud_warn_elapsed > hud_warn_period then 
-            hud_warning:set(0)
-        end
-    else 
-        hud_warning:set(0)
-    end
-    if hud_warn_elapsed > 2* hud_warn_period then
-        hud_warn_elapsed = 0
-    end
-    
-    
+    hud_warning:set((get_hud_warning() == 1 and blinking(0.2, 0.5)) and 1 or 0)
+
     local pitch = sensor_data.getPitch()
     local roll = sensor_data.getRoll()
     local hdg = get_avionics_hdg()
@@ -603,6 +601,14 @@ function update()
     if aoa > 40 then aoa = 40 end
     local aoa_delta = aoa - 4.5
     
+    local egi_state = UFCP_EGI.EGI_STATE:get()
+    if egi_state == UFCP_EGI_STATE_IDS.OFF then HUD.EGIR:set(0)
+    elseif egi_state == UFCP_EGI_STATE_IDS.ALIGNING then HUD.EGIR:set(-1)
+    elseif egi_state == UFCP_EGI_STATE_IDS.ALIGNED_COARSE then HUD.EGIR:set(1)
+    elseif egi_state == UFCP_EGI_STATE_IDS.ALIGNED then HUD.EGIR:set(blinking() and 1 or -1)
+    elseif egi_state == UFCP_EGI_STATE_IDS.NAV or egi_state == UFCP_EGI_STATE_IDS.NAV_COARSE then HUD.EGIR:set(-1)
+    end
+
     HUD_PITCH:set(pitch - pl_slide*math.sin(roll))
     HUD_ROLL:set(roll)
     HUD_HDG:set(hdg)

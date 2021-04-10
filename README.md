@@ -53,7 +53,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 
 # Changelog
 
-## Version 0.1.9b - 06 April 2021
+## Version 0.1.9b - 10 April 2021
 
 ### Added
 - BARO / RALT submode now remembered with mode changes.
@@ -63,6 +63,8 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - DTK - Desired Track.
 - New Normal Map and RoughMet (by Cubeboy)
 - New experimental sounds for canopy, buttons, knobs and switches.
+- UFCP EGI-INS format.
+- EGI states and alignment timings.
 
 ### Changed
 - NVG Switch only disables storm light.
@@ -71,6 +73,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Np around 100% when NG > 64%.
 - T5 adjustments.
 - Several EICAS transient values.
+- A/G Weapon selection order now allows any stores combinations.
 
 ### Fixes
 - UFCP WYPT menu minor bugs.
@@ -81,12 +84,10 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Thrust tables of FM
 - A/G Profiles
 - A/G mode select with Stick Step button.
-- A/G select different weapons
 - FIX is only cosmetic because currently there is only pure EGI/GPS navigation.
 - Create the alarms for the parameters in the LMT format.
-- Move the FYT in HUD according to the DTK position.
-- Show the DTK information in ADHSI.
 - Set the AA DGFT piper size relative to UFCP_WS (target wingspan in metres)
+- EGI state dictates NAV conditions.
 
 ## Version 0.1.8b - 04 April 2021 - Happy Easter
 
