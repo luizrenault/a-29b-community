@@ -70,6 +70,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - New RPM x FF curve.
 - Throttle ST and CUT OFF positions.
 - Engine Cutoff key binding.
+- Mirrors.
 
 ### Changed
 - NVG Switch only disables storm light.
