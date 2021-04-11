@@ -24,8 +24,6 @@ local MISC_SEL_IDS = {
 -- Inits
 ufcp_nav_mode = UFCP_NAV_MODE_IDS.AUTO
 ufcp_nav_time = UFCP_NAV_TIME_IDS.TTD
-ufcp_nav_solution = UFCP_NAV_SOLUTION_IDS.NAV_EGI
-ufcp_nav_egi_error = 35 -- meters
 
 ufcp_nav_misc_magv_auto = true
 ufcp_nav_misc_magv_sign = 1
@@ -203,6 +201,14 @@ function update_nav()
         if misc_sel == MISC_SEL_IDS.DELTA and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. string.format("%4.1f", ufcp_nav_misc_delta) end
         if misc_sel == MISC_SEL_IDS.DELTA then text = text .. "*" else text = text .. " " end
         text = text .. "HR "
+
+        if misc_sel == MISC_SEL_IDS.MAGV and ufcp_edit_pos > 0 then
+            text = replace_pos(text, 30)
+            text = replace_pos(text, 35)
+        elseif misc_sel == MISC_SEL_IDS.DELTA and ufcp_edit_pos > 0 then
+            text = replace_pos(text, 74)
+            text = replace_pos(text, 79)
+        end
     end
     UFCP_TEXT:set(text)
 end
