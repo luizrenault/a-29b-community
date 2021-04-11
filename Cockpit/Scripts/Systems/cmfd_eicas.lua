@@ -95,8 +95,11 @@ function update_eicas()
 
     ------------------ mostrador de torque
     local torque = sensor_data.getEngineLeftRPM()
-    if torque < 64 then torque = 64 end
-    torque = (torque - 63) * 100 / 37
+    if torque < 84 then 
+        torque = (torque - 64.6) / 19.4 * 10
+    else
+        torque = (torque - 84) / 16 * 90 + 10
+    end
     if torque < 0 then torque = 0 end
     if torque > 225 then torque = 225 end
     

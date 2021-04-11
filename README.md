@@ -9,7 +9,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Download
 
-[![Download](https://img.shields.io/github/downloads/luizrenault/a-29b-community/total?label=Download%20Latest%20Release)](https://github.com/luizrenault/a-29b-community/releases)
+[Download Latest Release](https://github.com/luizrenault/a-29b-community/archive/refs/heads/main.zip)
 
 [Download Latest Devel](https://github.com/luizrenault/a-29b-community/archive/refs/heads/devel.zip)
 
@@ -65,6 +65,9 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - New experimental sounds for canopy, buttons, knobs and switches.
 - UFCP EGI-INS format.
 - EGI states and alignment timings.
+- New Throttle x RPM curve.
+- New RPM x Thrust curve.
+- New RPM x FF curve.
 
 ### Changed
 - NVG Switch only disables storm light.
@@ -78,6 +81,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 ### Fixes
 - UFCP WYPT menu minor bugs.
 - Guns reloads to 500 rounds upon rearm.
+- Altimeter pressure initial adjustment.
 
 ### TODO
 - Remember A/G Gun Selection

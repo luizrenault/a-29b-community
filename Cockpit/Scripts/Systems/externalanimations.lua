@@ -36,6 +36,9 @@ local BFI_MB_param = get_param_handle("BFI_MB")
 dev:listen_command(device_commands.AltPressureKnob)
 dev:listen_command(device_commands.AltPressureStd)
 
+local iCommandAltimeterPressureIncrease = 316
+local iCommandAltimeterPressureDecrease = 317
+local iCommandAltimeterPressureStop = 318
 
 
 local ALT_PRESSURE_STD = 29.92 -- in Hg
@@ -46,9 +49,8 @@ local ALT_PRESSURE_MIN = 29.10 -- in Hg
 local balt_init
 local alt_init
 function post_initialize()
-	balt_init = sensor_data.getBarometricAltitude()
-	local x, z
-	x, alt_init, z = sensor_data.getSelfCoordinates()
+	dispatch_action(nil, iCommandAltimeterPressureIncrease)
+	dispatch_action(nil, iCommandAltimeterPressureDecrease)
 
 	DC_param:set(24.0)
     hdd_001_brightness_param:set(1.0)
@@ -77,7 +79,30 @@ local PropStepLim		 =  0.0833
 local propState         =   -1
 local propMaxRPM		= 2000
 local bfi_bright = 1
+
+local adjust = true
+
 function update()
+	if adjust then -- workaround for getBarometricAltitude
+		local x, y, z = sensor_data.getSelfCoordinates()
+		local dif = math.floor(y/10) - math.floor(sensor_data.getBarometricAltitude()/10)
+		if dif > 0 then
+			for i=1, math.floor(math.abs(dif/3)) do
+				dispatch_action(nil, iCommandAltimeterPressureIncrease)
+			end
+			dispatch_action(nil, iCommandAltimeterPressureIncrease)
+		elseif dif < 0 then
+			for i=1, math.floor(math.abs(dif/3)) do
+				dispatch_action(nil, iCommandAltimeterPressureDecrease)
+			end
+			dispatch_action(nil, iCommandAltimeterPressureDecrease)
+		else
+			adjust = false
+		end
+		return 0
+	end
+
+
 	--Test set anim argument
 	-- IAS_param:set(sensor_data.getTrueAirSpeed()*MPS_TO_KNOTS)
 	IAS_param:set(sensor_data.getIndicatedAirSpeed()*MPS_TO_KNOTS)
@@ -121,9 +146,6 @@ function update()
 end
 
 
-local iCommandAltimeterPressureIncrease = 316
-local iCommandAltimeterPressureDecrease = 317
-local iCommandAltimeterPressureStop = 318
 dev:listen_command(iCommandAltimeterPressureIncrease)
 dev:listen_command(iCommandAltimeterPressureDecrease)
 
@@ -135,6 +157,7 @@ function SetCommand(command,value)
 			dispatch_action(nil, iCommandAltimeterPressureDecrease)
 		end
 	elseif command == iCommandAltimeterPressureIncrease then
+		if adjust then return 0 end
 		local baro=BFI_BARO_param:get()
 		baro=baro+0.01
 		if baro>ALT_PRESSURE_MAX then 
@@ -142,6 +165,7 @@ function SetCommand(command,value)
 		end
 		BFI_BARO_param:set(baro)
 	elseif command == iCommandAltimeterPressureDecrease then
+		if adjust then return 0 end
 		local baro=BFI_BARO_param:get()
 		baro=baro-0.01
 		if baro<ALT_PRESSURE_MIN then 

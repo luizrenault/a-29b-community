@@ -307,7 +307,7 @@ A_29B =  {
 					-- { CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
 					-- { CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 					{ CLSID = "{5335D97A-35A5-4643-9D9B-026C75961E52}" }, -- CBU-97
-	
+
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
 					{ CLSID = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}" }, -- LAU-61 - 19
 	
@@ -600,7 +600,31 @@ A_29B =  {
 							}
 						},
 
-
+						TSFC_throttle_responce =  -- correction to TSFC for different engine RPM, 1d table
+						{
+							RPM = {0, 70, 80, 90, 100},
+							K   = {1,  1,  1,  1,   1},
+						},
+						--rpm_acceleration_time_factor = -- time factor for engine governor  ie RPM += (desired_RPM - RPM ) * t(RPM) * dt
+						--{
+						--	RPM  = {0, 50, 100},
+						--	t    = {0.3,0.3,0.3}
+						--},
+						--rpm_deceleration_time_factor = -- time factor for engine governor
+						--{
+						--	RPM  = {0, 50, 100},
+						--	t    = {0.3,0.3,0.3}
+						--},
+						rpm_throttle_responce = -- required RPM according to throttle position
+						{
+							throttle = {0, 0.1, 0.55,  1.0},
+							RPM      = {64.6, 84, 92, 100},
+						},
+						thrust_rpm_responce = -- thrust = K(RPM) * thrust_max(M,H)
+						{
+							RPM = {0, 64.6, 84,   100},
+							K   = {0, 0.00, 0.5,  1},
+						},
                 }, -- end of extended data
 
            
@@ -624,6 +648,17 @@ A_29B =  {
         --                         {   1904,   2042,    2296,   2300,  2433,   2798,   3212,   3483,   3639,   4097  },--H = 19812 (65kft)
         --                        },
         --         },
+		-- TSFC_afterburner =  -- afterburning thrust specific fuel consumption by altitude and Mach number RPM  100%, 2d table
+		-- {
+		-- 	M 		 = {0,0.3,0.5,0.7,1.0},
+		-- 	H		 = {0,1000,3000,10000},
+		-- 	TSFC	 = {-- M 0  0.3 0.5  0.7  1.0
+		-- 				{   1,   1,  1,   1,   1},--H = 0
+		-- 				{   1,   1,  1,   1,   1},--H = 1000
+		-- 				{   1,   1,  1,   1,   1},--H = 3000
+		-- 				{   1,   1,  1,   1,   1},--H = 10000
+		-- 	}
+		-- },
 		-- extended =
 		-- {
 		--   Cx0 = -- Interpolierung von Cx0 bei Geschwindikeit M und HÃ¶he H
