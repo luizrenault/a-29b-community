@@ -76,11 +76,13 @@ end
 
 local DRAW_FAN			 = 	407
 local PropStepLim		 =  0.0833
-local propState         =   -1
+local propState         =   0
 local propMaxRPM		= 2000
 local bfi_bright = 1
 
 local adjust = true
+
+local EICAS_NP = get_param_handle("EICAS_NP")
 
 function update()
 	if adjust then -- workaround for getBarometricAltitude
@@ -116,20 +118,19 @@ function update()
 	ALT_param:set(sensor_data.getBarometricAltitude() * meters_to_feet)
 	-- ALT_param:set(sensor_data.getBarometricAltitude()*meters_to_feet+(BFI_BARO_param:get()-ALT_PRESSURE_STD)*1000)
 
-	local propRPM = sensor_data.getEngineLeftRPM() / 100 * propMaxRPM
+	local propRPM = EICAS_NP:get() / 100 * propMaxRPM
 	--sensor is from 0 to 100 so it is divided by 100 and multiplied by the prop max RPM.
 	
-	local propStep = propRPM/60*update_time_step
-	--keeps prop animation between 0 and 1
+	local propStep = propRPM / 60 * update_time_step
 
-	propState = (propState + propStep)%1
-	if propRPM < 400 then
+	--keeps prop animation between 0 and 1
+	if propRPM < 1000 then
+		propState = (propState + propStep)%1
 		set_aircraft_draw_argument_value(DRAW_FAN,-1+propState/2)
 	else
+		propState = (propState + propStep/100)%1
 		set_aircraft_draw_argument_value(DRAW_FAN,propState)
 	end
-
-
 
 	local ROLL_STATE = sensor_data:getStickPitchPosition() / 100
 	set_aircraft_draw_argument_value(11, ROLL_STATE) -- right aileron

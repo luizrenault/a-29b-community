@@ -80,6 +80,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Several EICAS transient values.
 - A/G Weapon selection order now allows any stores combinations.
 - Startup procedure: (Throttle CUT OFF -> ST on Ng=13%, ST -> Idle on Np = 40%)
+- Propeller rotation animation to match Np.
 
 ### Fixes
 - UFCP WYPT menu minor bugs.

@@ -3,6 +3,7 @@ livery =
 {
     {"a29b_01.bmp", 0, "a29b_01", false};
     {"a29b_02.bmp", 0, "a29b_02", false};
+	{"a29b_01.bmp", ROUGHNESS_METALLIC ,"a29b_RoughMet",false};
 
    --[[
         uncomment lines for customized dds/tga/bmp files
