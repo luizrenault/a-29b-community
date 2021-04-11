@@ -8,7 +8,7 @@ developerName   =   "Fight's On BR",
 version		 = "0.1.9b",
 state		 = "installed",
 info		 = _("A-29B"),
-
+binaries	 = {'avWorkingRadio'},
 InputProfiles =
 {
     ["A-29B"] = current_mod_path .. '/Input/A-29B',
