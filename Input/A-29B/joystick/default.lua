@@ -21,6 +21,8 @@ join(res.keyCommands,{
 
 {pressed = iCommandThrottleIncrease,                        up = iCommandThrottleStop,                          name = _('Throttle Up'),			                            category = _('Flight Control')},
 {pressed = iCommandThrottleDecrease,                        up = iCommandThrottleStop,                          name = _('Throttle Down'),			                            category = _('Flight Control')},
+{down = Keys.Cutoff,               		                    up = Keys.Cutoff,                                   name = _('Engine Cutoff else other'),		                    category = _('Flight Control'),                value_down =  1.0,		value_up = 0.0},
+
 
 {down = iCommandPlaneAUTIncreaseRegime,			                                                                name = _('Throttle Step Up'),			                        category = _('Flight Control')},
 {down = iCommandPlaneAUTDecreaseRegime,			                                                                name = _('Throttle Step Down'),			                        category = _('Flight Control')},

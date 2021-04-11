@@ -53,7 +53,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 
 # Changelog
 
-## Version 0.1.9b - 10 April 2021
+## Version 0.1.9b - 11 April 2021
 
 ### Added
 - BARO / RALT submode now remembered with mode changes.
@@ -68,6 +68,8 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - New Throttle x RPM curve.
 - New RPM x Thrust curve.
 - New RPM x FF curve.
+- Throttle ST and CUT OFF positions.
+- Engine Cutoff key binding.
 
 ### Changed
 - NVG Switch only disables storm light.
@@ -77,6 +79,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - T5 adjustments.
 - Several EICAS transient values.
 - A/G Weapon selection order now allows any stores combinations.
+- Startup procedure: (Throttle CUT OFF -> ST on Ng=13%, ST -> Idle on Np = 40%)
 
 ### Fixes
 - UFCP WYPT menu minor bugs.

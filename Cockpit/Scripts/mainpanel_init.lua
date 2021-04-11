@@ -57,11 +57,17 @@ StickBank.input						= {-100, 100}
 StickBank.output					= {1, -1}
 StickBank.controller				= controllers.base_gauge_StickRollPosition
 
-Throttle							= CreateGauge()
+-- Throttle							= CreateGauge()
+-- Throttle.arg_number					= 80
+-- Throttle.input						= {0, 1}
+-- Throttle.output						= {0, 1}
+-- Throttle.controller					= controllers.base_gauge_ThrottleLeftPosition
+
+Throttle							= CreateGauge("parameter")
 Throttle.arg_number					= 80
-Throttle.input						= {0, 1}
-Throttle.output						= {0.2, 1}
-Throttle.controller					= controllers.base_gauge_ThrottleLeftPosition
+Throttle.input						= {-1, 1}
+Throttle.output						= {-1, 1}
+Throttle.parameter_name				= "ENGINE_THROTTLE"
 
 RudderPedals						= CreateGauge()
 RudderPedals.arg_number				= 4

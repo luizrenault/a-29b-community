@@ -69,12 +69,35 @@ elements["PNT_922"] = default_3_position_tumb("Ignition (On/Auto/Off)",         
 elements["PNT_923"] = springloaded_3_pos_tumb("Start (Start/No Function/Interrupt",	    	    devices.ENGINE,	 device_commands.EngineStart,    923, true)
 elements["PNT_924"] = default_2_position_tumb("Innertial Separation (Open/Close)",              devices.ENGINE,  device_commands.EngineInnSep,   924,TOGGLECLICK_MID_FWD)
 -- FUEL / HYDRAULIC / BLEED SHUTOFF
-elements["PNT_871"] = default_3_position_tumb("Fuel/Hydraulic/Bleed Shutoff (Open/Close/Close)",devices.ENGINE,  device_commands.FuelHydBleed, 871,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_871"] = default_3_position_tumb("Fuel/Hydraulic/Bleed Shutoff (Open/Close/Close)",devices.ENGINE,  device_commands.FuelHydBleed,   871,nil,true,TOGGLECLICK_MID_FWD)
 
 -- THROTTLE
-elements["PNT_911"] = default_movable_axis("Throttle",                                          devices.EXTANIM, device_commands.Throttle,       911, 0.0,0.1, true, false)
+elements["PNT_911"] = springloaded_3_pos_tumb("Throttle",                                       devices.ENGINE,  device_commands.ThrottleClick,  911, true)
+
+-- elements["PNT_911"] = 
+-- {
+--     class				= {class_type.BTN, class_type.BTN},
+-- 	hint				= ("Throttle"),
+-- 	device				= devices.ENGINE,
+-- 	action				= {device_commands.ThrottleAxis, device_commands.ThrottleClick},
+-- 	stop_action			= {0, 0},
+-- 	is_repeatable		= {},
+-- 	arg					= {911, 911},
+-- 	arg_value			= {0.0, -1.0},
+-- 	arg_lim				= {{0, 1}, {-1, 1}},
+-- 	relative			= {false, false},
+-- 	updatable			= {true, true},
+-- 	cycle				= {false, true},
+-- 	gain				= {0.15, 1},
+-- 	use_release_message	= {false, false},
+-- 	animated        	= {true, true},
+-- 	animation_speed 	= {16, 16},
+-- 	use_OBB 			= true,
+-- }
+
+
 elements["PNT_912"] = default_2_position_tumb("Flaps (Up/Down)",     		                    devices.FLAPS, 	 device_commands.flaps,          912,TOGGLECLICK_MID_FWD)
-elements["PNT_913"] = default_movable_axis("Friction",                                          devices.EXTANIM, device_commands.Friction,       913, 0.0,0.1, true, false)
+-- elements["PNT_913"] = default_movable_axis("Friction",                                          devices.EXTANIM, device_commands.Friction,       913, 0.0,0.1, true, false)
 
 -- TRIMS
 elements["PNT_901"] = springloaded_3_pos_tumb("Aileron Emergency (Left/Stop/Right)",            devices.AVIONICS, device_commands.TrimEmerAil,    901,true,TOGGLECLICK_MID_FWD)
