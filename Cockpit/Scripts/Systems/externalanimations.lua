@@ -124,7 +124,7 @@ function update()
 	local propStep = propRPM / 60 * update_time_step
 
 	--keeps prop animation between 0 and 1
-	if propRPM < 1000 then
+	if propRPM < 800 then
 		propState = (propState + propStep)%1
 		set_aircraft_draw_argument_value(DRAW_FAN,-1+propState/2)
 	else

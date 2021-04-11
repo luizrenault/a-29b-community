@@ -494,6 +494,8 @@ A_29B =  {
 			-- So if you have a NASA-Report or something like that, the only unknown might be B4. If you solve the equation for B4 it looks like this:
 			-- B4 = (-Cx0 - B * CL^2 + CD) / CL^4
 			-- CL = Cy0 + AoA * Cya
+			-- When angle-of-attack (a) is below Aldop:
+			-- Cy(M,a) = Cya(M)*a
 			-- in other words B4 = (-CDmin - (1 / pi * AR * e) * CL^2 + CD) / CL^4
 			-- Before I forget it, e is the "Oswald Factor" or "wing-efficiency-factor" which is somewhere between 0.7 and 1.0. If you take 0.7 for landing speeds and take-off speeds, 
 			-- where flaps and gear is extended, you will be approx. right, for everything else 0.85 or 0.9 is a good guess.

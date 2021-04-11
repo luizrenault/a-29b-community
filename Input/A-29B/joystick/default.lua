@@ -225,6 +225,8 @@ join(res.keyCommands,{
 {down = device_commands.CMFD2ButtonBright,                      up = device_commands.CMFD2ButtonBright,         name = _('CMFD2 Brightness Up'),                                category = {_('CMFD')},			            value_down =  1.0,      value_up =  0.0,                                               cockpit_device_id = devices.CMFD},
 {down = device_commands.CMFD2ButtonBright,                      up = device_commands.CMFD2ButtonBright,         name = _('CMFD2 Brightness Down'),                              category = {_('CMFD')},			            value_down =  -1.0,     value_up =  0.0,                                               cockpit_device_id = devices.CMFD},
 
+-- mirrors
+{down = iCommandToggleMirrors,                                                                                  name = _('Toggle Mirrors'),                   category = {_('View Cockpit')}},
 
 -- -- Weapons                                                                        
 -- {combos = defaultDeviceAssignmentFor("fire"),	down = iCommandPlaneFire, up = iCommandPlaneFireOff, name = _('Weapon Fire'),	category = _('Weapons')},

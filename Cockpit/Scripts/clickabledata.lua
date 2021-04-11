@@ -11,9 +11,9 @@ dofile(LockOn_Options.script_path.."devices.lua")
 
 elements = {}
 
--- -- Mirrors
--- elements["PNT_MIRROR_LEFT"]  = default_2_position_tumb("Toggle Mirrors", 0, 1625, nil)
--- elements["PNT_MIRROR_RIGHT"] = default_2_position_tumb("Toggle Mirrors", 0, 1625, nil)
+-- Mirrors
+elements["PNT_MIRROR_LEFT"]  = default_2_position_tumb("Toggle Mirrors", 0, 1625, nil)
+elements["PNT_MIRROR_RIGHT"] = default_2_position_tumb("Toggle Mirrors", 0, 1625, nil)
 
 elements["PNT_2"] = default_2_position_tumb("Hide Stick Toggle", devices.GEAR, Keys.ToggleStick, nil)
 
@@ -73,29 +73,6 @@ elements["PNT_871"] = default_3_position_tumb("Fuel/Hydraulic/Bleed Shutoff (Ope
 
 -- THROTTLE
 elements["PNT_911"] = springloaded_3_pos_tumb("Throttle",                                       devices.ENGINE,  device_commands.ThrottleClick,  911, true)
-
--- elements["PNT_911"] = 
--- {
---     class				= {class_type.BTN, class_type.BTN},
--- 	hint				= ("Throttle"),
--- 	device				= devices.ENGINE,
--- 	action				= {device_commands.ThrottleAxis, device_commands.ThrottleClick},
--- 	stop_action			= {0, 0},
--- 	is_repeatable		= {},
--- 	arg					= {911, 911},
--- 	arg_value			= {0.0, -1.0},
--- 	arg_lim				= {{0, 1}, {-1, 1}},
--- 	relative			= {false, false},
--- 	updatable			= {true, true},
--- 	cycle				= {false, true},
--- 	gain				= {0.15, 1},
--- 	use_release_message	= {false, false},
--- 	animated        	= {true, true},
--- 	animation_speed 	= {16, 16},
--- 	use_OBB 			= true,
--- }
-
-
 elements["PNT_912"] = default_2_position_tumb("Flaps (Up/Down)",     		                    devices.FLAPS, 	 device_commands.flaps,          912,TOGGLECLICK_MID_FWD)
 -- elements["PNT_913"] = default_movable_axis("Friction",                                          devices.EXTANIM, device_commands.Friction,       913, 0.0,0.1, true, false)
 
@@ -150,10 +127,10 @@ elements["PNT_782"] = default_3_position_tumb("Late Arm (On/Safe)",             
 elements["PNT_811"] = default_button("Salvo",                                                   devices.WEAPON_SYSTEM, device_commands.Salvo,         811)
 
 -- ELT
-elements["PNT_771"] = default_3_position_tumb("ELT (On/Arm-Reset)",                             devices.EXTANIM, device_commands.EltOn,        771,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_741"] = default_3_position_tumb("ELT (On/Arm-Reset)",                             devices.EXTANIM, device_commands.EltOn,        741,nil,true,TOGGLECLICK_MID_FWD)
 -- PIC NAV
-elements["PNT_772"] = springloaded_3_pos_tumb("Manual Sync (CW/CCW)",                           devices.EXTANIM, device_commands.PicNavMan,     772,true,TOGGLECLICK_MID_FWD)
-elements["PNT_773"] = default_3_position_tumb("Slave (Free/Slave/Fast Slave)",                  devices.EXTANIM, device_commands.PicNavSlave,   773,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_742"] = springloaded_3_pos_tumb("Manual Sync (CW/CCW)",                           devices.EXTANIM, device_commands.PicNavMan,     742,true,TOGGLECLICK_MID_FWD)
+elements["PNT_743"] = default_3_position_tumb("Slave (Free/Slave/Fast Slave)",                  devices.EXTANIM, device_commands.PicNavSlave,   743,nil,true,TOGGLECLICK_MID_FWD)
 
 -- AUDIO
 elements["PNT_761"] = default_2_position_tumb("Audio Selector (Normal/Backup)",                 devices.EXTANIM, device_commands.AudioNormal,        761,TOGGLECLICK_MID_FWD)
@@ -161,6 +138,12 @@ elements["PNT_762"] = default_movable_axis("COM 1 Audio",      		           				
 elements["PNT_763"] = default_movable_axis("COM 2 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM2_VOL,     763)
 elements["PNT_764"] = default_movable_axis("COM 3 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM3_VOL,     764)
 elements["PNT_765"] = default_movable_axis("COM 4 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM4_VOL,     765)
+elements["PNT_766"] = default_movable_axis("ADF",		      		           					devices.EXTANIM, device_commands.AUDIO_ADF_VOL,      766)
+elements["PNT_767"] = default_movable_axis("NAV", 		     		           					devices.EXTANIM, device_commands.AUDIO_NAV_VOL,      767)
+elements["PNT_768"] = default_movable_axis("Missile",	      		           					devices.EXTANIM, device_commands.AUDIO_MSL_VOL,      768)
+elements["PNT_769"] = default_movable_axis("MKR",		      		           					devices.EXTANIM, device_commands.AUDIO_MKR_VOL,      769)
+elements["PNT_770"] = default_movable_axis("Volume",	      		           					devices.EXTANIM, device_commands.AUDIO_VOL,		     770)
+elements["PNT_771"] = default_movable_axis("VOX",      		           							devices.EXTANIM, device_commands.AUDIO_VOX,     	 771)
 
 -- ASI
 elements["PNT_751"] = 

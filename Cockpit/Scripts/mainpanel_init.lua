@@ -23,14 +23,14 @@ local controllers = LoRegisterPanelControls()
 
 mirrors_data =
 {
-    center_point 	= {0.2,0.1,0.00},
+    center_point 	= {0.493,0.092,0.00},
     width 		 	= 0.8, --1.2,
     aspect 		 	= 1.5,
 	rotation 	 	= math.rad(1);
 	animation_speed = 2.0;
 	near_clip 		= 0.1;
 	middle_clip		= 10;
-	far_clip		= 60000;
+	far_clip		= 5000;
 }
 
 Canopy    							= CreateGauge()
@@ -282,7 +282,7 @@ Z_test =
 	far  = 4.0,
 }
 
-livery = "default"
+livery = "FAB"
 
 --[[ available functions
 

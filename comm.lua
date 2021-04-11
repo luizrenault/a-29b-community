@@ -43,7 +43,7 @@ local parameters = {
 	refueling = true
 }
 
-local menus = data.menus
+-- local menus = data.menus
 
 utils.verifyChunk(utils.loadfileIn('Scripts/UI/RadioCommandDialogPanel/Config/LockOnAirplane.lua', getfenv()))(parameters)
 

@@ -21,6 +21,7 @@ join(res.keyCommands,{
 
 {combos = {{key = 'Num+'}}, 						                    pressed = iCommandThrottleIncrease,		            up = iCommandThrottleStop,                  name = _('Throttle Up'),		                                category = _('Flight Control')},
 {combos = {{key = 'Num-'}}, 						                    pressed = iCommandThrottleDecrease,		            up = iCommandThrottleStop,                  name = _('Throttle Down'),		                                category = _('Flight Control')},
+{                            						                    down = Keys.Cutoff,               		            up = Keys.Cutoff,                           name = _('Engine Cutoff else other'),		                    category = _('Flight Control'),                         value_down =  1.0,		value_up = 0.0},
 
 {combos = {{key = 'PageUp'}},							                down = iCommandPlaneAUTIncreaseRegime,	            	                                        name = _('Throttle Step Up'),			                        category = _('Flight Control')},
 {combos = {{key = 'PageDown'}},							                down = iCommandPlaneAUTDecreaseRegime,	            	                                        name = _('Throttle Step Down'),			                        category = _('Flight Control')},
@@ -221,6 +222,9 @@ join(res.keyCommands,{
 {									                                    down = device_commands.CMFD2OSS28,              up = device_commands.CMFD2OSS28,                name = _('CMFD2 OSS28'),			                            category = {_('CMFD')},			            value_down =  1.0,      value_up =  0.0,                                               cockpit_device_id = devices.CMFD},
 {									                                    down = device_commands.CMFD2ButtonBright,       up = device_commands.CMFD2ButtonBright,         name = _('CMFD2 Brightness Up'),                                category = {_('CMFD')},			            value_down =  1.0,      value_up =  0.0,                                               cockpit_device_id = devices.CMFD},
 {									                                    down = device_commands.CMFD2ButtonBright,       up = device_commands.CMFD2ButtonBright,         name = _('CMFD2 Brightness Down'),                              category = {_('CMFD')},			            value_down =  -1.0,     value_up =  0.0,                                               cockpit_device_id = devices.CMFD},
+
+-- mirrors
+{combos = {{key = 'M' }},                                               down = iCommandToggleMirrors,                                                                   name = _('Toggle Mirrors'),                                     category = {_('View Cockpit')}},
 
 
 -- {combos = {{key = 'Space'}},							down = hotas_commands.STICK_TRIGGER_2ND_DETENT,		up = hotas_commands.STICK_TRIGGER_2ND_DETENT,		cockpit_device_id = devices.HOTAS,	value_down =  1.0,		value_up = 0.0,	name = _('Gun Trigger - SECOND DETENT (Press to shoot)'),				category = {_('Stick'), _('HOTAS')}},
