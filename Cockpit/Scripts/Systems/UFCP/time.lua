@@ -15,6 +15,8 @@ ufcp_time = get_absolute_model_time()
 ufcp_time_calculated = 0
 ufcp_time_run = 0
 ufcp_time_run_calculated = 0
+ufcp_time_adv_delay = -1 -- -1Delay 1Advance
+ufcp_time_delta = 0
 
 -- Methods
 
@@ -142,7 +144,7 @@ function update_time()
     if sel == SEL_IDS.TIME and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. seconds_to_string(math.floor(ufcp_time)) end
     if sel == SEL_IDS.TIME then text = text .. "*" else text = text .. " " end 
     
-    --text = text .. ""
+    text = text .. " "
     -- Run
     if sel == SEL_IDS.RUN then text = text .. "*" else text = text .. " " end 
     if sel == SEL_IDS.RUN and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else if math.floor(ufcp_time_run) > 0 then text = text .. " " end; text = text .. seconds_to_string(math.floor(ufcp_time_run)) end
@@ -158,13 +160,24 @@ function update_time()
 
     -- Equals
     text = text .. "="
+    if sel == SEL_IDS.CALCULATE then text = text .. "*" else text = text .. " " end 
 
     -- Run calculated
-    if sel == SEL_IDS.RUN_CALCULATED or sel == SEL_IDS.CALCULATE then text = text .. "*" else text = text .. " " end 
+    if sel == SEL_IDS.RUN_CALCULATED then text = text .. "*" else text = text .. " " end 
     if sel == SEL_IDS.RUN_CALCULATED and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit() else text = text .. seconds_to_string(math.floor(ufcp_time_run_calculated)) end
     if sel == SEL_IDS.RUN_CALCULATED then text = text .. "*" else text = text .. " " end 
 
     text = text .. "\n"
+
+    -- Advance/delay
+    text = text .. "       "
+    if sel == SEL_IDS.DELTA then text = text .. "*" else text = text .. " " end 
+    if sel == SEL_IDS.DELTA and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit() else text = text .. seconds_to_string(math.floor(ufcp_time_delta)) end
+    if sel == SEL_IDS.DELTA then text = text .. "*" else text = text .. " " end 
+
+    if sel == SEL_IDS.ADV_DELAY then text = text .. "*" else text = text .. " " end 
+    if ufcp_time_adv_delay == 1 then text = text .. "ADV  " else text = text .. "DELAY" end
+    if sel == SEL_IDS.ADV_DELAY then text = text .. "*" else text = text .. " " end 
 
     UFCP_TEXT:set(text)
 end
@@ -174,6 +187,8 @@ function SetCommandTime(command,value)
         sel = (sel + 1) % max_sel
     elseif command == device_commands.UFCP_JOY_UP and ufcp_edit_pos == 0 and value == 1 then
         sel = (sel - 1) % max_sel
+    elseif sel == SEL_IDS.ADV_DELAY and command == device_commands.UFCP_JOY_RIGHT and ufcp_edit_pos == 0 and value == 1 then
+        ufcp_time_adv_delay = -ufcp_time_adv_delay
     elseif command == device_commands.UFCP_1 and value == 1 then
         if sel == SEL_IDS.RUN or sel == SEL_IDS.TIME_CALCULATED or sel == SEL_IDS.RUN_CALCULATED then
             ufcp_continue_edit("1", FIELD_INFO[sel], false)

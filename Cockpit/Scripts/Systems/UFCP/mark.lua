@@ -151,8 +151,8 @@ function update_mark()
     text = text .. " FT     "
 
     if ufcp_mark_designated then
-       text = blink_text(text,38,11)
-       text = blink_text(text,56,11)
+       text = blink_text(text,33,3)
+       text = blink_text(text,51,3)
     end
 
     UFCP_TEXT:set(text)
