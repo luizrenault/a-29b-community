@@ -12,6 +12,13 @@ function update_menu()
     if UFCP_DTK_ENABLED:get() == 1 then
         text = replace_pos(text, 10)
     end
+
+    -- If ufcp_bal_impact or ufcp_bal_mbal is true, this should be highlighted.
+    -- TODO Check which.
+    if ufcp_bal_impact then
+    --if ufcp_bal_mbal then
+        text = replace_pos(text, 16)
+    end
     UFCP_TEXT:set(text)
 end
 

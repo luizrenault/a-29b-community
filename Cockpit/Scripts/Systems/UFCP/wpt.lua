@@ -113,12 +113,22 @@ end
 local function ufcp_wpt_lat_lon_input_validade(text, save)
     -- local reference = "E XXºXX.XX'"
     if text:len() == 1 then
-        if     ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LAT and text == "2" then text = "N "
-        elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LAT and text == "8" then text = "S "
-        elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LON and text == "4" then text = "W"
-        elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LON and text == "6" then text = "E"
+        if ufcp_nav_misc_zone_auto then
+            if ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LAT and ufcp_nav_misc_zone_y == 1 then text = "N " .. text
+            elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LAT and ufcp_nav_misc_zone_y == -1 then text = "S " .. text
+            elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LON and ufcp_nav_misc_zone_x == 1 then text = "E" .. text
+            elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LON and ufcp_nav_misc_zone_x == -1 then text = "W" .. text
+            else
+                text=""
+            end
         else
-            text=""
+            if     ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LAT and text == "2" then text = "N "
+            elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LAT and text == "8" then text = "S "
+            elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LON and text == "4" then text = "W"
+            elseif ufcp_wpt_sel == UFCP_WPT_SEL_IDS.LON and text == "6" then text = "E"
+            else
+                text=""
+            end
         end
     elseif text:len() == 4 then text = text .. '$'
     elseif text:len() == 7 then text = text .. '.'
