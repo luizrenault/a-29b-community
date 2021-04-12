@@ -59,7 +59,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - BARO / RALT submode now remembered with mode changes.
 - Cabin Altitude pressurized down to 7000 ft. 
 - New CMFD Texture.
-- FIX, TIP, LMT, WS, and DTK UFCP formats.
+- BAL, NAV MISC, EGI, FIX, TIP, LMT, WS, and DTK UFCP formats.
 - DTK - Desired Track.
 - New Normal Map and RoughMet (by Cubeboy)
 - New experimental sounds for canopy, buttons, knobs and switches.
@@ -82,6 +82,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - A/G Weapon selection order now allows any stores combinations.
 - Startup procedure: (Throttle CUT OFF -> ST on Ng=13%, ST -> Idle on Np = 40%)
 - Propeller rotation animation to match Np.
+- Minor tweaks to UFCP formats.
 
 ### Fixes
 - UFCP WYPT menu minor bugs.

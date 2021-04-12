@@ -59,7 +59,7 @@ creators[devices.ALARM]           = {"avLuaDevice"           ,LockOn_Options.scr
 creators[devices.AUTOPILOT]		  = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/autopilot.lua"}
 creators[devices.HELMET_DEVICE]	  = {"avNightVisionGoggles"}
 
--- creators[devices.TEST]		      = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/test_device.lua"}
+-- creators[devices.TEST]		      = {"A29B::avWorkingRadio"           ,LockOn_Options.script_path.."Systems/test_device.lua"}
 
 indicators                  = {}
 indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."CMFD/CMFD_Left_init.lua" , devices.CMFD,{{"CENTER_HDD001_PNT","DOWN_HDD001_PNT","RIGHT_HDD001_PNT"}, {},1},1}
@@ -77,6 +77,22 @@ indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."UFCP/
 --attributes = {
 --	"support_for_cws",
 --}
+
+--RADAROFF indicators[#indicators + 1] = {"ccIndicator",LockOn_Options.script_path.."RADAR/Indicator/init.lua",--init script
+--RADAROFF   nil,--id of parent device
+--RADAROFF   {
+--RADAROFF 	{}, -- initial geometry anchor , triple of connector names
+--RADAROFF 	{sx_l =  0,  -- center position correction in meters (forward , backward)
+--RADAROFF 	 sy_l =  0,  -- center position correction in meters (up , down)
+--RADAROFF 	 sz_l =  0.3,  -- center position correction in meters (left , right)
+--RADAROFF 	 sh   =  0,  -- half height correction
+--RADAROFF 	 sw   =  0,  -- half width correction
+--RADAROFF 	 rz_l =  0,  -- rotation corrections
+--RADAROFF 	 rx_l =  0,
+--RADAROFF 	 ry_l =  0}
+--RADAROFF   }
+--RADAROFF } --RADAR
+
 ---------------------------------------------
 dofile(LockOn_Options.common_script_path.."KNEEBOARD/declare_kneeboard_device.lua")
 ---------------------------------------------

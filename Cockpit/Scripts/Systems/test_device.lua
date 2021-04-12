@@ -1,10 +1,16 @@
-dofile(LockOn_Options.common_script_path.."mission_prepare.lua")
+-- dofile(LockOn_Options.common_script_path.."mission_prepare.lua")
 
 -- dofile ("scripts/Database/db_scan.lua")
 
 dofile(LockOn_Options.script_path.."dump.lua")
--- dump("_G",_G)
--- dump("_G",getmetatable(_G))
+-- package.cpath 			= package.cpath..";".. LockOn_Options.script_path.. "..\\..\\bin\\?.dll"
+-- local avwr = require('avWorkingRadio')   -- loads the DLL
+
+dump("_G",_G)
+dump("_G",getmetatable(_G))
+
+dump("list_indication",getmetatable(list_indication()))
+
 
 dofile(LockOn_Options.common_script_path.."devices_defs.lua")
 dofile(LockOn_Options.script_path.."devices.lua")
@@ -17,6 +23,10 @@ dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
 startup_print("test: load")
 
 local dev = GetSelf()
+
+
+
+-- dump1("avwr", avwr)
 
 -- log.alert("----------------------------------")
 -- dump1("dev",dev)
@@ -1160,3 +1170,16 @@ avWeap_ReleaseTimer_Activity
 -- getWOW_LeftMainLandingGear
 -- getWOW_NoseLandingGear
 -- getWOW_RightMainLandingGear
+
+
+
+
+-- _G["Factory"] = {}
+-- _G["Factory"]["createClass"] = function: 000001BF4D80B4A0
+-- _G["Factory"]["clone"] = function: 000001BF4D80AF60
+-- _G["Factory"]["_NAME"] = "Factory"
+-- _G["Factory"]["_PACKAGE"] = ""
+-- _G["Factory"]["registerWidget"] = function: 000001BF4D80ADE0
+-- _G["Factory"]["_M"] = ->_G["Factory"]
+-- _G["Factory"]["create"] = function: 000001BF4D80B260
+-- _G["Factory"]["setBaseClass"] = function: 000001BF4D80B5F0
