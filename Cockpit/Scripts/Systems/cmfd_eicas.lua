@@ -220,8 +220,8 @@ function update_eicas()
     if get_avionics_onground() then
         if np > 70 then np = 100
         elseif np > 64.8 then np = 50 + (np-64.8)/5.2 * 50
-        elseif np > 55 then np = (np-55)/9.8 * 50
-        else np = 0
+        elseif np > 55 then np = 15+(np-55)/9.8 * 35
+        else np = np / 55 * 15
         end
     else
         if np > 64 then np = 99 + (np-64)/36 * 2

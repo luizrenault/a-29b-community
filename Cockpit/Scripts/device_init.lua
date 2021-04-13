@@ -59,7 +59,7 @@ creators[devices.ALARM]           = {"avLuaDevice"           ,LockOn_Options.scr
 creators[devices.AUTOPILOT]		  = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/autopilot.lua"}
 creators[devices.HELMET_DEVICE]	  = {"avNightVisionGoggles"}
 
--- creators[devices.TEST]		      = {"A29B::avWorkingRadio"           ,LockOn_Options.script_path.."Systems/test_device.lua"}
+-- creators[devices.TEST]		      = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/test_device.lua"}
 
 indicators                  = {}
 indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."CMFD/CMFD_Left_init.lua" , devices.CMFD,{{"CENTER_HDD001_PNT","DOWN_HDD001_PNT","RIGHT_HDD001_PNT"}, {},1},1}
