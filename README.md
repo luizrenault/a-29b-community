@@ -53,7 +53,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 
 # Changelog
 
-## Version 0.1.9b - 11 April 2021
+## Version 0.1.9b - 19 April 2021
 
 ### Added
 - BARO / RALT submode now remembered with mode changes.
@@ -68,9 +68,11 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - New Throttle x RPM curve.
 - New RPM x Thrust curve.
 - New RPM x FF curve.
+- New aerodynamic flight model parameters.
 - Throttle ST and CUT OFF positions.
 - Engine Cutoff key binding.
 - Mirrors.
+- New DCS propeller technology for AI.
 
 ### Changed
 - NVG Switch only disables storm light.
@@ -83,6 +85,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Startup procedure: (Throttle CUT OFF -> ST on Ng=13%, ST -> Idle on Np = 40%)
 - Propeller rotation animation to match Np.
 - Minor tweaks to UFCP formats.
+- Lights Bano.
 
 ### Fixes
 - UFCP WYPT menu minor bugs.
