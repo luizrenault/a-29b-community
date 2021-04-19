@@ -24,6 +24,8 @@ livery =
     --{"light-yellow", 0, "bano-yellow", true};
 
      {"a29b_mirror", 0, "mirrors", true}; -- dynamic mirror replacement texture
+     {"a29b_mirror_l", 0, "mirrors", true}; -- dynamic mirror replacement texture
+     {"a29b_mirror_r", 0, "mirrors", true}; -- dynamic mirror replacement texture
 }
 ----== below part is not required for cockpit livery ==----
 --[[ name your own skin in default language (en)

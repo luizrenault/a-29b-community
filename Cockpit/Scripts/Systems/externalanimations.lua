@@ -126,9 +126,13 @@ function update()
 	--keeps prop animation between 0 and 1
 	if propRPM < 800 then
 		propState = (propState + propStep)%1
-		set_aircraft_draw_argument_value(DRAW_FAN,-1+propState/2)
+		set_aircraft_draw_argument_value(475,0)
+		set_aircraft_draw_argument_value(DRAW_FAN,propState)
+		set_aircraft_draw_argument_value(413,1)
 	else
 		propState = (propState + propStep/100)%1
+		set_aircraft_draw_argument_value(413,0)
+		set_aircraft_draw_argument_value(475,-1)
 		set_aircraft_draw_argument_value(DRAW_FAN,propState)
 	end
 
