@@ -22,6 +22,8 @@ AVIONICS_MASTER_MODE_ID = {
     FIX_R       = 21,
     RALT        = 22,
     ACAL        = 23,
+    A_G         = 24,
+    A_A         = 25,
 }
 AVIONICS_MASTER_MODE_STR={}
 
@@ -48,6 +50,8 @@ AVIONICS_MASTER_MODE_STR[20] = "FIX"
 AVIONICS_MASTER_MODE_STR[21] = "FIX R"
 AVIONICS_MASTER_MODE_STR[22] = "RALT"
 AVIONICS_MASTER_MODE_STR[23] = "ACAL"
+AVIONICS_MASTER_MODE_STR[24] = ""
+AVIONICS_MASTER_MODE_STR[25] = ""
 
 
 AVIONICS_ANS_MODE_IDS = {
@@ -70,6 +74,8 @@ AVIONICS_MASTER_MODE = get_param_handle("AVIONICS_MASTER_MODE")
 AVIONICS_MASTER_MODE_LAST = get_param_handle("AVIONICS_MASTER_MODE_LAST")
 AVIONICS_MASTER_MODE_TXT = get_param_handle("AVIONICS_MASTER_MODE_TXT")
 AVIONICS_GEAR_UP = get_param_handle("BASE_SENSOR_LEFT_GEAR_UP")
+
+local UFCP_DTK_ENABLED = get_param_handle("ADHSI_DTK")
 
 
 function get_avionics_ias()
@@ -116,6 +122,11 @@ function set_avionics_master_mode(new_mode)
     local current_mode = get_avionics_master_mode()
     if new_mode ~= current_mode and current_mode ~= AVIONICS_MASTER_MODE_ID.EJ and current_mode ~= AVIONICS_MASTER_MODE_ID.SJ then
         AVIONICS_MASTER_MODE_LAST:set(current_mode)
+    end
+
+    -- Disable these stuff in A/A or A/G
+    if get_avionics_master_mode_aa(new_mode) or get_avionics_master_mode_ag(new_mode) then
+        UFCP_DTK_ENABLED:set(0)
     end
     AVIONICS_MASTER_MODE:set(new_mode)
 end

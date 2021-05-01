@@ -23,15 +23,22 @@ local controllers = LoRegisterPanelControls()
 
 mirrors_data =
 {
-    center_point 	= {0.2,0.1,0.00},
-    width 		 	= 0.8, --1.2,
-    aspect 		 	= 1.5,
-	rotation 	 	= math.rad(1);
+    center_point 	= {0.493,0.092,0.00},
+    width 		 	= 1.0, --1.2,
+    aspect 		 	= 1.0,
+	rotation 	 	= math.rad(-1);
 	animation_speed = 2.0;
 	near_clip 		= 0.1;
 	middle_clip		= 10;
-	far_clip		= 60000;
+	far_clip		= 5000;
 }
+
+mirrors_draw                    = CreateGauge()
+mirrors_draw.arg_number         = 183
+mirrors_draw.input              = {0,1}
+mirrors_draw.output             = {0,1}
+mirrors_draw.controller         = controllers.mirrors_draw
+
 
 Canopy    							= CreateGauge()
 Canopy.arg_number 					= 26
@@ -57,11 +64,17 @@ StickBank.input						= {-100, 100}
 StickBank.output					= {1, -1}
 StickBank.controller				= controllers.base_gauge_StickRollPosition
 
-Throttle							= CreateGauge()
+-- Throttle							= CreateGauge()
+-- Throttle.arg_number					= 80
+-- Throttle.input						= {0, 1}
+-- Throttle.output						= {0, 1}
+-- Throttle.controller					= controllers.base_gauge_ThrottleLeftPosition
+
+Throttle							= CreateGauge("parameter")
 Throttle.arg_number					= 80
-Throttle.input						= {0, 1}
-Throttle.output						= {0.2, 1}
-Throttle.controller					= controllers.base_gauge_ThrottleLeftPosition
+Throttle.input						= {-1, 1}
+Throttle.output						= {-1, 1}
+Throttle.parameter_name				= "ENGINE_THROTTLE"
 
 RudderPedals						= CreateGauge()
 RudderPedals.arg_number				= 4
@@ -276,7 +289,7 @@ Z_test =
 	far  = 4.0,
 }
 
-livery = "default"
+livery = "FAB"
 
 --[[ available functions
 

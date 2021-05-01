@@ -239,11 +239,7 @@ local function SetCommandSmsAg(command,value, CMFD)
         if command==device_commands.CMFD1OSS1 or command==device_commands.CMFD2OSS1 then
             sms_mode = SMS_MODE_IDS.AG
         elseif command==device_commands.CMFD1OSS28 or command==device_commands.CMFD2OSS28 then
-            if master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R or master_mode == AVIONICS_MASTER_MODE_ID.GUN_R then 
-                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP_R)
-            else
-                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
-            end
+            set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
             sms_mode = SMS_MODE_IDS.AG
         elseif command==device_commands.CMFD1OSS27 or command==device_commands.CMFD2OSS27 then
             set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.MAN)
@@ -252,24 +248,24 @@ local function SetCommandSmsAg(command,value, CMFD)
             set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCRP)
             sms_mode = SMS_MODE_IDS.AG
         elseif command==device_commands.CMFD1OSS25 or command==device_commands.CMFD2OSS25 and WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
-            if master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R or master_mode == AVIONICS_MASTER_MODE_ID.GUN_R then 
-                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DTOS_R)
-            else
-                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DTOS)
-            end
+            set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DTOS)
             sms_mode = SMS_MODE_IDS.AG
         end
     elseif sms_mode == SMS_MODE_IDS.AG then
 
         if command==device_commands.CMFD1OSS1 or command==device_commands.CMFD2OSS1 then
             -- implement last option to return
-            if master_mode == AVIONICS_MASTER_MODE_ID.GUN then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
-            elseif master_mode == AVIONICS_MASTER_MODE_ID.GUN_R then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP_R)
-            elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.DTOS or master_mode == AVIONICS_MASTER_MODE_ID.MAN or master_mode == AVIONICS_MASTER_MODE_ID.CCRP then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.GUN)
-            elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.GUN_R)
+            if get_avionics_master_mode_ag_gun() then
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+            else
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.GUN)
             end
         elseif command==device_commands.CMFD1OSS2 or command==device_commands.CMFD2OSS2 then
-            sms_mode = SMS_MODE_IDS.CD
+            if not get_avionics_master_mode_ag_gun() then
+                sms_mode = SMS_MODE_IDS.CD
+            else
+
+            end
         elseif command==device_commands.CMFD1OSS7 or command==device_commands.CMFD2OSS7 then 
             CallEditFormat(sms_sd_data)
         elseif command==device_commands.CMFD1OSS9 or command==device_commands.CMFD2OSS9 then 
@@ -278,15 +274,18 @@ local function SetCommandSmsAg(command,value, CMFD)
         elseif command==device_commands.CMFD1OSS11 or command==device_commands.CMFD2OSS11 then 
             -- SMS_TIME_ALT_SEL:set((SMS_TIME_ALT_SEL:get() + 1)% 3)
         elseif command==device_commands.CMFD1OSS24 or command==device_commands.CMFD2OSS24 then 
-            local weapon_type = WPN_SELECTED_WEAPON_TYPE:get()
-            if weapon_type == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET then 
-                CallEditFormat(sms_is_time_data)
-            elseif weapon_type == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then 
-                CallEditFormat(sms_is_dist_data)
+            if not get_avionics_master_mode_ag_gun() then 
+                    local weapon_type = WPN_SELECTED_WEAPON_TYPE:get()
+                if weapon_type == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET then 
+                    CallEditFormat(sms_is_time_data)
+                elseif weapon_type == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then 
+                    CallEditFormat(sms_is_dist_data)
+                end
             end
         elseif command==device_commands.CMFD1OSS25 or command==device_commands.CMFD2OSS25 then 
-            -- SMS_BR_RR_SEL:set((SMS_BR_RR_SEL:get() + 1)% 2)
-            CallEditFormat(sms_rp_data)
+            if not get_avionics_master_mode_ag_gun() then 
+                CallEditFormat(sms_rp_data)
+            end
         elseif command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26 then 
             if not get_avionics_master_mode_ag_gun() then 
                 weapons:performClickableAction(device_commands.WPN_AG_LAUNCH_OP_STEP, 1, true)

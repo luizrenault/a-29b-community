@@ -1,3 +1,7 @@
+UFCP_EGI = {
+    EGI_STATE = get_param_handle("EGI_STATE"),
+}
+
 UFCP_NAV_MODE = get_param_handle("UFCP_NAV_MODE")
 UFCP_NAV_TIME = get_param_handle("UFCP_NAV_TIME")
 UFCP_VAH = get_param_handle("UFCP_VAH")
@@ -115,4 +119,23 @@ UFCP_MARK_MODE_IDS = {
     ONTOP = 0,
     HUD = 1,
     FLIR = 2,
+}
+
+UFCP_EGI_STATE_IDS = {
+    OFF = 0,
+    INIT = 1,
+    STHD = 2,
+    ALIGNING = 3,
+    ALIGNED_COARSE = 4,
+    ALIGNED = 5,
+    NAV_COARSE = 6,
+    
+    TEST = 7,
+    ALIGN = 8,
+    NAV = 9,
+    IFA = 10,
+    ATT = 11,
+    FAIL = 12,
+    TEND = 13,
+
 }

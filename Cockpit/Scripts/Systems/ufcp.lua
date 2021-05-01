@@ -10,7 +10,7 @@ dofile(LockOn_Options.script_path.."Systems/weapon_system_api.lua")
 
 startup_print("ufcs: load")
 
-local dev = GetSelf()
+dev = GetSelf()
 local alarm 
 local hud
 
@@ -169,9 +169,7 @@ function blink_text(text, c_start, c_size)
     local text_copy = text:sub(1,c_start-1)
     local text_new = text:sub(c_start, c_start+c_size-1)
 
-    -- Todo this interval should be shorter, but I don't know if I can get current milliseconds
-    -- The ideal would be to blink off and on again every 1 second?
-    local interval = math.floor(get_absolute_model_time() % 2)
+    local interval = math.floor(2 * get_absolute_model_time() % 2)
 
     for i=1, c_size do
         if interval == 0 then
@@ -215,6 +213,46 @@ function seconds_to_string(time)
     return time_sign .. string.format("%02.0f:%02.0f:%02.0f", time_hours, time_mins, time_secs)
 end
 
+local return_to_main_time = -1.0
+-- Return to MAIN if current master mode is A/G or AA and the format only works in NAV.
+function ufcp_nav_only()
+    local master_mode = get_avionics_master_mode()
+    if get_avionics_master_mode_aa(master_mode) or get_avionics_master_mode_ag(master_mode) then
+        -- Return to MAIN after 0.5 seconds
+        if return_to_main_time == -1.0 then
+            return_to_main_time = ufcp_time + 0.5
+        end
+
+        if ufcp_time > return_to_main_time then
+            ufcp_edit_clear()
+            ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+            return_to_main_time = -1.0
+        end
+    else
+        return_to_main_time = -1.0
+    end
+end
+
+-- TODO Will do nothing until INS is implemented.
+-- Return to MAIN if current EGI mode is not INS and the format only works in INS.
+local return_to_main_time2 = -1.0
+function ufcp_ins_only()
+    if true then
+        -- Return to MAIN after 0.5 seconds
+        if return_to_main_time2 == -1.0 then
+            return_to_main_time2 = ufcp_time + 0.5
+        end
+
+        if ufcp_time > return_to_main_time2 then
+            ufcp_edit_clear()
+            ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
+            return_to_main_time2 = -1.0
+        end
+    else
+        return_to_main_time2 = -1.0
+    end
+end
+
 dofile(LockOn_Options.script_path.."Systems/UFCP/main.lua")
 dofile(LockOn_Options.script_path.."Systems/UFCP/ufcp_com1.lua")
 dofile(LockOn_Options.script_path.."Systems/UFCP/ufcp_com2.lua")
@@ -253,7 +291,8 @@ dofile(LockOn_Options.script_path.."Systems/UFCP/dl.lua")
 
 function update()
     local ufcp_bright = get_cockpit_draw_argument_value(480)
-    
+    update_egir()
+
     UFCP_COM1_FREQ:set(ufcp_com1_frequency)
     UFCP_COM1_MOD:set(ufcp_com1_modulation)
     UFCP_COM1_SQL:set(ufcp_com1_sql and 1 or 0)
@@ -370,17 +409,16 @@ end
 
 function post_initialize()
     startup_print("ufcs: postinit start")
+    post_initialize_egi()
 
     ufcp_cmfd_ref = GetDevice(devices.CMFD)
     local birth = LockOn_Options.init_conditions.birth_place
     alarm = GetDevice(devices.ALARM)
     hud = GetDevice(devices.HUD)
     if birth=="GROUND_HOT" or birth=="AIR_HOT" then
-        dev:performClickableAction(device_commands.UFCP_EGI, 1, true)
-        dev:performClickableAction(device_commands.UFCP_DVR, 0, true)
+        dev:performClickableAction(device_commands.UFCP_DVR, 1, true)
         dev:performClickableAction(device_commands.UFCP_RALT, 1, true)
     elseif birth=="GROUND_COLD" then
-        dev:performClickableAction(device_commands.UFCP_EGI, 0.15, true)
         dev:performClickableAction(device_commands.UFCP_DVR, -1, true)
         dev:performClickableAction(device_commands.UFCP_RALT, 0, true)
     end
@@ -456,23 +494,7 @@ function SetCommand(command,value)
         ufcp_edit_clear()
         ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
     elseif command == device_commands.UFCP_BARO_RALT and value == 1 then
-        -- TODO the system should remember the selected mode
-        local master_mode = get_avionics_master_mode()
-        local master_mode_last = master_mode
-        if master_mode == AVIONICS_MASTER_MODE_ID.GUN then master_mode = AVIONICS_MASTER_MODE_ID.GUN_R 
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.GUN_R then master_mode = AVIONICS_MASTER_MODE_ID.GUN 
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP then master_mode = AVIONICS_MASTER_MODE_ID.CCIP_R
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R then master_mode = AVIONICS_MASTER_MODE_ID.CCIP
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS then master_mode = AVIONICS_MASTER_MODE_ID.DTOS_R
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then master_mode = AVIONICS_MASTER_MODE_ID.DTOS
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.FIX then master_mode = AVIONICS_MASTER_MODE_ID.FIX_R
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.FIX_R then master_mode = AVIONICS_MASTER_MODE_ID.FIX
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.MARK then master_mode = AVIONICS_MASTER_MODE_ID.MARK_R
-        elseif master_mode == AVIONICS_MASTER_MODE_ID.MARK_R then master_mode = AVIONICS_MASTER_MODE_ID.MARK
-        end
-        if master_mode ~= master_mode_last then
-            set_avionics_master_mode(master_mode)
-        end
+        WPN_RALT:set((WPN_RALT:get() + 1) % 2)
     -- TODO is this still used? Yes, because has to monitor changes from CMFD.
     elseif command == device_commands.UFCP_VV and value == 1 then
         if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VV_VAH then 
@@ -487,7 +509,7 @@ function SetCommand(command,value)
 
     if ufcp_sel_format == UFCP_FORMAT_IDS.MAIN then SetCommandMain(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM1 then SetCommandCom1(command, value)
-    elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM2 then SetCommandCom2(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM2 or ufcp_sel_format == UFCP_FORMAT_IDS.COM2_NET then SetCommandCom2(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_AIDS then SetCommandNavAids(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.VVVAH then SetCommandVVVAH(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.DA_H then SetCommandDAH(command, value)
@@ -527,6 +549,9 @@ function SetCommand(command,value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.DL_MSG then SetCommandDlMsg(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.DLWP then SetCommandDlwp(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.SNDP then SetCommandSndp(command, value)
+    end
+
+    if command == device_commands.UFCP_EGI then SetCommandEgi(command, value)
     end
 end
 

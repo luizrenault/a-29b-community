@@ -58,7 +58,7 @@ local WPN_AG_QTY = get_param_handle("WPN_AG_QTY")
 local WPN_AG_NAME = get_param_handle("WPN_AG_NAME")
 local WS_TARGET_RANGE = get_param_handle("WS_TARGET_RANGE")
 
-local CMFD_NAV_FYT_OAP_ELV = get_param_handle("CMFD_NAV_FYT_OAP_ELV")
+local CMFD_NAV_FYT_DTK_ELV = get_param_handle("CMFD_NAV_FYT_DTK_ELV")
 
 local wpn_aa_sel = 0
 local wpn_aa_sight = WPN_AA_SIGHT_IDS.LCOS
@@ -153,8 +153,8 @@ local function update_ag_sel_next(byname)
     if not byname then
         local sequence = sms_search_sequence[wpn_ag_sel + 1]
         for k, pos in pairs(sequence) do
-            if wpn_sto_name[k] ~= name and wpn_sto_type[k] >= WPN_WEAPON_TYPE_IDS.AG_WEAPON_BEG and wpn_sto_type[k] <= WPN_WEAPON_TYPE_IDS.AG_WEAPON_END then
-                name = wpn_sto_name[k]
+            if wpn_sto_name[pos] ~= name and wpn_sto_type[pos] >= WPN_WEAPON_TYPE_IDS.AG_WEAPON_BEG and wpn_sto_type[pos] <= WPN_WEAPON_TYPE_IDS.AG_WEAPON_END and wpn_sto_count[pos] > 0 then
+                name = wpn_sto_name[pos]
                 break
             end
         end
@@ -283,6 +283,22 @@ local master_mode_last = -1
 
 local function update_master_mode_changed()
     master_mode = get_avionics_master_mode()
+    if master_mode == AVIONICS_MASTER_MODE_ID.GUN and WPN_RALT:get() == 1 then master_mode = AVIONICS_MASTER_MODE_ID.GUN_R
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.GUN_R and WPN_RALT:get() == 0 then master_mode = AVIONICS_MASTER_MODE_ID.GUN
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP and WPN_RALT:get() == 1 then master_mode = AVIONICS_MASTER_MODE_ID.CCIP_R
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R and WPN_RALT:get() == 0 then master_mode = AVIONICS_MASTER_MODE_ID.CCIP
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS and WPN_RALT:get() == 1 then master_mode = AVIONICS_MASTER_MODE_ID.DTOS_R
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R and WPN_RALT:get() == 0 then master_mode = AVIONICS_MASTER_MODE_ID.DTOS
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.FIX and WPN_RALT:get() == 1 then master_mode = AVIONICS_MASTER_MODE_ID.FIX_R
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.FIX_R and WPN_RALT:get() == 0 then master_mode = AVIONICS_MASTER_MODE_ID.FIX
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.MARK and WPN_RALT:get() == 1 then master_mode = AVIONICS_MASTER_MODE_ID.MARK_R
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.MARK_R and WPN_RALT:get() == 0 then master_mode = AVIONICS_MASTER_MODE_ID.MARK
+    end
+
+    if master_mode ~= master_mode_last then
+        set_avionics_master_mode(master_mode)
+    end
+
     if master_mode == master_mode_last then return 0 end
     if get_avionics_master_mode_aa(master_mode_last) then
         check_sidewinder()
@@ -308,9 +324,9 @@ local CMFD = {
     NAV_FYT_LON_M = get_param_handle("CMFD_NAV_FYT_LON_M"),
     NAV_FYT_ALT_M = get_param_handle("CMFD_NAV_FYT_ALT_M"),
 
-    NAV_FYT_OAP_AZIMUTH = get_param_handle("CMFD_NAV_FYT_OAP_AZIMUTH"),
-    NAV_FYT_OAP_ELEVATION = get_param_handle("CMFD_NAV_FYT_OAP_ELEVATION"),
-    NAV_FYT_OAP_DIST = get_param_handle("CMFD_NAV_FYT_OAP_DIST"),
+    NAV_FYT_DTK_AZIMUTH = get_param_handle("CMFD_NAV_FYT_DTK_AZIMUTH"),
+    NAV_FYT_DTK_ELEVATION = get_param_handle("CMFD_NAV_FYT_DTK_ELEVATION"),
+    NAV_FYT_DTK_DIST = get_param_handle("CMFD_NAV_FYT_DTK_DIST"),
 }
 
 local Ralt_last = 1600
@@ -332,7 +348,7 @@ local function calculate_ccip_max_range()
     h0 = (Ralt_last + Balt - Balt_last) * math.cos(math.abs(pitch)) * math.cos(math.abs(sensor_data.getRoll())) -- vertical distance travelled by weapon
 
     if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.GUN then
-        h0 = CMFD_NAV_FYT_OAP_ELV:get() / 3.28084
+        h0 = -CMFD_NAV_FYT_DTK_ELV:get() / 3.28084
     end
 
     Vx0, Vy0, Vz0 = sensor_data.getSelfVelocity()
@@ -360,7 +376,7 @@ local function calculate_ccip_impact()
     h0 = (Ralt_last + Balt - Balt_last) * math.cos(math.abs(pitch)) * math.cos(math.abs(sensor_data.getRoll())) -- vertical distance travelled by weapon
 
     if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.GUN then
-        h0 = CMFD_NAV_FYT_OAP_ELV:get() / 3.28084
+        h0 = -CMFD_NAV_FYT_DTK_ELV:get() / 3.28084
     end
 
     Vx0, Vy0, Vz0 = sensor_data.getSelfVelocity()
@@ -378,6 +394,7 @@ local function calculate_ccip_impact()
         Vz0 = Vz0 + 890 * Vz0 / vel_temp
         -- g=-0.5
     end
+    
     local delta = Vy0 * Vy0 - 2 * g * h0
     t = (-Vy0  - math.sqrt(delta))/g                -- time to impact
 
@@ -418,8 +435,8 @@ local function  update_ccrp()
         WPN.CCRP_TIME_MAX_RANGE:set(time_to_max_range)
 
         WPN.TD_AVAILABLE:set(1)
-        WPN.TD_AZIMUTH:set(CMFD.NAV_FYT_OAP_AZIMUTH:get())
-        WPN.TD_ELEVATION:set(CMFD.NAV_FYT_OAP_ELEVATION:get())
+        WPN.TD_AZIMUTH:set(CMFD.NAV_FYT_DTK_AZIMUTH:get())
+        WPN.TD_ELEVATION:set(CMFD.NAV_FYT_DTK_ELEVATION:get())
     else 
         WPN.CCRP_TIME:set(-1)
         WPN.TD_AZIMUTH:set(0)
@@ -442,7 +459,7 @@ local function  update_ccip()
         end
         h0 = (Ralt_last + Balt - Balt_last) * math.cos(math.abs(pitch)) * math.cos(math.abs(sensor_data.getRoll()))
         if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.GUN then
-            h0 = CMFD_NAV_FYT_OAP_ELV:get() / 3.28084
+            h0 = -CMFD_NAV_FYT_DTK_ELV:get() / 3.28084
         end
         Vx0, Vy0, Vz0 = sensor_data.getSelfVelocity()
 
@@ -993,6 +1010,13 @@ function SetCommand(command,value)
     end
 end
 
+dev:listen_event("WeaponRearmComplete")
+function CockpitEvent(command, val)
+    if command == "WeaponRearmComplete" then
+        wpn_guns_l = 250
+        wpn_guns_r = 250
+    end
+end
 
 startup_print("weapon: load end")
 need_to_be_closed = false -- close lua state after initialization

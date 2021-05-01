@@ -25,7 +25,7 @@ local iCommandPlaneWheelBrakeRightOff = 964
 
 local brake_table = {
     {5,10, 15, 20, 30,  45, 999},     -- velocity in m/s
-    {1, 0.8,  0.7,  0.6,  0.5, 0.4, 0.3},     -- Brake efficiency
+    {1, 0.9,  0.9,  0.8,  0.7, 0.6, 0.5},     -- Brake efficiency
 }
 
 local function get_brake_ratio(v, value)
@@ -44,7 +44,6 @@ local right_brake_pedal_param = get_param_handle("RIGHT_BRAKE_PEDAL")
 local brake_now = 0
 local brakes_on = false
 local brakes_on_last = brakes_on
-local brake_eff = get_param_handle("BRAKE_EFF")
 local single_wheelbrake_axis_value = -1
 local left_wheelbrake_AXIS_value = -1
 local right_wheelbrake_AXIS_value = -1
@@ -52,7 +51,19 @@ local wheelbrake_axis_value = -1
 local wheelbrake_toggle_state = false
 
 
+function update1()
+end
+local pbrake_light = get_param_handle("PBRAKE_LIGHT")
+local pbrake_on = 0
+
 function update()
+
+        if pbrake_on == 1 and get_elec_main_bar_ok() then 
+            pbrake_light:set(1)
+        else
+            pbrake_light:set(0)
+        end
+
         -- calculate combined brake axis
         wheelbrake_axis_value = -1
 
@@ -87,7 +98,6 @@ function update()
                 dispatch_action(nil,iCommandPlaneWheelBrakeOff)
             end
     
-            brake_eff:set(100*x/y)
             brake_now = brake_now + 1
             if brake_now > y then
                 brake_now = 1
@@ -97,7 +107,6 @@ function update()
             -- brakes are not set again if the brakes are already off
             if brakes_on_last ~= brakes_on then  -- edge triggered
                 dispatch_action(nil,iCommandPlaneWheelBrakeOff)
-                brake_eff:set(0)
             end
         end
         brakes_on_last = brakes_on
@@ -117,9 +126,6 @@ function post_initialize()
     elseif birth=="GROUND_COLD" then
         dev:performClickableAction(device_commands.EmerParkBrake, 1, true)
     end
-    dev:performClickableAction(iCommandWheelBrake, -1, true)
-    dev:performClickableAction(iCommandLeftWheelBrake, -1, true)
-    dev:performClickableAction(iCommandRightWheelBrake, -1, true)
     
     startup_print("brakes: postinit end")
 end
@@ -136,17 +142,16 @@ dev:listen_command(iCommandPlaneWheelBrakeLeftOff)
 dev:listen_command(iCommandPlaneWheelBrakeRightOn)
 dev:listen_command(iCommandPlaneWheelBrakeRightOff)
 
-local pbrake_light = get_param_handle("PBRAKE_LIGHT")
 
 function SetCommand(command,value)
     debug_message_to_user("brakes: command "..tostring(command).." = "..tostring(value))
     if command==device_commands.EmerParkBrake then
-        if value ==-1 then
+        if value == -1 then
             dispatch_action(nil,iCommandPlaneWheelBrakeOff)
-            pbrake_light:set(0)
+            pbrake_on = 0
         else 
             dispatch_action(nil,iCommandPlaneWheelBrakeOn)
-            pbrake_light:set(1)
+            pbrake_on = 1
         end
     elseif command == iCommandPlaneWheelBrakeOff then
         dev:performClickableAction(device_commands.EmerParkBrake, -1, true)

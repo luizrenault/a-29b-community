@@ -51,23 +51,42 @@ end
 
 local prev_canopy_val = -1
 local canopy_warning = 0
-function update()
-	local current_canopy_position = get_aircraft_draw_argument_value(canopy_ext_anim_arg)
 
+local sndhost
+local canopy_snd
+local canopy_move_snd
+
+function post_initialize()
+    sndhost = create_sound_host("COCKPIT_CANOPY","HEADPHONES",0,0,0)
+    canopy_snd = sndhost:create_sound("Aircrafts/A-29B/Canopy")
+    canopy_move_snd = sndhost:create_sound("Aircrafts/A-29B/CanopyMove")
+end
+
+function update()
+    local current_canopy_position = get_aircraft_draw_argument_value(canopy_ext_anim_arg)
     if current_canopy_position > 0.95 then
         CANOPY_COMMAND = 2 -- canopy was jettisoned
     end
 	if (CANOPY_COMMAND == 0 and current_canopy_position > 0) then
 		-- lower canopy in increments of 0.01 (50x per second)
-		current_canopy_position = current_canopy_position - 0.01
-        set_aircraft_draw_argument_value(canopy_ext_anim_arg, current_canopy_position)
+        if current_canopy_position > 0.89 then 
+            canopy_move_snd:play_once()
+        end
+        current_canopy_position = current_canopy_position - 0.01
 	elseif (CANOPY_COMMAND == 1 and current_canopy_position <= 0.89) then
         -- raise canopy in increment of 0.01 (50x per second)
+        if current_canopy_position == 0 then 
+            canopy_snd:play_once() 
+            canopy_move_snd:play_once()
+        end
 		current_canopy_position = current_canopy_position + 0.01
-        set_aircraft_draw_argument_value(canopy_ext_anim_arg, current_canopy_position)
     elseif current_canopy_position < 0 then current_canopy_position = 0
+        canopy_snd:play_once()
+        canopy_move_snd:stop()
     elseif current_canopy_position >= 0.89 and current_canopy_position < 0.95 then current_canopy_position = 0.9
-	end
+        canopy_move_snd:stop()
+    end
+    set_aircraft_draw_argument_value(canopy_ext_anim_arg, current_canopy_position)
     local cockpit_lever = get_cockpit_draw_argument_value(canopy_int_anim_arg)
     if prev_canopy_val ~= cockpit_lever then
         local canopy_lever_clickable_ref = get_clickable_element_reference("PNT_129")
@@ -81,7 +100,6 @@ function update()
         set_warning(WARNING_ID.CANOPY,0) 
         canopy_warning = 0
     end
-
     stick_vis_param:set(stick_vis_state)
 end
 

@@ -23,7 +23,7 @@ function default_button(hint_, device_, command_, arg_, arg_val_, arg_lim_, soun
         arg_value = {arg_val_},
         arg_lim = {arg_lim_},
         use_release_message = {true},
-        sound = sound_ and {{sound_}, {sound_}} or nil
+        sound_ = type(sound_) == "table" and sound_ or (sound_ and {{sound_}, {sound_}} or nil)
     }
 end
 

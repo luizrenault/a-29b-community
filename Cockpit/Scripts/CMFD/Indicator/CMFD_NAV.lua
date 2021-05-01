@@ -81,7 +81,7 @@ object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1
 object = addStrokeText(nil, "OAP", CMFD_STRINGDEFS_DEF_X1, "LeftCenter", {-0.41, -0.349}, CMFD_NAV_FYT_origin.name)
 
 object = addStrokeText(nil, "BRG  350`", CMFD_STRINGDEFS_DEF_X1, "LeftCenter", {-0.41, -0.448}, CMFD_NAV_FYT_origin.name, nil, {"BRG  %03.0f`"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT_OAP_BRG_TEXT"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT_OAP_BRG"}
 object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}}
 
 object = addStrokeText(nil, "DIS  1300 FT", CMFD_STRINGDEFS_DEF_X1, "LeftCenter", {-0.41, -0.543}, CMFD_NAV_FYT_origin.name, nil, {"DIS %5.1f NM"})

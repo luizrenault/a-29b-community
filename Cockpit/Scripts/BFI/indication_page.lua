@@ -111,6 +111,7 @@ BFI_origin.vertices 		= {{-GetHalfWidth(), GetHalfHeight()}, { GetHalfWidth(), G
 BFI_origin.indices			= default_box_indices	
 BFI_origin.element_params  = {"BFI_brightness", "ELEC_EMERGENCY_RESERVE_OK"} 
 BFI_origin.controllers 	 = {{"parameter_compare_with_number",1,1}}
+BFI_origin.use_mipfilter    = true
 Add(BFI_origin)
 
 
@@ -135,12 +136,14 @@ BFI_Horiz_origin.controllers 	 = {{"parameter_in_range",0,0.95,1.05},{"rotate_us
 BFI_Horiz_origin.parent_element 	= "BFI_origin"
 BFI_Horiz_origin.level			= DISPLAY_DEFAULT_LEVEL+1
 BFI_Horiz_origin.h_clip_relation  = h_clip_relations.COMPARE
+BFI_Horiz_origin.use_mipfilter    = true
+
 Add(BFI_Horiz_origin)
 
 
 local BFIhorizon	    	= CreateElement "ceTexPoly"
 BFIhorizon.name 			= "BFIhorizon"
-BFIhorizon.material   		= "BFI_Horizon"   
+BFIhorizon.material   		= "BFI_Horizon"
 BFIhorizon.vertices 		= {{-GetHalfWidth(), 5*GetHalfHeight()}, { GetHalfWidth(), 5*GetHalfHeight()}, { GetHalfWidth(),-5*GetHalfHeight()}, {-GetHalfWidth(),-5*GetHalfHeight()}}
 BFIhorizon.indices			= default_box_indices	
 BFIhorizon.tex_coords 		= {{0,0},{1,0},{1,1},{0,1}}
@@ -170,6 +173,7 @@ BFIbank.parent_element 	= "BFI_Horiz_origin"
 BFIbank.level			= DISPLAY_DEFAULT_LEVEL
 BFIbank.element_params 	= {"BFI_brightness"}
 BFIbank.controllers 		= {{"opacity_using_parameter", 0}}
+BFIbank.use_mipfilter    = true
 Add(BFIbank)
 
 
@@ -189,6 +193,7 @@ HDD001_PFD.h_clip_relation  = h_clip_relations.REWRITE_LEVEL
 HDD001_PFD.parent_element = "BFI_origin"
 HDD001_PFD.element_params 	= {"BFI_brightness"}
 -- HDD001_PFD.controllers 		= {{"opacity_using_parameter", 0}}
+HDD001_PFD.use_mipfilter    = true
 Add(HDD001_PFD)
 
 local BFIias	    	= CreateElement "ceTexPoly"

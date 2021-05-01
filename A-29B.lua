@@ -15,7 +15,9 @@ A_29B =  {
 	Picture 			= "A-29B.png",
 	Rate 				= 40, -- RewardPoint in Multiplayer
 	Shape 				= "A-29B",
-    propellorShapeType  = '3ARG',
+	propellorShapeType  = '3ARG_PROC_BLUR',
+	propellorShapeName  = 'a29b_blade.fbx',
+	debrisGeneration     = true,
 
 	shape_table_data 	= 
 	{
@@ -103,22 +105,24 @@ A_29B =  {
 	    M_empty									=	3356,  -- kg
 		M_nominal								=	3900,  -- kg  -- kg ~ %50 fuel, combat load
 		M_max									=	5400,  -- kg
-		M_fuel_max								=   435, -- utilizável --509 + 239 + 249*2 + 231,   -- kg Asas, Fuselage, Subalar, Ventral,
+		M_fuel_max								=   495, -- utilizável 495 --509 + 239 + 249*2 + 231,   -- kg Asas, Fuselage, Subalar, Ventral,
+        M_fuel_per_tank 						= 	{245, 250}, -- kg
 		H_max									=	10668 , -- m
 
-		average_fuel_consumption 	= 0.009042, -- this is highly relative, but good estimates are 36-40l/min = 28-31kg/min = 0.47-0.52kg/s -- 45l/min = 35kg/min = 0.583kg/s
-		CAS_min 					= 56, -- if this is not OVERAL FLIGHT TIME, but jus LOITER TIME, than it sholud be 10-15 minutes.....CAS capability in minute (for AI)
-		V_opt 						= 123,-- Cruise speed (for AI) –- Assume Mach 0.80 at 20000 ft as optimal. See -- http://www.nasa.gov/centers/dryden/pdf/87789main_H-636.pdf and		–- http://www.hochwarth.com/misc/AviationCalculator.html 		–- Mach 0.8 at 20000 = XXX kts TAS = XXX m / s
-		V_take_off 					= 60, -- Take off speed in m/s (for AI)
-		V_land 						= 60, -- Land speed in m/s (for AI)
-		V_max_sea_level 			= 165, -- Max speed at sea level in m/s (for AI)
-		V_max_h 					= 145, -- Max speed at max altitude in m/s (for AI)
+		average_fuel_consumption 	= 0.302, -- this is highly relative, but good estimates are 36-40l/min = 28-31kg/min = 0.47-0.52kg/s -- 45l/min = 35kg/min = 0.583kg/s
+        defFuelRatio    			= 0.68, -- топливо по умолчанию в долях от полного
+		CAS_min 					= 53, -- if this is not OVERAL FLIGHT TIME, but jus LOITER TIME, than it sholud be 10-15 minutes.....CAS capability in minute (for AI)
+		V_opt 						= 240/1.944,-- Cruise speed (for AI) –- Assume Mach 0.80 at 20000 ft as optimal. See -- http://www.nasa.gov/centers/dryden/pdf/87789main_H-636.pdf and		–- http://www.hochwarth.com/misc/AviationCalculator.html 		–- Mach 0.8 at 20000 = XXX kts TAS = XXX m / s
+		V_take_off 					= 120/1.944, -- Take off speed in m/s (for AI)
+		V_land 						= 125/1.944, -- Land speed in m/s (for AI)
+		V_max_sea_level 			= 320/1.944, -- Max speed at sea level in m/s (for AI)
+		V_max_h 					= 210/1.944, -- Max speed at max altitude in m/s (for AI)
 		Vy_max 						= 12, -- Max climb speed in m/s (for AI)
 		Mach_max 					= 0.562, -- Max speed in Mach (for AI)
 		Ny_min 						= -4, -- Min G (for AI)
 		Ny_max 						= 8.0,  -- Max G (for AI)
 		Ny_max_e 					= 8.0,  -- Max G (for AI)
-		AOA_take_off 				= 0.17, -- AoA in take off (for AI) -- in radians
+		AOA_take_off 				= math.rad(9.0), -- AoA in take off (for AI) -- in radians
 		bank_angle_max 				= 60, -- Max bank angle (for AI)
 	
 		has_afteburner 				= false, -- AFB yes/no
@@ -142,11 +146,11 @@ A_29B =  {
 	
 
 		wing_area 					= 19.4, -- wing area in m2
-		wing_span 					= 11.135, -- wing spain in m
+		wing_span 					= 11.135, -- wing span in m
 		wing_type 					= 0,
 
-		thrust_sum_max 				= 16620, -- thrust in kg (44kN)
-		thrust_sum_ab 				= 16620, -- thrust inkg (71kN)
+		thrust_sum_max 				= 17000, -- thrust in kg (44kN)
+		thrust_sum_ab 				= 17000, -- thrust inkg (71kN)
 		length 						= 11.332, -- full lenght in m
 		height 						= 3.974, -- height in m
 		flaps_maneuver 				= 1.0, -- Max flaps in take-off and maneuver (0.5 = 1st stage; 1.0 = 2nd stage) (for AI)
@@ -154,7 +158,7 @@ A_29B =  {
 		RCS 						= 2.5, -- Radar Cross Section m2
 		IR_emission_coeff 			= 0.1, -- Normal engine -- IR_emission_coeff = 1 is Su-27 without afterburner. It is reference.
 		IR_emission_coeff_ab 		= 0.1, -- With afterburner
-		wing_tip_pos 				= {-0.82, -0.250,     5.5}, -- wingtip coords for visual effects
+		wing_tip_pos 				= {-0.39, -0.412,     5.591}, -- wingtip coords for visual effects
 		brakeshute_name 			= 0, -- Landing - brake chute visual shape after separation
 		
 		-- The following is used for graphical AB effects
@@ -192,7 +196,7 @@ A_29B =  {
 				{	pilot_name            = "pilot_f86",
 					ejection_seat_name	=	17,
 					drop_canopy_name	=	'A-29B CANOPY',
-					pos = 	{0,	0.3,	0},
+					pos = 	{0,	0.3,	0}, -- location of your pilot ejecting,
 					can_be_playable 	 = true,
 					role 				 = "pilot",
 					role_display_name    = _("Pilot"),
@@ -205,7 +209,7 @@ A_29B =  {
 					drop_canopy_name	=	0,
 					pos = 	{-1.4,	0.5,	0},
 					pilot_body_arg      = 472,
-					can_be_playable 	 = true,
+					can_be_playable 	 = false,
 					role 				 = "instructor",
 					role_display_name    = _("Instructor pilot"),
 					ejection_order      = 1,
@@ -239,43 +243,124 @@ A_29B =  {
 		},
 
 		HumanRadio = {
-			frequency = 254.0, -- Maykop (Caucasus) or Nellis (NTTR)
-			editable = true,
-			minFrequency = 225.000,
-			maxFrequency = 399.900,
-			modulation = MODULATION_AM
+			frequency     = 124.0, -- onboard radio, default DCSW frequency, chnl 0
+			editable     = true,
+			minFrequency     = 30.000,
+			maxFrequency     = 399.975,
+			rangeFrequency = {
+				{min = 30.0,  max = 87.975},
+				{min = 108.0, max = 173.975},
+				{min = 225.0, max = 399.975},
+			},
 		},
-
+		
 		panelRadio = {
 			[1] = {
-				name = _("AN/ARC-51A"),
+				name = _("AN/ARC-150(V)-2"), --UHF
 				range = {
-					{min = 225.0, max = 399.9}
+					{min = 225.0, max = 399.975}
 				},
-				channels = {  -- matches L-39C except for channel 8, which was changed to a Georgian airport and #20 which is NTTR only (for now).  This radio goes 1-20 not 0-19.
-					[1] = { name = _("Channel 1"),		default = 264.0, modulation = _("AM"), connect = true}, -- mineralnye-vody (URMM) : 264.0
-					[2] = { name = _("Channel 2"),		default = 265.0, modulation = _("AM")},	-- nalchik (URMN) : 265.0
-					[3] = { name = _("Channel 3"),		default = 256.0, modulation = _("AM")},	-- sochi-adler (URSS) : 256.0
-					[4] = { name = _("Channel 4"),		default = 254.0, modulation = _("AM")},	-- maykop-khanskaya (URKH), nellis (KLSV) : 254.0
-					[5] = { name = _("Channel 5"),		default = 250.0, modulation = _("AM")},	-- anapa (URKA) : 250.0
-					[6] = { name = _("Channel 6"),		default = 270.0, modulation = _("AM")},	-- beslan (URMO) : 270.0
-					[7] = { name = _("Channel 7"),		default = 257.0, modulation = _("AM")},	-- krasnodar-pashkovsky (URKK) : 257.0
-					[8] = { name = _("Channel 8"),		default = 258.0, modulation = _("AM")},	-- sukhumi-babushara (UGSS) : 255.0
-					[9] = { name = _("Channel 9"),		default = 262.0, modulation = _("AM")},	-- kobuleti (UG5X) : 262.0
-					[10] = { name = _("Channel 10"),	default = 259.0, modulation = _("AM")},	-- gudauta (UG23) : 259.0
-					[11] = { name = _("Channel 11"),	default = 268.0, modulation = _("AM")},	-- tbilisi-soganlug (UG24) : 268.0
-					[12] = { name = _("Channel 12"),	default = 269.0, modulation = _("AM")},	-- tbilisi-vaziani (UG27) : 269.0
-					[13] = { name = _("Channel 13"),	default = 260.0, modulation = _("AM")},	-- batumi (UGSB) : 260.0
-					[14] = { name = _("Channel 14"),	default = 263.0, modulation = _("AM")},	-- kutaisi-kopitnari (UGKO) : 263.0
-					[15] = { name = _("Channel 15"),	default = 261.0, modulation = _("AM")},	-- senaki-kolkhi (UGKS) :  261.0
-					[16] = { name = _("Channel 16"),	default = 267.0, modulation = _("AM")},	-- tbilisi-lochini (UGTB) : 267.0
-					[17] = { name = _("Channel 17"),	default = 251.0, modulation = _("AM")},	-- krasnodar-center (URKI), creech (KINS) : 251.0
-					[18] = { name = _("Channel 18"),	default = 253.0, modulation = _("AM")},	-- krymsk (URKW), mccarran (KLAS) : 253.0
-					[19] = { name = _("Channel 19"),	default = 266.0, modulation = _("AM")},	-- mozdok (XRMF) : 266.0
-					[20] = { name = _("Channel 20"),	default = 252.0, modulation = _("AM")}, -- N/A, groom lake/homey (KXTA) : 252.0
+				channels = {
+					[1] = { name = _("Channel 1"), default = 225.0, modulation = _("AM")}, -- default
+					[2] = { name = _("Channel 2"), default = 258.0, modulation = _("AM")},
+					[3] = { name = _("Channel 3"), default = 260.0, modulation = _("AM")},
+					[4] = { name = _("Channel 4"), default = 270.0, modulation = _("AM")},
+					[5] = { name = _("Channel 5"), default = 255.0, modulation = _("AM")},
+					[6] = { name = _("Channel 6"), default = 259.0, modulation = _("AM")},
+					[7] = { name = _("Channel 7"), default = 262.0, modulation = _("AM")},
+					[8] = { name = _("Channel 8"), default = 257.0, modulation = _("AM")},
+					[9] = { name = _("Channel 9"), default = 253.0, modulation = _("AM")},
+					[10] = { name = _("Channel 10"), default = 263.0, modulation = _("AM")},
+					[11] = { name = _("Channel 11"), default = 267.0, modulation = _("AM")},
+					[12] = { name = _("Channel 12"), default = 254.0, modulation = _("AM")},
+					[13] = { name = _("Channel 13"), default = 264.0, modulation = _("AM")},
+					[14] = { name = _("Channel 14"), default = 266.0, modulation = _("AM")},
+					[15] = { name = _("Channel 15"), default = 265.0, modulation = _("AM")},
+					[16] = { name = _("Channel 16"), default = 252.0, modulation = _("AM")},
+					[17] = { name = _("Channel 17"), default = 268.0, modulation = _("AM")},
+					[18] = { name = _("Channel 18"), default = 269.0, modulation = _("AM")},
+					[19] = { name = _("Channel 19"), default = 268.0, modulation = _("AM")},
+					[20] = { name = _("Channel 20"), default = 269.0, modulation = _("AM")},
+				}
+			},
+			[2] = {
+				name = _("SRT-651/N"), --VHF/UHF
+				range = {{min = 30.0, max = 88.0},
+						 {min = 108.0, max = 174.0},
+						 {min = 225.0, max = 399.975}},
+				channels = {
+					[1] = { name = _("Channel 1"), default = 225.0, connect = true}, -- default
+					[2] = { name = _("Channel 2"), default = 258.0},
+					[3] = { name = _("Channel 3"), default = 260.0},
+					[4] = { name = _("Channel 4"), default = 270.0},
+					[5] = { name = _("Channel 5"), default = 255.0},
+					[6] = { name = _("Channel 6"), default = 259.0},
+					[7] = { name = _("Channel 7"), default = 262.0},
+					[8] = { name = _("Channel 8"), default = 257.0},
+					[9] = { name = _("Channel 9"), default = 253.0},
+					[10] = { name = _("Channel 10"), default = 263.0},
+					[11] = { name = _("Channel 11"), default = 267.0},
+					[12] = { name = _("Channel 12"), default = 254.0},
+					[13] = { name = _("Channel 13"), default = 264.0},
+					[14] = { name = _("Channel 14"), default = 266.0},
+					[15] = { name = _("Channel 15"), default = 265.0},
+					[16] = { name = _("Channel 16"), default = 252.0},
+					[17] = { name = _("Channel 17"), default = 268.0},
+					[18] = { name = _("Channel 18"), default = 269.0},
+					[19] = { name = _("Channel 19"), default = 268.0},
+					[20] = { name = _("Channel 20"), default = 269.0},
+					[21] = { name = _("Channel 21"), default = 225.0},
+					[22] = { name = _("Channel 22"), default = 258.0},
+					[23] = { name = _("Channel 23"), default = 260.0},
+					[24] = { name = _("Channel 24"), default = 270.0},
+					[25] = { name = _("Channel 25"), default = 255.0},
+					[26] = { name = _("Channel 26"), default = 259.0},
+					[27] = { name = _("Channel 27"), default = 262.0},
+					[28] = { name = _("Channel 28"), default = 257.0},
+					[29] = { name = _("Channel 29"), default = 253.0},
+					[30] = { name = _("Channel 30"), default = 263.0},
 				}
 			},
 		},
+	
+		-- HumanRadio = {
+		-- 	frequency = 254.0, -- Maykop (Caucasus) or Nellis (NTTR)
+		-- 	editable = true,
+		-- 	minFrequency = 225.000,
+		-- 	maxFrequency = 399.900,
+		-- 	modulation = MODULATION_AM
+		-- },
+
+		-- panelRadio = {
+		-- 	[1] = {
+		-- 		name = _("AN/ARC-51A"),
+		-- 		range = {
+		-- 			{min = 225.0, max = 399.9}
+		-- 		},
+		-- 		channels = {  -- matches L-39C except for channel 8, which was changed to a Georgian airport and #20 which is NTTR only (for now).  This radio goes 1-20 not 0-19.
+		-- 			[1] = { name = _("Channel 1"),		default = 264.0, modulation = _("AM"), connect = true}, -- mineralnye-vody (URMM) : 264.0
+		-- 			[2] = { name = _("Channel 2"),		default = 265.0, modulation = _("AM")},	-- nalchik (URMN) : 265.0
+		-- 			[3] = { name = _("Channel 3"),		default = 256.0, modulation = _("AM")},	-- sochi-adler (URSS) : 256.0
+		-- 			[4] = { name = _("Channel 4"),		default = 254.0, modulation = _("AM")},	-- maykop-khanskaya (URKH), nellis (KLSV) : 254.0
+		-- 			[5] = { name = _("Channel 5"),		default = 250.0, modulation = _("AM")},	-- anapa (URKA) : 250.0
+		-- 			[6] = { name = _("Channel 6"),		default = 270.0, modulation = _("AM")},	-- beslan (URMO) : 270.0
+		-- 			[7] = { name = _("Channel 7"),		default = 257.0, modulation = _("AM")},	-- krasnodar-pashkovsky (URKK) : 257.0
+		-- 			[8] = { name = _("Channel 8"),		default = 258.0, modulation = _("AM")},	-- sukhumi-babushara (UGSS) : 255.0
+		-- 			[9] = { name = _("Channel 9"),		default = 262.0, modulation = _("AM")},	-- kobuleti (UG5X) : 262.0
+		-- 			[10] = { name = _("Channel 10"),	default = 259.0, modulation = _("AM")},	-- gudauta (UG23) : 259.0
+		-- 			[11] = { name = _("Channel 11"),	default = 268.0, modulation = _("AM")},	-- tbilisi-soganlug (UG24) : 268.0
+		-- 			[12] = { name = _("Channel 12"),	default = 269.0, modulation = _("AM")},	-- tbilisi-vaziani (UG27) : 269.0
+		-- 			[13] = { name = _("Channel 13"),	default = 260.0, modulation = _("AM")},	-- batumi (UGSB) : 260.0
+		-- 			[14] = { name = _("Channel 14"),	default = 263.0, modulation = _("AM")},	-- kutaisi-kopitnari (UGKO) : 263.0
+		-- 			[15] = { name = _("Channel 15"),	default = 261.0, modulation = _("AM")},	-- senaki-kolkhi (UGKS) :  261.0
+		-- 			[16] = { name = _("Channel 16"),	default = 267.0, modulation = _("AM")},	-- tbilisi-lochini (UGTB) : 267.0
+		-- 			[17] = { name = _("Channel 17"),	default = 251.0, modulation = _("AM")},	-- krasnodar-center (URKI), creech (KINS) : 251.0
+		-- 			[18] = { name = _("Channel 18"),	default = 253.0, modulation = _("AM")},	-- krymsk (URKW), mccarran (KLAS) : 253.0
+		-- 			[19] = { name = _("Channel 19"),	default = 266.0, modulation = _("AM")},	-- mozdok (XRMF) : 266.0
+		-- 			[20] = { name = _("Channel 20"),	default = 252.0, modulation = _("AM")}, -- N/A, groom lake/homey (KXTA) : 252.0
+		-- 		}
+		-- 	},
+		-- },
 	
 		
 		-- Countermeasures
@@ -307,7 +392,7 @@ A_29B =  {
 					-- { CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
 					-- { CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 					{ CLSID = "{5335D97A-35A5-4643-9D9B-026C75961E52}" }, -- CBU-97
-	
+
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
 					{ CLSID = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}" }, -- LAU-61 - 19
 	
@@ -329,8 +414,8 @@ A_29B =  {
 					{ CLSID = "{A-29B TANK}" },
 	
 					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
-					-- { CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
-					-- { CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
+					{ CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
+					{ CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 					{ CLSID = "{5335D97A-35A5-4643-9D9B-026C75961E52}" }, -- CBU-97
 
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
@@ -372,8 +457,8 @@ A_29B =  {
 					{ CLSID = "{A-29B TANK}" },
 	
 					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
-					-- { CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
-					-- { CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
+					{ CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}" }, --GBU12
+					{ CLSID = "{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}" }, --GBU16
 					{ CLSID = "{5335D97A-35A5-4643-9D9B-026C75961E52}" }, -- CBU-97
 	
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
@@ -443,14 +528,14 @@ A_29B =  {
 		aircraft_task(AntishipStrike),
 		aircraft_task(Intercept),
    	},	
-	DefaultTask = aircraft_task(Intercept),
+	DefaultTask = aircraft_task(CAS),
 
 
 
 	SFM_Data = {
 		aerodynamics = 
 		{
-			Cy0	=	0.2, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
+			Cy0	=	0.1933, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
 			Mzalfa	=	4.355, -- Horizontal tail pitch coefficient
 			Mzalfadt	=	0.8,  -- Wing pitch coefficient
 			kjx = 2.25, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
@@ -458,9 +543,9 @@ A_29B =  {
 
 			Czbe = -0.056, -- Directional stability coefficient  -- coefficient, along Z axis (perpendicular), affects yaw, negative value means force orientation in FC coordinate system
 			
-			cx_gear = 0.3, -- Additional coefficient of drag for gear extended
-			cx_flap = 0.055, -- Additional coefficient of drag for flap extended
-			cy_flap = 0.23, -- Additional coefficient of lift for flap extended
+			cx_gear = 0.0277, -- Additional coefficient of drag for gear extended
+			cx_flap = 0.095, -- Additional coefficient of drag for flap extended
+			cy_flap = 0.18, -- Additional coefficient of lift for flap extended
 			cx_brk = 0.065, -- Additional coefficient of drag for air brakes
 			
 			-- Hi guys. I try to calculate the rollrate, or maxrollrate (omxmax) for a plane and I've got the measurements of the plane, Cl (rolling moment coefficient) and Clp.
@@ -488,11 +573,16 @@ A_29B =  {
 			-- The variables "B" and "B4" in the SFM of DCS are "modifiers" of the variable "drag at zero Lift" aka Cx0 to make those values fit the Lift/Drag (or Drag/Lift)-Polars, 
 			-- where at the same mach-speed different values of drag (CD) are possible due to different angles of attack "AoA" (see above chart in post at 15h18 07.02.2021). 
 			-- This is necessary, since the SFM does not differentiate between different angles of attack, but has to take into account, that a plane at 15° AoA has a lot more drag than 
-			-- one at 1°AoA. The basic formula is CD = Cx0 + B * CL^2 + B4 * CL^4. CD is the "total" Drag at the given Speed, in NASA-Papers CD. Cx0 is drag at zero lift, in NASA-Papers 
+			-- one at 1°AoA. The basic formula is 
+			-- CD = Cx0 + B * CL^2 + B4 * CL^4
+			-- CD is the "total" Drag at the given Speed, in NASA-Papers CD. Cx0 is drag at zero lift, in NASA-Papers 
 			-- CDmin. CL is Lift at given speeds, in NASA-Papers CL, which is once squared and once put to the 4th power for the formula. B on the other hand is also known as K which is 
 			-- 1 / (pi * AR * e). pi needs no explanation, since it is the number pi. AR is the aspect-ratio of the wing which is AR = S^2 / A where S is the Wingspan and A is the wing area. 
 			-- So if you have a NASA-Report or something like that, the only unknown might be B4. If you solve the equation for B4 it looks like this:
 			-- B4 = (-Cx0 - B * CL^2 + CD) / CL^4
+			-- CL = Cy0 + AoA * Cya
+			-- When angle-of-attack (a) is below Aldop:
+			-- Cy(M,a) = Cy0 + Cya(M)*a
 			-- in other words B4 = (-CDmin - (1 / pi * AR * e) * CL^2 + CD) / CL^4
 			-- Before I forget it, e is the "Oswald Factor" or "wing-efficiency-factor" which is somewhere between 0.7 and 1.0. If you take 0.7 for landing speeds and take-off speeds, 
 			-- where flaps and gear is extended, you will be approx. right, for everything else 0.85 or 0.9 is a good guess.
@@ -508,29 +598,29 @@ A_29B =  {
 			-- more efficient. The shorter, thicker the wing, the more unefficient (I would say/guess or whatever)...or you can calculate it (see above) which looks like a 
 			-- nicely spent weekend to me
 			--      M	    Cx0		 Cya		    B		 B4	     Omxmax	    Aldop	    Cymax
-		{0  /666.739,	   0.022,	0.010,		  0.051,	0.0065,	 0.15,	     22,    	1.40,	},
-		{10 /666.739,	   0.022,	0.020,		  0.051,	0.0065,	 0.20,	     22,    	1.40,	},
-		{30 /666.739,	   0.022,	0.040,		  0.051,	0.0065,	 0.30,	     22,    	1.40,	},
-		{50 /666.739,	   0.022,	0.070,		  0.051,	0.0065,	 0.40,	     22,	    1.40,	},
-		{70 /666.739,	   0.022,	0.090,		  0.051,	0.0065,	 0.50,	     22,	    1.40,	},
-		{80 /666.739,	   0.022,	0.100,		  0.051,	0.0065,	 0.55,	     22,	    1.40,	},
-		{90 /666.739,	   0.022,	0.110,		  0.051,	0.0065,	 0.60,	     22,	    1.40,	},
-		{100/666.739,	   0.022,	0.120,		  0.051,	0.0065,	 0.65,	     22,	    2.0,	},
-		{110/666.739,	   0.022,	0.100,		  0.051,	0.0065,	 0.70,	     22,	    2.0,	},
-		{130/666.739,	   0.022,	0.075,		  0.051,	0.0065,	 0.90,	     22,	    2.0,	},
-		{150/666.739,	   0.022,	0.073,		  0.051,	0.0065,	 1.2,	     22,	    2.0,	},
-		{170/666.739,	   0.022,	0.073,		  0.051,	0.0065,	 1.2,	     22,	    2.0,	},
-		{190/666.739,	   0.022,	0.072,		  0.051,	0.0090,	 1.6,	     22,	    2.0,	},
-		{210/666.739,	   0.022,	0.070,		  0.051,	0.0090,	 2.1,	     19,	    2.0,	},
-		{220/666.739,	   0.022,	0.070,		  0.051,	0.0090,	 2.1,	     19,	    2.0,	},
-		{230/666.739,	   0.025,	0.070,		  0.051,	0.0090,	 2.1,	     19,	    2.0,	},
-		{240/666.739,	   0.047,	0.070,		  0.051,	0.0090,	 2.6,	     18,	    2.3,	},
-		{250/666.739,	   0.089,	0.070,		  0.051,	0.0090,	 2.6,	     18,	    2.3,	},
-		{270/666.739,	   0.089,	0.065,		  0.055,	0.0160,	 2.6,	     18,	    2.3,	},
-		{290/666.739,	   0.089,	0.065,		  0.065,	0.0160,	 3.1,	     11,	    1.14,	},
-		{310/666.739,	   0.089,	0.065,		  0.080,	0.0300,	 3.5,	     8,	 	    0.9,	},
-		{360/666.739,	   0.089,	0.065,		  0.100,	0.0800,	 3.5,	     1,	 	    0.3     },
-		{600/666.739,	   0.089,	0.065,		  0.200,	0.0800,	 3.5,	     1,	 	    0.3     },
+		{0  /666.739,	   0.0708,	0.0880,		  0.0069,	0.1382,	 0.15,	     18,    	1.7771,	},
+		{10 /666.739,	   0.0708,	0.0880,		  0.0069,	0.1382,	 0.20,	     18,    	1.7771,	},
+		{30 /666.739,	   0.0708,	0.0880,		  0.0069,	0.1382,	 0.30,	     18,    	1.7771,	},
+		{50 /666.739,	   0.0708,	0.0880,		  0.0069,	0.1382,	 0.40,	     18,	    1.7771,	},
+		{70 /666.739,	   0.0708,	0.0880,		  0.0069,	0.1382,	 0.50,	     18,	    1.7771,	},
+		{80 /666.739,	   0.0708,	0.0880,		  0.0069,	0.1382,	 0.55,	     18,	    1.7771,	},
+		{90 /666.739,	   0.0708,	0.0880,		  0.0069,	0.1382,	 0.60,	     18,	    1.7771,	},
+		{100/666.739,	   0.0708,	0.0880,		  0.0069,	0.1382,	 0.65,	     18,	    1.7771,	},
+		{110/666.739,	   0.0708,	0.0880,		  0.0069,	0.1382,	 0.70,	     18,	    1.7771,	},
+		{130/666.739,	   0.0708,	0.0807,		  0.0069,	0.1382,	 0.90,	     18,	    1.6462,	},
+		{150/666.739,	   0.0708,	0.0770,		  0.0069,	0.1382,	 1.2,	     18,	    1.5798,	},
+		{170/666.739,	   0.0708,	0.0759,		  0.0069,	0.1382,	 1.2,	     18,	    1.5596,	},
+		{190/666.739,	   0.0708,	0.0761,		  0.0069,	0.1382,	 1.6,	     18,	    1.5629,	},
+		{210/666.739,	   0.0708,	0.0756,		  0.0069,	0.1382,	 2.1,	     18,	    1.5542,	},
+		{220/666.739,	   0.0708,	0.0798,		  0.0069,	0.1382,	 2.1,	     18,	    1.6250,	},
+		{230/666.739,	   0.0708,	0.0841,		  0.0069,	0.1382,	 2.1,	     18,	    1.7063,	},
+		{240/666.739,	   0.0708,	0.0853,		  0.0069,	0.1382,	 2.6,	     17,	    1.7250,	},
+		{250/666.739,	   0.0708,	0.0866,		  0.0069,	0.1382,	 2.6,	     16,	    1.7514,	},
+		{270/666.739,	   0.0708,	0.0864,		  0.0069,	0.1382,	 2.6,	     15,	    1.7476,	},
+		{290/666.739,	   0.0708,	0.0964,		  0.0069,	0.1382,	 3.1,	     14,	    1.9293,	},
+		{310/666.739,	   0.0708,	0.1054,		  0.0069,	0.1382,	 3.5,	     12, 	    2.0907,	},
+		{360/666.739,	   0.0708,	0.1054,		  0.0069,	0.1382,	 3.5,	     7,	 	    2.0907  },
+		{600/666.739,	   0.0708,	0.1054,		  0.0069,	0.1382,	 3.5,	     1,	 	    2.0907  },
 		}
 		}, -- end of aerodynamics
 		engine = 
@@ -543,10 +633,27 @@ A_29B =  {
 			typeng	=	3, -- E_TURBOJET = 0, E_TURBOJET_AB = 1, E_PISTON = 2, E_TURBOPROP = 3,	E_TURBOFAN    = 4,	E_TURBOSHAFT = 5
 			hMaxEng	=	19.5, -- maximum operating altitude for the engine in km -- typically higher than service ceiling of the aircraft
 			dcx_eng	=	0.095, -- drag coefficient for the engine -- no correlation found -- most common values are 0.0085 and 0.0144
-			cemax	=	0.05, -- kg / sec - fuel consumption for a single engine in dry configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
-			cefor	=	0.05, -- kg / sec - fuel consumption for a single engine in afterburner configuration -- -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
-			dpdh_m	=	5000, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
-			dpdh_f	=	5000, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			cemax   = 	0.37, -- not used for fuel calculation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
+			cefor   = 	0.37, -- not used for fuel calculation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
+			dpdh_m	=	1800, --  altitude coefficient for max thrust -- altitude effects to thrust -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			dpdh_f	=	1800, --  altitude coefficient for AB thrust ???? or altitude effects to fuel rate -- The best recommendation at this point is to start with these values between 2000 and 3000 and adjust as needed after initial flight testing
+			prop_locations = {{3.149, -0.524 , 0.014}, {0.0, 0.0, math.rad(-1.87)},},
+			prop_blades_count = 5,
+			prop_pitch_min		= 23.0,	-- prop pitch min, degrees 
+			prop_pitch_max		= 65.0,	-- prop pitch max, degrees 
+			prop_pitch_feather	= 80.0,	-- prop pitch feather position, degrees if feather < prop_pitch_max no feathering available
+			Nominal_RPM = 2000,
+			Startup_Prework = 1.0,
+			Startup_RPMs = {
+				{0.0, 0},
+				{1.0, 60},
+				{8.0, 60},
+				{8.6, 880},
+				{13.0, 601},
+			},
+			Startup_Ignition_Time = 8.3,
+			Shutdown_Duration = 9.8,
+
 			table_data = {
 			-- Pmax - total thrust in Mil Pwr in Newtons for all engines
 			-- Pfor - total thrust in AB in Newtons for all engines
@@ -574,13 +681,13 @@ A_29B =  {
                         { -- Minimum thrust 2000 kN, maximum thrust 16700 kN
                             M 		 = {0*666.739,100*666.739,120*666.739,140*666.739,160*666.739,200*666.739,220*666.739,280*666.739,320*666.739,400*666.739},
                             H		 = {0,3048,6096,9144,10500,12192},
-                            thrust	 = {-- M 0         0.1      0.2      0.3      0.4     0.5     0.6     0.7      0.8      0.9
-                                        {    17000,   17000,   17000,   17000,   17000,  17000,  17000,  17000,   16925,  17259 },--H = 0 (sea level)
-                                        {    17000,   17000,   17000,   17000,   17000,  16250,  12722,  12855,   12989,  13656 },--H = 3048 (10kft)
-                                        {    17000,   17000,   17000,   17000,   17000,  17000,   9786,   10053,   10320,  10765 },--H = 6096 (20kft)
-                                        {    17000,   17000,   17000,   17000,   17000,  17000,   7184,   7440,    7695,   8062 },--H = 9144 (30kft)
-                                        {    6939,    6294,    5649,    5638,    5627,   5749,   5872,   6094,    6316,   6628 	},--H = 10500 (34kft)
-										{    3327,    2782,    2237,    2248,    2260,   2349,   2438,   2627,    2816,   3071 	},--H = 12192 (40kft)
+                            thrust	 = {--KCAS 0       100      120      140      160     200     220     280      320     400
+                                        {    17000,   17000,   17000,   17000,   17000,  17000,  17000,  17000,   16925,  17000 },--H = 0 (sea level)
+                                        {    16000,   16000,   16000,   16000,   16000,  16000,  16000,  16000,   16000,  16000 },--H = 3048 (10kft)
+                                        {    11500,   11500,   11500,   11500,   11500,  11500,  11500,  11500,   11500,  11500 },--H = 6096 (20kft)
+                                        {     7000,    7000,    7000,    7000,    7000,   7000,   7000,   7000,    7000,   7000 },--H = 9144 (30kft)
+                                        {     5000,    5000,    5000,    5000,    5000,   5000,   5000,   5000,    5000,   5000 },--H = 10500 (34kft)
+										{     5000,    5000,    5000,    5000,    5000,   5000,   5000,   5000,    5000,   5000 },--H = 12192 (40kft)
                                         
                             },
                         },
@@ -599,7 +706,31 @@ A_29B =  {
 							}
 						},
 
-
+						TSFC_throttle_responce =  -- correction to TSFC for different engine RPM, 1d table
+						{
+							RPM = {0, 70, 80, 90, 100},
+							K   = {1,  1,  1,  1,   1},
+						},
+						--rpm_acceleration_time_factor = -- time factor for engine governor  ie RPM += (desired_RPM - RPM ) * t(RPM) * dt
+						--{
+						--	RPM  = {0, 50, 100},
+						--	t    = {0.3,0.3,0.3}
+						--},
+						--rpm_deceleration_time_factor = -- time factor for engine governor
+						--{
+						--	RPM  = {0, 50, 100},
+						--	t    = {0.3,0.3,0.3}
+						--},
+						rpm_throttle_responce = -- required RPM according to throttle position
+						{
+							throttle = {0, 0.1, 0.55,  1.0},
+							RPM      = {64.6, 84, 92, 100},
+						},
+						thrust_rpm_responce = -- thrust = K(RPM) * thrust_max(M,H)
+						{
+							RPM = {0, 64.6, 84,   100},
+							K   = {0, 0.00, 0.1,  1},
+						},
                 }, -- end of extended data
 
            
@@ -623,6 +754,17 @@ A_29B =  {
         --                         {   1904,   2042,    2296,   2300,  2433,   2798,   3212,   3483,   3639,   4097  },--H = 19812 (65kft)
         --                        },
         --         },
+		-- TSFC_afterburner =  -- afterburning thrust specific fuel consumption by altitude and Mach number RPM  100%, 2d table
+		-- {
+		-- 	M 		 = {0,0.3,0.5,0.7,1.0},
+		-- 	H		 = {0,1000,3000,10000},
+		-- 	TSFC	 = {-- M 0  0.3 0.5  0.7  1.0
+		-- 				{   1,   1,  1,   1,   1},--H = 0
+		-- 				{   1,   1,  1,   1,   1},--H = 1000
+		-- 				{   1,   1,  1,   1,   1},--H = 3000
+		-- 				{   1,   1,  1,   1,   1},--H = 10000
+		-- 	}
+		-- },
 		-- extended =
 		-- {
 		--   Cx0 = -- Interpolierung von Cx0 bei Geschwindikeit M und HÃ¶he H

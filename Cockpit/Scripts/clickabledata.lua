@@ -11,15 +11,15 @@ dofile(LockOn_Options.script_path.."devices.lua")
 
 elements = {}
 
--- -- Mirrors
--- elements["PNT_MIRROR_LEFT"]  = default_2_position_tumb("Toggle Mirrors", 0, 1625, nil)
--- elements["PNT_MIRROR_RIGHT"] = default_2_position_tumb("Toggle Mirrors", 0, 1625, nil)
+-- Mirrors
+elements["PNT_MIRROR_LEFT"]  = default_2_position_tumb("Toggle Mirrors", 0, 1625, nil)
+elements["PNT_MIRROR_RIGHT"] = default_2_position_tumb("Toggle Mirrors", 0, 1625, nil)
 
 elements["PNT_2"] = default_2_position_tumb("Hide Stick Toggle", devices.GEAR, Keys.ToggleStick, nil)
 
 elements["PNT_129"] = default_2_position_tumb("Canopy", devices.CANOPY, Keys.Canopy, 129)
-elements["PNT_129"].animated        = {true, true}
-elements["PNT_129"].animation_speed = {2, 2} 
+-- elements["PNT_129"].animated        = {true, true}
+-- elements["PNT_129"].animation_speed = {2, 2} 
 
 
 
@@ -69,12 +69,12 @@ elements["PNT_922"] = default_3_position_tumb("Ignition (On/Auto/Off)",         
 elements["PNT_923"] = springloaded_3_pos_tumb("Start (Start/No Function/Interrupt",	    	    devices.ENGINE,	 device_commands.EngineStart,    923, true)
 elements["PNT_924"] = default_2_position_tumb("Innertial Separation (Open/Close)",              devices.ENGINE,  device_commands.EngineInnSep,   924,TOGGLECLICK_MID_FWD)
 -- FUEL / HYDRAULIC / BLEED SHUTOFF
-elements["PNT_871"] = default_3_position_tumb("Fuel/Hydraulic/Bleed Shutoff (Open/Close/Close)",devices.ENGINE,  device_commands.FuelHydBleed, 871,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_871"] = default_3_position_tumb("Fuel/Hydraulic/Bleed Shutoff (Open/Close/Close)",devices.ENGINE,  device_commands.FuelHydBleed,   871,nil,false,TOGGLECLICK_MID_FWD)
 
 -- THROTTLE
-elements["PNT_911"] = default_movable_axis("Throttle",                                          devices.EXTANIM, device_commands.Throttle,       911, 0.0,0.1, true, false)
-elements["PNT_912"] = default_2_position_tumb("Flaps (Up/Down)",     		                    devices.FLAPS, 	 device_commands.flaps,          912,TOGGLECLICK_MID_FWD)
-elements["PNT_913"] = default_movable_axis("Friction",                                          devices.EXTANIM, device_commands.Friction,       913, 0.0,0.1, true, false)
+elements["PNT_911"] = springloaded_3_pos_tumb("Throttle",                                       devices.ENGINE,  device_commands.ThrottleClick,  911, true)
+elements["PNT_912"] = default_2_position_tumb("Flaps (Up/Down)",     		                    devices.FLAPS, 	 device_commands.flaps,          912,TOGGLECLICK_MID_FWD); elements["PNT_912"].arg_value = {1, -1}
+-- elements["PNT_913"] = default_movable_axis("Friction",                                          devices.EXTANIM, device_commands.Friction,       913, 0.0,0.1, true, false)
 
 -- TRIMS
 elements["PNT_901"] = springloaded_3_pos_tumb("Aileron Emergency (Left/Stop/Right)",            devices.AVIONICS, device_commands.TrimEmerAil,    901,true,TOGGLECLICK_MID_FWD)
@@ -93,51 +93,57 @@ elements["PNT_861"] = default_button("Anti-G Suit Test",                        
 
 
 -- AVIONICS
-elements["PNT_841"] = default_2_position_tumb("MDP 1 (On/Off)",                                 devices.ELECTRIC_SYSTEM, device_commands.AviMdp1,        841,TOGGLECLICK_MID_FWD)
-elements["PNT_842"] = default_2_position_tumb("MDP 2 (On/Off)",                                 devices.ELECTRIC_SYSTEM, device_commands.AviMdp2,        842,TOGGLECLICK_MID_FWD)
-elements["PNT_843"] = default_2_position_tumb("Avionics Master (On/Off)",                       devices.ELECTRIC_SYSTEM, device_commands.AviMst,         843,TOGGLECLICK_MID_FWD)
-elements["PNT_844"] = default_2_position_tumb("SMS (On/Off)",                                   devices.ELECTRIC_SYSTEM, device_commands.AviSms,         844,TOGGLECLICK_MID_FWD)
-elements["PNT_845"] = default_2_position_tumb("V/UHF (Guard/Normal)",                           devices.ELECTRIC_SYSTEM, device_commands.AviVuhf,        845,TOGGLECLICK_MID_FWD)
+elements["PNT_841"] = default_2_position_tumb("MDP 1 (On/Off)",                                 devices.ELECTRIC_SYSTEM, device_commands.AviMdp1,        841,TOGGLECLICK_RIGHT_FWD)
+elements["PNT_842"] = default_2_position_tumb("MDP 2 (On/Off)",                                 devices.ELECTRIC_SYSTEM, device_commands.AviMdp2,        842,TOGGLECLICK_RIGHT_FWD)
+elements["PNT_843"] = default_2_position_tumb("Avionics Master (On/Off)",                       devices.ELECTRIC_SYSTEM, device_commands.AviMst,         843,TOGGLECLICK_RIGHT_FWD)
+elements["PNT_844"] = default_2_position_tumb("SMS (On/Off)",                                   devices.ELECTRIC_SYSTEM, device_commands.AviSms,         844,TOGGLECLICK_RIGHT_FWD)
+elements["PNT_845"] = default_2_position_tumb("V/UHF (Guard/Normal)",                           devices.ELECTRIC_SYSTEM, device_commands.AviVuhf,        845,TOGGLECLICK_RIGHT_FWD)
 
 -- ENVIRONMENTAL CONTROL SYSTEM
 elements["PNT_831"] = default_movable_axis("Temperature (Cold/Hot)",                            devices.ENVIRON, device_commands.EnvTemp,        831, 0.0,0.1, true, false)
-elements["PNT_832"] = default_2_position_tumb("Air Conditioner (On/Off)",                       devices.ENVIRON, device_commands.EnvAC,          832,TOGGLECLICK_MID_FWD)
-elements["PNT_833"] = default_2_position_tumb("ECS (Auto/Manual)",                              devices.ENVIRON, device_commands.EnvECS,         833,TOGGLECLICK_MID_FWD)
-elements["PNT_834"] = default_2_position_tumb("Recirculating Fan (On/Off)",                     devices.ENVIRON, device_commands.EnvRecFan,      834,TOGGLECLICK_MID_FWD)
+elements["PNT_832"] = default_2_position_tumb("Air Conditioner (On/Off)",                       devices.ENVIRON, device_commands.EnvAC,          832,TOGGLECLICK_RIGHT_FWD)
+elements["PNT_833"] = default_2_position_tumb("ECS (Auto/Manual)",                              devices.ENVIRON, device_commands.EnvECS,         833,TOGGLECLICK_RIGHT_FWD)
+elements["PNT_834"] = default_2_position_tumb("Recirculating Fan (On/Off)",                     devices.ENVIRON, device_commands.EnvRecFan,      834,TOGGLECLICK_RIGHT_FWD)
 
 -- LANDING GEAR
-elements["PNT_821"] = default_2_position_tumb("Landing Gear (Up/Down)",                         devices.GEAR,    device_commands.LndGear,        821,TOGGLECLICK_MID_FWD)
+elements["PNT_821"] = default_2_position_tumb("Landing Gear (Up/Down)",                         devices.GEAR,    device_commands.LndGear,        821,TOGGLECLICK_LEFT_FWD)
 elements["PNT_821"].arg_value = {1, -1}
 elements["PNT_822"] = default_button("Beep Supress",                                            devices.GEAR,    device_commands.LndGearBeep,    822)
 elements["PNT_823"] = default_button("Down Lock Override",                                      devices.GEAR,    device_commands.LndGearOvr,     823)
-elements["PNT_851"] = default_2_position_tumb("Gear Emergency Down (Emergency Down/Normal)",    devices.GEAR,    device_commands.LndGearEmer, 851,TOGGLECLICK_MID_FWD)
+elements["PNT_851"] = default_2_position_tumb("Gear Emergency Down (Emergency Down/Normal)",    devices.GEAR,    device_commands.LndGearEmer, 	 851,TOGGLECLICK_LEFT_AFT)
 
 
 -- FUEL
-elements["PNT_801"] = multiposition_switch_limited("Fuel Main Pump (Auto/Off)",                 devices.FUEL, device_commands.FuelMain,         801, 2, 1.0, false, 0, TOGGLECLICK_MID_FWD)
-elements["PNT_802"] = multiposition_switch_limited("Fuel Aux Pump (LH/Auto/RH/Both)",           devices.FUEL, device_commands.FuelAux,          802, 4,0.25, false, TOGGLECLICK_MID_FWD)
+elements["PNT_801"] = multiposition_switch_limited("Fuel Main Pump (Auto/Off)",                 devices.FUEL, device_commands.FuelMain,         801, 2, 1.0, false, 0, KNOBCLICK_MID_FWD)
+elements["PNT_802"] = multiposition_switch_limited("Fuel Aux Pump (LH/Auto/RH/Both)",           devices.FUEL, device_commands.FuelAux,          802, 4,0.25, false, KNOBCLICK_MID_FWD)
 elements["PNT_803"] = default_3_position_tumb("Fuel Transfer (U-Wing/Ventral-Auto/Off)",        devices.FUEL, device_commands.FuelXfr,          803, nil,true,TOGGLECLICK_MID_FWD)
 
 -- PARKING BRAKES
-elements["PNT_791"] = default_3_position_tumb("Emergency/Parking Brakes",                       devices.BRAKES, device_commands.EmerParkBrake, 791, nil, true)
+elements["PNT_791"] = default_3_position_tumb("Emergency/Parking Brakes",                       devices.BRAKES, device_commands.EmerParkBrake, 791, nil, true, TOGGLECLICK_MID_FWD)
 
 -- WEAPONS
-elements["PNT_781"] = default_3_position_tumb("Mass (Sim/Save/Live)",                           devices.WEAPON_SYSTEM, device_commands.Mass,   781,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_781"] = default_3_position_tumb("Mass (Sim/Save/Live)",                           devices.WEAPON_SYSTEM, device_commands.Mass,   781,nil,true,KNOBCLICK_MID_FWD)
 elements["PNT_782"] = default_3_position_tumb("Late Arm (On/Safe)",                             devices.WEAPON_SYSTEM, device_commands.LateArm,       782,nil,true,TOGGLECLICK_MID_FWD)
 elements["PNT_811"] = default_button("Salvo",                                                   devices.WEAPON_SYSTEM, device_commands.Salvo,         811)
 
 -- ELT
-elements["PNT_771"] = default_3_position_tumb("ELT (On/Arm-Reset)",                             devices.EXTANIM, device_commands.EltOn,        771,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_741"] = default_3_position_tumb("ELT (On/Arm-Reset)",                             devices.EXTANIM, device_commands.EltOn,        741,nil,true,TOGGLECLICK_MID_FWD)
 -- PIC NAV
-elements["PNT_772"] = springloaded_3_pos_tumb("Manual Sync (CW/CCW)",                           devices.EXTANIM, device_commands.PicNavMan,     772,true,TOGGLECLICK_MID_FWD)
-elements["PNT_773"] = default_3_position_tumb("Slave (Free/Slave/Fast Slave)",                  devices.EXTANIM, device_commands.PicNavSlave,   773,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_742"] = springloaded_3_pos_tumb("Manual Sync (CW/CCW)",                           devices.EXTANIM, device_commands.PicNavMan,     742,true,TOGGLECLICK_MID_FWD)
+elements["PNT_743"] = default_3_position_tumb("Slave (Free/Slave/Fast Slave)",                  devices.EXTANIM, device_commands.PicNavSlave,   743,nil,true,TOGGLECLICK_MID_FWD)
 
 -- AUDIO
-elements["PNT_761"] = default_2_position_tumb("Audio Selector (Normal/Backup)",                 devices.EXTANIM, device_commands.AudioNormal,        761,TOGGLECLICK_MID_FWD)
-elements["PNT_762"] = default_movable_axis("COM 1 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM1_VOL,     762,TOGGLECLICK_MID_FWD)
-elements["PNT_763"] = default_movable_axis("COM 2 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM2_VOL,     763,TOGGLECLICK_MID_FWD)
-elements["PNT_764"] = default_movable_axis("COM 3 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM3_VOL,     764,TOGGLECLICK_MID_FWD)
-elements["PNT_765"] = default_movable_axis("COM 4 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM4_VOL,     765,TOGGLECLICK_MID_FWD)
+elements["PNT_761"] = default_2_position_tumb("Audio Selector (Normal/Backup)",                 devices.EXTANIM, device_commands.AudioNormal,        761,TOGGLECLICK_MID_FWD); elements["PNT_761"].arg_value = {1, -1}
+elements["PNT_762"] = default_movable_axis("COM 1 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM1_VOL,     762)
+elements["PNT_763"] = default_movable_axis("COM 2 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM2_VOL,     763)
+elements["PNT_764"] = default_movable_axis("COM 3 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM3_VOL,     764)
+elements["PNT_765"] = default_movable_axis("COM 4 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM4_VOL,     765)
+elements["PNT_766"] = default_movable_axis("ADF",		      		           					devices.EXTANIM, device_commands.AUDIO_ADF_VOL,      766)
+elements["PNT_767"] = default_movable_axis("NAV", 		     		           					devices.EXTANIM, device_commands.AUDIO_NAV_VOL,      767)
+elements["PNT_768"] = default_movable_axis("Missile",	      		           					devices.EXTANIM, device_commands.AUDIO_MSL_VOL,      768)
+elements["PNT_769"] = default_movable_axis("MKR",		      		           					devices.EXTANIM, device_commands.AUDIO_MKR_VOL,      769)
+elements["PNT_770"] = default_movable_axis("Volume",	      		           					devices.EXTANIM, device_commands.AUDIO_VOL,		     770)
+elements["PNT_771"] = default_movable_axis("VOX",      		           							devices.EXTANIM, device_commands.AUDIO_VOX,     	 771)
 
 -- ASI
 elements["PNT_751"] = 
@@ -187,10 +193,10 @@ elements["PNT_525"] = default_button("CMFD #1 OSS 25",                          
 elements["PNT_526"] = default_button("CMFD #1 OSS 26",                                       devices.CMFD, device_commands.CMFD1OSS26,        526)
 elements["PNT_527"] = default_button("CMFD #1 OSS 27",                                       devices.CMFD, device_commands.CMFD1OSS27,        527)
 elements["PNT_528"] = default_button("CMFD #1 OSS 28",                                       devices.CMFD, device_commands.CMFD1OSS28,        528)
-elements["PNT_529"] = default_2_position_tumb("CMFD #1 Power (On/Off)",                      devices.CMFD, device_commands.CMFD1ButtonOn,        529)
-elements["PNT_530"] = springloaded_3_pos_tumb("CMFD #1 Gain",                                devices.CMFD, device_commands.CMFD1ButtonGain,      530, true)
-elements["PNT_531"] = springloaded_3_pos_tumb("CMFD #1 Symbology",                           devices.CMFD, device_commands.CMFD1ButtonSymb,      531, true)
-elements["PNT_532"] = springloaded_3_pos_tumb("CMFD #1 Bright",                              devices.CMFD, device_commands.CMFD1ButtonBright,    532, true)
+elements["PNT_529"] = default_2_position_tumb("CMFD #1 Power (On/Off)",                      devices.CMFD, device_commands.CMFD1ButtonOn,        529, KNOBCLICK_MID_FWD)
+elements["PNT_530"] = springloaded_3_pos_tumb("CMFD #1 Gain",                                devices.CMFD, device_commands.CMFD1ButtonGain,      530, true, PUSHPRESS)
+elements["PNT_531"] = springloaded_3_pos_tumb("CMFD #1 Symbology",                           devices.CMFD, device_commands.CMFD1ButtonSymb,      531, true, PUSHPRESS)
+elements["PNT_532"] = springloaded_3_pos_tumb("CMFD #1 Bright",                              devices.CMFD, device_commands.CMFD1ButtonBright,    532, true, PUSHPRESS)
 
 -- CMFD2
 elements["PNT_551"] = default_button("CMFD #2 OSS 1",                                        devices.CMFD, device_commands.CMFD2OSS1,         551)
@@ -221,10 +227,10 @@ elements["PNT_575"] = default_button("CMFD #2 OSS 25",                          
 elements["PNT_576"] = default_button("CMFD #2 OSS 26",                                       devices.CMFD, device_commands.CMFD2OSS26,        576)
 elements["PNT_577"] = default_button("CMFD #2 OSS 27",                                       devices.CMFD, device_commands.CMFD2OSS27,        577)
 elements["PNT_578"] = default_button("CMFD #2 OSS 28",                                       devices.CMFD, device_commands.CMFD2OSS28,        578)
-elements["PNT_579"] = default_2_position_tumb("CMFD #2 Power (On/Off)",                      devices.CMFD, device_commands.CMFD2ButtonOn,        579)
-elements["PNT_580"] = springloaded_3_pos_tumb("CMFD #2 Gain",                                devices.CMFD, device_commands.CMFD2ButtonGain,      580, true)
-elements["PNT_581"] = springloaded_3_pos_tumb("CMFD #2 Symbology",                           devices.CMFD, device_commands.CMFD2ButtonSymb,      581, true)
-elements["PNT_582"] = springloaded_3_pos_tumb("CMFD #2 Bright",                              devices.CMFD, device_commands.CMFD2ButtonBright,    582, true)
+elements["PNT_579"] = default_2_position_tumb("CMFD #2 Power (On/Off)",                      devices.CMFD, device_commands.CMFD2ButtonOn,        579, KNOBCLICK_MID_FWD)
+elements["PNT_580"] = springloaded_3_pos_tumb("CMFD #2 Gain",                                devices.CMFD, device_commands.CMFD2ButtonGain,      580, true, PUSHPRESS)
+elements["PNT_581"] = springloaded_3_pos_tumb("CMFD #2 Symbology",                           devices.CMFD, device_commands.CMFD2ButtonSymb,      581, true, PUSHPRESS)
+elements["PNT_582"] = springloaded_3_pos_tumb("CMFD #2 Bright",                              devices.CMFD, device_commands.CMFD2ButtonBright,    582, true, PUSHPRESS)
 
 -- CLOCK
 elements["PNT_491"] = default_button("Clock Selection",                                     devices.EXTANIM, device_commands.ClockSel,           491)
@@ -257,23 +263,23 @@ elements["PNT_473"] = default_button("Warning Reset",                           
 elements["PNT_474"] = default_button("Up",                                           		devices.UFCP, device_commands.UFCP_UP,          	474)
 elements["PNT_475"] = default_button("Down",                                           		devices.UFCP, device_commands.UFCP_DOWN,          	475)
 
-elements["PNT_476"] = default_3_position_tumb("Day/Night/Auto",                        		devices.UFCP, device_commands.UFCP_DAY_NIGHT,     	476, false, true)
-elements["PNT_477"] = default_2_position_tumb("Radar Altimeter Transmit / Off",       		devices.UFCP, device_commands.UFCP_RALT,          	477)
-elements["PNT_478"] = default_3_position_tumb("DVR Rec/Standby/Off",                		devices.UFCP, device_commands.UFCP_DVR,          	478, false, true)
-elements["PNT_479"] = multiposition_switch_limited("EGI Nav/Align/Storage Heading/Off/Test",devices.UFCP, device_commands.UFCP_EGI,          	479,5,0.25)
+elements["PNT_476"] = default_3_position_tumb("Day/Night/Auto",                        		devices.UFCP, device_commands.UFCP_DAY_NIGHT,     	476, false, true, TOGGLECLICK_MID_FWD)
+elements["PNT_477"] = default_2_position_tumb("Radar Altimeter Transmit / Off",       		devices.UFCP, device_commands.UFCP_RALT,          	477, TOGGLECLICK_MID_FWD)
+elements["PNT_478"] = default_3_position_tumb("DVR Rec/Standby/Off",                		devices.UFCP, device_commands.UFCP_DVR,          	478, false, true, TOGGLECLICK_MID_FWD)
+elements["PNT_479"] = multiposition_switch_limited("EGI Nav/Align/Storage Heading/Off/Test",devices.UFCP, device_commands.UFCP_EGI,          	479,5,0.25, false, nil, KNOBCLICK_MID_FWD)
 elements["PNT_480"] = default_axis_limited("UFC BRT/OFF",									devices.UFCP , device_commands.UFCP_UFC,          	480, 0, 0.15)
-elements["PNT_481"] = default_2_position_tumb("HUD Test",									devices.UFCP, device_commands.UFCP_HUD_TEST,      	481)
-elements["PNT_482"] = default_2_position_tumb("SBS On",										devices.UFCP, device_commands.UFCP_SBS_ON,      	482)
+elements["PNT_481"] = default_2_position_tumb("HUD Test",									devices.UFCP, device_commands.UFCP_HUD_TEST,      	481, TOGGLECLICK_MID_FWD)
+elements["PNT_482"] = default_2_position_tumb("SBS On",										devices.UFCP, device_commands.UFCP_SBS_ON,      	482, TOGGLECLICK_MID_FWD)
 elements["PNT_483"] = default_axis_limited("HUD Britghness",								devices.HUD, device_commands.UFCP_HUD_BRIGHT,     	483, 1, -0.15)
 elements["PNT_484"] = default_axis_limited("SBS Adjust",	   								devices.UFCP, device_commands.UFCP_SBS_ADJUST,   	484, 1, -0.15)
 
-elements["PNT_485"] = default_button("Right",												devices.UFCP, device_commands.UFCP_JOY_RIGHT,   	485)
-elements["PNT_486"] = default_button("Left",												devices.UFCP, device_commands.UFCP_JOY_LEFT,  	 	486)
-elements["PNT_487"] = default_button("Up",													devices.UFCP, device_commands.UFCP_JOY_UP,   		487)
-elements["PNT_488"] = default_button("Down",												devices.UFCP, device_commands.UFCP_JOY_DOWN,  	 	488)
+elements["PNT_485"] = default_button("Right",												devices.UFCP, device_commands.UFCP_JOY_RIGHT,   	485, nil, nil, TOGGLECLICK_MID_FWD)
+elements["PNT_486"] = default_button("Left",												devices.UFCP, device_commands.UFCP_JOY_LEFT,  	 	486, nil, nil, TOGGLECLICK_MID_FWD)
+elements["PNT_487"] = default_button("Up",													devices.UFCP, device_commands.UFCP_JOY_UP,   		487, nil, nil, TOGGLECLICK_MID_FWD)
+elements["PNT_488"] = default_button("Down",												devices.UFCP, device_commands.UFCP_JOY_DOWN,  	 	488, nil, nil, TOGGLECLICK_MID_FWD)
 
-elements["PNT_441"] = default_button("Warning",												devices.ALARM, device_commands.WARNING_PRESS,  		441)
-elements["PNT_442"] = default_button("Caution",												devices.ALARM, device_commands.CAUTION_PRESS,  	 	442)
+elements["PNT_441"] = default_button("Warning",												devices.ALARM, device_commands.WARNING_PRESS,  		441, nil, nil, TOGGLECLICK_MID_FWD)
+elements["PNT_442"] = default_button("Caution",												devices.ALARM, device_commands.CAUTION_PRESS,  	 	442, nil, nil, TOGGLECLICK_MID_FWD)
 
 elements["PNT_431"] = default_button("AP Roll/Pitch",										devices.AUTOPILOT, device_commands.AP_RP,  				431)
 -- elements["PNT_432"] = default_button("AP Heading",											devices.AUTOPILOT, device_commands.AP_HDG,  	 		432)

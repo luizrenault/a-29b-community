@@ -9,7 +9,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Download
 
-[![Download](https://img.shields.io/github/downloads/luizrenault/a-29b-community/total?label=Download%20Latest%20Release)](https://github.com/luizrenault/a-29b-community/releases)
+[Download Latest Release](https://github.com/luizrenault/a-29b-community/archive/refs/heads/main.zip)
 
 [Download Latest Devel](https://github.com/luizrenault/a-29b-community/archive/refs/heads/devel.zip)
 
@@ -52,6 +52,79 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 [A-29 Super Tucano](https://forums.eagle.ru/topic/265017-a-29-super-tucano/)
 
 # Changelog
+
+## Version 0.2.0b - 01 May 2021
+
+### Added
+- BARO / RALT submode now remembered with mode changes.
+- Cabin Altitude pressurized down to 7000 ft. 
+- New CMFD Texture.
+- BAL, NAV MISC, EGI, FIX, TIP, LMT, WS, and DTK UFCP formats.
+- DTK - Desired Track.
+- New Normal Map and RoughMet (by Cubeboy)
+- New experimental sounds for canopy, buttons, knobs and switches.
+- UFCP EGI-INS format.
+- EGI states and alignment timings.
+- New Throttle x RPM curve.
+- New RPM x Thrust curve.
+- New RPM x FF curve.
+- New aerodynamic flight model parameters.
+- Throttle ST and CUT OFF positions.
+- Engine Cutoff key binding.
+- Mirrors.
+- New DCS propeller technology for AI.
+
+### Changed
+- NVG Switch only disables storm light.
+- Wingtip position for animation.
+- Rockets and Guns CCIP doesn't take wind into consideration.
+- Np around 100% when NG > 64%.
+- T5 adjustments.
+- Several EICAS transient values.
+- A/G Weapon selection order now allows any stores combinations.
+- Startup procedure: (Throttle CUT OFF -> ST on Ng=13%, ST -> Idle on Np = 40%)
+- Propeller rotation animation to match Np.
+- Minor tweaks to UFCP formats.
+- Lights Bano.
+- Brakes efficiency increased.
+
+### Fixes
+- UFCP WYPT menu minor bugs.
+- Guns reloads to 500 rounds upon rearm.
+- Altimeter pressure initial adjustment.
+- Flaps, Audio Normal/Bkp and Bleed/Cutoff left/right click behavior.
+- "Brake on" indicator still illuminated after battery is set to "off".
+
+### TODO
+- Remember A/G Gun Selection
+- Thrust tables of FM
+- A/G Profiles
+- A/G mode select with Stick Step button.
+- FIX is only cosmetic because currently there is only pure EGI/GPS navigation.
+- Create the alarms for the parameters in the LMT format.
+- Set the AA DGFT piper size relative to UFCP_WS (target wingspan in metres)
+- EGI state dictates NAV conditions.
+- Instant Action for sceneries other than Caucasus missing.
+- Warning msg when starting from Instant Action
+- Low res interior texture.
+- Strobe light in the wingtips has a black glare, while the lights do not glare when on.
+- Pilot change when ejecting?
+- Stall is weird (freezes in space), same when flying inverted, on apex of looping, etc.
+- Stall speeds too high? Even with low fuel and little load, stalls happen above 100 knots
+- Stall alarm not working
+- Roll speed too low ?
+- Parking brake without keyboard binding
+- Taxi light turns off when steering/not following nose gear movement
+- Taxing too stiff while turning? No effect of different weight loads.
+- Night/day switch not working
+- Light alarm test not working
+- Battery never runs out of juice, generator inoperative 
+- fuel pump switch innoperative, start works even when it is "off"
+
+- Gear light indicator too weak (gear maneuvering red light too bright at night)
+- Ground effect missing?
+- Storm light comes out nowhere/illuminates outside, but not visible when looking from outside view
+- Differential brake not working
 
 ## Version 0.1.8b - 04 April 2021 - Happy Easter
 
@@ -363,7 +436,7 @@ Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing f
 - Throttle and Stick are inconsistent with the real ones;
 
 ### Contributors
-- Renault, Milaré, PaKo, Malamem, Athos, Dino, Jorge Rodrigues, Paoladelf, Farias, Skypork, EDAV, Rudel_chw, and many others.
+- Renault, Milaré, PaKo, Malamem, Athos, Dino, Jorge Rodrigues, Paoladelf, Farias, Skypork, CubeBoy, Rudel_chw, EDAV, Urbi, and many others.
 
 
 ### Changed

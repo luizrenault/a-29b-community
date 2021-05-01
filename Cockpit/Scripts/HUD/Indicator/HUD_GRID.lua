@@ -800,15 +800,23 @@ object.controllers = {{"text_using_parameter", 0, 0}, {"opacity_using_parameter"
 
 -- FTY distance indicator
 object = addStrokeText("HUD_FTI_Dist", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"%02.1f>","%02.0f"})
-object.element_params = {"CMFD_NAV_FYT_OAP_DIST", "CMFD_NAV_FYT", "HUD_BRIGHT"}
-object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0,-0.05, 99.94}, {"opacity_using_parameter", 2}}
+object.element_params = {"CMFD_NAV_FYT_DTK_DIST", "CMFD_NAV_FYT", "HUD_BRIGHT", "ADHSI_DTK"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0,-0.05, 99.94}, {"opacity_using_parameter", 2}, {"parameter_compare_with_number", 3,0}}
 
 object = addStrokeText("HUD_FTI_Dist_100", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"%3.0f>","%02.0f"})
-object.element_params = {"CMFD_NAV_FYT_OAP_DIST", "CMFD_NAV_FYT", "HUD_BRIGHT"}
-object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0, 99.95, 999.5}, {"opacity_using_parameter", 2}}
+object.element_params = {"CMFD_NAV_FYT_DTK_DIST", "CMFD_NAV_FYT", "HUD_BRIGHT", "ADHSI_DTK"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0, 99.95, 999.5}, {"opacity_using_parameter", 2}, {"parameter_compare_with_number", 3,0}}
+
+object = addStrokeText("HUD_DTK_Dist", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"%02.1f>D","%02.0f"})
+object.element_params = {"CMFD_NAV_FYT_DTK_DIST", "CMFD_NAV_FYT", "HUD_BRIGHT", "ADHSI_DTK"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0,-0.05, 99.94}, {"opacity_using_parameter", 2}, {"parameter_compare_with_number", 3, 1}}
+
+object = addStrokeText("HUD_DTK_Dist_100", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"%3.0f>","%02.0f"})
+object.element_params = {"CMFD_NAV_FYT_DTK_DIST", "CMFD_NAV_FYT", "HUD_BRIGHT", "ADHSI_DTK"}
+object.controllers = {{"text_using_parameter", 0, 0}, {"text_using_parameter", 1, 1}, {"parameter_in_range",0, 99.95, 999.5}, {"opacity_using_parameter", 2}, {"parameter_compare_with_number", 3, 1}}
 
 object = addStrokeText("HUD_FTI_Dist_XXX", "22.3>08", STROKE_FNT_DFLT_120, "CenterCenter", {80, -99}, nil, nil, {"XXX>%02.0f"})
-object.element_params = {"CMFD_NAV_FYT_OAP_DIST", "CMFD_NAV_FYT", "HUD_BRIGHT"}
+object.element_params = {"CMFD_NAV_FYT_DTK_DIST", "CMFD_NAV_FYT", "HUD_BRIGHT"}
 object.controllers = {{"text_using_parameter", 1, 0}, {"parameter_compare_with_number",0,-1}, {"opacity_using_parameter", 2}}
 
 -- VOR
@@ -840,7 +848,7 @@ object = addStrokeText("HUD_EGIR_OFF", "OFF", STROKE_FNT_DFLT_120, "RightCenter"
 object.element_params = {"HUD_EGIR", "HUD_BRIGHT"}
 object.controllers = {{"parameter_compare_with_number", 0, 0}, {"opacity_using_parameter", 1}}
 
-object = addStrokeText("HUD_EGIR_ALIGN", "ALIGN", STROKE_FNT_DFLT_120, "RightCenter", {-65, -93})
+object = addStrokeText("HUD_EGIR_ALIGN", "ALGN", STROKE_FNT_DFLT_120, "RightCenter", {-65, -93})
 object.element_params = {"HUD_EGIR", "HUD_BRIGHT"}
 object.controllers = {{"parameter_compare_with_number", 0, 1}, {"opacity_using_parameter", 1}}
 

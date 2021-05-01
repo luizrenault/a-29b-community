@@ -1,0 +1,28 @@
+wave = {
+    "Effects/Aircrafts/A-29B/click1.wav",
+    "Effects/Aircrafts/A-29B/click2.wav",
+    "Effects/Aircrafts/A-29B/click3.wav",
+    "Effects/Aircrafts/A-29B/click4.wav",
+    "Effects/Aircrafts/A-29B/click5.wav",
+    "Effects/Aircrafts/A-29B/click6.wav",
+    "Effects/Aircrafts/A-29B/click7.wav",
+    "Effects/Aircrafts/A-29B/click8.wav",
+    "Effects/Aircrafts/A-29B/click9.wav",
+    "Effects/Aircrafts/A-29B/click10.wav",
+    "Effects/Aircrafts/A-29B/click11.wav",
+    "Effects/Aircrafts/A-29B/click12.wav",
+    "Effects/Aircrafts/A-29B/click13.wav",
+    "Effects/Aircrafts/A-29B/click14.wav",
+    "Effects/Aircrafts/A-29B/click15.wav",
+    "Effects/Aircrafts/A-29B/click16.wav",
+    "Effects/Aircrafts/A-29B/click17.wav"
+    }
+
+inner_radius = 1
+outer_radius = 4
+
+position = {-0.5,-0.2,0.5}
+
+detached = true
+
+listmode = RANDOM

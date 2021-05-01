@@ -45,7 +45,7 @@ function update_main()
     if ans_mode == AVIONICS_ANS_MODE_IDS.GPS then
         text = text .. "XX"
     else
-        text = text .. string.format("%02.0f", CMFD_NAV_FYT:get())
+        text = text .. string.format("%-2d", CMFD_NAV_FYT:get())
     end
     if ufcp_main_sel == SEL_IDS.FYT then text = text .. "^" else text = text .. " " end 
     text = text .. " "
@@ -55,30 +55,37 @@ function update_main()
     text = text .. "\n"
 
     -- Line 2
-    text = text .. "COM1"
-    if ufcp_main_sel == SEL_IDS.COM1 then text = text .. "^" else text = text .. " " end 
+    text = text .. "COM1 "
     if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-        text = text .. string.format("%02.0f [%07.3f]     ", ufcp_com1_channel, ufcp_com1_frequency)
+        text = text .. string.format("%-2d", ufcp_com1_channel)
+        if ufcp_main_sel == SEL_IDS.COM1 then text = text .. "^" else text = text .. " " end 
+        text = text .. string.format("[%07.3f]     ", ufcp_com1_frequency)
     else
-        text = text .. string.format("%07.3f          ", ufcp_com1_frequency)
+        text = text .. string.format("%07.3f", ufcp_com1_frequency)
+        if ufcp_main_sel == SEL_IDS.COM1 then text = text .. "^" else text = text .. " " end 
+        text = text .. "         "
     end
     text = text .. "\n"
 
     -- Line 3
-    text = text .. "COM2"
-    if ufcp_main_sel == SEL_IDS.COM2 then text = text .. "^" else text = text .. " " end 
+    text = text .. "COM2 "
+    
     if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-        text = text .. string.format("%02.0f [%07.3f]  ", ufcp_com2_channel, ufcp_com2_frequency)
+        text = text .. string.format("%-2d", ufcp_com2_channel)
+        if ufcp_main_sel == SEL_IDS.COM2 then text = text .. "^" else text = text .. " " end 
+        text = text .. string.format("[%07.3f]  ", ufcp_com2_frequency)
     else
-        text = text .. string.format("%07.3f       ", ufcp_com2_frequency)
+        text = text .. string.format("%07.3f", ufcp_com2_frequency)
+        if ufcp_main_sel == SEL_IDS.COM2 then text = text .. "^" else text = text .. " " end 
+        text = text .. "      "
     end
     if ufcp_com2_sync then text = text .. "SOK" else text = text .. "   " end
     text = text .. "\n"
 
     -- Line 4
     text = text .. TIME_TYPE_IDS[ufcp_main_time_type]
-    if ufcp_main_sel == SEL_IDS.TIME then text = text .. "^" else text = text .. " " end 
     if ufcp_main_time_type == TIME_TYPE_IDS.LC then
+        text = text .. " "
         local time = get_absolute_model_time()
         local time_secs = math.floor(time % 60)
         local time_mins = math.floor((time / 60) % 60)
@@ -90,16 +97,16 @@ function update_main()
             time_hours =  99
         end
     
-        text = text .. string.format(" %02.0f:%02.0f:%02.0f       ", time_hours, time_mins, time_secs)
+        text = text .. string.format("%02.0f:%02.0f:%02.0f", time_hours, time_mins, time_secs)
     elseif ufcp_main_time_type == TIME_TYPE_IDS.RT then
         if ufcp_time_run > 0 then text = text .. " " end
         text = text .. seconds_to_string(ufcp_time_run)
-        text = text .. "       "
     else
         text = text .. " "
         text = text .. seconds_to_string(ufcp_main_stopwatch)
-        text = text .. "       "
     end
+    if ufcp_main_sel == SEL_IDS.TIME then text = text .. "^" else text = text .. " " end 
+    text = text .. "       "
 
     if ufcp_com2_por then text = text .. "POR" else text = text .. "   " end
     text = text .. "\n"
@@ -144,6 +151,7 @@ function SetCommandMain(command,value)
         fix()
         ufcp_sel_format = UFCP_FORMAT_IDS.FIX
     elseif command == device_commands.UFCP_9 and value == 1 then
+        ufcp_tip_reset_cursor_timer()
         ufcp_sel_format = UFCP_FORMAT_IDS.TIP
     elseif command == device_commands.UFCP_JOY_RIGHT and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.MENU

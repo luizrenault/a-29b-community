@@ -92,6 +92,7 @@ Keys =
     TDCX        	     = __custom_counter(),
     TDCY        	     = __custom_counter(),
     AirBrake           = __custom_counter(),
+    Cutoff            = __custom_counter(),
 }
 
 start_command   = 3000
@@ -117,7 +118,6 @@ device_commands =
     gunpod_r                        = __counter(),
     gunpod_chargeclear              = __counter(),
 	push_starter_switch             = __counter(),
-	throttle                        = __counter(),
     flaps                           = __counter(),
 	spoiler_cover                   = __counter(),
 	spoiler_arm                     = __counter(),
@@ -521,6 +521,7 @@ device_commands =
     STICK_PADDLE                    = __counter(),
     NAV_INC_FYT                    = __counter(),
     NAV_DEC_FYT                    = __counter(),
+    NAV_SET_FYT                    = __counter(),
     
     
     AUDIO_COM1_VOL                    = __counter(),
@@ -550,5 +551,8 @@ device_commands =
 
     STICK_WEAPON_RELEASE_OFF                = __counter(),
     WPN_AG_LAUNCH_OP_STEP                    = __counter(),
+	
+    ThrottleAxis                        = __counter(),
+    ThrottleClick                        = __counter(),
 
 }

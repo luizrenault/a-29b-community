@@ -59,6 +59,7 @@ local HUD = {
     SL_AZIMUTH = get_param_handle("HUD_SL_AZIMUTH"),
     SI_ELEVATION = get_param_handle("HUD_SI_ELEVATION"),
     SI_HIDE = get_param_handle("HUD_SI_HIDE"),
+    EGIR = get_param_handle("HUD_EGIR")
 }
 local WPN = {
     TD_AZIMUTH = get_param_handle("WPN_TD_AZIMUTH"),
@@ -125,12 +126,12 @@ local WS_GUN_PIPER_AZIMUTH = get_param_handle("WS_GUN_PIPER_AZIMUTH")
 local WS_GUN_PIPER_ELEVATION = get_param_handle("WS_GUN_PIPER_ELEVATION")
 -- local WS_GUN_PIPER_SPAN = get_param_handle("WS_GUN_PIPER_SPAN")
 local WS_TARGET_RANGE = get_param_handle("WS_TARGET_RANGE")
-local CMFD_NAV_FYT_OAP_BRG = get_param_handle("CMFD_NAV_FYT_OAP_BRG")
-local CMFD_NAV_FYT_OAP_AZIMUTH = get_param_handle("CMFD_NAV_FYT_OAP_AZIMUTH")
-local CMFD_NAV_FYT_OAP_ELEVATION = get_param_handle("CMFD_NAV_FYT_OAP_ELEVATION")
-local CMFD_NAV_FYT_OAP_STT = get_param_handle("CMFD_NAV_FYT_OAP_STT")
-local CMFD_NAV_FYT_OAP_TTD = get_param_handle("CMFD_NAV_FYT_OAP_TTD")
-local CMFD_NAV_FYT_OAP_DT = get_param_handle("CMFD_NAV_FYT_OAP_DT")
+local CMFD_NAV_FYT_DTK_BRG = get_param_handle("CMFD_NAV_FYT_DTK_BRG")
+local CMFD_NAV_FYT_DTK_AZIMUTH = get_param_handle("CMFD_NAV_FYT_DTK_AZIMUTH")
+local CMFD_NAV_FYT_DTK_ELEVATION = get_param_handle("CMFD_NAV_FYT_DTK_ELEVATION")
+local CMFD_NAV_FYT_DTK_STT = get_param_handle("CMFD_NAV_FYT_DTK_STT")
+local CMFD_NAV_FYT_DTK_TTD = get_param_handle("CMFD_NAV_FYT_DTK_TTD")
+local CMFD_NAV_FYT_DTK_DT = get_param_handle("CMFD_NAV_FYT_DTK_DT")
 
 local function limit_xy(x, y, limit_x, limit_y, limit_x_down, limit_y_down) 
     limit_x_down = limit_x_down or -limit_x
@@ -166,8 +167,13 @@ local function update_piper_ccip()
     local slide = HUD_FPM_SLIDE:get()
     local vert = HUD_FPM_VERT:get()
 
-    local az, el, limited
-    az, el, limited = limit_xy(WPN_CCIP_PIPER_AZIMUTH:get() + slide, WPN_CCIP_PIPER_ELEVATION:get(), hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
+    local az = WPN_CCIP_PIPER_AZIMUTH:get() 
+    local el = WPN_CCIP_PIPER_ELEVATION:get()
+    local limited
+
+    if WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then az = az + slide end
+
+    az, el, limited = limit_xy(az, el, hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
 
     HUD_CCIP_PIPER_AZIMUTH:set(az)
     HUD_CCIP_PIPER_ELEVATION:set(el)
@@ -323,7 +329,7 @@ local function update_td()
     local td_elevation = WPN.TD_ELEVATION:get()
     local td_angle = atan(td_elevation - math.rad(1.2), td_azimuth)
     
-    local hud_fyt_azimuth, hud_fyt_elevation, hud_fyt_os, hud_fyt_lim_x, hud_fyt_lim_y = limit_xy(CMFD_NAV_FYT_OAP_AZIMUTH:get(), CMFD_NAV_FYT_OAP_ELEVATION:get(), hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
+    local hud_fyt_azimuth, hud_fyt_elevation, hud_fyt_os, hud_fyt_lim_x, hud_fyt_lim_y = limit_xy(CMFD_NAV_FYT_DTK_AZIMUTH:get(), CMFD_NAV_FYT_DTK_ELEVATION:get(), hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
     HUD.FYT_AZIMUTH:set(hud_fyt_azimuth)
     HUD.FYT_ELEVATION:set(hud_fyt_elevation)
     HUD.FYT_OS:set(hud_fyt_os)
@@ -392,11 +398,22 @@ UFCP_VAH:set(0)
 
 local max_accel = 0
 
-local hud_warn_period = 0.1
-local hud_warn_elapsed = 0
 local hud_warning = get_param_handle("HUD_WARNING")
 
+local time_elapsed = 0
+local function blinking(period, duty_cycle, offset)
+    period = period or 0.5
+    duty_cycle = duty_cycle or 0.5
+    offset = offset or 0
+
+    local period_elapsed = ((time_elapsed + offset) % period) / period
+    if period_elapsed > duty_cycle then return false
+    else return true end
+end
+
 function update()
+    time_elapsed = (time_elapsed + update_time_step) % 3600
+
     local master_mode = get_avionics_master_mode()
     local hud_on = get_elec_avionics_ok() and 1 or 0
     local hud_bright = 1-get_cockpit_draw_argument_value(483)
@@ -409,27 +426,13 @@ function update()
     update_fpm()
     update_td()
 
-    local hud_warn = get_hud_warning()
-    hud_warn_elapsed = hud_warn_elapsed + update_time_step
-    if hud_warn == 1 then
-        if hud_warn_elapsed > 2* hud_warn_period then
-            hud_warning:set(1)
-        elseif hud_warn_elapsed > hud_warn_period then 
-            hud_warning:set(0)
-        end
-    else 
-        hud_warning:set(0)
-    end
-    if hud_warn_elapsed > 2* hud_warn_period then
-        hud_warn_elapsed = 0
-    end
-    
-    
+    hud_warning:set((get_hud_warning() == 1 and blinking(0.2, 0.5)) and 1 or 0)
+
     local pitch = sensor_data.getPitch()
     local roll = sensor_data.getRoll()
     local hdg = get_avionics_hdg()
 
-    local hdg_des = CMFD_NAV_FYT_OAP_BRG:get()
+    local hdg_des = CMFD_NAV_FYT_DTK_BRG:get()
 
     if get_avionics_master_mode_aa() then hdg_des = -1 end
     local hdg_dif = (hdg_des - hdg)
@@ -527,7 +530,7 @@ function update()
 
     local ias_des = -1
     local nav_time = UFCP_NAV_TIME:get()
-    if nav_time == UFCP_NAV_TIME_IDS.DT or nav_time == UFCP_NAV_TIME_IDS.ETA then ias_des = CMFD_NAV_FYT_OAP_STT:get() end
+    if nav_time == UFCP_NAV_TIME_IDS.DT or nav_time == UFCP_NAV_TIME_IDS.ETA then ias_des = CMFD_NAV_FYT_DTK_STT:get() end
     if ias_des > 990 then ias_des = 990 end
 
     if master_mode == AVIONICS_MASTER_MODE_ID.LANDING then ias_des = -1 end
@@ -560,8 +563,8 @@ function update()
 
     local radar_alt = get_avionics_ralt()
     local time_text = ""
-    local ttd = CMFD_NAV_FYT_OAP_TTD:get()
-    local dt = CMFD_NAV_FYT_OAP_DT:get()
+    local ttd = CMFD_NAV_FYT_DTK_TTD:get()
+    local dt = CMFD_NAV_FYT_DTK_DT:get()
 
     local ccrp_time = WPN.CCRP_TIME:get()
     if  master_mode == AVIONICS_MASTER_MODE_ID.CCRP then 
@@ -598,6 +601,14 @@ function update()
     if aoa > 40 then aoa = 40 end
     local aoa_delta = aoa - 4.5
     
+    local egi_state = UFCP_EGI.EGI_STATE:get()
+    if egi_state == UFCP_EGI_STATE_IDS.OFF then HUD.EGIR:set(0)
+    elseif egi_state == UFCP_EGI_STATE_IDS.ALIGNING then HUD.EGIR:set(-1)
+    elseif egi_state == UFCP_EGI_STATE_IDS.ALIGNED_COARSE then HUD.EGIR:set(1)
+    elseif egi_state == UFCP_EGI_STATE_IDS.ALIGNED then HUD.EGIR:set(blinking() and 1 or -1)
+    elseif egi_state == UFCP_EGI_STATE_IDS.NAV or egi_state == UFCP_EGI_STATE_IDS.NAV_COARSE then HUD.EGIR:set(-1)
+    end
+
     HUD_PITCH:set(pitch - pl_slide*math.sin(roll))
     HUD_ROLL:set(roll)
     HUD_HDG:set(hdg)

@@ -86,6 +86,8 @@ local function clear()
 end
 
 function update_mark()
+    ufcp_nav_only()
+    
     local lat = nil
     local lon = nil
     local elev = nil
@@ -148,10 +150,16 @@ function update_mark()
     end
     text = text .. " FT     "
 
+    if ufcp_mark_designated then
+       text = blink_text(text,33,3)
+       text = blink_text(text,51,3)
+    end
+
     UFCP_TEXT:set(text)
 end
 
 function SetCommandMark(command,value)
+    -- TODO pressing Designate on the Joystick should have the same effect as pressing UFCP_7 (MARK)
     if command == device_commands.UFCP_JOY_RIGHT and value == 1 then
         ufcp_mark_mode = (ufcp_mark_mode+1) % 3
         clear()
@@ -160,8 +168,14 @@ function SetCommandMark(command,value)
             save()
         else
             mark()
+            save()
         end
     elseif command == device_commands.UFCP_CLR and value == 1 then
         clear()
+    elseif (command == device_commands.UFCP_7 and value == 1)
+    -- or (elseif command == device_commands.DESIGNATE and value == 1)
+    then
+        ufcp_mark_mode = UFCP_MARK_MODE_IDS.ONTOP
+        mark()
     end
 end

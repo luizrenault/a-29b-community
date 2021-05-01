@@ -1,10 +1,17 @@
-dofile(LockOn_Options.common_script_path.."mission_prepare.lua")
+-- dofile(LockOn_Options.common_script_path.."mission_prepare.lua")
 
 -- dofile ("scripts/Database/db_scan.lua")
 
 dofile(LockOn_Options.script_path.."dump.lua")
--- dump("_G",_G)
--- dump("_G",getmetatable(_G))
+package.cpath 			= package.cpath..";".. LockOn_Options.script_path.. "..\\..\\bin\\?.dll"
+local avwr = require('avWorkingRadio')   -- loads the DLL
+
+dump("_G",_G)
+dump("_G",getmetatable(_G))
+
+
+dump("list_indication",getmetatable(list_indication()))
+
 
 dofile(LockOn_Options.common_script_path.."devices_defs.lua")
 dofile(LockOn_Options.script_path.."devices.lua")
@@ -18,9 +25,13 @@ startup_print("test: load")
 
 local dev = GetSelf()
 
-log.alert("----------------------------------")
-dump1("dev",dev)
-dump1("_dev", getmetatable(dev))
+
+
+-- dump1("avwr", avwr)
+
+-- log.alert("----------------------------------")
+-- dump1("dev",dev)
+-- dump1("_dev", getmetatable(dev))
 
 local update_time_step = 0.02 --update will be called 50 times per second
 if make_default_activity ~= nil then make_default_activity(update_time_step) end
@@ -100,13 +111,13 @@ local iPlaneAirBrakeOff = 148
 
 for i=1, 50000 do
     if i== 1032 or i == 1033 or i == 1034 then
+    elseif i==74 or i==75 then
     elseif i== 2001 or i == 1033 or i == 2002 or i == 350 then
     elseif i== 93 or i == 94 or i == 95 or i == 96 or i == 98 or i == 99 or i == 215 then --trim
     elseif i ~= 2142 and i~= 2143 and (i < 193 or i> 204)  then 
         dev:listen_command(i)
     end
 end
-dev:listen_command(74)
 function SetCommand(command,value)
     print_message_to_user("test: command "..tostring(command).." = "..tostring(value))
     if command == 74 then 
@@ -123,12 +134,12 @@ function SetCommand(command,value)
         --     -- print_message_to_user(text)
         --     log.info(text)
         -- end
-        print_message_to_user("Dumped!")
-        local text = dump("Params\n", list_cockpit_params())
-        text = strsplit("\n", text)
-        for key, value in pairs(text) do
-            log.info(value)
-        end
+        -- print_message_to_user("Dumped!")
+        -- local text = dump("Params\n", list_cockpit_params())
+        -- text = strsplit("\n", text)
+        -- for key, value in pairs(text) do
+        --     log.info(value)
+        -- end
         -- dispatch_action(nil,iPlaneAirBrakeOn)
     end
 end
@@ -1160,3 +1171,16 @@ avWeap_ReleaseTimer_Activity
 -- getWOW_LeftMainLandingGear
 -- getWOW_NoseLandingGear
 -- getWOW_RightMainLandingGear
+
+
+
+
+-- _G["Factory"] = {}
+-- _G["Factory"]["createClass"] = function: 000001BF4D80B4A0
+-- _G["Factory"]["clone"] = function: 000001BF4D80AF60
+-- _G["Factory"]["_NAME"] = "Factory"
+-- _G["Factory"]["_PACKAGE"] = ""
+-- _G["Factory"]["registerWidget"] = function: 000001BF4D80ADE0
+-- _G["Factory"]["_M"] = ->_G["Factory"]
+-- _G["Factory"]["create"] = function: 000001BF4D80B260
+-- _G["Factory"]["setBaseClass"] = function: 000001BF4D80B5F0
