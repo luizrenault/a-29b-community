@@ -1,6 +1,7 @@
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
+dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 
 startup_print("brakes: load")
 
