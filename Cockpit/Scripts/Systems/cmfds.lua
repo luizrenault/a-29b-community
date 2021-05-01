@@ -230,7 +230,7 @@ function SetCommandMenu1(command,value, CMFD)
         elseif command==device_commands.CMFD1OSS7 or command==device_commands.CMFD2OSS7 then selected=SUB_PAGE_ID.DTE
         elseif command==device_commands.CMFD1OSS8 or command==device_commands.CMFD2OSS8 then selected=SUB_PAGE_ID.FLIR
         elseif command==device_commands.CMFD1OSS9 or command==device_commands.CMFD2OSS9 then selected=SUB_PAGE_ID.DVR
-        elseif command==device_commands.CMFD1OSS10 or command==device_commands.CMFD2OSS10 then selected=SUB_PAGE_ID.EMERG
+        elseif command==device_commands.CMFD1OSS10 or command==device_commands.CMFD2OSS10 then selected=SUB_PAGE_ID.CHECKLIST
         elseif command==device_commands.CMFD1OSS11 or command==device_commands.CMFD2OSS11 then selected=SUB_PAGE_ID.PFL
         elseif command==device_commands.CMFD1OSS12 or command==device_commands.CMFD2OSS12 then selected=SUB_PAGE_ID.BIT
         elseif command==device_commands.CMFD1OSS13 or command==device_commands.CMFD2OSS13 then selected=SUB_PAGE_ID.NAV
