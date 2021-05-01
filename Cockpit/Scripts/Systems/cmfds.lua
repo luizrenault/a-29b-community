@@ -19,12 +19,24 @@ make_default_activity(update_time_step)
 
 sensor_data = get_base_data()
 
-dofile(LockOn_Options.script_path.."Systems/cmfd_sms.lua")
-dofile(LockOn_Options.script_path.."Systems/cmfd_adhsi.lua")
-dofile(LockOn_Options.script_path.."Systems/cmfd_eicas.lua")
-dofile(LockOn_Options.script_path.."Systems/cmfd_nav.lua")
+dofile(LockOn_Options.script_path.."Systems/CMFD/menu1.lua")
+dofile(LockOn_Options.script_path.."Systems/CMFD/menu2.lua")
 
+dofile(LockOn_Options.script_path.."Systems/CMFD/dte.lua")
+dofile(LockOn_Options.script_path.."Systems/CMFD/flir.lua")
+dofile(LockOn_Options.script_path.."Systems/CMFD/dvr.lua")
+dofile(LockOn_Options.script_path.."Systems/CMFD/checklist.lua")
+dofile(LockOn_Options.script_path.."Systems/CMFD/pfl.lua")
+dofile(LockOn_Options.script_path.."Systems/CMFD/bit.lua")
+dofile(LockOn_Options.script_path.."Systems/CMFD/nav.lua")
 
+dofile(LockOn_Options.script_path.."Systems/CMFD/hsd.lua")
+dofile(LockOn_Options.script_path.."Systems/CMFD/hud.lua")
+dofile(LockOn_Options.script_path.."Systems/CMFD/sms.lua")
+dofile(LockOn_Options.script_path.."Systems/CMFD/ew.lua")
+dofile(LockOn_Options.script_path.."Systems/CMFD/adhsi.lua")
+dofile(LockOn_Options.script_path.."Systems/CMFD/ufcp.lua")
+dofile(LockOn_Options.script_path.."Systems/CMFD/eicas.lua")
 
 dev:listen_command(device_commands.CMFD2OSS1)
 dev:listen_command(device_commands.CMFD2OSS2)
@@ -172,10 +184,25 @@ function update()
     CMFD1On:set(get_elec_avionics_ok() and 1 or 0)
     CMFD2On:set(get_elec_emergency_ok() and 1 or 0)
 
-    update_eicas()
-    update_adhsi()
-    update_sms()
+    update_menu1()
+    update_menu2()
+
+    update_dte()
+    update_flir()
+    update_dvr()
+    update_checklist()
+    update_pfl()
+    update_bit()
     update_nav()
+
+    update_hsd()
+    update_hud()
+    update_sms()
+    update_ew()
+    update_adhsi()
+    update_ufcp()
+    update_eicas()
+   
 
     CMFD1_BRIGHT:set(cmfd_bright[1])
     CMFD2_BRIGHT:set(cmfd_bright[2])
@@ -205,82 +232,28 @@ function post_initialize()
     end
     dev:performClickableAction(device_commands.CMFD1ButtonOn,1)
     dev:performClickableAction(device_commands.CMFD2ButtonOn,1)
-    post_initialize_sms()
-    post_initialize_eicas()
+
+    post_initialize_menu1()
+    post_initialize_menu2()
+
+    post_initialize_dte()
+    post_initialize_flir()
+    post_initialize_dvr()
+    post_initialize_checklist()
+    post_initialize_pfl()
+    post_initialize_bit()
     post_initialize_nav()
+
+    post_initialize_hsd()
+    post_initialize_hud()
+    post_initialize_sms()
+    post_initialize_ew()
+    post_initialize_adhsi()
+    post_initialize_ufcp()
+    post_initialize_eicas()
+    
     startup_print("environ: postinit end")
 end
-
-
-
--- HSD, SMS, UFCP, DVR, EW, ADHSI, EICAS, FLIR, EMERG, PFL, BIT, HUD, DTE e NAV
-
-function SetCommandMenu1(command,value, CMFD)
-    if value == 1 then 
-        local selected=-1
-        if command==device_commands.CMFD1OSS1 or command==device_commands.CMFD2OSS1 then CMFD["Format"]:set(SUB_PAGE_ID.MENU2)
-        elseif command == device_commands.CMFD1OSS2 or command == device_commands.CMFD2OSS2 then
-            -- Função: Restaurar a configuração padrão do sistema para os formatos Primário e Secundário e para o DOI de cada modo principal.
-        elseif command == device_commands.CMFD1OSS4 or command == device_commands.CMFD2OSS4 then
-            -- Função: Restaurar os valores padrão do brilho da simbologia e do contraste das imagens de vídeo.
-            -- Esta função é usada para se fazer uma recuperação rápida de ajustes errôneos de contraste ou brilho.
-        elseif command==device_commands.CMFD1OSS3 or command==device_commands.CMFD2OSS3 then selected=SUB_PAGE_ID.BLANK
-        elseif command==device_commands.CMFD1OSS5 or command==device_commands.CMFD2OSS5 then selected=SUB_PAGE_ID.BLANK
-        elseif command==device_commands.CMFD1OSS6 or command==device_commands.CMFD2OSS6 then selected=SUB_PAGE_ID.BLANK
-        elseif command==device_commands.CMFD1OSS7 or command==device_commands.CMFD2OSS7 then selected=SUB_PAGE_ID.DTE
-        elseif command==device_commands.CMFD1OSS8 or command==device_commands.CMFD2OSS8 then selected=SUB_PAGE_ID.FLIR
-        elseif command==device_commands.CMFD1OSS9 or command==device_commands.CMFD2OSS9 then selected=SUB_PAGE_ID.DVR
-        elseif command==device_commands.CMFD1OSS10 or command==device_commands.CMFD2OSS10 then selected=SUB_PAGE_ID.CHECKLIST
-        elseif command==device_commands.CMFD1OSS11 or command==device_commands.CMFD2OSS11 then selected=SUB_PAGE_ID.PFL
-        elseif command==device_commands.CMFD1OSS12 or command==device_commands.CMFD2OSS12 then selected=SUB_PAGE_ID.BIT
-        elseif command==device_commands.CMFD1OSS13 or command==device_commands.CMFD2OSS13 then selected=SUB_PAGE_ID.NAV
-        elseif command==device_commands.CMFD1OSS14 or command==device_commands.CMFD2OSS14 then selected=SUB_PAGE_ID.BLANK
-        elseif command==device_commands.CMFD1OSS21 or command==device_commands.CMFD2OSS21 then selected=SUB_PAGE_ID.BLANK
-        elseif command==device_commands.CMFD1OSS22 or command==device_commands.CMFD2OSS22 then selected=SUB_PAGE_ID.EICAS
-        elseif command==device_commands.CMFD1OSS23 or command==device_commands.CMFD2OSS23 then selected=SUB_PAGE_ID.UFCP
-        elseif command==device_commands.CMFD1OSS24 or command==device_commands.CMFD2OSS24 then selected=SUB_PAGE_ID.ADHSI
-        elseif command==device_commands.CMFD1OSS25 or command==device_commands.CMFD2OSS25 then selected=SUB_PAGE_ID.EW
-        elseif command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26 then selected=SUB_PAGE_ID.SMS
-        elseif command==device_commands.CMFD1OSS27 or command==device_commands.CMFD2OSS27 then selected=SUB_PAGE_ID.HUD
-        elseif command==device_commands.CMFD1OSS28 or command==device_commands.CMFD2OSS28 then selected=SUB_PAGE_ID.HSD
-        end
-
-        if selected > 0 then
-            CMFD["Format"]:set(selected)
-            CMFD["Sel"]:set(selected)
-            if CMFD["Primary"]:get()==1 then
-                CMFD["SelRight"]:set(selected)
-                CMFD["SelRightName"]:set(SUB_PAGE_NAME[selected])
-                -- if CMFD["SelLeft"]:get() == selected then
-                --     CMFD["SelLeft"]:set(SUB_PAGE_ID.BLANK)
-                --     CMFD["SelLeftName"]:set(SUB_PAGE_NAME[SUB_PAGE_ID.BLANK])
-                -- end
-            else 
-                CMFD["SelLeft"]:set(selected)
-                CMFD["SelLeftName"]:set(SUB_PAGE_NAME[selected])
-                -- if CMFD["SelRight"]:get() == selected then
-                --     CMFD["SelRight"]:set(SUB_PAGE_ID.BLANK)
-                --     CMFD["SelRightName"]:set(SUB_PAGE_NAME[SUB_PAGE_ID.BLANK])
-                -- end
-            end
-        end
-    end
-end
-
-function SetCommandMenu2(command,value, CMFD)
-    if value == 1 then 
-        if command==device_commands.CMFD1OSS1 or command==device_commands.CMFD2OSS1 then CMFD["Format"]:set(SUB_PAGE_ID.MENU1)
-        elseif command == device_commands.CMFD2OSS2 then
-            -- Função: Restaurar a configuração padrão do sistema para os formatos Primário e Secundário e para o DOI de cada modo principal.
-        elseif command == device_commands.CMFD2OSS4 then
-            -- Função: Restaurar os valores padrão do brilho da simbologia e do contraste das imagens de vídeo.
-            -- Esta função é usada para se fazer uma recuperação rápida de ajustes errôneos de contraste ou brilho.
-        end
-    end
-end
-
-
-
 
 local CMFD = {{},{}}
 CMFD[1]["Number"]          = 1
@@ -366,10 +339,24 @@ function SetCommand(command,value)
 
     if CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.MENU1 then SetCommandMenu1(command,value, CMFD[cmfdnumber]) 
     elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.MENU2 then SetCommandMenu2(command,value, CMFD[cmfdnumber]) 
-    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.EICAS then SetCommandEicas(command,value, CMFD[cmfdnumber]) 
-    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.ADHSI then SetCommandAdhsi(command,value, CMFD[cmfdnumber]) 
+
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.DTE   then SetCommandDte(command,value, CMFD[cmfdnumber])
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.FLIR   then SetCommandFlir(command,value, CMFD[cmfdnumber])
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.DVR   then SetCommandDvr(command,value, CMFD[cmfdnumber])
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.CHECKLIST   then SetCommandChecklist(command,value, CMFD[cmfdnumber])
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.PFL   then SetCommandPfl(command,value, CMFD[cmfdnumber])
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.BIT   then SetCommandBit(command,value, CMFD[cmfdnumber])
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.NAV   then SetCommandNav(command,value, CMFD[cmfdnumber])
+
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.HSD then SetCommandHsd(command,value, CMFD[cmfdnumber]) 
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.HUD then SetCommandHud(command,value, CMFD[cmfdnumber])
     elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.SMS   then SetCommandSms(command,value, CMFD[cmfdnumber]) 
-    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.NAV   then SetCommandNav(command,value, CMFD[cmfdnumber]) 
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.EW then SetCommandEw(command,value, CMFD[cmfdnumber])
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.ADHSI then SetCommandAdhsi(command,value, CMFD[cmfdnumber])
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.UFCP then SetCommandUfcp(command,value, CMFD[cmfdnumber])
+    elseif CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.EICAS then SetCommandEicas(command,value, CMFD[cmfdnumber])  
+
+
     end
 
     if command == device_commands.CMFD1ButtonBright or command == device_commands.CMFD2ButtonBright then
