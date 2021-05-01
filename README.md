@@ -15,9 +15,6 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 [Livery Pack](https://mega.nz/file/UAxUmYAY#0PyL3pO6i5x2QTrBWEkE5LsqeKFW5IuSJG_Er42PAas)
 
-[SRS Script](https://1drv.ms/u/s!Arl6nHiJ8ZUai8te1MoMez1jnNUTZQ?e=CCLSVl)
-Copy to Saved Games\DCS\Mods\Services\DCS-SRS\Scripts and replace the existing file. Will be included in next SRS Update (thanks to ciribob).
-
 # Tutorial videos 
 
 (Pt-BR by [Lucas Orsi](https://www.youtube.com/user/lucaoorsi)) - English subtitles now available.
