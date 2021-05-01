@@ -24,14 +24,21 @@ local controllers = LoRegisterPanelControls()
 mirrors_data =
 {
     center_point 	= {0.493,0.092,0.00},
-    width 		 	= 0.8, --1.2,
-    aspect 		 	= 1.5,
-	rotation 	 	= math.rad(1);
+    width 		 	= 1.0, --1.2,
+    aspect 		 	= 1.0,
+	rotation 	 	= math.rad(-1);
 	animation_speed = 2.0;
 	near_clip 		= 0.1;
 	middle_clip		= 10;
 	far_clip		= 5000;
 }
+
+mirrors_draw                    = CreateGauge()
+mirrors_draw.arg_number         = 183
+mirrors_draw.input              = {0,1}
+mirrors_draw.output             = {0,1}
+mirrors_draw.controller         = controllers.mirrors_draw
+
 
 Canopy    							= CreateGauge()
 Canopy.arg_number 					= 26
