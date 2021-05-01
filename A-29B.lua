@@ -15,7 +15,6 @@ A_29B =  {
 	Picture 			= "A-29B.png",
 	Rate 				= 40, -- RewardPoint in Multiplayer
 	Shape 				= "A-29B",
-    -- propellorShapeType  = '3ARG',
 	propellorShapeType  = '3ARG_PROC_BLUR',
 	propellorShapeName  = 'a29b_blade.fbx',
 	debrisGeneration     = true,
@@ -529,7 +528,7 @@ A_29B =  {
 		aircraft_task(AntishipStrike),
 		aircraft_task(Intercept),
    	},	
-	DefaultTask = aircraft_task(Intercept),
+	DefaultTask = aircraft_task(CAS),
 
 
 

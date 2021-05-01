@@ -69,11 +69,11 @@ elements["PNT_922"] = default_3_position_tumb("Ignition (On/Auto/Off)",         
 elements["PNT_923"] = springloaded_3_pos_tumb("Start (Start/No Function/Interrupt",	    	    devices.ENGINE,	 device_commands.EngineStart,    923, true)
 elements["PNT_924"] = default_2_position_tumb("Innertial Separation (Open/Close)",              devices.ENGINE,  device_commands.EngineInnSep,   924,TOGGLECLICK_MID_FWD)
 -- FUEL / HYDRAULIC / BLEED SHUTOFF
-elements["PNT_871"] = default_3_position_tumb("Fuel/Hydraulic/Bleed Shutoff (Open/Close/Close)",devices.ENGINE,  device_commands.FuelHydBleed,   871,nil,true,TOGGLECLICK_MID_FWD)
+elements["PNT_871"] = default_3_position_tumb("Fuel/Hydraulic/Bleed Shutoff (Open/Close/Close)",devices.ENGINE,  device_commands.FuelHydBleed,   871,nil,false,TOGGLECLICK_MID_FWD)
 
 -- THROTTLE
 elements["PNT_911"] = springloaded_3_pos_tumb("Throttle",                                       devices.ENGINE,  device_commands.ThrottleClick,  911, true)
-elements["PNT_912"] = default_2_position_tumb("Flaps (Up/Down)",     		                    devices.FLAPS, 	 device_commands.flaps,          912,TOGGLECLICK_MID_FWD)
+elements["PNT_912"] = default_2_position_tumb("Flaps (Up/Down)",     		                    devices.FLAPS, 	 device_commands.flaps,          912,TOGGLECLICK_MID_FWD); elements["PNT_912"].arg_value = {1, -1}
 -- elements["PNT_913"] = default_movable_axis("Friction",                                          devices.EXTANIM, device_commands.Friction,       913, 0.0,0.1, true, false)
 
 -- TRIMS
@@ -133,7 +133,7 @@ elements["PNT_742"] = springloaded_3_pos_tumb("Manual Sync (CW/CCW)",           
 elements["PNT_743"] = default_3_position_tumb("Slave (Free/Slave/Fast Slave)",                  devices.EXTANIM, device_commands.PicNavSlave,   743,nil,true,TOGGLECLICK_MID_FWD)
 
 -- AUDIO
-elements["PNT_761"] = default_2_position_tumb("Audio Selector (Normal/Backup)",                 devices.EXTANIM, device_commands.AudioNormal,        761,TOGGLECLICK_MID_FWD)
+elements["PNT_761"] = default_2_position_tumb("Audio Selector (Normal/Backup)",                 devices.EXTANIM, device_commands.AudioNormal,        761,TOGGLECLICK_MID_FWD); elements["PNT_761"].arg_value = {1, -1}
 elements["PNT_762"] = default_movable_axis("COM 1 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM1_VOL,     762)
 elements["PNT_763"] = default_movable_axis("COM 2 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM2_VOL,     763)
 elements["PNT_764"] = default_movable_axis("COM 3 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM3_VOL,     764)
