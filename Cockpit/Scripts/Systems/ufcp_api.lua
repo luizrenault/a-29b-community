@@ -139,3 +139,7 @@ UFCP_EGI_STATE_IDS = {
     TEND = 13,
 
 }
+
+nav_fyt_list = {}
+nav_fyt = 1
+wpt_index = {}

@@ -105,19 +105,30 @@ object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
 object.controllers = {{"opacity_using_parameter", 0}}
 
 -- FYT Point
+
+--[[-- This is the FYT circle
 object = addMesh(nil, nil, nil, {0,0}, "triangles", HSI_FYT_Origin.name, nil, "CMFD_IND_MAGENTA")
 object = SetMeshCircle(object, 0.02, 10)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_FYT_DTK_DIST"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, -0.05, 1.299999}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FYT_DTK_DIST"}
+object.controllers = {{"opacity_using_parameter", 0}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}}
 
+-- This is the FYT text
 object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {0,0}, HSI_FYT_Origin.name, nil, {" %02.0f"}, CMFD_FONT_MAGENTA)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT", "CMFD_NAV_FYT_DTK_BRG", "AVIONICS_HDG", "ADHSI_FYT_DTK_DIST"}
-object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}, {"move_up_down_using_parameter", 4, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)}, }
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT", "CMFD_NAV_FYT_DTK_BRG", "AVIONICS_HDG", "CMFD_HSD_FYT_DTK_DIST"}
+object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}, {"move_up_down_using_parameter", 4, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)}, }]]
 
-object = addStrokeCircle(nil, 0.02, {0, 1.3 * HSI_radius}, HSI_FYT_Origin.name, nil, nil, 0.5, 0.5, true, "CMFD_IND_MAGENTA")
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_FYT_DTK_DIST"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, 1.299999, 10}}
-object.thickness = 0.05
+-- Waypoints
+for k=1,100 do
+    -- Circle
+    object = addMesh(nil, nil, nil, {0,0}, "triangles", HSI_Origin_Rot.name, nil, "CMFD_IND_MAGENTA")
+    object = SetMeshCircle(object, 0.02, 10)
+    object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_WP" .. k .. "_DIST", "CMFD_HSD_WP" .. k .. "_BRG"}
+    object.controllers = {{"opacity_using_parameter", 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"parameter_in_range",1,0.01,100}}
+
+    object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {0,0}, HSI_Origin_Rot.name, nil, {" %02.0f"}, CMFD_FONT_MAGENTA)
+    object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_WP" .. k .. "_DIST", "CMFD_HSD_WP" .. k .. "_BRG", "CMFD_HSD_WP" .. k .. "_ID", "AVIONICS_HDG"}
+    object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 3, 0}, {"parameter_in_range",1,0.01,100}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 4, -math.rad(1)}}
+end
 
 
 local mesh_poly
