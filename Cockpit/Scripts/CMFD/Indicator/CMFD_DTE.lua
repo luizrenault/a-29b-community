@@ -30,16 +30,44 @@ default_parent      = page_root.name
 
 local object
 
-local CMFD_UFCP_DED_origin = addPlaceholder(nil, {0,0}, page_root.name)
+local CMFD_DTE_origin = addPlaceholder(nil, {0,0}, page_root.name)
 
-object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0, 0.5}, CMFD_UFCP_DED_origin.name, nil, {"%s"})
+
+object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0, 0.5}, CMFD_DTE_origin.name, nil, {"%s"})
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_DTE_TEXT"}
-object.controllers = {
-                        {"opacity_using_parameter", 0},
-                        {"text_using_parameter", 1, 0},
-                    }
+object.controllers = {{"opacity_using_parameter", 0},{"text_using_parameter", 1, 0}}
 
 -- OSS Menus
+
+-- Stroke loaded groups
+object = addOSSStrokeBox(7,2)
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_DTE_SIM_INV_LOADED"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
+
+object = addOSSStrokeBox(11,1)
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_DTE_MSMD_LOADED"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
+
+object = addOSSStrokeBox(24,1)
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_DTE_HSD_LOADED"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
+
+object = addOSSStrokeBox(25,1)
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_DTE_INV_LOADED"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
+
+object = addOSSStrokeBox(26,1)
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_DTE_PROG_LOADED"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
+
+object = addOSSStrokeBox(27,1)
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_DTE_DB_LOADED"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
+
+object = addOSSStrokeBox(28,1)
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_DTE_MPD_LOADED"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
+
 local HW = 0.15
 local HH = 0.04 * H2W_SCALE
 
@@ -52,7 +80,7 @@ local osb_txt = {
     {value=" ",             init_pos={CMFD_FONT_UD6_X, H2W_SCALE},                      align="CenterTop",      formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
 
     {value="SIM\nINV",      init_pos={CMFD_FONT_R_HORI_X, ( 5.8*1.0/8) * H2W_SCALE},    align="RightCenter",    formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
-    {value=" ",             init_pos={CMFD_FONT_R_HORI_X, ( 4.1*1.0/8) * H2W_SCALE},    align="RightCenter",    formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
+    {value=" ",             init_pos={CMFD_FONT_R_HORI_X, ( 4.4*1.0/8) * H2W_SCALE},    align="RightCenter",    formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
     {value=" ",             init_pos={CMFD_FONT_R_HORI_X, ( 2.5*1.0/8) * H2W_SCALE},    align="RightCenter",    formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
     {value=" ",             init_pos={CMFD_FONT_R_HORI_X, ( 0.9*1.0/8) * H2W_SCALE},    align="RightCenter",    formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
     {value="MSMD",          init_pos={CMFD_FONT_R_HORI_X, (-1.2*1.0/8) * H2W_SCALE},    align="RightCenter",    formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
@@ -66,7 +94,7 @@ local osb_txt = {
     {value="HSD",           init_pos={CMFD_FONT_L_HORI_X, (-1.2*1.0/8) * H2W_SCALE},    align="LeftCenter",     formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
     {value="INV",           init_pos={CMFD_FONT_L_HORI_X, ( 0.9*1.0/8) * H2W_SCALE},    align="LeftCenter",     formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
     {value="PROG",          init_pos={CMFD_FONT_L_HORI_X, ( 2.5*1.0/8) * H2W_SCALE},    align="LeftCenter",     formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
-    {value="DB",            init_pos={CMFD_FONT_L_HORI_X, ( 4.1*1.0/8) * H2W_SCALE},    align="LeftCenter",     formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
+    {value="DB",            init_pos={CMFD_FONT_L_HORI_X, ( 4.4*1.0/8) * H2W_SCALE},    align="LeftCenter",     formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
     {value="MPD",           init_pos={CMFD_FONT_L_HORI_X, ( 5.8*1.0/8) * H2W_SCALE},    align="LeftCenter",     formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
 }
 

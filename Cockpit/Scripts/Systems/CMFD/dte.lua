@@ -1,6 +1,14 @@
 local DTE_TEXT = get_param_handle("CMFD_DTE_TEXT")
 local DTE_DVR_STATE = get_param_handle("CMFD_DTE_DVR_STATE")
 
+local DTE_MPD_LOADED = get_param_handle("CMFD_DTE_MPD_LOADED")
+local DTE_DB_LOADED = get_param_handle("CMFD_DTE_DB_LOADED")
+local DTE_PROG_LOADED = get_param_handle("CMFD_DTE_PROG_LOADED")
+local DTE_INV_LOADED = get_param_handle("CMFD_DTE_INV_LOADED")
+local DTE_HSD_LOADED = get_param_handle("CMFD_DTE_HSD_LOADED")
+local DTE_SIM_INV_LOADED = get_param_handle("CMFD_DTE_SIM_INV_LOADED")
+local DTE_MSMD_LOADED = get_param_handle("CMFD_DTE_MSMD_LOADED")
+
 local CMFD_DTE_DVR_STATE_IDS = {
     OFF = 0,
     DTE = 1,
@@ -15,6 +23,22 @@ local mission = ""
 local pilot = ""
 local copilot = ""
 local dtcid = ""
+
+local mpd_loaded = 0
+local db_loaded = 0
+local prog_loaded = 0
+local inv_loaded = 0
+local hsd_loaded = 0
+local sim_inv_loaded = 0
+local msmd_loaded = 0
+
+DTE_MPD_LOADED:set(mpd_loaded)
+DTE_DB_LOADED:set(db_loaded)
+DTE_PROG_LOADED:set(prog_loaded)
+DTE_INV_LOADED:set(inv_loaded)
+DTE_HSD_LOADED:set(hsd_loaded)
+DTE_SIM_INV_LOADED:set(sim_inv_loaded)
+DTE_MSMD_LOADED:set(msmd_loaded)
 
 local cmfd_dte_dvr_state = CMFD_DTE_DVR_STATE_IDS.DTE
 DTE_DVR_STATE:set(cmfd_dte_dvr_state)
@@ -40,6 +64,15 @@ function update_dte()
     text = text .. "COPILOT : " .. string.format("%-12s", copilot) .. "\n\n"
     text = text .. " DTC ID : " .. string.format("%-12s", dtcid)
 
+    DTE_MPD_LOADED:set(mpd_loaded)
+    DTE_DB_LOADED:set(db_loaded)
+    DTE_PROG_LOADED:set(prog_loaded)
+    DTE_INV_LOADED:set(inv_loaded)
+    DTE_HSD_LOADED:set(hsd_loaded)
+    DTE_SIM_INV_LOADED:set(sim_inv_loaded)
+    DTE_MSMD_LOADED:set(msmd_loaded)
+
+
     DTE_TEXT:set(text)
 end
 
@@ -58,6 +91,8 @@ local function load_mpd()
     -- TOD
     -- MAG DEC
     -- Weight
+
+    mpd_loaded = 1
 end
 
 local function load_db()
@@ -66,6 +101,8 @@ local function load_db()
     -- TDMA ID
     -- Formation names
     -- DL messages
+
+    db_loaded = 1
 end
 
 local function load_prog()
@@ -75,6 +112,8 @@ local function load_prog()
     -- Wingspan
     -- Range rate
     -- A/A GUN mode
+
+    prog_loaded = 1
 end
 
 local function load_inv()
@@ -83,22 +122,29 @@ local function load_inv()
     -- Machinegun amount
     -- Strafe limit
     -- Flir installation state
+
+    inv_loaded = 1
 end
 
 local function load_hsd()
     -- Contact line (5 points)
     -- Avoid areas (30)
 
+    hsd_loaded = 1
 end
 
 local function load_sim_inv()
     -- 5 stations (type and amount of weapons)
     -- Rack ID
     -- Machinegun amount
+
+    sim_inv_loaded = 1
 end
 
 local function load_msmd()
     -- Load all mastermodes and select current mastermode
+
+    msmd_loaded = 1
 end
 
 local function load_all()
