@@ -1,37 +1,50 @@
 dofile(LockOn_Options.script_path .. "CMFD/CMFD_defs.lua")
 dofile(LockOn_Options.script_path .. "CMFD/CMFD_pageID_defs.lua")
+dofile(LockOn_Options.script_path .. "Indicator/Indicator_defs.lua")
+dofile(LockOn_Options.script_path.."CMFD/CMFD_UFCP_ID_defs.lua")
+
+dofile(LockOn_Options.script_path.."utils.lua")
 
 local CMFDNumber=get_param_handle("CMFDNumber")
 local CMFDNu = CMFDNumber:get()
 
+local aspect = GetAspect()
+
+-- Content
+
+DEFAULT_LEVEL = 9
+default_material = CMFD_FONT_DEF
+stroke_font			= "cmfd_font_def"
+stroke_material		= "HUD"
+stroke_thickness  = 1 --0.25
+stroke_fuzziness  = 0.6
+additive_alpha		= true
+default_element_params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}
+default_controllers={{"opacity_using_parameter", 0}}
+
 local page_root = create_page_root()
 page_root.element_params = {"CMFD"..CMFDNu.."Format"}
 page_root.controllers = {{"parameter_compare_with_number",0,SUB_PAGE_ID.DTE}}
+default_parent      = page_root.name
 
 
-local Poly_Text        = CreateElement "ceStringPoly"
-Poly_Text.material    = CMFD_FONT_DEF
-Poly_Text.stringdefs= CMFD_STRINGDEFS_DEF_X08
-Poly_Text.init_pos    = {0, 0, 0}
-Poly_Text.alignment    = "CenterCenter"
-Poly_Text.value        = "MISSION :             \n\n" ..
-                         "  PILOT :             \n\n" .. 
-                         "COPILOT :             \n\n" ..
-                         " DTC ID :             \n\n" ..
-                         "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-Poly_Text.parent_element    = page_root.name
-Poly_Text.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
-Poly_Text.controllers = {{"opacity_using_parameter", 0}}
+local object
 
-AddToUpper(Poly_Text)
-Poly_Text = nil
+local CMFD_UFCP_DED_origin = addPlaceholder(nil, {0,0}, page_root.name)
+
+object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0, 0.5}, CMFD_UFCP_DED_origin.name, nil, {"%s"})
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_DTE_TEXT"}
+object.controllers = {
+                        {"opacity_using_parameter", 0},
+                        {"text_using_parameter", 1, 0},
+                    }
 
 -- OSS Menus
 local HW = 0.15
 local HH = 0.04 * H2W_SCALE
 
 local osb_txt = {
-    {value="DTE",           init_pos={CMFD_FONT_UD1_X, H2W_SCALE},                      align="CenterTop",      formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
+    {value="DTE",           init_pos={CMFD_FONT_UD1_X, H2W_SCALE},                      align="CenterTop",      formats={"%s"}, controller={{"opacity_using_parameter", 0},{"text_using_parameter", 1, 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT","CMFD_DTE_DVR_STATE"}},
     {value=" ",             init_pos={CMFD_FONT_UD2_X, H2W_SCALE},                      align="CenterTop",      formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
     {value="CLR",           init_pos={CMFD_FONT_UD3_X, H2W_SCALE},                      align="CenterTop",      formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
     {value="QCHK",          init_pos={CMFD_FONT_UD4_X, H2W_SCALE},                      align="CenterTop",      formats={"%s"}, controller={{"opacity_using_parameter", 0}}, params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}},
