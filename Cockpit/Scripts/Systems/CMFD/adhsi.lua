@@ -184,6 +184,10 @@ function SetCommandAdhsi(command,value, CMFD)
     end
 end
 
+function post_initialize_adhsi()
+
+end
+
 
 
 -- get_mission_route = {}

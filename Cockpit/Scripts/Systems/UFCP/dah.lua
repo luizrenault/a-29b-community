@@ -6,6 +6,7 @@ local SEL_IDS = {
 
 UFCP_DAH_BARO = get_param_handle("UFCP_DAH_BARO")
 UFCP_DAH_RALT = get_param_handle("UFCP_DAH_RALT")
+BFI_MB = get_param_handle("BFI_MB")
 
 -- Inits
 ufcp_dah_baro = 2000
@@ -76,7 +77,7 @@ function update_da_h()
 
     -- QNH
     -- TODO get QNH setting from BFI
-    local qnh = 1013
+    local qnh = BFI_MB:get()
     text = text .. "QNH " .. string.format("%04d", qnh) .. " HPA"
 
     if sel == SEL_IDS.RALT and ufcp_edit_pos > 0 then

@@ -160,6 +160,24 @@ BFIhorizon.level			= DISPLAY_DEFAULT_LEVEL+1
 BFIhorizon.collimated 		= true
 Add(BFIhorizon)
 
+local BFIias	    	= CreateElement "ceTexPoly"
+BFIias.name 			= "BFIias"
+BFIias.material   		= "BFI_Ias"   
+BFIias.vertices 		= {{-GetHalfWidth(), 5*GetHalfHeight()}, { -GetHalfWidth()+24/80*GetHalfWidth(), 5*GetHalfHeight()}, { -GetHalfWidth()+24/80*GetHalfWidth(),0}, {-GetHalfWidth(),0}}
+BFIias.indices			= default_box_indices	
+BFIias.tex_coords 		= {{0,0},{1,0},{1,1},{0,1}}
+BFIias.init_pos   		= {0,0} 
+-- BFIias.blend_mode 		= blend_mode.IBM_NO_WRITECOLOR
+BFIias.parent_element 	= "HDD001_PFD"
+BFIias.element_params 	= {"BFI_brightness", "IAS"}
+BFIias.controllers 		= {{"opacity_using_parameter", 0},{"move_up_down_using_parameter",1,-1*5*GetHalfHeight()/400}}
+BFIias.use_mipfilter    = true
+BFIias.additive_alpha   = true
+BFIias.h_clip_relation = h_clip_relations.COMPARE
+BFIias.level			= DISPLAY_DEFAULT_LEVEL
+-- BFIias.blend_mode 		= blend_mode.IBM_REGULAR
+BFIias.collimated 		= true
+--Add(BFIias)
 
 local BFIbank	    	= CreateElement "ceTexPoly"
 BFIbank.name 			= "BFIbank"
@@ -196,32 +214,13 @@ HDD001_PFD.element_params 	= {"BFI_brightness"}
 HDD001_PFD.use_mipfilter    = true
 Add(HDD001_PFD)
 
-local BFIias	    	= CreateElement "ceTexPoly"
-BFIias.name 			= "BFIias"
-BFIias.material   		= "BFI_Ias"   
-BFIias.vertices 		= {{-GetHalfWidth(), 5*GetHalfHeight()}, { -GetHalfWidth()+24/80*GetHalfWidth(), 5*GetHalfHeight()}, { -GetHalfWidth()+24/80*GetHalfWidth(),0}, {-GetHalfWidth(),0}}
-BFIias.indices			= default_box_indices	
-BFIias.tex_coords 		= {{0,0},{1,0},{1,1},{0,1}}
-BFIias.init_pos   		= {0,0} 
--- BFIias.blend_mode 		= blend_mode.IBM_NO_WRITECOLOR
-BFIias.parent_element 	= "HDD001_PFD"
-BFIias.element_params 	= {"BFI_brightness", "IAS"}
-BFIias.controllers 		= {{"opacity_using_parameter", 0},{"move_up_down_using_parameter",1,-1*5*GetHalfHeight()/400}}
-BFIias.use_mipfilter    = true
-BFIias.additive_alpha   = true
-BFIias.h_clip_relation = h_clip_relations.COMPARE
-BFIias.level			= DISPLAY_DEFAULT_LEVEL
--- BFIias.blend_mode 		= blend_mode.IBM_REGULAR
-BFIias.collimated 		= true
---Add(BFIias)
-
-Add_Object_Text_(inHg, "inHg", BFI_origin.name,
-					"font_Bold_Arial_white",--objectmaterial
+Add_Object_Text_(hPa, "hPa", BFI_origin.name,
+					"font_Arial_green",--objectmaterial
 					"RightCenter",--objectalignment
-					{"inHg"},--format_value
+					{"hPa"},--format_value
 					{smallFontHeight,smallFontWidth,  smallFontSpacing, 0},--stringdefs_value
 					GetHalfWidth(),--initpixelposx
-					GetHalfHeight()-fontHeight*0.6-(fontHeight-smallFontHeight)/4.0,--initpixelposy
+					GetHalfHeight()-fontHeight*0.5-(fontHeight-smallFontHeight)/4.0,--initpixelposy
 					{--params
 						"BFI_brightness",
 						"",
@@ -231,16 +230,16 @@ Add_Object_Text_(inHg, "inHg", BFI_origin.name,
 						{"text_using_parameter",1,0},
 					}
 				)
-Add_Object_Text_(inHgvalue, "inHgvalue", BFI_origin.name,
-				"font_Bold_Arial_white",--objectmaterial
+Add_Object_Text_(hPaValue, "hPaValue", BFI_origin.name,
+				"font_Arial_green",--objectmaterial
 				"RightCenter",--objectalignment
-				{"%02.2f"},--format_value
+				{"%04.0f"},--format_value
 				{fontHeight,fontWidth,  fontSpacing, 0},--stringdefs_value
 				GetHalfWidth()-(smallFontWidth+smallFontSpacing)*3.5,--initpixelposx
-				GetHalfHeight()-fontHeight*0.6,--initpixelposy
+				GetHalfHeight()-fontHeight*0.5,--initpixelposy
 			{--params
 					"BFI_brightness",
-					"BFI_BARO",
+					"BFI_MB",
 				},
 				{--controllers
 					{"opacity_using_parameter",0},
@@ -248,55 +247,22 @@ Add_Object_Text_(inHgvalue, "inHgvalue", BFI_origin.name,
 				}
 			)
 
-Add_Object_Text_(mb, "mb", BFI_origin.name,
-			"font_Bold_Arial_white",--objectmaterial
-			"RightCenter",--objectalignment
-			{"mb"},--format_value
-			{smallFontHeight, smallFontWidth,  smallFontSpacing, 0},--stringdefs_value
-			(fontWidth+fontSpacing)*3.5,--initpixelposx
-			GetHalfHeight()-fontHeight*0.6-smallFontHeight/4.0,--initpixelposy
-			{--params
-				"BFI_brightness",
-				"",
-			},
-			{--controllers
-				{"opacity_using_parameter",0},
-				{"text_using_parameter",1,0},
-			}
-		)
-Add_Object_Text_(inmbvalue, "mbvalue", BFI_origin.name,
-		"font_Bold_Arial_white",--objectmaterial
+Add_Object_Text_(hdg, "hdg", BFI_origin.name,
+		"font_Arial_red",--objectmaterial
 		"CenterCenter",--objectalignment
-		{"%04.0f"},--format_value
+		{"HDG"},--format_value
 		{fontHeight,fontWidth,  fontSpacing, 0},--stringdefs_value
 		0,--initpixelposx
-		GetHalfHeight()-fontHeight*0.6,--initpixelposy
+		GetHalfHeight()-fontHeight*0.5,--initpixelposy
 		{--params
 			"BFI_brightness",
-			"BFI_MB",
+			"",
 		},
 		{--controllers
 			{"opacity_using_parameter",0},
 			{"text_using_parameter",1,0},
 		}
 	)
-
-	Add_Object_Text_(m, "m", BFI_origin.name,
-	"font_Arial_white",--objectmaterial
-	"RightCenter",--objectalignment
-	{"M"},--format_value
-	{fontHeight, fontWidth,  fontSpacing, 0},--stringdefs_value
-	(fontWidth+fontSpacing)*5-GetHalfWidth(),--initpixelposx
-	GetHalfHeight()-fontHeight*0.6,--initpixelposy
-	{--params
-		"BFI_brightness",
-		"",
-	},
-	{--controllers
-		{"opacity_using_parameter",0},
-		{"text_using_parameter",1,0},
-	}
-)
 
 
 Add_Object_Text_(IAS, "IAS", BFI_origin.name,

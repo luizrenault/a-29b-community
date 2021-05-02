@@ -51,10 +51,8 @@ local ADHSI_DTK_DIST = get_param_handle("ADHSI_DTK_DIST")
 local ADHSI_DTK = get_param_handle("ADHSI_DTK")
 
 local nav_format = CMFD_NAV_FORMAT_IDS.AC
-local nav_fyt = 1
 local nav_fyt_last = -1
 local route
-local nav_fyt_list = {}
 
 local Terrain = require('terrain')
 local terrainAirdromes = get_terrain_related_data("Airdromes") or {};
@@ -169,6 +167,7 @@ local cmfd_nav_page = 0
 local function get_valid_wpt_list()
     local wpt_index = {}
     for k=1,100 do
+        -- TODO (0,0) is a valid waypoint.
         if nav_fyt_list[k] and nav_fyt_list[k].lat ~= 0 and nav_fyt_list[k].lon ~= 0 then
             wpt_index[#wpt_index + 1] = k
         end
@@ -176,7 +175,7 @@ local function get_valid_wpt_list()
     return wpt_index
 end
 
-local wpt_index = get_valid_wpt_list()
+wpt_index = get_valid_wpt_list()
 
 local distance_last = -1
 
