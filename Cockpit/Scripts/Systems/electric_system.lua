@@ -282,10 +282,21 @@ dev:listen_command(device_commands.AviMdp2)
 dev:listen_command(device_commands.AviMst)
 dev:listen_command(device_commands.AviSms)
 dev:listen_command(device_commands.AviVuhf)
+dev:listen_command(Keys.AviMdp1)
+dev:listen_command(Keys.AviMdp2)
+dev:listen_command(Keys.AviMst)
+dev:listen_command(Keys.AviSms)
+dev:listen_command(Keys.AviVuhf)
+dev:listen_command(Keys.ElecBatt)
+dev:listen_command(Keys.ElecGen)
+dev:listen_command(Keys.ElecExtPwr)
+dev:listen_command(Keys.ElecBkp)
+dev:listen_command(Keys.ElecEmer)
+dev:listen_command(Keys.ElecAcftIntc)
 
 
 function SetCommand(command,value)
-    debug_message_to_user("electric_system: command "..tostring(command).." = "..tostring(value))
+    print_message_to_user("electric_system: command "..tostring(command).." = "..tostring(value))
     if command == device_commands.ElecBatt then
         if value==0 then
             dev:DC_Battery_on(true)
@@ -310,6 +321,28 @@ function SetCommand(command,value)
         elseif value == -1 then 
             dev:DC_Battery_on(false)
         end
+    elseif command == Keys.AviMdp1 then
+        dev:performClickableAction(device_commands.AviMdp1, (get_cockpit_draw_argument_value(841) + 1) % 2)
+    elseif command == Keys.AviMdp2 then
+        dev:performClickableAction(device_commands.AviMdp2, (get_cockpit_draw_argument_value(842) + 1) % 2)
+    elseif command == Keys.AviMst then
+        dev:performClickableAction(device_commands.AviMst, (get_cockpit_draw_argument_value(843) + 1) % 2)
+    elseif command == Keys.AviSms then
+        dev:performClickableAction(device_commands.AviSms, (get_cockpit_draw_argument_value(844) + 1) % 2)
+    elseif command == Keys.AviVuhf then
+        dev:performClickableAction(device_commands.AviVuhf, (get_cockpit_draw_argument_value(845) + 1) % 2)
+    elseif command == Keys.ElecBatt then
+        dev:performClickableAction(device_commands.ElecBatt, get_cockpit_draw_argument_value(961) == 0 and -1 or 0)
+    elseif command == Keys.ElecGen then
+        dev:performClickableAction(device_commands.ElecGen, (get_cockpit_draw_argument_value(962) + 1) % 2)
+    elseif command == Keys.ElecExtPwr then
+        dev:performClickableAction(device_commands.ElecExtPwr, (get_cockpit_draw_argument_value(963) + 1) % 2)
+    elseif command == Keys.ElecBkp then
+        dev:performClickableAction(device_commands.ElecBkp, (get_cockpit_draw_argument_value(964) + 1) % 2)
+    elseif command == Keys.ElecEmer then
+        dev:performClickableAction(device_commands.ElecEmer, get_cockpit_draw_argument_value(965) == 1 and -1 or 1)
+    elseif command == Keys.ElecAcftIntc then
+        dev:performClickableAction(device_commands.ElecAcftIntc, get_cockpit_draw_argument_value(966) == 1 and -1 or 1)
     end
 end
 

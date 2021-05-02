@@ -50,6 +50,53 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
+## Version 0.2.1b - 08 May 2021
+
+### Added
+- Several key bindings.
+- Added placeholder pages to CMFD.
+- Added template CMFD system pages.
+- Added UFCP format to CMFD.
+- Added DTE format to CMFD.
+- HSD Prototype.
+
+### Changes
+- Updated BFI.
+
+### Fixes
+- DA/H UFCP format will now show the correct QNH.
+
+### TODO
+- Remember A/G Gun Selection
+- Thrust tables of FM
+- A/G Profiles
+- A/G mode select with Stick Step button.
+- FIX is only cosmetic because currently there is only pure EGI/GPS navigation.
+- Create the alarms for the parameters in the LMT format.
+- Set the AA DGFT piper size relative to UFCP_WS (target wingspan in metres)
+- EGI state dictates NAV conditions.
+- Instant Action for sceneries other than Caucasus missing.
+- Warning msg when starting from Instant Action
+- Low res interior texture.
+- Strobe light in the wingtips has a black glare, while the lights do not glare when on.
+- Pilot change when ejecting?
+- Stall is weird (freezes in space), same when flying inverted, on apex of looping, etc.
+- Stall speeds too high? Even with low fuel and little load, stalls happen above 100 knots
+- Stall alarm not working
+- Roll speed too low ?
+- Parking brake without keyboard binding
+- Taxi light turns off when steering/not following nose gear movement
+- Taxing too stiff while turning? No effect of different weight loads.
+- Night/day switch not working
+- Light alarm test not working
+- Battery never runs out of juice, generator inoperative 
+- fuel pump switch inoperative, start works even when it is "off"
+
+- Gear light indicator too weak (gear maneuvering red light too bright at night)
+- Ground effect missing?
+- Storm light comes out nowhere/illuminates outside, but not visible when looking from outside view
+- Differential brake not working
+
 ## Version 0.2.0b - 01 May 2021
 
 ### Added
@@ -91,37 +138,6 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Altimeter pressure initial adjustment.
 - Flaps, Audio Normal/Bkp and Bleed/Cutoff left/right click behavior.
 - "Brake on" indicator still illuminated after battery is set to "off".
-
-### TODO
-- Remember A/G Gun Selection
-- Thrust tables of FM
-- A/G Profiles
-- A/G mode select with Stick Step button.
-- FIX is only cosmetic because currently there is only pure EGI/GPS navigation.
-- Create the alarms for the parameters in the LMT format.
-- Set the AA DGFT piper size relative to UFCP_WS (target wingspan in metres)
-- EGI state dictates NAV conditions.
-- Instant Action for sceneries other than Caucasus missing.
-- Warning msg when starting from Instant Action
-- Low res interior texture.
-- Strobe light in the wingtips has a black glare, while the lights do not glare when on.
-- Pilot change when ejecting?
-- Stall is weird (freezes in space), same when flying inverted, on apex of looping, etc.
-- Stall speeds too high? Even with low fuel and little load, stalls happen above 100 knots
-- Stall alarm not working
-- Roll speed too low ?
-- Parking brake without keyboard binding
-- Taxi light turns off when steering/not following nose gear movement
-- Taxing too stiff while turning? No effect of different weight loads.
-- Night/day switch not working
-- Light alarm test not working
-- Battery never runs out of juice, generator inoperative 
-- fuel pump switch innoperative, start works even when it is "off"
-
-- Gear light indicator too weak (gear maneuvering red light too bright at night)
-- Ground effect missing?
-- Storm light comes out nowhere/illuminates outside, but not visible when looking from outside view
-- Differential brake not working
 
 ## Version 0.1.8b - 04 April 2021 - Happy Easter
 

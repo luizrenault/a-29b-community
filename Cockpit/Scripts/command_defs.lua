@@ -93,6 +93,20 @@ Keys =
     TDCY        	     = __custom_counter(),
     AirBrake           = __custom_counter(),
     Cutoff            = __custom_counter(),
+
+    AviMdp1                     = __custom_counter(),
+    AviMdp2                     = __custom_counter(),
+    AviMst                     = __custom_counter(),
+    AviSms                     = __custom_counter(),
+    AviVuhf                     = __custom_counter(),
+
+    ElecBatt                     = __custom_counter(),
+    ElecGen                     = __custom_counter(),
+    ElecAcftIntc                 = __custom_counter(),
+    ElecExtPwr                     = __custom_counter(),
+    ElecBkp                     = __custom_counter(),
+    ElecEmer                     = __custom_counter(),
+
 }
 
 start_command   = 3000

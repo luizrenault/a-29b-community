@@ -92,6 +92,6 @@ function SetCommandUfcp(command,value, CMFD)
     end
 end
 
-function post_initialize_adhsi()
+function post_initialize_ufcp()
 
 end

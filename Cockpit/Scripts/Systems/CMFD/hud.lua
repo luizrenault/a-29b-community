@@ -6,6 +6,6 @@ function SetCommandHud(command,value, CMFD)
    
 end
 
-function post_initialize_adhsi()
+function post_initialize_hud()
 
 end

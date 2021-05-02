@@ -6,6 +6,6 @@ function SetCommandEw(command,value, CMFD)
    
 end
 
-function post_initialize_adhsi()
+function post_initialize_ew()
 
 end
