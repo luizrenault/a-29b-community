@@ -619,6 +619,7 @@ end
 function addOSSArrow(ossnum, up_direction, parent, parameters, controllers, material)
 	local origin = OSSPos[ossnum]
 	if ossnum <= 6 then
+		origin[2] = origin[2] - 0.085
 	elseif ossnum <= 14  then
 		origin[1] = origin[1] - 0.085
 	elseif ossnum <= 20  then
