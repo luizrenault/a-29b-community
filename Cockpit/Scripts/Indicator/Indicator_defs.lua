@@ -589,6 +589,23 @@ function addOSSText(ossnum, value, parent, parameters, controllers, formats)
 	return object
 end
 
+function addOSSBlinkingText(ossnum, value, parent, parameters, controllers, formats)
+	local align
+	if ossnum <= 6 then
+		align = "CenterTop"
+	elseif ossnum <= 14  then
+		align = "RightCenter"
+	elseif ossnum <= 20  then
+		align = "CenterBottom"
+	else
+		align = "LeftCenter"
+	end
+	local object = addStrokeText(nil, value or "", CMFD_STRINGDEFS_DEF_X08, align, OSSPos[ossnum], parent, controllers, formats)
+	if parameters ~= nil then object.element_params = parameters end
+	if controllers ~= nil then	object.controllers = controllers end
+	return object
+end
+
 function addOSSStrokeBox(ossnum, lines, parent, parameters, controllers, material)
 	lines = lines or 1
 	local align

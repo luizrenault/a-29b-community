@@ -1,0 +1,21 @@
+CMFD_DTE_FORMAT_IDS = {
+    DTE       = 0,
+    QCHK      = 1,
+}
+
+CMFD_DTE_DVR_STATE_IDS = {
+    OFF = 0,
+    DTE = 1,
+    BIT = 2
+}
+
+CMFD_DTE_DVR_STATE_IDS.OFF = "OFF"
+CMFD_DTE_DVR_STATE_IDS.DTE = "DTE"
+CMFD_DTE_DVR_STATE_IDS.BIT = "BIT"
+
+CMFD_DTE_STATE_IDS = {
+    UNLOADED = 0,
+    LOADING = 1,
+    FAILED = 2,
+    LOADED = 3,
+}
