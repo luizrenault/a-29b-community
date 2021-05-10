@@ -117,7 +117,7 @@ local CMFD2Format=get_param_handle("CMFD2Format")
 CMFD2Format:set(SUB_PAGE_ID.EICAS)
 
 local CMFDDoi=get_param_handle("CMFDDoi")
-CMFDDoi:set(0)
+CMFDDoi:set(1)  -- Set FWD LCMFD as default DOI. This is set by DTE, but usually the aircraft has this as set.
 
 local CMFD1DCLT=get_param_handle("CMFD1DCLT")
 CMFD1DCLT:set(0)
