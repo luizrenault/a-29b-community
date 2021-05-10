@@ -173,7 +173,7 @@ local function update_piper_ccip()
 
     if WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then az = az + slide end
 
-    az, el, limited = limit_xy(az, el, hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
+    az, el, limited = limit_xy(az, el, hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 0.7)
 
     HUD_CCIP_PIPER_AZIMUTH:set(az)
     HUD_CCIP_PIPER_ELEVATION:set(el)
