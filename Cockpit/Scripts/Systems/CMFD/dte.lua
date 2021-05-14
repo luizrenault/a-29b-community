@@ -71,7 +71,7 @@ local function read_ADD_SINV()
     dofile(mission_dir .. "ADD_SINV.lua")
 
     -- TODO read data
-    error()
+    --error()
 end
 
 local function read_ADF()
@@ -190,7 +190,7 @@ local function read_SIM_INV()
     dofile(mission_dir .. "SIM_INV.lua")
 
     -- TODO read data
-    error()
+    --error()
 end
 
 local function read_SMS_MISC()

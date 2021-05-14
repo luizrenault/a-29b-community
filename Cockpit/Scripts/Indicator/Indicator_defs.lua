@@ -586,6 +586,7 @@ function addOSSText(ossnum, value, parent, parameters, controllers, formats)
 	local object = addStrokeText(nil, value or "", CMFD_STRINGDEFS_DEF_X08, align, OSSPos[ossnum], parent, controllers, formats)
 	if parameters ~= nil then object.element_params = parameters end
 	if controllers ~= nil then	object.controllers = controllers end
+	if formats ~= nil then	object.formats = formats end
 	return object
 end
 
@@ -603,11 +604,13 @@ function addOSSBlinkingText(ossnum, value, parent, parameters, controllers, form
 	local object = addStrokeText(nil, value or "", CMFD_STRINGDEFS_DEF_X08, align, OSSPos[ossnum], parent, controllers, formats)
 	if parameters ~= nil then object.element_params = parameters end
 	if controllers ~= nil then	object.controllers = controllers end
+	if formats ~= nil then	object.formats = formats end
 	return object
 end
 
-function addOSSStrokeBox(ossnum, lines, parent, parameters, controllers, material)
+function addOSSStrokeBox(ossnum, lines, parent, parameters, controllers, material, length)
 	lines = lines or 1
+	length = length or 8
 	local align
 	if ossnum <= 6 then
 		align = "CenterTop"
@@ -618,7 +621,7 @@ function addOSSStrokeBox(ossnum, lines, parent, parameters, controllers, materia
 	else
 		align = "LeftCenter"
 	end
-	local object = addStrokeBox(nil, 0.3, 0.064 * lines, align, OSSPos[ossnum], parent, controllers, material)
+	local object = addStrokeBox(nil, 0.0375 * length, 0.064 * lines, align, OSSPos[ossnum], parent, controllers, material)
 	if parameters ~= nil then object.element_params = parameters end
 	if controllers ~= nil then	object.controllers = controllers end
 	return object
