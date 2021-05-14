@@ -13,6 +13,7 @@ startup_print("ufcs: load")
 dev = GetSelf()
 local alarm 
 local hud
+local cmfd
 
 update_time_step = 0.02 --update will be called 50 times per second
 make_default_activity(update_time_step)
@@ -23,6 +24,7 @@ Terrain = require('terrain')
 local UFCP_BRIGHT = get_param_handle("UFCP_BRIGHT")
 local ADHSI_VV = get_param_handle("ADHSI_VV")
 local TIME_RUN = get_param_handle("UFCP_TIME_RUN")
+local DVR_SWITCH_STATE = get_param_handle("UFCP_DVR_SWITCH_STATE")
 
 -- Variables
 ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
@@ -415,12 +417,15 @@ function post_initialize()
     local birth = LockOn_Options.init_conditions.birth_place
     alarm = GetDevice(devices.ALARM)
     hud = GetDevice(devices.HUD)
+    cmfd = GetDevice(devices.CMFD)
     if birth=="GROUND_HOT" or birth=="AIR_HOT" then
         dev:performClickableAction(device_commands.UFCP_DVR, 1, true)
         dev:performClickableAction(device_commands.UFCP_RALT, 1, true)
+        DVR_SWITCH_STATE:set(1)
     elseif birth=="GROUND_COLD" then
         dev:performClickableAction(device_commands.UFCP_DVR, -1, true)
         dev:performClickableAction(device_commands.UFCP_RALT, 0, true)
+        DVR_SWITCH_STATE:set(-1)
     end
     dev:performClickableAction(device_commands.UFCP_UFC, 1, true)
     dev:performClickableAction(device_commands.UFCP_DAY_NIGHT, 0, true)
@@ -431,6 +436,7 @@ end
 dev:listen_command(device_commands.UFCP_WARNRST)
 dev:listen_command(device_commands.UFCP_4)
 dev:listen_command(device_commands.UFCP_BARO_RALT)
+dev:listen_command(device_commands.UFCP_DVR)
 
 function SetCommandCommon(command, value)
     -- Control keys
@@ -503,6 +509,9 @@ function SetCommand(command,value)
             ufcp_vvvah_mode_last = ufcp_vvvah_mode
             ufcp_vvvah_mode = UFCP_VVVAH_MODE_IDS.VV_VAH
         end
+    elseif command == device_commands.UFCP_DVR then
+        cmfd:SetCommand(command, value) -- This is not reached somehow...
+        DVR_SWITCH_STATE:set(value) -- So I set this.
     end
 
     SetCommandCommon(command, value)
