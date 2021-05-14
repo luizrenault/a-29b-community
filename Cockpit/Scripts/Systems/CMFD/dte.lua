@@ -20,26 +20,28 @@ local DTE_HSD_BLINK = get_param_handle("CMFD_DTE_HSD_BLINK")
 local DTE_SIM_INV_BLINK = get_param_handle("CMFD_DTE_SIM_INV_BLINK")
 local DTE_MSMD_BLINK = get_param_handle("CMFD_DTE_MSMD_BLINK")
 
+local UFCP_LMT_MAX_G = get_param_handle("UFCP_LMT_MAX_G")
+local UFCP_LMT_MIN_VEL = get_param_handle("UFCP_LMT_MIN_VEL")
+local UFCP_LMT_MAX_VEL = get_param_handle("UFCP_LMT_MAX_VEL")
+local UFCP_LMT_MAX_AOA = get_param_handle("UFCP_LMT_MAX_AOA")
+local UFCP_LMT_MAX_AOA_FLAPS = get_param_handle("UFCP_LMT_MAX_AOA_FLAPS")
+local UFCP_LMT_MAX_MACH = get_param_handle("UFCP_LMT_MAX_MACH")
+
+local UFCP_DAH_BARO = get_param_handle("UFCP_DAH_BARO")
+local UFCP_DAH_RALT = get_param_handle("UFCP_DAH_RALT")
+
+local UFCP_WS = get_param_handle("UFCP_WS")
+
+local EICAS_FUEL_JOKER = get_param_handle("EICAS_FUEL_JOKER")
+
+-- TODO get bingo and hmpt from UFCP FUEL
+local UFCP_FUEL_BINGO = get_param_handle("UFCP_FUEL_BINGO")
+local UFCP_FUEL_HMPT = get_param_handle("UFCP_FUEL_HMPT")
+
 local mission = ""
 local pilot = ""
 local copilot = ""
 local dtcid = ""
-
-local max_g = ""
-local max_aoa_f_up = ""
-local max_aoa_f_dn = ""
-local max_vel = ""
-local max_mach = ""
-local min_vel = ""
-
-local da_h_baro = ""
-local da_h_ralt = ""
-
-local wing_span = ""
-
-local joker = ""
-local bingo = ""
-local hmpt = ""
 
 local format = CMFD_DTE_FORMAT_IDS.DTE
 
@@ -71,7 +73,7 @@ local function read_ADD_SINV()
     dofile(mission_dir .. "ADD_SINV.lua")
 
     -- TODO read data
-    --error()
+    error()
 end
 
 local function read_ADF()
@@ -190,7 +192,7 @@ local function read_SIM_INV()
     dofile(mission_dir .. "SIM_INV.lua")
 
     -- TODO read data
-    --error()
+    error()
 end
 
 local function read_SMS_MISC()
@@ -233,27 +235,27 @@ function update_dte()
         text = text .. "COPILOT : " .. string.format("%-12s", copilot) .. "\n\n"
         text = text .. " DTC ID : " .. string.format("%-12s", dtcid)
     elseif format == CMFD_DTE_FORMAT_IDS.QCHK then
-        text = text .. "MAG G        " .. string.format("%4s", max_g) .. "\n\n"
-        text = text .. "MAX AOA F UP " .. string.format("%4s", max_aoa_f_up) .. "\n\n"
-        text = text .. "MAX AOA F DN " .. string.format("%4s", max_aoa_f_dn) .. "\n\n"
-        text = text .. "MAX VEL      " .. string.format("%4s", max_vel) .. "\n\n"
-        text = text .. "MAX MACH     " .. string.format("%4s", max_mach) .. "\n\n"
-        text = text .. "MIN VEL      " .. string.format("%4s", min_vel) .. "\n\n"
+        text = text .. "MAG G        " .. string.format("%4s", string.format("%3.1f", UFCP_LMT_MAX_G:get())) .. "\n\n"
+        text = text .. "MAX AOA F UP " .. string.format("%4s", string.format("%4.1f", UFCP_LMT_MAX_AOA:get())) .. "\n\n"
+        text = text .. "MAX AOA F DN " .. string.format("%4s", string.format("%4.1f", UFCP_LMT_MAX_AOA_FLAPS:get())) .. "\n\n"
+        text = text .. "MAX VEL      " .. string.format("%4s", UFCP_LMT_MAX_VEL:get()) .. "\n\n"
+        text = text .. "MAX MACH     " .. string.format("%4s", string.format("%4.2f", UFCP_LMT_MAX_MACH:get())) .. "\n\n"
+        text = text .. "MIN VEL      " .. string.format("%4s", UFCP_LMT_MIN_VEL:get()) .. "\n\n"
 
         text = text .. "\n\n"
 
-        text = text .. "DA\\H BARO    " .. string.format("%4s", da_h_baro) .. "\n\n"
-        text = text .. "DA\\H RALT    " .. string.format("%4s", da_h_ralt) .. "\n\n"
+        text = text .. "DA\\H BARO    " .. string.format("%4s", UFCP_DAH_BARO:get()) .. "\n\n"
+        text = text .. "DA\\H RALT    " .. string.format("%4s", UFCP_DAH_RALT:get()) .. "\n\n"
 
         text = text .. "\n\n"
 
-        text = text .. "WING SPAN    " .. string.format("%4s", wing_span) .. "\n\n"
+        text = text .. "WING SPAN    " .. string.format("%4s", string.format("%4.1f", UFCP_WS:get())) .. "\n\n"
 
         text = text .. "\n\n"
 
-        text = text .. "JOKER        " .. string.format("%4s", joker) .. "\n\n"
-        text = text .. "BINGO        " .. string.format("%4s", bingo) .. "\n\n"
-        text = text .. "HMPT         " .. string.format("%4s", hmpt) .. "\n\n"
+        text = text .. "JOKER        " .. string.format("%4s", EICAS_FUEL_JOKER:get()) .. "\n\n"
+        text = text .. "BINGO        " .. string.format("%4s", UFCP_FUEL_BINGO:get()) .. "\n\n"
+        text = text .. "HMPT         " .. string.format("%4s", UFCP_FUEL_HMPT:get()) .. "\n\n"
     end
 
     DTE_FORMAT:set(format)

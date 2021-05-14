@@ -52,6 +52,9 @@ local EICAS_FUEL_LEFT_COR = get_param_handle("EICAS_FUEL_LEFT_COR")
 local EICAS_FUEL_RIGHT = get_param_handle("EICAS_FUEL_RIGHT")
 local EICAS_FUEL_RIGHT_COR = get_param_handle("EICAS_FUEL_RIGHT_COR")
 local EICAS_FUEL_JOKER = get_param_handle("EICAS_FUEL_JOKER")
+
+-- TODO The yellow arrow in the fuel indicator is actually the calculated fuel to reach the homepoint with the bingo value set in UFCP FUEL. It does not replicate
+-- joker. I'm gonna work on this later.
 local EICAS_FUEL_JOKER_ROT = get_param_handle("EICAS_FUEL_JOKER_ROT")
 local EICAS_FUEL_TOT_ROT = get_param_handle("EICAS_FUEL_TOT_ROT")
 local EICAS_FUEL_INT_ROT = get_param_handle("EICAS_FUEL_INT_ROT")
