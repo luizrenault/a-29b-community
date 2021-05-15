@@ -53,8 +53,9 @@ local EICAS_FUEL_RIGHT = get_param_handle("EICAS_FUEL_RIGHT")
 local EICAS_FUEL_RIGHT_COR = get_param_handle("EICAS_FUEL_RIGHT_COR")
 local EICAS_FUEL_JOKER = get_param_handle("EICAS_FUEL_JOKER")
 
--- TODO The yellow arrow in the fuel indicator is actually the calculated fuel to reach the homepoint with the bingo value set in UFCP FUEL. It does not replicate
--- joker. I'm gonna work on this later.
+local UFCP_FUEL_BINGO = get_param_handle("UFCP_FUEL_BINGO")
+local UFCP_FUEL_HMPT = get_param_handle("UFCP_FUEL_HMPT")
+
 local EICAS_FUEL_JOKER_ROT = get_param_handle("EICAS_FUEL_JOKER_ROT")
 local EICAS_FUEL_TOT_ROT = get_param_handle("EICAS_FUEL_TOT_ROT")
 local EICAS_FUEL_INT_ROT = get_param_handle("EICAS_FUEL_INT_ROT")
@@ -68,9 +69,12 @@ local EICAS_SPD_BRK_TXT = get_param_handle("EICAS_SPD_BRK_TXT")
 
 local EICAS_INIT = get_param_handle("EICAS_INIT")
 
-fuel_init = 300;
+fuel_init = 495;
 fuel_random = 0 --os.time()%30
-fuel_joker = 200;
+fuel_joker = 300;
+
+EICAS_FUEL_INIT:set(fuel_init)
+EICAS_FUEL_JOKER:set(fuel_joker)
 
 local torque_tempo = -1
 local np_tempo = -1
@@ -78,9 +82,23 @@ local oat_base = 25
 
 local engine_limits_warning = 0
 local fuel_imbalance_caution = 0
+local fuel_joker_voice = 0
+local fuel_bingo_caution = 0
 
 
 local cabin_press_cor=0
+
+local function calc_dist(dest_lat_m, dest_lon_m, orig_lat_m, orig_lon_m)
+    local o_lat_m, o_alt_m, o_lon_m = sensor_data.getSelfCoordinates()
+    orig_lat_m = orig_lat_m or o_lat_m
+    orig_lon_m = orig_lon_m or o_lon_m
+
+    local lat = dest_lat_m - orig_lat_m
+    local lon = dest_lon_m - orig_lon_m
+
+    return math.sqrt(lat * lat + lon * lon)
+
+end
 
 function update_eicas()
     if sensor_data.getWOW_LeftMainLandingGear()==0 then EICAS_INIT:set(0)   -- INIT -> DETOT
@@ -366,19 +384,31 @@ function update_eicas()
     if fuel_flow < 0 then fuel_flow = 0 end
     --if fuel_flow > 500 then fuel_flow = 500 end
 
+    fuel_init = EICAS_FUEL_INIT:get()
     if fuel_init > 1465 then fuel_init = 1465 end
     if fuel_init < 0 then fuel_init = 0 end
     fuel_init = fuel_init - sensor_data.getEngineLeftFuelConsumption()*update_time_step
 
     -- Se os dados de fluxo de combustível não estiverem disponíveis por mais de 5 minutos, o campo apresenta os caracteres “XXXX” na cor vermelha e os dados não mais estarão disponíveis.
+    fuel_joker = EICAS_FUEL_JOKER:get()
 
     if fuel_joker > 1465 then fuel_joker = 1465 end
     if fuel_joker < 95 then fuel_joker = 95 end
+
+    -- Calculate the remaining fuel after navigating to the homepoint
+    local fuel_bingo = UFCP_FUEL_BINGO:get()
+    local hmpt = UFCP_FUEL_HMPT:get()
+    local dest_lat_m = nav_fyt_list[hmpt+1].lat_m
+    local dest_lon_m = nav_fyt_list[hmpt+1].lon_m
+    local distance = calc_dist(dest_lat_m, dest_lon_m)
+    local cruise_flow = 1.0 / 1852 -- hardcoded 1kg / nm
+    fuel_bingo = fuel_bingo + distance * cruise_flow
+
     local fuel_joker_rot
-    if fuel_joker <= 300 then
-        fuel_joker_rot = (115.5- 55/300*fuel_joker)*math.pi/180
+    if fuel_bingo <= 300 then
+        fuel_joker_rot = (115.5- 55/300*fuel_bingo)*math.pi/180
     else
-        fuel_joker_rot = (60.5- 152/1300* (fuel_joker-305))*math.pi/180
+        fuel_joker_rot = (60.5- 152/1300* (fuel_bingo-305))*math.pi/180
     end
 
     local fuel = sensor_data.getTotalFuelWeight() + fuel_random
@@ -438,6 +468,22 @@ function update_eicas()
     elseif (torque_cor ~= 2 and t5_cor ~= 2 and ng_cor ~= 2 and np_cor ~= 2) and engine_limits_warning ~= 0 then 
         set_warning(WARNING_ID.ENG_LMTS,0)
         engine_limits_warning = 0
+    end
+
+    if (fuel < fuel_joker or fuel_init < fuel_joker) and fuel_joker_voice == 0 then
+        set_voice(VOICE_ID.JOKER, 1)
+        fuel_joker_voice = 1
+    elseif fuel >= fuel_joker and fuel_init >= fuel_joker and fuel_joker_voice ~= 0 then
+        set_voice(VOICE_ID.JOKER, 0)
+        fuel_joker_voice = 0
+    end
+
+    if (fuel <= fuel_bingo or fuel_init <= fuel_bingo) and fuel_bingo_caution == 0 then
+        set_caution(CAUTION_ID.BINGO,1)
+        fuel_bingo_caution = 1
+    elseif fuel > fuel_bingo and fuel_init > fuel_bingo and fuel_bingo_caution ~= 0 then
+        set_caution(CAUTION_ID.BINGO,0)
+        fuel_bingo_caution = 0
     end
 
     EICAS_TQ:set(torque)
@@ -522,10 +568,18 @@ end
 
 function SetCommandEicas(command,value, CMFD)
     if value == 1 then 
-        if command==device_commands.CMFD1OSS13 or command==device_commands.CMFD2OSS13 then fuel_joker = fuel_joker + 5
-        elseif command==device_commands.CMFD1OSS14 or command==device_commands.CMFD2OSS14 then fuel_joker = fuel_joker - 5
-        elseif (command==device_commands.CMFD1OSS11 or command==device_commands.CMFD2OSS11) and EICAS_INIT:get() == 1 then fuel_init = fuel_init + 5
-        elseif (command==device_commands.CMFD1OSS12 or command==device_commands.CMFD2OSS12) and EICAS_INIT:get() == 1 then fuel_init = fuel_init - 5
+        if command==device_commands.CMFD1OSS13 or command==device_commands.CMFD2OSS13 then
+            fuel_joker = fuel_joker + 5
+            EICAS_FUEL_JOKER:set(fuel_joker)
+        elseif command==device_commands.CMFD1OSS14 or command==device_commands.CMFD2OSS14 then 
+            fuel_joker = fuel_joker - 5
+            EICAS_FUEL_JOKER:set(fuel_joker)
+        elseif (command==device_commands.CMFD1OSS11 or command==device_commands.CMFD2OSS11) and EICAS_INIT:get() == 1 then
+            fuel_init = fuel_init + 5
+            EICAS_FUEL_INIT:set(fuel_init)
+        elseif (command==device_commands.CMFD1OSS12 or command==device_commands.CMFD2OSS12) and EICAS_INIT:get() == 1 then
+            fuel_init = fuel_init - 5
+            EICAS_FUEL_INIT:set(fuel_init)
         elseif command==device_commands.CMFD1OSS25 or command==device_commands.CMFD2OSS25 then oat_base = oat_base - 1
         elseif command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26 then oat_base = oat_base + 1
         end
