@@ -54,7 +54,15 @@ local hsd_state = CMFD_DTE_STATE_IDS.UNLOADED
 local sim_inv_state = CMFD_DTE_STATE_IDS.UNLOADED
 local msmd_state = CMFD_DTE_STATE_IDS.UNLOADED
 
-local mission_dir = LockOn_Options.script_path.."../../Mission/"
+local mission_dir
+
+-- TESTING
+--local terrainVersion          = get_terrain_related_data("edterrainVersion") or 3.0
+local theatre
+local terrainAirdromes = get_terrain_related_data("Airdromes") or {};
+--local terrain_path = get_terrain_related_data("KNEEBOARD") or "none"
+--local user_path    = lfs.writedir().."Mission"
+--local unit_name    = get_aircraft_type()
 
 -- INV: Selected or loading
 -- BOXED: Loaded
@@ -444,5 +452,29 @@ function SetCommandDte(command,value, CMFD)
 end
 
 function post_initialize_dte()
+    theatre = get_terrain_related_data("name")
 
+    -- I can't get the terrain name or kneeboard from Syria. Syria has an airport called OS57, so I'll use it as reference.
+    if theatre == nil and terrainAirdromes then
+        for i,airdrome in pairs(terrainAirdromes) do
+            local code = airdrome.code or string.sub(airdrome.id,1,4)
+            if code == "OS57" then
+                theatre = "Syria"
+                break
+            end
+        end
+    end
+    if theatre == nil then
+        theatre = "none"
+    end
+
+    -- Set mission dir. It will look for the theatre dir inside mission, otherwise will load the files inside mission. 
+    -- Is this the ideal way? Or should it be in the user dir? People should have their own mission files, although
+    -- I doubt anyone is gonna make them.
+
+    if theatre ~= "none" then
+        mission_dir = LockOn_Options.script_path.."../../Mission/" .. theatre .. "/"
+    else
+        mission_dir = LockOn_Options.script_path.."../../Mission/"
+    end
 end
