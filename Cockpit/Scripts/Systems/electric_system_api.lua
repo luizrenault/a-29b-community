@@ -1,4 +1,3 @@
-
 function get_elec_avionics_ok()
     return elec_avionics_ok:get()==1 and true or false
 end
@@ -32,6 +31,25 @@ function get_avionics_on()
     return get_cockpit_draw_argument_value(843) == 1
 end
 
+function get_acft_intc_on()
+    return get_cockpit_draw_argument_value(966) == 1
+end
+
+function get_ext_pwr_on()
+    return get_cockpit_draw_argument_value(963) == 1
+end
+
+function get_mdp1_on()
+    return get_cockpit_draw_argument_value(841) == 1
+end
+
+function get_mdp2_on()
+    return get_cockpit_draw_argument_value(842) == 1
+end
+
+function get_emer_ovrd()
+    return get_cockpit_draw_argument_value(965) == 1
+end
 
 
 
@@ -43,6 +61,7 @@ elec_avionics_emergency_ok=get_param_handle("ELEC_AVIONICS_EMEGENCY_OK") -- 1 or
 elec_main_bar_ok=get_param_handle("ELEC_MAIN_BAR_OK") -- 1 or 0
 elec_emergency_ok=get_param_handle("ELEC_EMERGENCY_OK") -- 1 or 0
 elec_emergency_reserve_ok=get_param_handle("ELEC_EMERGENCY_RESERVE_OK") -- 1 or 0
+elec_avionics_master_mdp=get_param_handle("ELEC_AVIONICS_MASTER_MDP") -- 0, 1 or 2
 
 -- elec_aft_mon_ac_ok=get_param_handle("ELEC_AFT_MON_AC_OK") -- 1 or 0
 -- elec_fwd_mon_ac_ok=get_param_handle("ELEC_FWD_MON_AC_OK") -- 1 or 0
