@@ -25,6 +25,7 @@ local UFCP_BRIGHT = get_param_handle("UFCP_BRIGHT")
 local ADHSI_VV = get_param_handle("ADHSI_VV")
 local TIME_RUN = get_param_handle("UFCP_TIME_RUN")
 local DVR_SWITCH_STATE = get_param_handle("UFCP_DVR_SWITCH_STATE")
+local RALT_SWITCH_STATE = get_param_handle("UFCP_RALT_SWITCH_STATE")
 
 -- Variables
 ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
@@ -422,10 +423,12 @@ function post_initialize()
         dev:performClickableAction(device_commands.UFCP_DVR, 1, true)
         dev:performClickableAction(device_commands.UFCP_RALT, 1, true)
         DVR_SWITCH_STATE:set(1)
+        RALT_SWITCH_STATE:set(1)
     elseif birth=="GROUND_COLD" then
         dev:performClickableAction(device_commands.UFCP_DVR, -1, true)
         dev:performClickableAction(device_commands.UFCP_RALT, 0, true)
         DVR_SWITCH_STATE:set(-1)
+        RALT_SWITCH_STATE:set(0)
     end
     dev:performClickableAction(device_commands.UFCP_UFC, 1, true)
     dev:performClickableAction(device_commands.UFCP_DAY_NIGHT, 0, true)
@@ -512,6 +515,8 @@ function SetCommand(command,value)
     elseif command == device_commands.UFCP_DVR then
         cmfd:SetCommand(command, value) -- This is not reached somehow...
         DVR_SWITCH_STATE:set(value) -- So I set this.
+    elseif command == device_commands.UFCP_RALT  then
+        RALT_SWITCH_STATE:set(value)
     end
 
     SetCommandCommon(command, value)
