@@ -51,7 +51,9 @@ function get_emer_ovrd()
     return get_cockpit_draw_argument_value(965) == 1
 end
 
-
+function get_vuhf_guard_on()
+    return get_cockpit_draw_argument_value(845) == 1
+end
 
 
 

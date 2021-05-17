@@ -406,6 +406,19 @@ function update()
         UFCP_DRIFT_CO:set(0)
     end
 
+    -- UPDATE VUHF GUARD
+    if get_vuhf_guard_on() then -- Should it only work when both MDPs are off?
+        -- Set COM1 to 121.5
+        ufcp_com1_frequency_manual = 121.5
+        ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
+        ufcp_com1_frequency = ufcp_com1_frequency_manual
+
+        -- Set COM2 to 243.0
+        ufcp_com2_frequency_manual = 243
+        ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
+        ufcp_com2_frequency = ufcp_com2_frequency_manual
+    end
+
     UFCP_NAV_MODE:set(ufcp_nav_mode)
     UFCP_NAV_TIME:set(ufcp_nav_time)
 end
