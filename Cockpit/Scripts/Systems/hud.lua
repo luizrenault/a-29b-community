@@ -44,6 +44,8 @@ local HUD_FPM_VERT = get_param_handle("HUD_FPM_VERT")
 local HUD_PL_SLIDE = get_param_handle("HUD_PL_SLIDE")
 local HUD_RI_ROLL = get_param_handle("HUD_RI_ROLL")
 
+local UFCP_RALT_SWITCH_STATE = get_param_handle("UFCP_RALT_SWITCH_STATE")
+
 local HUD = {
     CCRP = get_param_handle("HUD_CCRP"),
     FYT_AZIMUTH = get_param_handle("HUD_FYT_AZIMUTH"),
@@ -173,7 +175,7 @@ local function update_piper_ccip()
 
     if WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then az = az + slide end
 
-    az, el, limited = limit_xy(az, el, hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
+    az, el, limited = limit_xy(az, el, hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 0.7)
 
     HUD_CCIP_PIPER_AZIMUTH:set(az)
     HUD_CCIP_PIPER_ELEVATION:set(el)
@@ -562,6 +564,7 @@ function update()
     if CMFDDoi:get() == 0 then hud_doi = 1 else hud_doi = 0 end
 
     local radar_alt = get_avionics_ralt()
+    if UFCP_RALT_SWITCH_STATE:get() == 0 then radar_alt = -1 end
     local time_text = ""
     local ttd = CMFD_NAV_FYT_DTK_TTD:get()
     local dt = CMFD_NAV_FYT_DTK_DT:get()

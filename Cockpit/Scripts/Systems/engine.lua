@@ -2,7 +2,11 @@
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
+dofile(LockOn_Options.script_path.."Systems/engine_api.lua")
 dofile(LockOn_Options.script_path.."utils.lua")
+
+local ENGINE_ON_FIRE = get_param_handle("ENGINE_ON_FIRE")
+ENGINE_ON_FIRE:set(0)   -- TODO detect when aircraft is on fire
 
 startup_print("engine: load")
 
@@ -34,6 +38,8 @@ local ENGINE_state = ENGINE_STATE_IDS.CUTOFF
 local prev_throttle_pos = 0
 local throttle_clickable_ref
 
+local fire_warning = 0
+
 function update()
     local throttle = sensor_data.getThrottleLeftPosition()
     if ENGINE_state == ENGINE_STATE_IDS.ON then
@@ -57,6 +63,14 @@ function update()
         prev_throttle_pos = throttle_pos
     end
     ENGINE.THROTTLE:set(throttle_position_wma:get_WMA(throttle))
+
+    if is_engine_on_fire() then
+        set_warning(WARNING_ID.FIRE, 1)
+        fire_warning = 1
+    elseif not is_engine_on_fire() then
+        set_warning(WARNING_ID.FIRE, 0)
+        fire_warning = 0
+    end
 end
 
 function post_initialize()

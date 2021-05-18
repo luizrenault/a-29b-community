@@ -11,8 +11,8 @@ page_root.controllers = {{"parameter_compare_with_number",0,SUB_PAGE_ID.EW}}
 
 local Poly_Text        = CreateElement "ceStringPoly"
 Poly_Text.material    = CMFD_FONT_DEF
-Poly_Text.stringdefs= CMFD_STRINGDEFS_DEF_X2
-Poly_Text.init_pos    = {0, 0, 0}
+Poly_Text.stringdefs= CMFD_STRINGDEFS_DEF_X1
+Poly_Text.init_pos    = {0, 0.4, 0}
 Poly_Text.alignment    = "CenterCenter"
 Poly_Text.value        = "EW"
 Poly_Text.parent_element    = page_root.name

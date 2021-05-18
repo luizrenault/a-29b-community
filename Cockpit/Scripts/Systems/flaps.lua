@@ -17,6 +17,8 @@ dofile(LockOn_Options.script_path.."functions.lua")
 --   if flaps were stopped manually, the next flaps command (F) will resume movement towards the furthest endpoint
 --   flaps lever will re-center (off) if driven by keyboard when endpoint is reached
 
+local elec_main_bar_ok = get_param_handle("ELEC_MAIN_BAR_OK") -- 1 or 0
+
 local dev = GetSelf()
 
 local update_time_step = 0.006
@@ -25,11 +27,6 @@ make_default_activity(update_time_step)
 local function get_efm_sensor_data_overrides()
     return get_base_data()
 end
-
-local function get_hyd_utility_ok()
-    return true
-end
-
 
 local sensor_data = get_efm_sensor_data_overrides()
 -- local efm_data_bus = get_efm_data_bus()
@@ -88,21 +85,23 @@ end
 --   primary action is based on lever behavior/clicking, and keys will map to lever behavior w/ limit functions
 
 function SetCommand(command,value)
-    if command == device_commands.flaps then
-        MOVING = 1
-        FLAPS_TARGET = value
-        FLAPS_TARGET_LAST= -1
-    elseif command == Keys.PlaneFlaps then
-        fromKeyboard = true
-        if FLAPS_TARGET >= 0.5 then
-            dev:performClickableAction(device_commands.flaps, 0, false)
-        else
-            dev:performClickableAction(device_commands.flaps, 1, false)
+    if elec_main_bar_ok:get() == 1 then
+        if command == device_commands.flaps then
+            MOVING = 1
+            FLAPS_TARGET = value
+            FLAPS_TARGET_LAST= -1
+        elseif command == Keys.PlaneFlaps then
+            fromKeyboard = true
+            if FLAPS_TARGET >= 0.5 then
+                dev:performClickableAction(device_commands.flaps, 0, false)
+            else
+                dev:performClickableAction(device_commands.flaps, 1, false)
+            end
+        elseif command == Keys.PlaneFlapsOn then
+            dev:performClickableAction(device_commands.flaps, 1.0, false)
+        elseif command == Keys.PlaneFlapsOff then
+            dev:performClickableAction(device_commands.flaps, 0.0, false)
         end
-    elseif command == Keys.PlaneFlapsOn then
-        dev:performClickableAction(device_commands.flaps, 1.0, false)
-    elseif command == Keys.PlaneFlapsOff then
-        dev:performClickableAction(device_commands.flaps, 0.0, false)
     end
 end
 
@@ -126,7 +125,7 @@ function update()
         FLAPS_STATE = FLAPS_STATE - flaps_increment -- force flaps in if too much pressure on them
     -- make primary adjustment if needed
     elseif math.abs(FLAPS_STATE - FLAPS_TARGET)>=flaps_increment then
-        if get_hyd_utility_ok() then
+        if elec_main_bar_ok:get() == 1 then
             if MOVING == 1 then
                 -- we intended to move the flaps, and they're out of position...
                 if FLAPS_STATE < FLAPS_TARGET then

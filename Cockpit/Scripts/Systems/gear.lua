@@ -3,6 +3,8 @@ dofile(LockOn_Options.script_path.."functions.lua")
 
 startup_print("gear: load")
 
+local PANEL_ALARM_TEST = get_param_handle("PANEL_ALARM_TEST")
+
 local dev = GetSelf()
 
 local update_time_step = 0.02 --update will be called 50 times per second

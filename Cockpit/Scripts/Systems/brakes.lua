@@ -5,6 +5,8 @@ dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 
 startup_print("brakes: load")
 
+local PANEL_ALARM_TEST = get_param_handle("PANEL_ALARM_TEST")
+
 local dev = GetSelf()
 
 local update_time_step = 0.02 --update will be called 50 times per second
@@ -59,11 +61,12 @@ local pbrake_on = 0
 
 function update()
 
-        if pbrake_on == 1 and get_elec_main_bar_ok() then 
+        if pbrake_on == 1 or PANEL_ALARM_TEST:get() == 1 then 
             pbrake_light:set(1)
         else
             pbrake_light:set(0)
         end
+        if not get_elec_main_bar_ok() then pbrake_light:set(0) end
 
         -- calculate combined brake axis
         wheelbrake_axis_value = -1

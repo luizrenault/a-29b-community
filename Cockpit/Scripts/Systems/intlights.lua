@@ -1,6 +1,12 @@
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
+dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
+
+local ENGINE_FIRE_TEST = get_param_handle("ENGINE_FIRE_TEST")
+local PANEL_ALARM_TEST = get_param_handle("PANEL_ALARM_TEST")
+ENGINE_FIRE_TEST:set(0)
+PANEL_ALARM_TEST:set(0)
 
 startup_print("intlights: load")
 
@@ -65,6 +71,9 @@ function SetCommand(command,value)
         elseif value == 1 then 
             nvg=0.3
         end
+    elseif command == device_commands.IntLightAlm then
+        ENGINE_FIRE_TEST:set(value < 0 and 1 or 0)
+        PANEL_ALARM_TEST:set(value > 0 and 1 or 0)
     end
 end
 

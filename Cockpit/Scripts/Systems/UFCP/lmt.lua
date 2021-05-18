@@ -211,6 +211,32 @@ function update_lmt()
     if sel == SEL_IDS.MAX_AOA_FLAPS and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. string.format("%4.1f", ufcp_lmt_max_aoa_flaps) end
     if sel == SEL_IDS.MAX_AOA_FLAPS then text = text .. "*" else text = text .. " " end
 
+    if sel == SEL_IDS.MAX_G and ufcp_edit_pos > 0 then
+        text = replace_pos(text, 24)
+        text = replace_pos(text, 28)
+    elseif sel == SEL_IDS.MIN_VEL and ufcp_edit_pos > 0 then
+        text = replace_pos(text, 49)
+        text = replace_pos(text, 53)
+    elseif sel == SEL_IDS.MAX_VEL and ufcp_edit_pos > 0 then
+        text = replace_pos(text, 74)
+        text = replace_pos(text, 78)
+    elseif sel == SEL_IDS.MAX_VEL and ufcp_edit_pos > 0 then
+        text = replace_pos(text, 74)
+        text = replace_pos(text, 78)
+    elseif sel == SEL_IDS.MAX_MACH and ufcp_edit_pos > 0 then
+        text = replace_pos(text, 82)
+        text = replace_pos(text, 87)
+    elseif sel == SEL_IDS.MAX_MACH and ufcp_edit_pos > 0 then
+        text = replace_pos(text, 82)
+        text = replace_pos(text, 87)
+    elseif sel == SEL_IDS.MAX_AOA and ufcp_edit_pos > 0 then
+        text = replace_pos(text, 101)
+        text = replace_pos(text, 106)
+    elseif sel == SEL_IDS.MAX_AOA_FLAPS and ufcp_edit_pos > 0 then
+        text = replace_pos(text, 109)
+        text = replace_pos(text, 114)
+    end
+
     UFCP_TEXT:set(text)
 end
 

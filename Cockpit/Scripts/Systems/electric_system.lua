@@ -86,7 +86,9 @@ local gen_v = 0
 local gen_vnom = 30
 local gen_amax=400
 
-
+local mdp_warmup_delay = 28
+local avoinics_master_on_delay = 2
+local mdp_switch_delay = 2
 
 -- Contactoras
 local contact_cfe = false
@@ -174,10 +176,13 @@ local ctl_sw_ext_pwr_on = false
 local battery_caution = 0
 local gen_caution = 0
 
+local elec_avionics_emergency_warm_up_until = 0
+local elec_avionics_warm_up_until = 0
+
 function update()
     if get_batt_on() or
     (get_generator_on() and get_engine_on())  then -- Generator On and Engine On
-        elec_main_bar_ok:set(1)
+        elec_main_bar_ok:set(((sensor_data.getWOW_LeftMainLandingGear() > 0 or get_engine_on()) and not get_emer_ovrd()) and 1 or 0)
         if elec_emergency_ok:get() == 0 then set_caution(CAUTION_ID.EMER_BUS,0) end
         elec_emergency_ok:set(1)
         
@@ -187,8 +192,86 @@ function update()
             elec_emergency_reserve_ok:set(0) 
         end
 
-        elec_avionics_ok:set(get_avionics_on() and get_elec_main_bar_ok() and 1 or 0)
-        elec_avionics_emergency_ok:set(get_avionics_on() and get_elec_emergency_ok() and 1 or 0)
+        local mdp = elec_avionics_master_mdp:get()
+        if mdp == 0 and get_mdp1_on() then
+            elec_avionics_master_mdp:set(1)
+        elseif mdp == 0 and get_mdp2_on() then
+            elec_avionics_master_mdp:set(2)
+        elseif (mdp == 1 and not get_mdp1_on()) or (mdp == 2 and not get_mdp2_on()) then
+            elec_avionics_master_mdp:set(0)
+    
+            -- Load backup MDP in two seconds, if available
+            if get_mdp1_on() or get_mdp2_on() then
+                if get_mdp1_on() then
+                    elec_avionics_master_mdp:set(1)
+                elseif get_mdp2_on() then
+                    elec_avionics_master_mdp:set(2)
+                end
+
+                elec_avionics_emergency_ok:set(0)
+                elec_avionics_ok:set(0)
+                elec_avionics_emergency_warm_up_until = get_absolute_model_time() + mdp_switch_delay
+                elec_avionics_warm_up_until = get_absolute_model_time() + mdp_switch_delay
+            end
+        end
+
+        if elec_avionics_ok:get() == 0 then
+            if get_avionics_on() and elec_avionics_master_mdp:get() > 0 and get_elec_main_bar_ok() and (sensor_data.getWOW_LeftMainLandingGear() > 0 or get_engine_on()) then
+                if elec_avionics_warm_up_until == -1 then
+                    -- Start warm up
+                    elec_avionics_warm_up_until = get_absolute_model_time() + avoinics_master_on_delay
+                    --elec_avionics_emergency_ok:set(1)
+                elseif get_absolute_model_time() >= elec_avionics_warm_up_until and get_absolute_model_time() >= elec_avionics_emergency_warm_up_until then
+                    -- End warm up
+                    elec_avionics_ok:set(1)
+                    elec_avionics_warm_up_until = -1.0
+                else
+                    -- Continue warm up
+                end
+            else
+                elec_avionics_ok:set(0)
+                if elec_avionics_warm_up_until > 0 then
+                    elec_avionics_warm_up_until = -1.0
+                end
+            end
+        else
+            if get_avionics_on() and elec_avionics_master_mdp:get() > 0 and get_elec_main_bar_ok() and (sensor_data.getWOW_LeftMainLandingGear() > 0 or get_engine_on()) then
+
+            else
+                elec_avionics_ok:set(0)
+                elec_avionics_warm_up_until = -1.0
+            end
+        end
+
+        if elec_avionics_emergency_ok:get() == 0 then
+            -- Take 28 seconds to turn it on
+            if elec_avionics_master_mdp:get() > 0 and get_elec_emergency_ok() then
+                if elec_avionics_emergency_warm_up_until == -1 then
+                    -- Start warm up
+                    elec_avionics_emergency_warm_up_until = get_absolute_model_time() + mdp_warmup_delay
+                    --elec_avionics_emergency_ok:set(1)
+                elseif get_absolute_model_time() >= elec_avionics_emergency_warm_up_until then
+                    -- End warm up
+                    elec_avionics_emergency_ok:set(1)
+                    elec_avionics_emergency_warm_up_until = -1.0
+                else
+                    -- Continue warm up
+                end
+            else
+                elec_avionics_emergency_ok:set(0)
+                if elec_avionics_emergency_warm_up_until > 0 then
+                    elec_avionics_emergency_warm_up_until = -1.0
+                end
+            end
+        else
+            if elec_avionics_master_mdp:get() > 0 and get_elec_emergency_ok() then
+
+            else
+                elec_avionics_emergency_ok:set(0)
+                elec_avionics_emergency_warm_up_until = -1.0
+            end 
+        end
+        
     else
         elec_main_bar_ok:set(0)
         elec_avionics_ok:set(0)
@@ -209,12 +292,28 @@ function update()
         battery_caution = 0
     end
 
-    if not (get_generator_on() and get_engine_on()) and gen_caution == 0 then
+    -- Engine is running but generator switch is off
+    if get_engine_on() and not get_generator_on() and gen_caution == 0 then
         set_caution(CAUTION_ID.GEN, 1)
         gen_caution = 1
-    elseif (get_generator_on() and get_engine_on()) and gen_caution == 1 then
+    -- Engine is running and generator switch is on
+    elseif get_engine_on() and get_generator_on() and gen_caution == 1 then
         set_caution(CAUTION_ID.GEN, 0)
         gen_caution = 0
+    -- Engine is not running and aircraft is airborne
+    elseif not get_engine_on() and sensor_data.getWOW_LeftMainLandingGear() == 0 then
+        set_caution(CAUTION_ID.GEN, 1)
+        gen_caution = 1
+    -- Engine is not running and aircraft is on the ground
+    elseif not get_engine_on() and sensor_data.getWOW_LeftMainLandingGear() > 0 then
+        set_caution(CAUTION_ID.GEN, 0)
+        gen_caution = 0
+    end
+
+    if get_acft_intc_on() and get_engine_on() and get_generator_on() and get_batt_on() and not get_ext_pwr_on() then
+        set_advice(ADVICE_ID.INTC_ON, 1)
+    else
+        set_advice(ADVICE_ID.INTC_ON, 0)
     end
 
     -- update_electrical()
@@ -251,6 +350,8 @@ function post_initialize()
     elseif birth=="GROUND_COLD" then
         dev:performClickableAction(device_commands.ElecBatt, -1, true)
         dev:performClickableAction(device_commands.AviMst, 0, true)
+        elec_avionics_emergency_warm_up_until = -1.0
+        elec_avionics_warm_up_until = -1.0
     end
 
     dev:performClickableAction(device_commands.ElecExtPwr, 0, true)

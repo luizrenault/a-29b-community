@@ -12,6 +12,9 @@ BFI_MB = get_param_handle("BFI_MB")
 ufcp_dah_baro = 2000
 ufcp_dah_ralt = 500
 
+UFCP_DAH_BARO:set(ufcp_dah_baro)
+UFCP_DAH_RALT:set(ufcp_dah_ralt)
+
 -- Methods
 
 local function ufcp_dah_ralt_validate(text, save)

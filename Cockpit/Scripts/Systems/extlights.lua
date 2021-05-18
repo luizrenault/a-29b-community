@@ -170,7 +170,7 @@ function update()
             set_aircraft_draw_argument_value(ExtLight_Strobe_arg, strobelight*flashon_ext)
         end
 
-        if (gear > 0) and (taxilight == 1 or (taxilight == 0 and sensor_data:getWOW_LeftMainLandingGear() >0)) then 
+        if (gear > 0) and (taxilight == 1 or (taxilight == 0 and sensor_data:getWOW_LeftMainLandingGear() == 0)) then 
             set_aircraft_draw_argument_value(ExtLight_Taxi_arg,  1 )
         else 
             set_aircraft_draw_argument_value(ExtLight_Taxi_arg,  0 )
