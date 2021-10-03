@@ -117,7 +117,7 @@ local CMFD2Format=get_param_handle("CMFD2Format")
 CMFD2Format:set(SUB_PAGE_ID.EICAS)
 
 local CMFDDoi=get_param_handle("CMFDDoi")
-CMFDDoi:set(0)
+CMFDDoi:set(1)  -- Set FWD LCMFD as default DOI. This is set by DTE, but usually the aircraft has this as set.
 
 local CMFD1DCLT=get_param_handle("CMFD1DCLT")
 CMFD1DCLT:set(0)
@@ -181,8 +181,8 @@ cmfd_bright[1] = 1
 cmfd_bright[2] = 1
 
 function update()
-    CMFD1On:set(get_elec_avionics_ok() and 1 or 0)
-    CMFD2On:set(get_elec_emergency_ok() and 1 or 0)
+    CMFD1On:set((get_elec_avionics_ok() or (CMFD2SwOn:get() == 0 and get_elec_avionics_emergency_ok())) and 1 or 0)
+    CMFD2On:set(get_elec_avionics_emergency_ok() and 1 or 0)
 
     update_menu1()
     update_menu2()
@@ -332,6 +332,7 @@ function SetCommand(command,value)
 
     if command == device_commands.CMFD1ButtonOn or command == device_commands.CMFD2ButtonOn then
         -- Quando se liga o CMFD, as imagens tornam-se visíveis depois de aproximadamente 30 segundos e o seu desempenho é total depois de 5 minutos.
+        -- O CMFD liga na hora. Essa lógica acima é do MDP.
         CMFD[cmfdnumber]["SwOn"]:set(value)
     end
 

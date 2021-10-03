@@ -116,6 +116,14 @@ function set_advice(id, state)
     end
 end
 
+function set_voice(id, state) -- TODO create voice alarms
+    state = state or 1
+    local alarm = GetDevice(devices.ALARM)
+    --if state == 0 then          alarm:SetCommand(device_commands.ALERTS_RESET_ADVICE,id)
+    --elseif state == 1 then      alarm:SetCommand(device_commands.ALERTS_SET_ADVICE,id)
+    --end
+end
+
 
 function acknowledge_warnings()
     local alarm = GetDevice(devices.ALARM)

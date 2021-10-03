@@ -1,77 +1,291 @@
+dofile(LockOn_Options.script_path.."CMFD/CMFD_DTE_ID_defs.lua")
+
 local DTE_TEXT = get_param_handle("CMFD_DTE_TEXT")
+
+local DTE_FORMAT = get_param_handle("CMFD_DTE_FORMAT")
 local DTE_DVR_STATE = get_param_handle("CMFD_DTE_DVR_STATE")
+local DTE_MPD_STATE = get_param_handle("CMFD_DTE_MPD_STATE")
+local DTE_DB_STATE = get_param_handle("CMFD_DTE_DB_STATE")
+local DTE_PROG_STATE = get_param_handle("CMFD_DTE_PROG_STATE")
+local DTE_INV_STATE = get_param_handle("CMFD_DTE_INV_STATE")
+local DTE_HSD_STATE = get_param_handle("CMFD_DTE_HSD_STATE")
+local DTE_SIM_INV_STATE = get_param_handle("CMFD_DTE_SIM_INV_STATE")
+local DTE_MSMD_STATE = get_param_handle("CMFD_DTE_MSMD_STATE")
 
-local DTE_MPD_LOADED = get_param_handle("CMFD_DTE_MPD_LOADED")
-local DTE_DB_LOADED = get_param_handle("CMFD_DTE_DB_LOADED")
-local DTE_PROG_LOADED = get_param_handle("CMFD_DTE_PROG_LOADED")
-local DTE_INV_LOADED = get_param_handle("CMFD_DTE_INV_LOADED")
-local DTE_HSD_LOADED = get_param_handle("CMFD_DTE_HSD_LOADED")
-local DTE_SIM_INV_LOADED = get_param_handle("CMFD_DTE_SIM_INV_LOADED")
-local DTE_MSMD_LOADED = get_param_handle("CMFD_DTE_MSMD_LOADED")
+local DTE_MPD_BLINK = get_param_handle("CMFD_DTE_MPD_BLINK")
+local DTE_DB_BLINK = get_param_handle("CMFD_DTE_DB_BLINK")
+local DTE_PROG_BLINK = get_param_handle("CMFD_DTE_PROG_BLINK")
+local DTE_INV_BLINK = get_param_handle("CMFD_DTE_INV_BLINK")
+local DTE_HSD_BLINK = get_param_handle("CMFD_DTE_HSD_BLINK")
+local DTE_SIM_INV_BLINK = get_param_handle("CMFD_DTE_SIM_INV_BLINK")
+local DTE_MSMD_BLINK = get_param_handle("CMFD_DTE_MSMD_BLINK")
 
-local CMFD_DTE_DVR_STATE_IDS = {
-    OFF = 0,
-    DTE = 1,
-    BIT = 2
-}
+local UFCP_LMT_MAX_G = get_param_handle("UFCP_LMT_MAX_G")
+local UFCP_LMT_MIN_VEL = get_param_handle("UFCP_LMT_MIN_VEL")
+local UFCP_LMT_MAX_VEL = get_param_handle("UFCP_LMT_MAX_VEL")
+local UFCP_LMT_MAX_AOA = get_param_handle("UFCP_LMT_MAX_AOA")
+local UFCP_LMT_MAX_AOA_FLAPS = get_param_handle("UFCP_LMT_MAX_AOA_FLAPS")
+local UFCP_LMT_MAX_MACH = get_param_handle("UFCP_LMT_MAX_MACH")
 
-CMFD_DTE_DVR_STATE_IDS.OFF = "OFF"
-CMFD_DTE_DVR_STATE_IDS.DTE = "DTE"
-CMFD_DTE_DVR_STATE_IDS.BIT = "BIT"
+local UFCP_DAH_BARO = get_param_handle("UFCP_DAH_BARO")
+local UFCP_DAH_RALT = get_param_handle("UFCP_DAH_RALT")
+
+local UFCP_WS = get_param_handle("UFCP_WS")
+
+local EICAS_FUEL_JOKER = get_param_handle("EICAS_FUEL_JOKER")
+
+-- TODO get bingo and hmpt from UFCP FUEL
+local UFCP_FUEL_BINGO = get_param_handle("UFCP_FUEL_BINGO")
+local UFCP_FUEL_HMPT = get_param_handle("UFCP_FUEL_HMPT")
 
 local mission = ""
 local pilot = ""
 local copilot = ""
 local dtcid = ""
 
-local mpd_loaded = 0
-local db_loaded = 0
-local prog_loaded = 0
-local inv_loaded = 0
-local hsd_loaded = 0
-local sim_inv_loaded = 0
-local msmd_loaded = 0
+local format = CMFD_DTE_FORMAT_IDS.DTE
 
-DTE_MPD_LOADED:set(mpd_loaded)
-DTE_DB_LOADED:set(db_loaded)
-DTE_PROG_LOADED:set(prog_loaded)
-DTE_INV_LOADED:set(inv_loaded)
-DTE_HSD_LOADED:set(hsd_loaded)
-DTE_SIM_INV_LOADED:set(sim_inv_loaded)
-DTE_MSMD_LOADED:set(msmd_loaded)
+local dvr_state = CMFD_DTE_DVR_STATE_IDS.DTE
+local mpd_state = CMFD_DTE_STATE_IDS.UNLOADED
+local db_state = CMFD_DTE_STATE_IDS.UNLOADED
+local prog_state = CMFD_DTE_STATE_IDS.UNLOADED
+local inv_state = CMFD_DTE_STATE_IDS.UNLOADED
+local hsd_state = CMFD_DTE_STATE_IDS.UNLOADED
+local sim_inv_state = CMFD_DTE_STATE_IDS.UNLOADED
+local msmd_state = CMFD_DTE_STATE_IDS.UNLOADED
 
-local cmfd_dte_dvr_state = CMFD_DTE_DVR_STATE_IDS.DTE
-DTE_DVR_STATE:set(cmfd_dte_dvr_state)
+local mission_dir
+
+-- TESTING
+--local terrainVersion          = get_terrain_related_data("edterrainVersion") or 3.0
+local theatre
+local terrainAirdromes = get_terrain_related_data("Airdromes") or {};
+--local terrain_path = get_terrain_related_data("KNEEBOARD") or "none"
+--local user_path    = lfs.writedir().."Mission"
+--local unit_name    = get_aircraft_type()
 
 -- INV: Selected or loading
 -- BOXED: Loaded
 -- BLINKING: Failed
 -- NORMAL: Ready to load
 -- BLANK: DVR OFF OR BIT RUNNING
-function update_dte()
-    local text = ""
 
-    -- Load DTC files.
-    dofile(LockOn_Options.script_path.."../../Mission/GENERAL.lua")
+local function read_ADD_RINV()
+    dofile(mission_dir .. "ADD_RINV.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_ADD_SINV()
+    dofile(mission_dir .. "ADD_SINV.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_ADF()
+    dofile(mission_dir .. "ADF.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_AIRFIELD()
+    dofile(mission_dir .. "AIRFIELD.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_ALN_SLOT()
+    dofile(mission_dir .. "ALN_SLOT.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_AVD_AREA()
+    dofile(mission_dir .. "AVD_AREA.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_CNT_LINE()
+    dofile(mission_dir .. "CNT_LINE.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_COMM1()
+    dofile(mission_dir .. "COMM1.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_DL_PTEXT()
+    dofile(mission_dir .. "DL_PTEXT.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_DL_SETUP()
+    dofile(mission_dir .. "DL_SETUP.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_FLT_AREA()
+    dofile(mission_dir .. "FLT_AREA.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_GENERAL()
+    dtcid = ""
+    pilot = ""
+    copilot = ""
+    mission = ""
+    
+    dofile(mission_dir .. "GENERAL.lua")
 
     dtcid = string.sub(GENERAL.General.DTC_Name:upper(),1,12)
     pilot = string.sub(GENERAL.General.Pilot_1_Name:upper(),1,12)
     copilot = string.sub(GENERAL.General.Pilot_2_Name:upper(),1,12)
     mission = string.sub(GENERAL.General.Mission_Name:upper(),1,12)
+end
 
-    text = text .. "MISSION : " .. string.format("%-12s", mission) .. "\n\n"
-    text = text .. "  PILOT : " .. string.format("%-12s", pilot) .. "\n\n"
-    text = text .. "COPILOT : " .. string.format("%-12s", copilot) .. "\n\n"
-    text = text .. " DTC ID : " .. string.format("%-12s", dtcid)
+local function read_IFF()
+    dofile(mission_dir .. "IFF.lua")
 
-    DTE_MPD_LOADED:set(mpd_loaded)
-    DTE_DB_LOADED:set(db_loaded)
-    DTE_PROG_LOADED:set(prog_loaded)
-    DTE_INV_LOADED:set(inv_loaded)
-    DTE_HSD_LOADED:set(hsd_loaded)
-    DTE_SIM_INV_LOADED:set(sim_inv_loaded)
-    DTE_MSMD_LOADED:set(msmd_loaded)
+    -- TODO read data
+    error()
+end
 
+local function read_MSMD()
+    dofile(mission_dir .. "MSMD.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_NAV_SYS()
+    dofile(mission_dir .. "NAV_SYS.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_PROG()
+    dofile(mission_dir .. "PROG.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_REAL_INV()
+    dofile(mission_dir .. "REAL_INV.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_SIM_INV()
+    dofile(mission_dir .. "SIM_INV.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_SMS_MISC()
+    dofile(mission_dir .. "SMS_MISC.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_VOR()
+    dofile(mission_dir .. "VOR.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_WARNING()
+    dofile(mission_dir .. "WARNING.lua")
+
+    -- TODO read data
+    error()
+end
+
+local function read_WAYPOINT()
+    dofile(mission_dir .. "WAYPOINT.lua")
+
+    -- TODO read data
+    error()
+end
+
+function update_dte()
+    local text = ""
+
+    -- Load DTC files.
+    pcall(read_GENERAL)
+
+    if format == CMFD_DTE_FORMAT_IDS.DTE then
+        text = text .. "MISSION : " .. string.format("%-12s", mission) .. "\n\n"
+        text = text .. "  PILOT : " .. string.format("%-12s", pilot) .. "\n\n"
+        text = text .. "COPILOT : " .. string.format("%-12s", copilot) .. "\n\n"
+        text = text .. " DTC ID : " .. string.format("%-12s", dtcid)
+    elseif format == CMFD_DTE_FORMAT_IDS.QCHK then
+        text = text .. "MAG G        " .. string.format("%4s", string.format("%3.1f", UFCP_LMT_MAX_G:get())) .. "\n\n"
+        text = text .. "MAX AOA F UP " .. string.format("%4s", string.format("%4.1f", UFCP_LMT_MAX_AOA:get())) .. "\n\n"
+        text = text .. "MAX AOA F DN " .. string.format("%4s", string.format("%4.1f", UFCP_LMT_MAX_AOA_FLAPS:get())) .. "\n\n"
+        text = text .. "MAX VEL      " .. string.format("%4s", UFCP_LMT_MAX_VEL:get()) .. "\n\n"
+        text = text .. "MAX MACH     " .. string.format("%4s", string.format("%4.2f", UFCP_LMT_MAX_MACH:get())) .. "\n\n"
+        text = text .. "MIN VEL      " .. string.format("%4s", UFCP_LMT_MIN_VEL:get()) .. "\n\n"
+
+        text = text .. "\n\n"
+
+        text = text .. "DA\\H BARO    " .. string.format("%4s", UFCP_DAH_BARO:get()) .. "\n\n"
+        text = text .. "DA\\H RALT    " .. string.format("%4s", UFCP_DAH_RALT:get()) .. "\n\n"
+
+        text = text .. "\n\n"
+
+        text = text .. "WING SPAN    " .. string.format("%4s", string.format("%4.1f", UFCP_WS:get())) .. "\n\n"
+
+        text = text .. "\n\n"
+
+        text = text .. "JOKER        " .. string.format("%4s", EICAS_FUEL_JOKER:get()) .. "\n\n"
+        text = text .. "BINGO        " .. string.format("%4s", UFCP_FUEL_BINGO:get()) .. "\n\n"
+        text = text .. "HMPT         " .. string.format("%4s", UFCP_FUEL_HMPT:get()) .. "\n\n"
+    end
+
+    DTE_FORMAT:set(format)
+    DTE_DVR_STATE:set(dvr_state)
+    DTE_MPD_STATE:set(mpd_state)
+    DTE_DB_STATE:set(db_state)
+    DTE_PROG_STATE:set(prog_state)
+    DTE_INV_STATE:set(inv_state)
+    DTE_HSD_STATE:set(hsd_state)
+    DTE_SIM_INV_STATE:set(sim_inv_state)
+    DTE_MSMD_STATE:set(msmd_state)
+
+    -- Make OSS text blink if failed
+    local interval = math.floor(2 * get_absolute_model_time() % 2)
+
+    DTE_MPD_BLINK:set(mpd_state == CMFD_DTE_STATE_IDS.FAILED and interval == 0 and 1 or 0)
+    DTE_DB_BLINK:set(db_state == CMFD_DTE_STATE_IDS.FAILED and interval == 0 and 1 or 0)
+    DTE_PROG_BLINK:set(prog_state == CMFD_DTE_STATE_IDS.FAILED and interval == 0 and 1 or 0)
+    DTE_INV_BLINK:set(inv_state == CMFD_DTE_STATE_IDS.FAILED and interval == 0 and 1 or 0)
+    DTE_HSD_BLINK:set(hsd_state == CMFD_DTE_STATE_IDS.FAILED and interval == 0 and 1 or 0)
+    DTE_SIM_INV_BLINK:set(sim_inv_state == CMFD_DTE_STATE_IDS.FAILED and interval == 0 and 1 or 0)
+    DTE_MSMD_BLINK:set(msmd_state == CMFD_DTE_STATE_IDS.FAILED and interval == 0 and 1 or 0)
 
     DTE_TEXT:set(text)
 end
@@ -91,8 +305,16 @@ local function load_mpd()
     -- TOD
     -- MAG DEC
     -- Weight
-
-    mpd_loaded = 1
+    if pcall(read_WAYPOINT) and
+        pcall(read_WARNING) and 
+        pcall(read_NAV_SYS) and 
+        pcall(read_ALN_SLOT) and 
+        pcall(read_AIRFIELD)
+    then
+        mpd_state = CMFD_DTE_STATE_IDS.LOADED
+    else
+        mpd_state = CMFD_DTE_STATE_IDS.FAILED
+    end
 end
 
 local function load_db()
@@ -102,7 +324,14 @@ local function load_db()
     -- Formation names
     -- DL messages
 
-    db_loaded = 1
+    if pcall(read_COMM1) and
+        pcall(read_DL_PTEXT) and 
+        pcall(read_DL_SETUP)
+    then
+        db_state = CMFD_DTE_STATE_IDS.LOADED
+    else
+        db_state = CMFD_DTE_STATE_IDS.FAILED
+    end
 end
 
 local function load_prog()
@@ -113,7 +342,13 @@ local function load_prog()
     -- Range rate
     -- A/A GUN mode
 
-    prog_loaded = 1
+    if pcall(read_PROG) and
+        pcall(read_SMS_MISC)
+    then
+        prog_state = CMFD_DTE_STATE_IDS.LOADED
+    else
+        prog_state = CMFD_DTE_STATE_IDS.FAILED
+    end
 end
 
 local function load_inv()
@@ -123,14 +358,27 @@ local function load_inv()
     -- Strafe limit
     -- Flir installation state
 
-    inv_loaded = 1
+    if pcall(read_ADD_RINV) and
+        pcall(read_REAL_INV)
+    then
+        inv_state = CMFD_DTE_STATE_IDS.LOADED
+    else
+        inv_state = CMFD_DTE_STATE_IDS.FAILED
+    end
 end
 
 local function load_hsd()
     -- Contact line (5 points)
     -- Avoid areas (30)
 
-    hsd_loaded = 1
+    if pcall(read_FLT_AREA) and
+        pcall(read_CNT_LINE) and
+        pcall(read_AVD_AREA) 
+    then
+        hsd_state = CMFD_DTE_STATE_IDS.LOADED
+    else
+        hsd_state = CMFD_DTE_STATE_IDS.FAILED
+    end
 end
 
 local function load_sim_inv()
@@ -138,13 +386,24 @@ local function load_sim_inv()
     -- Rack ID
     -- Machinegun amount
 
-    sim_inv_loaded = 1
+    if pcall(read_ADD_SINV) and
+        pcall(read_SIM_INV)
+    then
+        sim_inv_state = CMFD_DTE_STATE_IDS.LOADED
+    else
+        sim_inv_state = CMFD_DTE_STATE_IDS.FAILED
+    end
 end
 
 local function load_msmd()
     -- Load all mastermodes and select current mastermode
 
-    msmd_loaded = 1
+    if pcall(read_MSMD)
+    then
+        msmd_state = CMFD_DTE_STATE_IDS.LOADED
+    else
+        msmd_state = CMFD_DTE_STATE_IDS.FAILED
+    end
 end
 
 local function load_all()
@@ -156,12 +415,22 @@ local function load_all()
     load_sim_inv()
 end
 
+local function clear_all()
+    if mpd_state < CMFD_DTE_STATE_IDS.LOADED then mpd_state = CMFD_DTE_STATE_IDS.UNLOADED end
+    if db_state < CMFD_DTE_STATE_IDS.LOADED then db_state = CMFD_DTE_STATE_IDS.UNLOADED end
+    if prog_state < CMFD_DTE_STATE_IDS.LOADED then prog_state = CMFD_DTE_STATE_IDS.UNLOADED end
+    if inv_state < CMFD_DTE_STATE_IDS.LOADED then inv_state = CMFD_DTE_STATE_IDS.UNLOADED end
+    if hsd_state < CMFD_DTE_STATE_IDS.LOADED then hsd_state = CMFD_DTE_STATE_IDS.UNLOADED end
+    if sim_inv_state < CMFD_DTE_STATE_IDS.LOADED then sim_inv_state = CMFD_DTE_STATE_IDS.UNLOADED end
+    if msmd_state < CMFD_DTE_STATE_IDS.LOADED then msmd_state = CMFD_DTE_STATE_IDS.UNLOADED end
+end
+
 function SetCommandDte(command,value, CMFD)
     if value == 1 then
         if (command==device_commands.CMFD1OSS3 or command==device_commands.CMFD2OSS3) then
-            -- TODO Stop data transfer
+            clear_all()
         elseif (command==device_commands.CMFD1OSS4 or command==device_commands.CMFD2OSS4) then
-            -- TODO QCHK format
+            format = 1 - format
         elseif (command==device_commands.CMFD1OSS5 or command==device_commands.CMFD2OSS5) then
             load_all()
         elseif (command==device_commands.CMFD1OSS7 or command==device_commands.CMFD2OSS7) then
@@ -183,5 +452,29 @@ function SetCommandDte(command,value, CMFD)
 end
 
 function post_initialize_dte()
+    theatre = get_terrain_related_data("name")
 
+    -- I can't get the terrain name or kneeboard from Syria. Syria has an airport called OS57, so I'll use it as reference.
+    if theatre == nil and terrainAirdromes then
+        for i,airdrome in pairs(terrainAirdromes) do
+            local code = airdrome.code or string.sub(airdrome.id,1,4)
+            if code == "OS57" then
+                theatre = "Syria"
+                break
+            end
+        end
+    end
+    if theatre == nil then
+        theatre = "none"
+    end
+
+    -- Set mission dir. It will look for the theatre dir inside mission, otherwise will load the files inside mission. 
+    -- Is this the ideal way? Or should it be in the user dir? People should have their own mission files, although
+    -- I doubt anyone is gonna make them.
+
+    if theatre ~= "none" then
+        mission_dir = LockOn_Options.script_path.."../../Mission/" .. theatre .. "/"
+    else
+        mission_dir = LockOn_Options.script_path.."../../Mission/"
+    end
 end
