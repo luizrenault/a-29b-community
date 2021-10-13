@@ -50,6 +50,41 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
+## Version 0.2.2b - 12 Oct 2021
+
+### Added
+- QCHK and interactive OSSes to CMFD DTE.
+- CMFD FLIR dummy page.
+- Working CMFD DVR page.
+- Blank submenu pages to checklist.
+- UFCP FUEL format.
+- Alarm test.
+
+### Changes
+- Limited CCIP to HUD FOV.
+- Set FWD LCMFD as default DOI.
+- OSS Stroke Box can now have a width.
+- CMFD DTE QCHK will show the loaded values in the aircraft.
+- DTE will now look for theatre specific mission files.
+- Auto-rudder Engage position is now momentary.
+- RALT can now be turned on/off.
+- Electric system enhancements:
+    - ACFT INTC will show an advice when conditions meet.
+    - GEN CAUT will not turn on with aircraft on the ground and engine off.
+    - Main Bus and Main Avionics Bus gets disconnected when aircraft is airborne and engine is off.
+    - Flaps will only be commanded/change position when Main Bus is connected.
+    - Avionics will turn off when there is no Master MDP.
+    - Left CMFD will stay on if Right CMFD is off and Avionics Master is off.
+    - The MDPs will now take time to warm up.
+    - ELEC OVRD switch will now force the electric system into the emergency mode.
+- V/UHF Guard will switch the COM frequencies to 121.5 and 243.0.
+- Taxi lights should only turn on on auto when in air.
+
+### Fixes
+- FPM calculation was a little off with high roll angles.
+- UFCP LMTs not being highlighted when edited.
+- CCIP cue and bomb fall line.
+
 ## Version 0.2.1b - 08 May 2021
 
 ### Added

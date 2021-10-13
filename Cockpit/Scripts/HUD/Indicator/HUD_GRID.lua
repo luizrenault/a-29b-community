@@ -427,7 +427,7 @@ object.controllers = {
 
 
 -- Flight Path Marker - FPM
-local HUD_FPM_origin = addPlaceholder("HUD_FPM_origin", {0, 0}, nil, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_FPM_Pos"}})
+local HUD_FPM_origin = addPlaceholder("HUD_FPM_origin", {0, 0})
 HUD_FPM_origin.element_params = {"HUD_DCLT", "HUD_BRIGHT"}
 HUD_FPM_origin.controllers = {{"parameter_compare_with_number",0,0}, {"opacity_using_parameter", 1}}
 
