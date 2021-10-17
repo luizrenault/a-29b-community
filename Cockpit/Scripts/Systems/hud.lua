@@ -61,7 +61,9 @@ local HUD = {
     SL_AZIMUTH = get_param_handle("HUD_SL_AZIMUTH"),
     SI_ELEVATION = get_param_handle("HUD_SI_ELEVATION"),
     SI_HIDE = get_param_handle("HUD_SI_HIDE"),
-    EGIR = get_param_handle("HUD_EGIR")
+    EGIR = get_param_handle("HUD_EGIR"),
+    CCIP_DELAYED_AZIMUTH = get_param_handle("HUD_CCIP_DELAYED_AZIMUTH"),
+    CCIP_DELAYED_ELEVATION = get_param_handle("HUD_CCIP_DELAYED_ELEVATION"),
 }
 local WPN = {
     TD_AZIMUTH = get_param_handle("WPN_TD_AZIMUTH"),
@@ -125,6 +127,7 @@ local HUD_MSL_HIDDEN = get_param_handle("HUD_MSL_HIDDEN")
 local HUD_CCIP_PIPER_AZIMUTH = get_param_handle("HUD_CCIP_PIPER_AZIMUTH")
 local HUD_CCIP_PIPER_ELEVATION = get_param_handle("HUD_CCIP_PIPER_ELEVATION")
 local HUD_CCIP_PIPER_HIDDEN = get_param_handle("HUD_CCIP_PIPER_HIDDEN")
+local HUD_CCIP_DELAYED = get_param_handle("HUD_CCIP_DELAYED")
 
 local WS_GUN_PIPER_AZIMUTH = get_param_handle("WS_GUN_PIPER_AZIMUTH")
 local WS_GUN_PIPER_ELEVATION = get_param_handle("WS_GUN_PIPER_ELEVATION")
@@ -182,11 +185,16 @@ local function update_piper_ccip()
 
     --if WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then az = az + slide end
     local roll = sensor_data:getRoll()
-    local az1 = az * math.cos(roll) - el * math.sin(roll)
-    local el1 = el * math.cos(roll) + az * math.sin(roll)
+    local s=math.sin(roll)
+    local c=math.cos(roll)
 
+    local az1 = az * c - el * s
+    local el1 = el * c + az * s
 
+    local size = math.sqrt(az1 * az1 + el1 * el1)
     az1, el1, limited = limit_xy(az1, el1, hud_limit.x - slide, hud_limit.y - vert, -hud_limit.x - slide, -hud_limit.y * 1.3 - vert)
+
+    local ratio = math.sqrt(az1 * az1 + el1 * el1) / size
 
     az = az1 + slide
     el = el1 + vert
@@ -195,13 +203,20 @@ local function update_piper_ccip()
     HUD_CCIP_PIPER_ELEVATION:set(el)
     HUD_CCIP_PIPER_HIDDEN:set(limited)
 
-    local roll = math.atan2(slide-az , vert-el)
+    HUD_CCIP_DELAYED:set(WPN.CCIP_DELAYED:get())
 
-    HUD_PIPER_LINE_A_X:set(slide - 0.004 * math.sin(roll))
-    HUD_PIPER_LINE_A_Y:set(vert  - 0.004 * math.cos(roll))
+    roll = math.atan2(slide-az , vert-el)
+    s=math.sin(roll)
+    c=math.cos(roll)
+    
+    HUD_PIPER_LINE_A_X:set(slide - 0.004 * s)
+    HUD_PIPER_LINE_A_Y:set(vert  - 0.004 * c)
 
-    HUD_PIPER_LINE_B_X:set(az + 0.005 * math.sin(roll))
-    HUD_PIPER_LINE_B_Y:set(el + 0.005 * math.cos(roll))
+    HUD_PIPER_LINE_B_X:set(az + 0.005 * s)
+    HUD_PIPER_LINE_B_Y:set(el + 0.005 * c)
+
+    HUD.CCIP_DELAYED_AZIMUTH:set(slide + (az + 0.005 * s - slide)* ratio )
+    HUD.CCIP_DELAYED_ELEVATION:set(vert + (el + 0.005 * c - vert)* ratio )
 end
 
 local function update_piper_lcos()
@@ -341,6 +356,7 @@ local function update_td()
     HUD.FYT_OS:set(hud_fyt_os)
     HUD.FYT_HIDE:set(0)
 
+    local time_to_impact = WPN.CCRP_TIME:get()
 
     if master_mode == AVIONICS_MASTER_MODE_ID.CCRP and (get_wpn_mass() == WPN_MASS_IDS.SAFE or get_avionics_onground() or (get_wpn_mass() == WPN_MASS_IDS.LIVE and WPN_AG_SEL:get() == 0) or (get_wpn_mass() == WPN_MASS_IDS.SIM and WPN_AG_SEL:get() == 0) ) then
         HUD.CCRP:set(0)
@@ -350,6 +366,7 @@ local function update_td()
         HUD.FYT_HIDE:set(1)
     elseif (master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R) and WPN.CCIP_DELAYED:get() == 1 then
         HUD.CCRP:set(1)
+        time_to_impact = WPN.CCIP_DELAYED_TIME:get()
         HUD.TD_HIDE:set(0)
     elseif get_avionics_master_mode_aa() then
         HUD.CCRP:set(0)
@@ -359,6 +376,7 @@ local function update_td()
     end
 
     local hud_td_azimuth, hud_td_elevation, hud_td_lim, hud_td_lim_x, hud_td_lim_y = limit_xy(td_azimuth, td_elevation, hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
+   
     HUD.TD_AZIMUTH:set(hud_td_azimuth)
     HUD.TD_ELEVATION:set(hud_td_elevation)
     HUD.TD_OS:set(hud_td_lim_y and 1 or 0)
@@ -376,8 +394,8 @@ local function update_td()
         HUD.MAX_RANGE:set(0)
     end
 
-    local time_to_impact = WPN.CCRP_TIME:get()
     if time_to_impact > 5 then time_to_impact = 5 end
+
     if WPN.WEAPON_RELEASE:get() == 1 or time_to_max_range <= 2 then
         HUD.SI_HIDE:set(0)
     elseif time_to_max_range > 2 then 
@@ -572,7 +590,10 @@ function update()
     local dt = CMFD_NAV_FYT_DTK_DT:get()
 
     local ccrp_time = WPN.CCRP_TIME:get()
-    if  master_mode == AVIONICS_MASTER_MODE_ID.CCRP then 
+    if  master_mode == AVIONICS_MASTER_MODE_ID.CCRP then
+        time_text = time_text .. string.format("%02.0f:%02.0f ", math.floor(ccrp_time / 60), math.floor(ccrp_time % 60) )
+    elseif (master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R) and WPN.CCIP_DELAYED:get() == 1 then
+        ccrp_time = WPN.CCIP_DELAYED_TIME:get()
         time_text = time_text .. string.format("%02.0f:%02.0f ", math.floor(ccrp_time / 60), math.floor(ccrp_time % 60) )
     elseif nav_time == UFCP_NAV_TIME_IDS.DT then
         if dt >= 0 then time_text = "A" else time_text = "D" end

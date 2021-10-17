@@ -397,7 +397,7 @@ dev:listen_command(Keys.ElecAcftIntc)
 
 
 function SetCommand(command,value)
-    print_message_to_user("electric_system: command "..tostring(command).." = "..tostring(value))
+    --debug_message_to_user("electric_system: command "..tostring(command).." = "..tostring(value))
     if command == device_commands.ElecBatt then
         if value==0 then
             dev:DC_Battery_on(true)

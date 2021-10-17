@@ -74,6 +74,8 @@ local WPN = {
 local HUD = {
     CCIP_PIPER_AZIMUTH = get_param_handle("HUD_CCIP_PIPER_AZIMUTH"),
     CCIP_PIPER_ELEVATION = get_param_handle("HUD_CCIP_PIPER_ELEVATION"),
+    FPM_SLIDE = get_param_handle("HUD_FPM_SLIDE"),
+    FPM_VERT = get_param_handle("HUD_FPM_VERT"),
 }
 
 local CMFD = {
@@ -408,10 +410,10 @@ local function calculate_ccip_impact()
     local Vx = math.sqrt(Vx0*Vx0 + Vz0 * Vz0)       -- horizontal weapon velocity
     local Sx = Vx * t                               -- horizontal distance travelled by weapon
 
-    local angle = math.atan(h0/Sx) + pitch
-    local roll = sensor_data.getRoll()
-    local azimuth = angle * math.sin(roll)
-    local elevation = -angle * math.cos(roll)
+    --local angle = math.atan(h0/Sx) + pitch
+    --local roll = sensor_data.getRoll()
+    --local azimuth = angle * math.sin(roll)
+    --local elevation = -angle * math.cos(roll)
     return Sx, t, h0
 
 end
@@ -461,14 +463,23 @@ local function  update_ccip_delayed()
         local dy = wpn_ccip_delayed_target.alt_m - y
         local dz = wpn_ccip_delayed_target.lon_m - z
         local p_hdg = 2*math.pi - sensor_data:getHeading()
+        local p_roll = sensor_data:getRoll()
+        local p_pitch = sensor_data:getPitch()
 
         local dif_hdg = (math.atan2(dz, dx) - p_hdg) % (2*math.pi)
         if dif_hdg > math.pi then dif_hdg = dif_hdg - 2 * math.pi end
 
-        local max_range = calculate_ccip_max_range()
-
+        
         local target_dist = math.sqrt(dx * dx +  dz * dz)
         local elevation  = math.atan2(dy, target_dist)
+
+        local s = math.sin(p_roll)
+        local c = math.cos(p_roll)
+
+        local new_azimuth = dif_hdg * c - elevation * s
+        local new_elevation = dif_hdg * s + elevation * c
+        dif_hdg = new_azimuth + p_pitch * s
+        elevation = new_elevation - p_pitch * c
 
         local ccrp_dif = target_dist - Sx
         local ccrp_time = 0
@@ -476,6 +487,7 @@ local function  update_ccip_delayed()
             ccrp_time = ccrp_dif / get_avionics_gs()
         end
 
+        local max_range = calculate_ccip_max_range()
         local time_to_max_range = (target_dist - max_range) / get_avionics_gs()
 
         WPN.CCIP_DELAYED_TIME:set(ccrp_time)
@@ -483,8 +495,7 @@ local function  update_ccip_delayed()
 
         WPN.TD_AVAILABLE:set(1)
         WPN.TD_AZIMUTH:set(dif_hdg)
-        WPN.TD_ELEVATION:set(-sensor_data:getPitch() + elevation)
-        print_message_to_user("time:" .. ccrp_time .. " time_max:" .. time_to_max_range .. " Az:" .. dif_hdg .. " El:" .. elevation)
+        WPN.TD_ELEVATION:set(elevation)
     else 
         WPN.CCIP_DELAYED_TIME:set(-1)
     end
@@ -985,13 +996,50 @@ function SetCommand(command,value)
             if master_mode == AVIONICS_MASTER_MODE_ID.CCRP then
                 wpn_ripple_count = wpn_ripple_count + 1
             elseif ((master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R) and get_param_handle("HUD_CCIP_PIPER_HIDDEN"):get() == 1) then
-                print_message_to_user("CCIP Delayed")
+                local slide = HUD.FPM_SLIDE:get()
+                local vert = HUD.FPM_VERT:get()
+            
                 local ccip_az = HUD.CCIP_PIPER_AZIMUTH:get()
                 local ccip_el = HUD.CCIP_PIPER_ELEVATION:get()
+                
+                local p_hdg = sensor_data:getHeading()
+                local p_pitch = sensor_data:getPitch()
+                local p_roll = sensor_data:getRoll()
+
+                local s = math.sin(p_roll)
+                local c = math.cos(p_roll)
+
+                local new_ccip_az = ccip_az --- slide
+                local new_ccip_el = ccip_el --- vert
+                
+                ccip_az = new_ccip_az * c + new_ccip_el * s
+                ccip_el = new_ccip_el * c - new_ccip_az * s
+
+                local t_hdg = p_hdg - ccip_az
+                local t_pitch = ccip_el + p_pitch
+
+                local x, y, z = sensor_data.getSelfCoordinates()
+
                 wpn_ccip_delayed_target = {}
-                wpn_ccip_delayed_target.lat_m = CMFD.NAV_FYT_LAT_M:get()
-                wpn_ccip_delayed_target.lon_m = CMFD.NAV_FYT_LON_M:get()
-                wpn_ccip_delayed_target.alt_m = CMFD.NAV_FYT_ALT_M:get()
+
+                local h0 = CMFD.NAV_FYT_ALT_M:get() - y
+
+                if master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R then
+                    local Ralt = sensor_data.getRadarAltitude()
+                    local Balt = sensor_data.getBarometricAltitude()
+                    if Ralt < 1600 then 
+                        Ralt_last = Ralt
+                        Balt_last = Balt
+                    end
+                    h0 = -(Ralt_last + Balt - Balt_last) * math.cos(math.abs(p_pitch)) * math.cos(math.abs(p_roll)) -- vertical distance travelled by weapon
+                end
+                
+                local t_dist = h0 / math.tan (t_pitch);
+                
+                wpn_ccip_delayed_target.lat_m = x + t_dist * math.sin(t_hdg + math.pi/2)
+                wpn_ccip_delayed_target.lon_m = z + t_dist * math.cos(t_hdg + math.pi/2)
+                wpn_ccip_delayed_target.alt_m = h0 + y
+
                 wpn_ripple_count = wpn_ripple_count + 1
                 WPN.CCIP_DELAYED:set(1);
             else

@@ -151,7 +151,7 @@ SnapViews = {
 		rollAngle = 0.000000,
 	},
 },
-[2] = {-- player slot 1
+[2] = {-- player slot 2
 	[1] = {--LWin + Num0 : Snap View 0
 		viewAngle = 60.000000,--FOV
 		hAngle	 = 0.000000,

@@ -50,9 +50,10 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
-## Version 0.2.2b - 12 Oct 2021
+## Version 0.2.2b - 17 Oct 2021
 
 ### Added
+- CCIP Delayed Mode.
 - QCHK and interactive OSSes to CMFD DTE.
 - CMFD FLIR dummy page.
 - Working CMFD DVR page.
@@ -85,21 +86,8 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - UFCP LMTs not being highlighted when edited.
 - CCIP cue and bomb fall line.
 
-## Version 0.2.1b - 08 May 2021
-
-### Added
-- Several key bindings.
-- Added placeholder pages to CMFD.
-- Added template CMFD system pages.
-- Added UFCP format to CMFD.
-- Added DTE format to CMFD.
-- HSD Prototype.
-
-### Changes
-- Updated BFI.
-
-### Fixes
-- DA/H UFCP format will now show the correct QNH.
+### Known Issues
+- Bombing range is still a little short
 
 ### TODO
 - Remember A/G Gun Selection
@@ -126,11 +114,28 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Light alarm test not working
 - Battery never runs out of juice, generator inoperative 
 - fuel pump switch inoperative, start works even when it is "off"
-
 - Gear light indicator too weak (gear maneuvering red light too bright at night)
 - Ground effect missing?
 - Storm light comes out nowhere/illuminates outside, but not visible when looking from outside view
 - Differential brake not working
+
+- Time to Impact
+
+## Version 0.2.1b - 08 May 2021
+
+### Added
+- Several key bindings.
+- Added placeholder pages to CMFD.
+- Added template CMFD system pages.
+- Added UFCP format to CMFD.
+- Added DTE format to CMFD.
+- HSD Prototype.
+
+### Changes
+- Updated BFI.
+
+### Fixes
+- DA/H UFCP format will now show the correct QNH.
 
 ## Version 0.2.0b - 01 May 2021
 
