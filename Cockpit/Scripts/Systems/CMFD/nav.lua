@@ -416,7 +416,7 @@ function update_nav()
 
         CMFD.NAV_FYT_LAT_M:set(nav_fyt_list[nav_fyt+1].lat_m)
         CMFD.NAV_FYT_LON_M:set(nav_fyt_list[nav_fyt+1].lon_m)
-        CMFD.NAV_FYT_ALT_M:set(nav_fyt_list[nav_fyt+1].altitude)
+        CMFD.NAV_FYT_ALT_M:set(nav_fyt_list[nav_fyt+1].altitude/3.28084)
 
 
         local oap_brg = hdg
