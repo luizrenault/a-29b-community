@@ -64,6 +64,7 @@ local HUD = {
     EGIR = get_param_handle("HUD_EGIR"),
     CCIP_DELAYED_AZIMUTH = get_param_handle("HUD_CCIP_DELAYED_AZIMUTH"),
     CCIP_DELAYED_ELEVATION = get_param_handle("HUD_CCIP_DELAYED_ELEVATION"),
+    TIME_TO_IMPACT = get_param_handle("HUD_TIME_TO_IMPACT"),
 }
 local WPN = {
     TD_AZIMUTH = get_param_handle("WPN_TD_AZIMUTH"),
@@ -73,6 +74,7 @@ local WPN = {
     WEAPON_RELEASE = get_param_handle("WPN_WEAPON_RELEASE"),
     CCIP_DELAYED_TIME = get_param_handle("WPN_CCIP_DELAYED_TIME"),
     CCIP_DELAYED = get_param_handle("WPN_CCIP_DELAYED"),
+    TIME_TO_IMPACT = get_param_handle("WPN_TIME_TO_IMPACT"),
 }
 
 
@@ -215,8 +217,10 @@ local function update_piper_ccip()
     HUD_PIPER_LINE_B_X:set(az + 0.005 * s)
     HUD_PIPER_LINE_B_Y:set(el + 0.005 * c)
 
-    HUD.CCIP_DELAYED_AZIMUTH:set(slide + (az + 0.005 * s - slide)* ratio )
-    HUD.CCIP_DELAYED_ELEVATION:set(vert + (el + 0.005 * c - vert)* ratio )
+    ratio = 0.8
+
+    HUD.CCIP_DELAYED_AZIMUTH:set(az + 0.015 * s )
+    HUD.CCIP_DELAYED_ELEVATION:set(el + 0.015 * c )
 end
 
 local function update_piper_lcos()
@@ -588,13 +592,18 @@ function update()
     local time_text = ""
     local ttd = CMFD_NAV_FYT_DTK_TTD:get()
     local dt = CMFD_NAV_FYT_DTK_DT:get()
-
+    local tti = HUD.TIME_TO_IMPACT:get()
     local ccrp_time = WPN.CCRP_TIME:get()
-    if  master_mode == AVIONICS_MASTER_MODE_ID.CCRP then
+    
+    if (master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R or master_mode == AVIONICS_MASTER_MODE_ID.CCRP) and tti >= 0 then
+        time_text = time_text .. string.format("¨\t %2.0f", math.floor(tti))
+        HUD.TIME_TO_IMPACT:set(tti - update_time_step)
+    elseif  master_mode == AVIONICS_MASTER_MODE_ID.CCRP then
         time_text = time_text .. string.format("%02.0f:%02.0f ", math.floor(ccrp_time / 60), math.floor(ccrp_time % 60) )
     elseif (master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R) and WPN.CCIP_DELAYED:get() == 1 then
         ccrp_time = WPN.CCIP_DELAYED_TIME:get()
         time_text = time_text .. string.format("%02.0f:%02.0f ", math.floor(ccrp_time / 60), math.floor(ccrp_time % 60) )
+    elseif (master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R) then
     elseif nav_time == UFCP_NAV_TIME_IDS.DT then
         if dt >= 0 then time_text = "A" else time_text = "D" end
         dt = math.abs(dt)

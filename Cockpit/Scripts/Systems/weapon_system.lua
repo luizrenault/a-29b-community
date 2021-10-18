@@ -69,6 +69,7 @@ local WPN = {
     WEAPON_RELEASE = get_param_handle("WPN_WEAPON_RELEASE"),
     CCIP_DELAYED_TIME = get_param_handle("WPN_CCIP_DELAYED_TIME"),
     CCIP_DELAYED = get_param_handle("WPN_CCIP_DELAYED"),
+    TIME_TO_IMPACT = get_param_handle("WPN_TIME_TO_IMPACT"),
 }
 
 local HUD = {
@@ -76,6 +77,7 @@ local HUD = {
     CCIP_PIPER_ELEVATION = get_param_handle("HUD_CCIP_PIPER_ELEVATION"),
     FPM_SLIDE = get_param_handle("HUD_FPM_SLIDE"),
     FPM_VERT = get_param_handle("HUD_FPM_VERT"),
+    TIME_TO_IMPACT = get_param_handle("HUD_TIME_TO_IMPACT"),
 }
 
 local CMFD = {
@@ -440,6 +442,7 @@ local function  update_ccrp()
 
         WPN.CCRP_TIME:set(ccrp_time)
         WPN.TIME_MAX_RANGE:set(time_to_max_range)
+        WPN.TIME_TO_IMPACT:set(t)
 
         WPN.TD_AVAILABLE:set(1)
         WPN.TD_AZIMUTH:set(CMFD.NAV_FYT_DTK_AZIMUTH:get())
@@ -492,6 +495,7 @@ local function  update_ccip_delayed()
 
         WPN.CCIP_DELAYED_TIME:set(ccrp_time)
         WPN.TIME_MAX_RANGE:set(time_to_max_range)
+        WPN.TIME_TO_IMPACT:set(t)
 
         WPN.TD_AVAILABLE:set(1)
         WPN.TD_AZIMUTH:set(dif_hdg)
@@ -546,6 +550,8 @@ local function  update_ccip()
 
         WPN_CCIP_PIPER_AZIMUTH:set(0)
         WPN_CCIP_PIPER_ELEVATION:set(-angle)
+        WPN.TIME_TO_IMPACT:set(t)
+
         return h0, Vy0, Vx, Sx, angle
     else 
         WPN_CCIP_PIPER_AVAILABLE:set(0)
@@ -626,15 +632,9 @@ local function update_ag_sel_wpn()
     if wpn_is_m_last ~= wpn_is_m then
         wpn_is_m_last = wpn_is_m
         WPN_IS_M:set(wpn_is_m)
-    --     wpn_is_time = wpn_is_m * 10
-    --     wpn_is_time_last = wpn_is_time
-    --     WPN_IS_TIME:set(wpn_is_time_last)
     elseif wpn_is_time_last ~= wpn_is_time then
         wpn_is_time_last = wpn_is_time
         WPN_IS_TIME:set(wpn_is_time)
-        -- wpn_is_m = wpn_is_time / 10
-        -- wpn_is_m_last = wpn_is_m
-        -- WPN_IS_M:set(wpn_is_m)
     end
     WPN_AG_QTY:set(wpn_ag_qty)
     WPN_AG_NAME:set(wpn_ag_name)
@@ -824,6 +824,13 @@ function update()
             while wpn_ripple_elapsed >= wpn_ripple_interval and wpn_ripple_count > 0 do
                 wpn_ripple_elapsed = wpn_ripple_elapsed - wpn_ripple_interval
                 wpn_ripple_count = wpn_ripple_count - 1
+                if WPN.CCIP_DELAYED:get() == 1 and wpn_ripple_count == 0 then
+                    WPN.CCIP_DELAYED:set(0)
+                end
+                if (master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R or master_mode == AVIONICS_MASTER_MODE_ID.CCRP) and WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
+                    HUD.TIME_TO_IMPACT:set(WPN.TIME_TO_IMPACT:get())
+                end
+
                 local lauch_op = WPN_LAUNCH_OP:get()
                 if lauch_op == WPN_LAUNCH_OP_IDS.SALVO or lauch_op == WPN_LAUNCH_OP_IDS.PAIR then
                     for i=1,5 do
@@ -1043,6 +1050,10 @@ function SetCommand(command,value)
                 wpn_ripple_count = wpn_ripple_count + 1
                 WPN.CCIP_DELAYED:set(1);
             else
+                if (master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R or master_mode == AVIONICS_MASTER_MODE_ID.CCRP) and WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
+                    HUD.TIME_TO_IMPACT:set(WPN.TIME_TO_IMPACT:get())
+                end
+
                 local lauch_op = WPN_LAUNCH_OP:get()
                 if lauch_op == WPN_LAUNCH_OP_IDS.SALVO or lauch_op == WPN_LAUNCH_OP_IDS.PAIR then
                     for i=1,5 do

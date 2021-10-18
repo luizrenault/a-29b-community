@@ -175,7 +175,7 @@ object.controllers = {
 }
 -- SI Solution Indicator
 object = addStrokeLine(nil, 10, {0,0}, 0, object.name)
-object.vertices = {{-10,0}, {10,0}}
+object.vertices = {{-5,0}, {5,0}}
 object.element_params = {"HUD_BRIGHT", "HUD_SI_HIDE", "HUD_SI_ELEVATION"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
@@ -260,9 +260,9 @@ object.controllers = {
 }
 
 -- CCIP out of screen
-object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
-object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_HIDDEN"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+-- object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
+-- object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_HIDDEN"}
+-- object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
 
 
 -- CCIP Bomb Line
@@ -276,7 +276,7 @@ object.controllers = {
 
 -- CCIP Delayed Indicator
 object = addStrokeLine(nil, 10, {0,0}, 0, HUD_CCIP_BOMB_origin.name)
-object.vertices = {{-10,0}, {10,0}}
+object.vertices = {{-5,0}, {5,0}}
 object.element_params = {"HUD_BRIGHT", "HUD_CCIP_DELAYED_AZIMUTH", "HUD_CCIP_DELAYED_ELEVATION", "HUD_CCIP_PIPER_HIDDEN", "HUD_ROLL"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 

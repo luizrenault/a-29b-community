@@ -119,8 +119,6 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Storm light comes out nowhere/illuminates outside, but not visible when looking from outside view
 - Differential brake not working
 
-- Time to Impact
-
 ## Version 0.2.1b - 08 May 2021
 
 ### Added
