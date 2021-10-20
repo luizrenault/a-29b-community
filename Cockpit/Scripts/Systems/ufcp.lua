@@ -296,6 +296,7 @@ function update()
     local ufcp_bright = get_cockpit_draw_argument_value(480)
     update_egir()
 
+    ufcp_com1_check()
     UFCP_COM1_FREQ:set(ufcp_com1_frequency)
     UFCP_COM1_MOD:set(ufcp_com1_modulation)
     UFCP_COM1_SQL:set(ufcp_com1_sql and 1 or 0)

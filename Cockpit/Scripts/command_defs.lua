@@ -107,6 +107,10 @@ Keys =
     ElecBkp                     = __custom_counter(),
     ElecEmer                     = __custom_counter(),
 
+    COM1                     = __custom_counter(),
+    COM2                     = __custom_counter(),
+    COM3                     = __custom_counter(),
+
 }
 
 start_command   = 3000

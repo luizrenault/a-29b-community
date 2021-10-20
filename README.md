@@ -50,9 +50,10 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
-## Version 0.2.2b - 17 Oct 2021
+## Version 0.2.2b - 20 Oct 2021
 
 ### Added
+- In game Radio.
 - CCIP Delayed Mode.
 - QCHK and interactive OSSes to CMFD DTE.
 - CMFD FLIR dummy page.
@@ -60,6 +61,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Blank submenu pages to checklist.
 - UFCP FUEL format.
 - Alarm test.
+- Time to Impact for bombing.
 
 ### Changes
 - Limited CCIP to HUD FOV.
