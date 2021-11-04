@@ -59,6 +59,7 @@ creators[devices.ALARM]           = {"avLuaDevice"           ,LockOn_Options.scr
 creators[devices.AUTOPILOT]		  = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/autopilot.lua"}
 creators[devices.HELMET_DEVICE]	  = {"avNightVisionGoggles"}
 
+
 --creators[devices.TEST]		      = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/test_device.lua"}
 
 indicators                  = {}
@@ -68,6 +69,7 @@ indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."BFI/i
 indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."HUD/Indicator/HUD_page_init.lua" , devices.HUD ,	{ {"PTR-HUD-CENTER", "PTR-HUD-DOWN", "PTR-HUD-RIGHT"},{},2},2}
 indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."UFCP/UFCP_page_init.lua" , devices.UFCP ,	{ {"PTR-UFCP-CENTER", "PTR-UFCP-DOWN", "PTR-UFCP-RIGHT"},{rx=-0.1},2},2}
 
+--indicators[#indicators + 1] = {"ccGunCamera", LockOn_Options.script_path.."Systems/sai.lua" , nil,{{"CENTER_BFI_PNT","DOWN_BFI_PNT","RIGHT_BFI_PNT"}, {}}}
 
 --indicators[#indicators + 1] = {"ccChart", LockOn_Options.script_path.."Systems/test_device.lua" , devices.TEST ,	{ {"PTR-HUD-CENTER", "PTR-HUD-DOWN", "PTR-HUD-RIGHT"},{},2},2}
 

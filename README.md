@@ -50,11 +50,13 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
-## Version 0.2.2b - 20 Oct 2021
+## Version 0.2.2b - 04 Nov 2021
 
 ### Added
 - In game Radio.
 - CCIP Delayed Mode.
+- CCIP Cluster Bomb calculations
+- CCIP High Drag Bomb calculations
 - QCHK and interactive OSSes to CMFD DTE.
 - CMFD FLIR dummy page.
 - Working CMFD DVR page.
@@ -64,6 +66,9 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Time to Impact for bombing.
 
 ### Changes
+- CCIP Bomb calculations for better precision.
+- CCIP Rocket calculations for better precision.
+- CCIP GUN calculations for better precision.
 - Limited CCIP to HUD FOV.
 - Set FWD LCMFD as default DOI.
 - OSS Stroke Box can now have a width.

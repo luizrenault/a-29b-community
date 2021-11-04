@@ -18,7 +18,6 @@ A_29B =  {
 	propellorShapeType  = '3ARG_PROC_BLUR',
 	propellorShapeName  = 'a29b_blade.fbx',
 	debrisGeneration     = true,
-
 	shape_table_data 	= 
 	{
 		{
@@ -395,7 +394,9 @@ A_29B =  {
 
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
 					{ CLSID = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}" }, -- LAU-61 - 19
-	
+	                { CLSID = "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}", arg_value = 0.0},	-- LAU-68-M151 High Explosive *7
+					{ CLSID = "{LAU_61R}" }, -- LAU-61 - 19
+					
 					-- { CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
 	
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
@@ -420,16 +421,13 @@ A_29B =  {
 
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
 					{ CLSID = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}" }, -- LAU-61 - 19
-	
-					-- { CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
-	
-	
+	                { CLSID = "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}", arg_value = 0.0},	-- LAU-68-M151 High Explosive *7
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
-	
-	
 					{ CLSID = "{CBU_105}" ,arg_increment = 0.0}, -- CBU-105	
+					{ CLSID = "{Mk82SNAKEYE}" }, --MK82SE
+					-- { CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
 					-- { CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
-
+	
 					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
 				}
 			),
@@ -442,6 +440,7 @@ A_29B =  {
 					{ CLSID = "{A-29B TANK}" },
 					{ CLSID = "{BCE4E030-38E9-423E-98ED-24BE3DA87C32}"	},  -- Mk-82
 					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
+					{ CLSID = "{Mk82SNAKEYE}" }, --MK82SE
 					-- { CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
 
 					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
@@ -463,13 +462,13 @@ A_29B =  {
 	
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
 					{ CLSID = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}" }, -- LAU-61 - 19
-	
+	                { CLSID = "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}", arg_value = 0.0},	-- LAU-68-M151 High Explosive *7
+					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
+					{ CLSID = "{CBU_105}" ,arg_increment = 0.0}, -- CBU-105	
+					{ CLSID = "{Mk82SNAKEYE}" }, --MK82SE
+
 					-- { CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
 	
-					{ CLSID = "{00F5DAC4-0466-4122-998F-B1A298E34113}" }, -- M-117
-	
-	
-					{ CLSID = "{CBU_105}" ,arg_increment = 0.0}, -- CBU-105	
 					-- { CLSID = "{GBU_49}" ,arg_increment = 0.10 }, --FRENCH GBU-49
 
 					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
@@ -490,6 +489,7 @@ A_29B =  {
 	
 					{ CLSID = "{4F977A2A-CD25-44df-90EF-164BFA2AE72F}" }, --LAU68-MK156
 					{ CLSID = "{FD90A1DC-9147-49FA-BF56-CB83EF0BD32B}" }, -- LAU-61 - 19
+	                { CLSID = "{A021F29D-18AB-4d3e-985C-FC9C60E35E9E}", arg_value = 0.0},	-- LAU-68-M151 High Explosive *7
 	
 					-- { CLSID	= "AGM114x2_OH_58" }, --"AGM-114K * 2"
 									

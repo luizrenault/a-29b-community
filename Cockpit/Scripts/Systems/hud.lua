@@ -190,13 +190,13 @@ local function update_piper_ccip()
     local s=math.sin(roll)
     local c=math.cos(roll)
 
-    local az1 = az * c - el * s
-    local el1 = el * c + az * s
-
+    local az1 = az-- * c - el * s
+    local el1 = el-- * c + az * s
+    az1 = az1 - slide
+    el1 = el1 - vert
+    
     local size = math.sqrt(az1 * az1 + el1 * el1)
     az1, el1, limited = limit_xy(az1, el1, hud_limit.x - slide, hud_limit.y - vert, -hud_limit.x - slide, -hud_limit.y * 1.3 - vert)
-
-    local ratio = math.sqrt(az1 * az1 + el1 * el1) / size
 
     az = az1 + slide
     el = el1 + vert
@@ -207,7 +207,7 @@ local function update_piper_ccip()
 
     HUD_CCIP_DELAYED:set(WPN.CCIP_DELAYED:get())
 
-    roll = math.atan2(slide-az , vert-el)
+    roll = math.atan2(-az1 , -el1)
     s=math.sin(roll)
     c=math.cos(roll)
     
@@ -217,15 +217,30 @@ local function update_piper_ccip()
     HUD_PIPER_LINE_B_X:set(az + 0.005 * s)
     HUD_PIPER_LINE_B_Y:set(el + 0.005 * c)
 
-    ratio = 0.8
-
     HUD.CCIP_DELAYED_AZIMUTH:set(az + 0.015 * s )
     HUD.CCIP_DELAYED_ELEVATION:set(el + 0.015 * c )
 end
 
+local function global_az_el_to_cockpit(az, el)
+    local p_roll = sensor_data.getRoll()
+    local s = math.sin(p_roll)
+    local c = math.sin(p_roll)
+
+    local az1 = az * c - el * s
+    local el1 = az * s + el * c
+    return az1, el1
+end
+
 local function update_piper_lcos()
+    
     local piper_x = WS_GUN_PIPER_AZIMUTH:get()
-    local piper_y = WS_GUN_PIPER_ELEVATION:get()
+    local piper_y = WS_GUN_PIPER_ELEVATION:get() 
+
+    piper_y = piper_y - math.rad(1)*1.2
+
+    piper_x = piper_x * 0.75
+    piper_y = piper_y * 0.75
+
     local limited = false
     piper_x, piper_y, limited = limit_xy(piper_x, piper_y, hud_limit.x, hud_limit.y)
     local piper_dist = math.sqrt(piper_x*piper_x + piper_y*piper_y)
