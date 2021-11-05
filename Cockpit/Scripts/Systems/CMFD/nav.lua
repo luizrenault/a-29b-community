@@ -34,6 +34,7 @@ local CMFD = {
     NAV_FYT_OAP_BRG = get_param_handle("CMFD_NAV_FYT_OAP_BRG"),
     NAV_FYT_OAP_DIST = get_param_handle("CMFD_NAV_FYT_OAP_DIST"),
     NAV_FYT_OAP_ELV = get_param_handle("CMFD_NAV_FYT_OAP_ELV"),
+    NAV_FYT_SET = get_param_handle("CMFD_NAV_FYT_SET"),
 }
 local CMFD_NAV_ROUT_TEXT = get_param_handle("CMFD_NAV_ROUT_TEXT")
 local CMFD_NAV_ROUT_TEXT1 = get_param_handle("CMFD_NAV_ROUT_TEXT1")
@@ -79,6 +80,8 @@ local CMFD_NAV_SET_TIME = get_param_handle("CMFD_NAV_SET_TIME")
 CMFD_NAV_SET_INDEX:set(-1)
 CMFD_NAV_GET_INDEX:set(-1)
 CMFD_NAV_GET_RDY:set(0)
+
+CMFD.NAV_FYT_SET:set(-1) -- Whenever this value is set, it will try to switch the fyt to the set value. If it fails, it will maintain the current fit and ignore this
 
 local function get_distance(x1, y1, x2, y2)
     local x = x2 - x1
@@ -192,9 +195,9 @@ local function update_nav_get()
             CMFD_NAV_GET_TIME:set(nav_fyt_list[get_index+1].time or 0)
             CMFD_NAV_GET_RDY:set(1)
         else 
-            CMFD_NAV_GET_LAT:set(0)
-            CMFD_NAV_GET_LON:set(0)
-            CMFD_NAV_GET_ELV:set(0)
+            CMFD_NAV_GET_LAT:set(-100) -- Impossible values, so the system considers them invalid
+            CMFD_NAV_GET_LON:set(-200) -- Impossible values, so the system considers them invalid
+            CMFD_NAV_GET_ELV:set(-2000) -- Impossible values, so the system considers them invalid
             CMFD_NAV_GET_TIME:set(0)
             CMFD_NAV_GET_RDY:set(1)
         end
@@ -288,7 +291,29 @@ local function coord_project(orig_lat_m, orig_lon_m, brg, dist)
     return orig_lat_m, orig_lon_m
 end
 
+-- Check if the fyt update request is valid. If it is, switch the fyt to the new value
+function update_fyt()
+    -- Check if a new fyt was set
+    if CMFD.NAV_FYT_SET:get() >= 0 then
+
+        -- Get the value set
+        local nav_fyt_next = CMFD.NAV_FYT_SET:get()
+
+        -- Check if the fyt is valid
+        if nav_fyt_list[nav_fyt_next+1]~=nil then
+
+            -- Update the fyt
+            nav_fyt = CMFD.NAV_FYT_SET:get()
+        end
+
+        -- Clear the request
+        CMFD.NAV_FYT_SET:set(-1)
+    end
+end
+
 function update_nav()
+    update_fyt()
+
     CMFD_NAV_FORMAT:set(nav_format)
     CMFD.NAV_FYT:set(nav_fyt)
     calc_average_speed()
