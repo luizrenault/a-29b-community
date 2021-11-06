@@ -1,12 +1,13 @@
 local openFormation = true
 
---function specialEvent(params) 
---	return staticParamsEvent(Message.wMsgLeaderSpecialCommand, params)
---end
+function specialEvent(params) 
+	print_message_to_user("specialEvent: " ..tostring(params))
+	return staticParamsEvent(Message.wMsgLeaderSpecialCommand, params)
+end
 
 local menus = data.menus
 
---[[data.rootItem = {
+data.rootItem = {
 	name = _('Main'),
 	getSubmenu = function(self)	
 		local tbl = {
@@ -34,7 +35,7 @@ local menus = data.menus
 		return tbl
 	end,
 	builders = {}
-}--]]
+}
 
 local parameters = {
 	fighter = true,
@@ -45,11 +46,11 @@ local parameters = {
 
 utils.verifyChunk(utils.loadfileIn('Scripts/UI/RadioCommandDialogPanel/Config/LockOnAirplane.lua', getfenv()))(parameters)
 
--- utils.verifyChunk(utils.loadfileIn('Scripts/UI/RadioCommandDialogPanel/Config/Common/JTAC.lua', getfenv()))(4)
---utils.verifyChunk(utils.loadfileIn('Scripts/UI/RadioCommandDialogPanel/Config/Common/ATC.lua', getfenv()))(5, {[Airbase.Category.AIRDROME] = true})
---utils.verifyChunk(utils.loadfileIn('Scripts/UI/RadioCommandDialogPanel/Config/Common/Tanker.lua', getfenv()))(6)
---utils.verifyChunk(utils.loadfileIn('Scripts/UI/RadioCommandDialogPanel/Config/Common/AWACS.lua', getfenv()))(7, {tanker = true, radar = false})
---utils.verifyChunk(utils.loadfileIn('Scripts/UI/RadioCommandDialogPanel/Config/Common/Ground Crew.lua', getfenv()))(8)
+utils.verifyChunk(utils.loadfileIn('Scripts/UI/RadioCommandDialogPanel/Config/Common/JTAC.lua', getfenv()))(4)
+utils.verifyChunk(utils.loadfileIn('Scripts/UI/RadioCommandDialogPanel/Config/Common/ATC.lua', getfenv()))(5, {[Airbase.Category.AIRDROME] = true})
+utils.verifyChunk(utils.loadfileIn('Scripts/UI/RadioCommandDialogPanel/Config/Common/Tanker.lua', getfenv()))(6)
+utils.verifyChunk(utils.loadfileIn('Scripts/UI/RadioCommandDialogPanel/Config/Common/AWACS.lua', getfenv()))(7, {tanker = true, radar = true})
+utils.verifyChunk(utils.loadfileIn('Scripts/UI/RadioCommandDialogPanel/Config/Common/Ground Crew.lua', getfenv()))(8)
 
 -- Wheel Chocks
 --[[menus['Wheel chocks'] = {

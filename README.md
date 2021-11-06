@@ -93,9 +93,6 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - UFCP LMTs not being highlighted when edited.
 - CCIP cue and bomb fall line.
 
-### Known Issues
-- Bombing range is still a little short
-
 ### TODO
 - Remember A/G Gun Selection
 - Thrust tables of FM

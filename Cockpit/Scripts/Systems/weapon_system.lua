@@ -127,6 +127,15 @@ function wpn_get_weapon_type(station)
 
 end
 
+function launch_station(station)
+    if WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
+        avSimplestWeaponSystem.LaunchGBU(station, 1688)
+    else
+        dev:launch_station(station)
+    end
+
+end
+
 local function update_storages()
     wpn_sto_total_count = {}
     for i = 0, station_count-1 do
@@ -838,11 +847,11 @@ function update()
                     for i=1,5 do
                         local param = get_param_handle("WPN_POS_"..i.."_SEL")
                         if param:get() == 1 then
-                            dev:launch_station(i-1)
+                            launch_station(i-1)
                         end
                     end
                 else 
-                    dev:launch_station(wpn_ag_sel-1)
+                    launch_station(wpn_ag_sel-1)
                 end
                 update_storages()
                 update_ag_sel_next(true)
@@ -993,7 +1002,7 @@ function SetCommand(command,value)
             WPN.WEAPON_RELEASE:set(0)
         end
         if get_wpn_aa_msl_ready() and value == 1 then 
-            dev:launch_station(wpn_aa_sel-1)
+            launch_station(wpn_aa_sel-1)
             WPN_RELEASE:set(1)
             wpn_release = true
             wpn_release_elapsed = 0.5
@@ -1065,11 +1074,11 @@ function SetCommand(command,value)
                     for i=1,5 do
                         local param = get_param_handle("WPN_POS_"..i.."_SEL")
                         if param:get() == 1 then
-                            dev:launch_station(i-1)
+                            launch_station(i-1)
                         end
                     end
                 else 
-                    dev:launch_station(wpn_ag_sel-1)
+                    launch_station(wpn_ag_sel-1)
                 end
                 update_storages()
                 update_ag_sel_next(true)
@@ -1112,7 +1121,12 @@ function SetCommand(command,value)
     elseif command == Keys.StickStep then
         if get_avionics_master_mode_aa() and value == 1 then 
             update_aa_sel_next()
+        else
+            if value == 1 then
+                avSimplestWeaponSystem.LaunchGBU(1688)
+            end
         end
+
     elseif command == Keys.GunSelDist and value == 1 then
         local param = get_param_handle("WS_TARGET_RANGE")
         local travel_dist = param:get()
