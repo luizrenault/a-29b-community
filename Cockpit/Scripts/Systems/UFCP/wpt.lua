@@ -46,20 +46,23 @@ ufcp_wpt_lon = 0
 ufcp_wpt_elev = 0
 ufcp_wpt_time = 0
 
-ufcp_wpt_utm_gridzone = "XXX"
-ufcp_wpt_utm_digraph = "XX"
-ufcp_wpt_utm_easting = "XXXX"
-ufcp_wpt_utm_northing = "XXXX"
+local ufcp_wpt_utm = {
+    gridzone = "XXX",
+    digraph = "XX",
+    easting = "XXXX",
+    northing = "XXXX",
+    active = false,
+    sel = 0,
+    max_sel = 10,
+}
+
 
 local ufcp_wpt_save_now = false
 
-local ufcp_wpt_utm = false
 
 ufcp_wpt_sel = 0
 local ufcp_wpt_max_sel = 6
 
-ufcp_wpt_utm_sel = 0
-local ufcp_wpt_utm_max_sel = 10
 
 -- Methods
 
@@ -84,10 +87,10 @@ local function ufcp_wpt_load()
             ufcp_wpt_num_last = ufcp_wpt_num
 
             local mgrs = coordinate:LLtoMGRS(ufcp_wpt_lat, ufcp_wpt_lon)
-            ufcp_wpt_utm_gridzone = mgrs.gridzone
-            ufcp_wpt_utm_digraph = mgrs.digraph
-            ufcp_wpt_utm_easting = mgrs.easting
-            ufcp_wpt_utm_northing = mgrs.northing
+            ufcp_wpt_utm.gridzone = mgrs.gridzone
+            ufcp_wpt_utm.digraph = mgrs.digraph
+            ufcp_wpt_utm.easting = mgrs.easting
+            ufcp_wpt_utm.northing = mgrs.northing
         end
     end
 end
@@ -130,15 +133,15 @@ local function valid_geo_input()
 end
 
 local function valid_utm_input()
-    if tonumber(ufcp_wpt_utm_gridzone:sub(1,2)) == nil then
+    if tonumber(ufcp_wpt_utm.gridzone:sub(1,2)) == nil then
         return false
     end
 
-    if tonumber(ufcp_wpt_utm_easting) == nil then
+    if tonumber(ufcp_wpt_utm.easting) == nil then
         return false
     end
 
-    if tonumber(ufcp_wpt_utm_northing) == nil then
+    if tonumber(ufcp_wpt_utm.northing) == nil then
         return false
     end
 
@@ -287,10 +290,10 @@ local function ufcp_wpt_elev_validate(text, save)
             text = ""
 
             -- Move to the next field
-            if not ufcp_wpt_utm then
+            if not ufcp_wpt_utm.active then
                 ufcp_wpt_sel = ufcp_wpt_sel + 1 % ufcp_wpt_max_sel
             else
-                ufcp_wpt_utm_sel = ufcp_wpt_utm_sel + 1 % ufcp_wpt_utm_max_sel
+                ufcp_wpt_utm.sel = ufcp_wpt_utm.sel + 1 % ufcp_wpt_utm.max_sel
             end
         else
             ufcp_edit_invalid = true
@@ -338,7 +341,7 @@ end
 
 -- Update the lat and lon based on mgrs variables
 local function mgrs_to_ll()
-    local ll = coordinate:MGRStoLL(ufcp_wpt_utm_gridzone, ufcp_wpt_utm_digraph, ufcp_wpt_utm_easting, ufcp_wpt_utm_northing)
+    local ll = coordinate:MGRStoLL(ufcp_wpt_utm.gridzone, ufcp_wpt_utm.digraph, ufcp_wpt_utm.easting, ufcp_wpt_utm.northing)
     ufcp_wpt_lat = ll.latitude
     ufcp_wpt_lon = ll.longitude
 end
@@ -347,7 +350,7 @@ local function ufcp_wpt_utm_gridzone_validate(text, save)
     if text:len() >= ufcp_edit_lim or save then
         local number = tonumber(text)
         if number ~= nil and number >= 1 and number <= 60 then
-            ufcp_wpt_utm_gridzone = string.format("%02d", number) .. ufcp_wpt_utm_gridzone:sub(3,3)
+            ufcp_wpt_utm.gridzone = string.format("%02d", number) .. ufcp_wpt_utm.gridzone:sub(3,3)
             if valid_utm_input() then
                 mgrs_to_ll()
             
@@ -356,7 +359,7 @@ local function ufcp_wpt_utm_gridzone_validate(text, save)
                 end
             end
             text = ""
-            ufcp_wpt_utm_sel = ufcp_wpt_utm_sel + 1 % ufcp_wpt_utm_max_sel
+            ufcp_wpt_utm.sel = ufcp_wpt_utm.sel + 1 % ufcp_wpt_utm.max_sel
         else
             ufcp_edit_invalid = true
         end
@@ -369,7 +372,7 @@ local function ufcp_wpt_utm_easting_validate(text, save)
         local number = tonumber(text)
         number = number * 10 -- The input format is 4 digits, while the full format is 5 digits
         if number ~= nil then
-            ufcp_wpt_utm_easting = string.format("%05d", number)
+            ufcp_wpt_utm.easting = string.format("%05d", number)
             if valid_utm_input() then
                 mgrs_to_ll()
             
@@ -378,7 +381,7 @@ local function ufcp_wpt_utm_easting_validate(text, save)
                 end
             end
             text = ""
-            ufcp_wpt_utm_sel = ufcp_wpt_utm_sel + 1 % ufcp_wpt_utm_max_sel
+            ufcp_wpt_utm.sel = ufcp_wpt_utm.sel + 1 % ufcp_wpt_utm.max_sel
         else
             ufcp_edit_invalid = true
         end
@@ -391,7 +394,7 @@ local function ufcp_wpt_utm_northing_validate(text, save)
         local number = tonumber(text)
         number = number * 10 -- The input format is 4 digits, while the full format is 5 digits
         if number ~= nil then
-            ufcp_wpt_utm_northing = string.format("%05d", number)
+            ufcp_wpt_utm.northing = string.format("%05d", number)
             if valid_utm_input() then
                 mgrs_to_ll()
             
@@ -400,7 +403,7 @@ local function ufcp_wpt_utm_northing_validate(text, save)
                 end
             end
             text = ""
-            ufcp_wpt_utm_sel = ufcp_wpt_utm_sel + 1 % ufcp_wpt_utm_max_sel
+            ufcp_wpt_utm.sel = ufcp_wpt_utm.sel + 1 % ufcp_wpt_utm.max_sel
         else
             ufcp_edit_invalid = true
         end
@@ -409,7 +412,7 @@ local function ufcp_wpt_utm_northing_validate(text, save)
 end
 
 local function sel_next_gz_lat()
-    local letter = ufcp_wpt_utm_gridzone:sub(3,3)
+    local letter = ufcp_wpt_utm.gridzone:sub(3,3)
     local letterIdx = 1
     for i, v in ipairs(coordinate.digraphArrayN) do
         if v == letter then
@@ -421,7 +424,7 @@ local function sel_next_gz_lat()
     letterIdx = math.max(math.min(letterIdx % 23, 22), 3)
     letter = coordinate.digraphArrayN[letterIdx]
     
-    ufcp_wpt_utm_gridzone = ufcp_wpt_utm_gridzone:sub(1,2) .. letter
+    ufcp_wpt_utm.gridzone = ufcp_wpt_utm.gridzone:sub(1,2) .. letter
     if valid_utm_input() then
         mgrs_to_ll()
     
@@ -432,7 +435,7 @@ local function sel_next_gz_lat()
 end
 
 local function sel_next_dg_lon()
-    local letter = ufcp_wpt_utm_digraph:sub(1,1)
+    local letter = ufcp_wpt_utm.digraph:sub(1,1)
     local letterIdx = 1
     for i, v in ipairs(coordinate.digraphArrayN) do
         if v == letter then
@@ -444,7 +447,7 @@ local function sel_next_dg_lon()
     letterIdx = (letterIdx - 1) % 24 + 1
     letter = coordinate.digraphArrayN[letterIdx]
     
-    ufcp_wpt_utm_digraph = letter .. ufcp_wpt_utm_digraph:sub(2,2)
+    ufcp_wpt_utm.digraph = letter .. ufcp_wpt_utm.digraph:sub(2,2)
     if valid_utm_input() then
         mgrs_to_ll()
     
@@ -455,7 +458,7 @@ local function sel_next_dg_lon()
 end
 
 local function sel_next_dg_lat()
-    local letter = ufcp_wpt_utm_digraph:sub(2,2)
+    local letter = ufcp_wpt_utm.digraph:sub(2,2)
     local letterIdx = 1
     for i, v in ipairs(coordinate.digraphArrayN) do
         if v == letter then
@@ -467,7 +470,7 @@ local function sel_next_dg_lat()
     letterIdx = (letterIdx - 1) % 24 + 1
     letter = coordinate.digraphArrayN[letterIdx]
     
-    ufcp_wpt_utm_digraph = ufcp_wpt_utm_digraph:sub(1,1) .. letter
+    ufcp_wpt_utm.digraph = ufcp_wpt_utm.digraph:sub(1,1) .. letter
     if valid_utm_input() then
         mgrs_to_ll()
     
@@ -518,7 +521,7 @@ function update_wpt()
 
     local ll = coordinate.LLtoDMMString(ufcp_wpt_lat, ufcp_wpt_lon)
 
-    if not ufcp_wpt_utm then 
+    if not ufcp_wpt_utm.active then 
         -- Fyt/WP
         text = text .. "        FYT/WPT"
         text = text .. " " --if ufcp_wpt_sel == GEO_SEL_IDS.FYT then text = text .. "*" else text = text .. " " end
@@ -584,88 +587,88 @@ function update_wpt()
             text = replace_pos(text, 112)
             text = replace_pos(text, 121)
         end
-    elseif ufcp_wpt_utm then
+    elseif ufcp_wpt_utm.active then
          -- Fyt/WP
          text = text .. "        FYT/WPT"
          text = text .. " " --if ufcp_wpt_sel == GEO_SEL_IDS.FYT then text = text .. "*" else text = text .. " " end
          if ufcp_wpt_fyt then text = text .. "FYT" else text = text .. "WP " end
-         if ufcp_wpt_utm_sel == UTM_SEL_IDS.FYT or ufcp_wpt_utm_sel == UTM_SEL_IDS.NUM then text = text .. "*" else text = text .. " " end
+         if ufcp_wpt_utm.sel == UTM_SEL_IDS.FYT or ufcp_wpt_utm.sel == UTM_SEL_IDS.NUM then text = text .. "*" else text = text .. " " end
  
          -- Number
-         if ufcp_wpt_utm_sel == UTM_SEL_IDS.NUM and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. string.format("%02d", ufcp_wpt_num) end
-         if ufcp_wpt_utm_sel == UTM_SEL_IDS.NUM then text = text .. "*" else text = text .. " " end
+         if ufcp_wpt_utm.sel == UTM_SEL_IDS.NUM and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. string.format("%02d", ufcp_wpt_num) end
+         if ufcp_wpt_utm.sel == UTM_SEL_IDS.NUM then text = text .. "*" else text = text .. " " end
          text = text .. "^\n"
 
          -- Page
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.PAGE then text = text .. "*" else text = text .. " " end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.PAGE then text = text .. "*" else text = text .. " " end
         text = text .. "UTM"
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.PAGE then text = text .. "*" else text = text .. " " end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.PAGE then text = text .. "*" else text = text .. " " end
 
         -- Grid zone
         text = text .. "GZ"
 
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.GZ_LON then text = text .. "*" else text = text .. " " end
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.GZ_LON and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. string.sub(ufcp_wpt_utm_gridzone, 1, 2) end
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.GZ_LON or ufcp_wpt_utm_sel == UTM_SEL_IDS.GZ_LAT then text = text .. "*" else text = text .. " " end
-        text = text .. string.sub(ufcp_wpt_utm_gridzone, 3, 3)
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.GZ_LAT then text = text .. "*" else text = text .. " " end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.GZ_LON then text = text .. "*" else text = text .. " " end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.GZ_LON and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. string.sub(ufcp_wpt_utm.gridzone, 1, 2) end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.GZ_LON or ufcp_wpt_utm.sel == UTM_SEL_IDS.GZ_LAT then text = text .. "*" else text = text .. " " end
+        text = text .. string.sub(ufcp_wpt_utm.gridzone, 3, 3)
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.GZ_LAT then text = text .. "*" else text = text .. " " end
 
         -- Digraph
         text = text .. "     "
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.DG_LON then text = text .. "*" else text = text .. " " end
-        text = text .. string.sub(ufcp_wpt_utm_digraph, 1, 1)
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.DG_LON or ufcp_wpt_utm_sel == UTM_SEL_IDS.DG_LAT then text = text .. "*" else text = text .. " " end
-        text = text .. string.sub(ufcp_wpt_utm_digraph, 2, 2)
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.DG_LAT then text = text .. "*" else text = text .. " " end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.DG_LON then text = text .. "*" else text = text .. " " end
+        text = text .. string.sub(ufcp_wpt_utm.digraph, 1, 1)
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.DG_LON or ufcp_wpt_utm.sel == UTM_SEL_IDS.DG_LAT then text = text .. "*" else text = text .. " " end
+        text = text .. string.sub(ufcp_wpt_utm.digraph, 2, 2)
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.DG_LAT then text = text .. "*" else text = text .. " " end
 
         text = text .. " \n"
 
         -- Easting
         text = text .. "        E"
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.EASTING then text = text .. "*" else text = text .. " " end
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.EASTING and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. (tonumber(ufcp_wpt_utm_easting) >= 0 and string.sub(ufcp_wpt_utm_easting, 1, 4) or "XXXX") end
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.EASTING then text = text .. "*" else text = text .. " " end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.EASTING then text = text .. "*" else text = text .. " " end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.EASTING and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. (tonumber(ufcp_wpt_utm.easting) >= 0 and string.sub(ufcp_wpt_utm.easting, 1, 4) or "XXXX") end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.EASTING then text = text .. "*" else text = text .. " " end
 
         -- Northing
         text = text .. " N "
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.NORTHING then text = text .. "*" else text = text .. " " end
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.NORTHING and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. (tonumber(ufcp_wpt_utm_northing) >= 0 and string.sub(ufcp_wpt_utm_northing, 1, 4) or "XXXX") end
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.NORTHING then text = text .. "*" else text = text .. " " end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.NORTHING then text = text .. "*" else text = text .. " " end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.NORTHING and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. (tonumber(ufcp_wpt_utm.northing) >= 0 and string.sub(ufcp_wpt_utm.northing, 1, 4) or "XXXX") end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.NORTHING then text = text .. "*" else text = text .. " " end
 
         text = text .. "\n"
         
         -- Elevation
         text = text .. "     ELEV  "
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.ELEV then text = text .. "*" else text = text .. " " end
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.ELEV and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. (ufcp_wpt_elev >= -1500 and string.format("%5d", ufcp_wpt_elev) or "XXXXX") end
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.ELEV then text = text .. "*" else text = text .. " " end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.ELEV then text = text .. "*" else text = text .. " " end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.ELEV and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. (ufcp_wpt_elev >= -1500 and string.format("%5d", ufcp_wpt_elev) or "XXXXX") end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.ELEV then text = text .. "*" else text = text .. " " end
 
         text = text .. "F     \n"
 
         -- TOFT
         text = text .. "     TOFT  "
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.TOFT then text = text .. "*" else text = text .. " " end
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.TOFT and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. string.format("%02.0f:%02.0f:%02.0f", time_hours, time_mins, time_secs) end
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.TOFT then text = text .. "*" else text = text .. " " end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.TOFT then text = text .. "*" else text = text .. " " end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.TOFT and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit(true) else text = text .. string.format("%02.0f:%02.0f:%02.0f", time_hours, time_mins, time_secs) end
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.TOFT then text = text .. "*" else text = text .. " " end
 
         text = text .. "   "
 
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.NUM and ufcp_edit_pos > 0 then
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.NUM and ufcp_edit_pos > 0 then
             text = replace_pos(text, 20)
             text = replace_pos(text, 23)
-        elseif ufcp_wpt_utm_sel == UTM_SEL_IDS.GZ_LON and ufcp_edit_pos > 0 then
+        elseif ufcp_wpt_utm.sel == UTM_SEL_IDS.GZ_LON and ufcp_edit_pos > 0 then
             text = replace_pos(text, 33)
             text = replace_pos(text, 36)
-        elseif ufcp_wpt_utm_sel == UTM_SEL_IDS.EASTING and ufcp_edit_pos > 0 then
+        elseif ufcp_wpt_utm.sel == UTM_SEL_IDS.EASTING and ufcp_edit_pos > 0 then
             text = replace_pos(text, 60)
             text = replace_pos(text, 65)
-        elseif ufcp_wpt_utm_sel == UTM_SEL_IDS.NORTHING and ufcp_edit_pos > 0 then
+        elseif ufcp_wpt_utm.sel == UTM_SEL_IDS.NORTHING and ufcp_edit_pos > 0 then
             text = replace_pos(text, 69)
             text = replace_pos(text, 74)
-        elseif ufcp_wpt_utm_sel == UTM_SEL_IDS.ELEV and ufcp_edit_pos > 0 then
+        elseif ufcp_wpt_utm.sel == UTM_SEL_IDS.ELEV and ufcp_edit_pos > 0 then
             text = replace_pos(text, 87)
             text = replace_pos(text, 93)
-        elseif ufcp_wpt_utm_sel == UTM_SEL_IDS.TOFT and ufcp_edit_pos > 0 then
+        elseif ufcp_wpt_utm.sel == UTM_SEL_IDS.TOFT and ufcp_edit_pos > 0 then
             text = replace_pos(text, 112)
             text = replace_pos(text, 121)
         end
@@ -676,31 +679,31 @@ end
 
 function SetCommandWpt(command,value)
     -- Move cursor
-    if not ufcp_wpt_utm then 
+    if not ufcp_wpt_utm.active then 
         if command == device_commands.UFCP_JOY_DOWN and ufcp_edit_pos == 0 and value == 1 then
             ufcp_wpt_sel = (ufcp_wpt_sel + 1) % ufcp_wpt_max_sel
         elseif command == device_commands.UFCP_JOY_UP and ufcp_edit_pos == 0 and value == 1 then
             ufcp_wpt_sel = (ufcp_wpt_sel - 1) % ufcp_wpt_max_sel
         end
-    elseif ufcp_wpt_utm then
+    elseif ufcp_wpt_utm.active then
         if command == device_commands.UFCP_JOY_DOWN and ufcp_edit_pos == 0 and value == 1 then
-            ufcp_wpt_utm_sel = (ufcp_wpt_utm_sel + 1) % ufcp_wpt_utm_max_sel
+            ufcp_wpt_utm.sel = (ufcp_wpt_utm.sel + 1) % ufcp_wpt_utm.max_sel
         elseif command == device_commands.UFCP_JOY_UP and ufcp_edit_pos == 0 and value == 1 then
-            ufcp_wpt_utm_sel = (ufcp_wpt_utm_sel - 1) % ufcp_wpt_utm_max_sel
+            ufcp_wpt_utm.sel = (ufcp_wpt_utm.sel - 1) % ufcp_wpt_utm.max_sel
         end
     end
 
     -- Switch to UTM subformat
     if command == device_commands.UFCP_JOY_RIGHT and value == 1 then
-        if (not ufcp_wpt_utm and ufcp_wpt_sel == GEO_SEL_IDS.PAGE) or (ufcp_wpt_utm and ufcp_wpt_utm_sel == UTM_SEL_IDS.PAGE) then 
-            ufcp_wpt_utm = not ufcp_wpt_utm
-            ufcp_wpt_utm_sel = UTM_SEL_IDS.PAGE
+        if (not ufcp_wpt_utm.active and ufcp_wpt_sel == GEO_SEL_IDS.PAGE) or (ufcp_wpt_utm.active and ufcp_wpt_utm.sel == UTM_SEL_IDS.PAGE) then 
+            ufcp_wpt_utm.active = not ufcp_wpt_utm.active
+            ufcp_wpt_utm.sel = UTM_SEL_IDS.PAGE
             ufcp_wpt_sel = GEO_SEL_IDS.PAGE
         end
     end
 
     -- Switch between FYT and WP modes
-    if (not ufcp_wpt_utm and ufcp_wpt_sel == GEO_SEL_IDS.FYT) or (ufcp_wpt_utm and ufcp_wpt_utm_sel == UTM_SEL_IDS.FYT) then
+    if (not ufcp_wpt_utm.active and ufcp_wpt_sel == GEO_SEL_IDS.FYT) or (ufcp_wpt_utm.active and ufcp_wpt_utm.sel == UTM_SEL_IDS.FYT) then
         if command == device_commands.UFCP_JOY_RIGHT and value == 1 then
             if not ufcp_wpt_fyt then
                 CMFD_NAV_FYT_SET:set(ufcp_wpt_num) -- Try to set the fyt to the selected value
@@ -710,7 +713,7 @@ function SetCommandWpt(command,value)
     end
 
     -- Increase/decrease
-    if (not ufcp_wpt_utm and ufcp_wpt_sel == GEO_SEL_IDS.NUM) or (ufcp_wpt_utm and ufcp_wpt_utm_sel == UTM_SEL_IDS.NUM) then
+    if (not ufcp_wpt_utm.active and ufcp_wpt_sel == GEO_SEL_IDS.NUM) or (ufcp_wpt_utm.active and ufcp_wpt_utm.sel == UTM_SEL_IDS.NUM) then
         if command == device_commands.UFCP_UP and value == 1 then
             if ufcp_wpt_fyt == true then
                 if ufcp_cmfd_ref ~= nil then
@@ -731,7 +734,7 @@ function SetCommandWpt(command,value)
     end
 
     -- Input
-    if not ufcp_wpt_utm then
+    if not ufcp_wpt_utm.active then
         if ufcp_wpt_sel == GEO_SEL_IDS.NUM or 
         ufcp_wpt_sel == GEO_SEL_IDS.LAT or 
         ufcp_wpt_sel == GEO_SEL_IDS.LON or 
@@ -761,44 +764,44 @@ function SetCommandWpt(command,value)
                 ufcp_continue_edit("", GEO_FIELD_INFO[ufcp_wpt_sel], true)
             end
         end
-    elseif ufcp_wpt_utm then
-        if ufcp_wpt_utm_sel == UTM_SEL_IDS.NUM or 
-        ufcp_wpt_utm_sel == UTM_SEL_IDS.GZ_LON or 
-        ufcp_wpt_utm_sel == UTM_SEL_IDS.EASTING or 
-        ufcp_wpt_utm_sel == UTM_SEL_IDS.NORTHING or 
-        ufcp_wpt_utm_sel == UTM_SEL_IDS.ELEV or 
-        ufcp_wpt_utm_sel == UTM_SEL_IDS.TOFT then
+    elseif ufcp_wpt_utm.active then
+        if ufcp_wpt_utm.sel == UTM_SEL_IDS.NUM or 
+        ufcp_wpt_utm.sel == UTM_SEL_IDS.GZ_LON or 
+        ufcp_wpt_utm.sel == UTM_SEL_IDS.EASTING or 
+        ufcp_wpt_utm.sel == UTM_SEL_IDS.NORTHING or 
+        ufcp_wpt_utm.sel == UTM_SEL_IDS.ELEV or 
+        ufcp_wpt_utm.sel == UTM_SEL_IDS.TOFT then
             if command == device_commands.UFCP_1 and value == 1 then
-                ufcp_continue_edit("1", UTM_FIELD_INFO[ufcp_wpt_utm_sel], false)
+                ufcp_continue_edit("1", UTM_FIELD_INFO[ufcp_wpt_utm.sel], false)
             elseif command == device_commands.UFCP_2 and value == 1 then
-                ufcp_continue_edit("2", UTM_FIELD_INFO[ufcp_wpt_utm_sel], false)
+                ufcp_continue_edit("2", UTM_FIELD_INFO[ufcp_wpt_utm.sel], false)
             elseif command == device_commands.UFCP_3 and value == 1 then
-                ufcp_continue_edit("3", UTM_FIELD_INFO[ufcp_wpt_utm_sel], false)
+                ufcp_continue_edit("3", UTM_FIELD_INFO[ufcp_wpt_utm.sel], false)
             elseif command == device_commands.UFCP_4 and value == 1 then
-                ufcp_continue_edit("4", UTM_FIELD_INFO[ufcp_wpt_utm_sel], false)
+                ufcp_continue_edit("4", UTM_FIELD_INFO[ufcp_wpt_utm.sel], false)
             elseif command == device_commands.UFCP_5 and value == 1 then
-                ufcp_continue_edit("5", UTM_FIELD_INFO[ufcp_wpt_utm_sel], false)
+                ufcp_continue_edit("5", UTM_FIELD_INFO[ufcp_wpt_utm.sel], false)
             elseif command == device_commands.UFCP_6 and value == 1 then
-                ufcp_continue_edit("6", UTM_FIELD_INFO[ufcp_wpt_utm_sel], false)
+                ufcp_continue_edit("6", UTM_FIELD_INFO[ufcp_wpt_utm.sel], false)
             elseif command == device_commands.UFCP_7 and value == 1 then
-                ufcp_continue_edit("7", UTM_FIELD_INFO[ufcp_wpt_utm_sel], false)
+                ufcp_continue_edit("7", UTM_FIELD_INFO[ufcp_wpt_utm.sel], false)
             elseif command == device_commands.UFCP_8 and value == 1 then
-                ufcp_continue_edit("8", UTM_FIELD_INFO[ufcp_wpt_utm_sel], false)
+                ufcp_continue_edit("8", UTM_FIELD_INFO[ufcp_wpt_utm.sel], false)
             elseif command == device_commands.UFCP_9 and value == 1 then
-                ufcp_continue_edit("9", UTM_FIELD_INFO[ufcp_wpt_utm_sel], false)
+                ufcp_continue_edit("9", UTM_FIELD_INFO[ufcp_wpt_utm.sel], false)
             elseif command == device_commands.UFCP_0 and value == 1 then
-                ufcp_continue_edit("0", UTM_FIELD_INFO[ufcp_wpt_utm_sel], false)
+                ufcp_continue_edit("0", UTM_FIELD_INFO[ufcp_wpt_utm.sel], false)
             elseif command == device_commands.UFCP_ENTR and value == 1 then
-                ufcp_continue_edit("", UTM_FIELD_INFO[ufcp_wpt_utm_sel], true)
+                ufcp_continue_edit("", UTM_FIELD_INFO[ufcp_wpt_utm.sel], true)
             end
         end
 
         if command == device_commands.UFCP_JOY_RIGHT and value == 1 then
-            if ufcp_wpt_utm_sel == UTM_SEL_IDS.GZ_LAT then
+            if ufcp_wpt_utm.sel == UTM_SEL_IDS.GZ_LAT then
                 sel_next_gz_lat()
-            elseif ufcp_wpt_utm_sel == UTM_SEL_IDS.DG_LON then
+            elseif ufcp_wpt_utm.sel == UTM_SEL_IDS.DG_LON then
                 sel_next_dg_lon()
-            elseif ufcp_wpt_utm_sel == UTM_SEL_IDS.DG_LAT then
+            elseif ufcp_wpt_utm.sel == UTM_SEL_IDS.DG_LAT then
                 sel_next_dg_lat()
             end
         end

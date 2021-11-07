@@ -135,6 +135,21 @@ object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterC
 object.element_params = {"HUD_BRIGHT", "HUD_FYT_OS"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
 
+-- OAP
+object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "8-oap"}, "CenterCenter", {0, 0})
+object.element_params = {"HUD_BRIGHT", "HUD_OAP_HIDE", "CMFD_NAV_FYT_VALID", "HUD_OAP_AZIMUTH", "HUD_OAP_ELEVATION"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_compare_with_number",1,0},
+	{"parameter_compare_with_number",2,1},
+	{"move_left_right_using_parameter", 3, 0.75},
+	{"move_up_down_using_parameter", 4, 0.75},
+}
+
+object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
+object.element_params = {"HUD_BRIGHT", "HUD_OAP_OS"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+
 
 -- CCRP
 local HUD_CCRP_origin = addPlaceholder(nil, {0,0})
@@ -143,7 +158,7 @@ HUD_CCRP_origin.controllers = {{"parameter_compare_with_number", 0, 1}}
 
 -- TD Target Designator
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "5-target"}, "CenterCenter", {0, 0}, HUD_CCRP_origin.name)
-object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_TD_AZIMUTH", "HUD_TD_ELEVATION", "HUD_CCIP_DELAYED"}
+object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_FYT_AZIMUTH", "HUD_FYT_ELEVATION", "HUD_CCIP_DELAYED"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
 	{"parameter_compare_with_number", 1, 0},

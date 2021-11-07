@@ -469,7 +469,7 @@ function SetCommandCommon(command, value)
 end
 
 function SetCommand(command,value)
-    debug_message_to_user("ufcs: command "..tostring(command).." = "..tostring(value))
+    debug_message_to_user("ufcp: command "..tostring(command).." = "..tostring(value))
     if not ufcp_on() then return 0 end
     if command==device_commands.UFCP_WARNRST and value == 1 then
         alarm:SetCommand(command, value)

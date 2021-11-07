@@ -50,9 +50,12 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
-## Version 0.2.2b - 04 Nov 2021
+## Version 0.2.2b - 07 Nov 2021
 
 ### Added
+- OAP UFCP menu and HUD cue.
+- WPT UTM format. 
+- JTAC communication.
 - In game Radio.
 - CCIP Delayed Mode.
 - CCIP Cluster Bomb calculations
@@ -89,6 +92,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Taxi lights should only turn on on auto when in air.
 
 ### Fixes
+- Remade the UFCP WPT.
 - FPM calculation was a little off with high roll angles.
 - UFCP LMTs not being highlighted when edited.
 - CCIP cue and bomb fall line.
