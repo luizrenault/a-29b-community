@@ -145,8 +145,8 @@ SnapViews = {
 		viewAngle = 87.468338,--FOV
 		hAngle	 = 0.000000,
 		vAngle	 = -9.500000,
-		x_trans	 = 0.113927,
-		y_trans	 = -0.004946,
+		x_trans	 = 0.0,
+		y_trans	 = 0.025,
 		z_trans	 = 0.000000,
 		rollAngle = 0.000000,
 	},

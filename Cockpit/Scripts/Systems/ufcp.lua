@@ -298,6 +298,8 @@ function update()
     update_egir()
 
     ufcp_com1_check()
+    ufcp_com2_check()
+
     UFCP_COM1_FREQ:set(ufcp_com1_frequency)
     UFCP_COM1_MOD:set(ufcp_com1_modulation)
     UFCP_COM1_SQL:set(ufcp_com1_sql and 1 or 0)
@@ -503,16 +505,14 @@ function SetCommand(command,value)
         end
     -- Master mode keys
     elseif command == device_commands.UFCP_A_G and value == 1 then
-        -- TODO select CCIP or CCIP R depending on the last selection
-        set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+        if not get_avionics_master_mode_ag() then
+            set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.A_G)
+        end
     elseif command == device_commands.UFCP_A_A and value == 1 then
         set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DGFT_B)
     elseif command == device_commands.UFCP_NAV and value == 1 then
         set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.NAV)
-
-
     elseif command == device_commands.UFCP_UFC then
-
     elseif command == device_commands.UFCP_JOY_LEFT and value == 1 then
         ufcp_edit_clear()
         ufcp_sel_format = UFCP_FORMAT_IDS.MAIN

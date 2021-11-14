@@ -81,7 +81,36 @@ for i = 1,ufcp_com2_max_channel+1 do ufcp_com2_nets2[i] = 0 end
 for i = 1,ufcp_com2_max_channel+1 do ufcp_com2_eccms1[i] = 1 end
 for i = 1,ufcp_com2_max_channel+1 do ufcp_com2_eccms2[i] = 1 end
 
+ufcp_com2_memory = {
+    frequency_last = 0,
+    tx_last = false,
+    rx_last = false,
+    modulation_last = 0,
+    sql_last = 0, 
+}
 -- Methods
+
+function ufcp_com2_check()
+    if ufcp_com2_memory.frequency_last ~= ufcp_com2_frequency then
+        local radio = GetDevice(devices.VUHF2_RADIO)
+        if radio then
+            radio:set_frequency(ufcp_com2_frequency * 1e6)
+        end
+        ufcp_com2_memory.frequency_last = ufcp_com2_frequency
+    end
+    if ufcp_com2_memory.modulation_last ~= ufcp_com2_modulation then
+        local radio = GetDevice(devices.VUHF2_RADIO)
+        if radio then
+            if ufcp_com2_modulation == UFCP_COM_MODE_IDS.AM then
+                radio:set_modulation(MODULATION_AM)
+            elseif ufcp_com2_modulation == UFCP_COM_MODE_IDS.FM then
+                radio:set_modulation(MODULATION_FM)
+            end
+        end
+        ufcp_com2_memory.modulation_last = ufcp_com2_modulation
+    end
+end
+
 
 function ufcp_com2_select_channel(channel)
     -- Set frequency
@@ -541,7 +570,7 @@ function SetCommandCom2(command,value)
 
     -- Activate field
     if ufcp_sel_format == UFCP_FORMAT_IDS.COM2 then
-        if command == device_commands.UFCP_0 and value == 1 then
+        if command == device_commands.UFCP_0 and value == 1 and ufcp_edit_pos <= 0 then
             if sel == SEL_IDS.MAN_FREQUENCY then
                 ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
                 ufcp_com2_frequency = ufcp_com2_frequency_manual
@@ -566,7 +595,7 @@ function SetCommandCom2(command,value)
             end
         end
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM2_NET then
-        if command == device_commands.UFCP_0 and value == 1 then
+        if command == device_commands.UFCP_0 and value == 1 and ufcp_edit_pos <= 0 then
             if net_sel == NET_SEL_IDS.SYNC then
                 -- TODO sync with MSTR
                 show_sync_message_until = ufcp_time + 3

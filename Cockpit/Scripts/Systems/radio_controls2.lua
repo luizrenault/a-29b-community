@@ -72,7 +72,7 @@ end
 
 
 function post_initialize()
-    uhf_radio_device = GetDevice(devices.UHF_RADIO)
+    uhf_radio_device = GetDevice(devices.VUHF1_RADIO)
     -- print_message_to_user(dump("radio",getmetatable(uhf_radio_device)))
     local birth = LockOn_Options.init_conditions.birth_place
 

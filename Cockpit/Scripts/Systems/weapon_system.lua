@@ -334,9 +334,17 @@ end
 
 local master_mode = -1
 local master_mode_last = -1
+local master_mode_a_g_last = -1
 
 local function update_master_mode_changed()
     master_mode = get_avionics_master_mode()
+
+    if master_mode == AVIONICS_MASTER_MODE_ID.A_G then
+        if master_mode_a_g_last == -1 then master_mode_a_g_last = AVIONICS_MASTER_MODE_ID.CCIP end
+        master_mode = master_mode_a_g_last
+        set_avionics_master_mode(master_mode)
+    end
+
     if master_mode == AVIONICS_MASTER_MODE_ID.GUN and WPN_RALT:get() == 1 then master_mode = AVIONICS_MASTER_MODE_ID.GUN_R
     elseif master_mode == AVIONICS_MASTER_MODE_ID.GUN_R and WPN_RALT:get() == 0 then master_mode = AVIONICS_MASTER_MODE_ID.GUN
     elseif master_mode == AVIONICS_MASTER_MODE_ID.CCIP and WPN_RALT:get() == 1 then master_mode = AVIONICS_MASTER_MODE_ID.CCIP_R
@@ -347,6 +355,10 @@ local function update_master_mode_changed()
     elseif master_mode == AVIONICS_MASTER_MODE_ID.FIX_R and WPN_RALT:get() == 0 then master_mode = AVIONICS_MASTER_MODE_ID.FIX
     elseif master_mode == AVIONICS_MASTER_MODE_ID.MARK and WPN_RALT:get() == 1 then master_mode = AVIONICS_MASTER_MODE_ID.MARK_R
     elseif master_mode == AVIONICS_MASTER_MODE_ID.MARK_R and WPN_RALT:get() == 0 then master_mode = AVIONICS_MASTER_MODE_ID.MARK
+    end
+
+    if master_mode >= AVIONICS_MASTER_MODE_ID.GUN and master_mode <= AVIONICS_MASTER_MODE_ID.MAN then
+        master_mode_a_g_last = master_mode
     end
 
     if master_mode ~= master_mode_last then
@@ -378,7 +390,7 @@ local function calculate_ccip_max_range(h0)
     local vel_temp = math.sqrt(Vx0 * Vx0 + Vy0 * Vy0 + Vz0 * Vz0)
     Vy0 = vel_temp / math.sqrt(2)
 
-    local delta = Vy0 * Vy0 - 2 * g * (h0)
+    local delta = Vy0 * Vy0 - 2 * g * (math.abs(h0))
     fly_time = (-Vy0  - math.sqrt(delta))/g                -- time to impact
 
     local Vx = Vy0                                  -- horizontal weapon velocity
@@ -822,7 +834,10 @@ local wpn_ripple_count = 0
 local wpn_ripple_interval = 0
 local wpn_ripple_elapsed = 0
 
+local time_elapsed = 0
+
 function update()
+    time_elapsed = time_elapsed + update_time_step
     update_storages()
     update_master_mode_changed()
     if get_avionics_master_mode_aa() then update_aa()
@@ -945,6 +960,7 @@ dev:listen_command(Keys.TDCX)
 dev:listen_command(Keys.TDCY)
 dev:listen_command(Keys.JettisonWeapons)
 
+local step_time_elapsed = -1;
 
 function SetCommand(command,value)
     debug_message_to_user("weapon: command "..tostring(command).." = "..tostring(value))
@@ -1138,11 +1154,32 @@ function SetCommand(command,value)
             wpn_guns_on = false
         end
     elseif command == Keys.StickStep then
+        if value == 1 then
+            step_time_elapsed = time_elapsed + 0.5
+        end
         if get_avionics_master_mode_aa() and value == 1 then 
             update_aa_sel_next()
-        else
-            if value == 1 then
-                avSimplestWeaponSystem.LaunchGBU(1688)
+        elseif get_avionics_master_mode_ag() and value == 1 then
+            if WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
+                if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R then
+                    set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DTOS)
+                elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then
+                    set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCRP)
+                elseif master_mode == AVIONICS_MASTER_MODE_ID.CCRP or master_mode == AVIONICS_MASTER_MODE_ID.CCRP_R then
+                    set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+                elseif master_mode == AVIONICS_MASTER_MODE_ID.MAN then
+                    set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+                elseif master_mode == AVIONICS_MASTER_MODE_ID.GUN_M then
+                    set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.GUN)
+                end
+            else
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+            end
+        elseif value == 1 then
+            set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+        elseif value == 0 then
+            if time_elapsed>= step_time_elapsed and get_avionics_master_mode_ag() then
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.MAN)
             end
         end
 
@@ -1429,3 +1466,12 @@ need_to_be_closed = false -- close lua state after initialization
 
 -- Instantaneous angle of view of missiles:
 -- IR GOS + - 1 degree
+
+
+
+-- Fzu39 (fusível de proximidade) - yes\no
+-- Fnc time (tempo de funcionamento) - .63; .95; 1.28; 1.60; 1.92; 2.23
+-- HOF (height of function) - 300; 500; 700; 900; 1200; 1500; 1800; 2200; 2600; 3000
+-- DES TOF (desired time of function) - qualquer valor
+-- Min alt - qualquer valor
+-- Esses são para CBU 97, 103 E 105

@@ -37,9 +37,6 @@ GUI = {
 function post_initialize()
   dev:set_frequency(261E6) -- Sochi
   dev:set_modulation(MODULATION_AM)
-  local intercom = GetDevice(devices.INTERCOM)
-  intercom:set_communicator(devices.UHF_RADIO)
-  intercom:make_setup_for_communicator()
 end
 
 need_to_be_closed = false -- close lua state after initialization

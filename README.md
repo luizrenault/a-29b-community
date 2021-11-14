@@ -67,6 +67,9 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - UFCP FUEL format.
 - Alarm test.
 - Time to Impact for bombing.
+- A/G mode select with Stick Step button.
+- Going out and back to A/G mode uses last selection.
+- GBU12, MK20RE, MK81 and MK82SE.
 
 ### Changes
 - CCIP Bomb calculations for better precision.
@@ -96,12 +99,11 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - FPM calculation was a little off with high roll angles.
 - UFCP LMTs not being highlighted when edited.
 - CCIP cue and bomb fall line.
+- UFCP COM2 data editing.
 
 ### TODO
-- Remember A/G Gun Selection
 - Thrust tables of FM
 - A/G Profiles
-- A/G mode select with Stick Step button.
 - FIX is only cosmetic because currently there is only pure EGI/GPS navigation.
 - Create the alarms for the parameters in the LMT format.
 - Set the AA DGFT piper size relative to UFCP_WS (target wingspan in metres)
