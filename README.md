@@ -93,6 +93,14 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
     - ELEC OVRD switch will now force the electric system into the emergency mode.
 - V/UHF Guard will switch the COM frequencies to 121.5 and 243.0.
 - Taxi lights should only turn on on auto when in air.
+- HSD:
+    - Zoom can now be set in manual.
+    - Added shortcut to ADHSI format.
+    - FYTs are displayed by filled circles and WPs by outlined circles
+    - HSD displays the original FYT position when DTK is on.
+- ADHSI:
+    - FYTs are displayed by filled circles and WPs by outlined circles
+    - FYT label is D when DTK is active.
 
 ### Fixes
 - Remade the UFCP WPT.
