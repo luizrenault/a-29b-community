@@ -58,7 +58,7 @@ end
 
 -- RAD SEL
 object = addStrokeText("HSI_RAD_SEL_text", "20", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {-0.9, 0.850}, nil, nil, {"%3.0f"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_RAD_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "HSD_RAD_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}}
 
 object = addOSSArrow(28, 1, CMFD_HSD_origin.name)
@@ -119,17 +119,28 @@ object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1
 
 -- Waypoints
 for k=1,100 do
-    -- Circle
-    object = addMesh(nil, nil, nil, {0,0}, "triangles", HSI_Origin_Rot.name, nil, "CMFD_IND_MAGENTA")
-    object = SetMeshCircle(object, 0.02, 10)
+    -- Outer purple circle outline dashed
+    object = addStrokeCircle(nil, 0.03, {0,0}, HSI_Origin_Rot.name, nil, nil, 0.5, 0.5, true, "CMFD_IND_MAGENTA")
+    object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_DTK" .. k .. "_DIST", "CMFD_HSD_DTK" .. k .. "_BRG", "CMFD_HSD_DTK" .. k}
+    object.controllers = {{"opacity_using_parameter", 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"parameter_in_range",1,0.01,100}, {"parameter_compare_with_number", 3, 1}}
+    object.thickness = 0.05
+
+    -- Outer purple circle outline
+    object = addStrokeCircle(nil, 0.03, {0,0}, HSI_Origin_Rot.name, nil, nil, 0.5, 0.5, false, "CMFD_IND_MAGENTA")
     object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_WP" .. k .. "_DIST", "CMFD_HSD_WP" .. k .. "_BRG"}
     object.controllers = {{"opacity_using_parameter", 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"parameter_in_range",1,0.01,100}}
+    object.thickness = 0.01
+
+    -- Inner purple circle fill
+    object = addMesh(nil, nil, nil, {0,0}, "triangles", HSI_Origin_Rot.name, nil, "CMFD_IND_MAGENTA")
+    object = SetMeshCircle(object, 0.02, 10)
+    object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_WP" .. k .. "_DIST", "CMFD_HSD_WP" .. k .. "_BRG", "CMFD_NAV_FYT"}
+    object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 3, k-1}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"parameter_in_range",1,0.01,100}}
 
     object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {0,0}, HSI_Origin_Rot.name, nil, {" %02.0f"}, CMFD_FONT_MAGENTA)
     object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_WP" .. k .. "_DIST", "CMFD_HSD_WP" .. k .. "_BRG", "CMFD_HSD_WP" .. k .. "_ID", "AVIONICS_HDG"}
     object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 3, 0}, {"parameter_in_range",1,0.01,100}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 4, -math.rad(1)}}
 end
-
 
 local mesh_poly
 mesh_poly                   = CreateElement "ceTexPoly"

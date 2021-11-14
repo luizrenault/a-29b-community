@@ -121,6 +121,15 @@ function update_adhsi()
         ADHSI_DTK:set(0)
     end
 
+    local adhsi_fyt_dist = get_param_handle("CMFD_NAV_FYT_DIST"):get()
+    adhsi_fyt_dist = adhsi_fyt_dist / adhsi_rad_sel
+    if adhsi_fyt_dist > 1.3 then adhsi_fyt_dist = 1.3 end
+    get_param_handle("ADHSI_FYT_DIST"):get()
+
+    if adhsi_ans_mode ~= AVIONICS_ANS_MODE_IDS.EGI or get_avionics_master_mode() ~= AVIONICS_MASTER_MODE_ID.NAV then 
+        ADHSI_DTK:set(0)
+    end
+
     local adhsi_cdi_show_ovrd = adhsi_cdi_show
     if adhsi_ans_mode == AVIONICS_ANS_MODE_IDS.ILS then adhsi_cdi_show_ovrd = 1 end
 
@@ -145,7 +154,6 @@ function update_adhsi()
     ADHSI_GPS_HDG:set(adhsi_gps_hdg)
 
     AVIONICS_ANS_MODE:set(adhsi_ans_mode)
-
 end
 
 function SetCommandAdhsi(command,value, CMFD)
@@ -168,16 +176,13 @@ function SetCommandAdhsi(command,value, CMFD)
             if adhsi_vor_hdg ~= -1 then
                 if adhsi_cdi_show == 0 then adhsi_cdi_show = 1 else adhsi_cdi_show = 0 end
             end
+
+        -- Change zoom
         elseif command==device_commands.CMFD1OSS22 or command==device_commands.CMFD2OSS22 then 
-            if adhsi_rad_sel == 20 then adhsi_rad_sel = 10
-            elseif adhsi_rad_sel == 40 then adhsi_rad_sel = 20
-            elseif adhsi_rad_sel == 80 then adhsi_rad_sel = 40
-            end
+            adhsi_rad_sel = math.max(10, adhsi_rad_sel / 2) -- increase zoom
         elseif command==device_commands.CMFD1OSS23 or command==device_commands.CMFD2OSS23 then 
-            if adhsi_rad_sel == 10 then adhsi_rad_sel = 20
-            elseif adhsi_rad_sel == 20 then adhsi_rad_sel = 40
-            elseif adhsi_rad_sel == 40 then adhsi_rad_sel = 80
-            end
+            adhsi_rad_sel = math.min(80, adhsi_rad_sel * 2) -- decrease zoom
+            
         elseif command==device_commands.CMFD1OSS24 or command==device_commands.CMFD2OSS24 then 
             adhsi_ans_mode = (adhsi_ans_mode + 1) % 4
         end

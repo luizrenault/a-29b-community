@@ -469,14 +469,28 @@ object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
 object.controllers = {{"opacity_using_parameter", 0}}
 
 -- FYT Point
+
+-- Outer purple circle outline
+object = addStrokeCircle(nil, 0.03, {0,0}, HSI_FYT_Origin.name, nil, nil, 0.5, 0.5, false, "CMFD_IND_MAGENTA")
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_FYT_DTK_DIST"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, -0.05, 1.299999}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}}
+object.thickness = 0.01
+
+-- Inner purple circle fill
 object = addMesh(nil, nil, nil, {0,0}, "triangles", HSI_FYT_Origin.name, nil, "CMFD_IND_MAGENTA")
 object = SetMeshCircle(object, 0.02, 10)
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_FYT_DTK_DIST"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, -0.05, 1.299999}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}}
 
+-- No DTK text
 object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {0,0}, HSI_FYT_Origin.name, nil, {" %02.0f"}, CMFD_FONT_MAGENTA)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT", "CMFD_NAV_FYT_DTK_BRG", "AVIONICS_HDG", "ADHSI_FYT_DTK_DIST"}
-object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}, {"move_up_down_using_parameter", 4, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)}, }
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT", "CMFD_NAV_FYT_DTK_BRG", "AVIONICS_HDG", "ADHSI_FYT_DTK_DIST", "ADHSI_DTK"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 5, 0}, {"text_using_parameter", 1, 0}, {"move_up_down_using_parameter", 4, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)}, }
+
+-- DTK text
+object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {0,0}, HSI_FYT_Origin.name, nil, {" D"}, CMFD_FONT_MAGENTA)
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_NAV_FYT", "CMFD_NAV_FYT_DTK_BRG", "AVIONICS_HDG", "ADHSI_FYT_DTK_DIST", "ADHSI_DTK"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 5, 1}, {"text_using_parameter", 1, 0}, {"move_up_down_using_parameter", 4, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)}, }
 
 object = addStrokeCircle(nil, 0.02, {0, 1.3 * HSI_radius}, HSI_FYT_Origin.name, nil, nil, 0.5, 0.5, true, "CMFD_IND_MAGENTA")
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_FYT_DTK_DIST"}

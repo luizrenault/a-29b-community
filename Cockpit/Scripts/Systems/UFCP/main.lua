@@ -137,7 +137,7 @@ function SetCommandMain(command,value)
     elseif command == device_commands.UFCP_4 and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.WPT
         ufcp_wpt_sel = 0
-        ufcp_wpt_utm_sel = 0
+        ufcp_wpt_utm_sel = 9
         ufcp_wpt_fyt = true
     elseif command == device_commands.UFCP_5 and value == 1 then
         ufcp_sel_format = UFCP_FORMAT_IDS.XPDR
