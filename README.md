@@ -50,7 +50,7 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
-## Version 0.2.2b - 14 Nov 2021
+## Version 0.3.0b - 15 Nov 2021
 
 ### Added
 - OAP UFCP menu and HUD cue.
