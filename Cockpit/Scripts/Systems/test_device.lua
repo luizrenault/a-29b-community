@@ -3,14 +3,16 @@
 -- dofile ("scripts/Database/db_scan.lua")
 
 dofile(LockOn_Options.script_path.."dump.lua")
-package.cpath 			= package.cpath..";".. LockOn_Options.script_path.. "..\\..\\bin\\?.dll"
-local avwr = require('avWorkingRadio')   -- loads the DLL
+--package.cpath 			= package.cpath..";".. LockOn_Options.script_path.. "..\\..\\bin\\?.dll"
+--local avwr = require('avSimplestRadio')   -- loads the DLL
+
+
 
 dump("_G",_G)
 dump("_G",getmetatable(_G))
 
 
-dump("list_indication",getmetatable(list_indication()))
+--dump("list_indication",getmetatable(list_indication()))
 
 
 dofile(LockOn_Options.common_script_path.."devices_defs.lua")
@@ -111,7 +113,7 @@ local iPlaneAirBrakeOff = 148
 
 for i=1, 50000 do
     if i== 1032 or i == 1033 or i == 1034 then
-    elseif i==74 or i==75 then
+    --elseif i==74 or i==75 then
     elseif i== 2001 or i == 1033 or i == 2002 or i == 350 then
     elseif i== 93 or i == 94 or i == 95 or i == 96 or i == 98 or i == 99 or i == 215 then --trim
     elseif i ~= 2142 and i~= 2143 and (i < 193 or i> 204)  then 
@@ -120,7 +122,12 @@ for i=1, 50000 do
 end
 function SetCommand(command,value)
     print_message_to_user("test: command "..tostring(command).." = "..tostring(value))
+
     if command == 74 then 
+        local radio = GetDevice(devices.VUHF1_RADIO)
+        dispatch_action(devices.VUHF1_RADIO, 179, 1)
+    elseif command == 179 then 
+        -- print_message_to_user("Setup: " .. avSimplestRadio.avSimplestRadioSetup())
         -- local wpn = GetDevice(devices.WEAPON_SYSTEM)
         -- local WS_DLZ_MAX = get_param_handle("WS_DLZ_MAX")
         -- local WS_DLZ_MIN = get_param_handle("WS_DLZ_MIN")

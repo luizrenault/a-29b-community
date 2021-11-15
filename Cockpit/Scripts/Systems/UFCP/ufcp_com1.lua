@@ -38,6 +38,36 @@ ufcp_com1_power = UFCP_COM_POWER_IDS.HIGH
 ufcp_com1_modulation = UFCP_COM_MODULATION_IDS.AM
 ufcp_com1_sql = true
 
+ufcp_com1_memory = {
+    frequency_last = 0,
+    tx_last = false,
+    rx_last = false,
+    modulation_last = 0,
+    sql_last = 0, 
+}
+
+function ufcp_com1_check()
+    if ufcp_com1_memory.frequency_last ~= ufcp_com1_frequency then
+        local radio = GetDevice(devices.VUHF1_RADIO)
+        if radio then
+            radio:set_frequency(ufcp_com1_frequency * 1e6)
+        end
+        ufcp_com1_memory.frequency_last = ufcp_com1_frequency
+    end
+    if ufcp_com1_memory.modulation_last ~= ufcp_com1_modulation then
+        local radio = GetDevice(devices.VUHF1_RADIO)
+        if radio then
+            if ufcp_com1_modulation == UFCP_COM_MODE_IDS.AM then
+                radio:set_modulation(MODULATION_AM)
+            elseif ufcp_com1_modulation == UFCP_COM_MODE_IDS.FM then
+                radio:set_modulation(MODULATION_FM)
+            end
+        end
+        ufcp_com1_memory.modulation_last = ufcp_com1_modulation
+    end
+end
+
+
 for i = 1,ufcp_com1_max_channel+1 do ufcp_com1_channels[i] = 118 end
 
 -- Methods
@@ -144,6 +174,8 @@ local FIELD_INFO = {
     [SEL_IDS.PRST_FREQUENCY] = {7, ufcp_com1_frequency_prst_validate},
     [SEL_IDS.NEXT_FREQUENCY] = {7, ufcp_com1_frequency_next_validate},
 }
+
+
 
 local sel = 0
 function update_com1()

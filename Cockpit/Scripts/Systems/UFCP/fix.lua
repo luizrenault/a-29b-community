@@ -1,6 +1,11 @@
 -- Constants
 local CMFD_NAV_FYT = get_param_handle("CMFD_NAV_FYT")
 
+
+local SEL_IDS = {
+    FYT = 0,
+}
+
 -- Inits
 ufcp_fix_mode = UFCP_MARK_MODE_IDS.ONTOP
 ufcp_fix_wp = 0

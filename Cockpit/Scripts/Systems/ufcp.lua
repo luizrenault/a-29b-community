@@ -7,12 +7,14 @@ dofile(LockOn_Options.script_path.."dump.lua")
 dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
 dofile(LockOn_Options.script_path.."Systems/weapon_system_api.lua")
+dofile(LockOn_Options.script_path.."Systems/coordinate_api.lua")
 
 startup_print("ufcs: load")
 
 dev = GetSelf()
 local alarm 
 local hud
+local cmfd
 
 update_time_step = 0.02 --update will be called 50 times per second
 make_default_activity(update_time_step)
@@ -23,6 +25,8 @@ Terrain = require('terrain')
 local UFCP_BRIGHT = get_param_handle("UFCP_BRIGHT")
 local ADHSI_VV = get_param_handle("ADHSI_VV")
 local TIME_RUN = get_param_handle("UFCP_TIME_RUN")
+local DVR_SWITCH_STATE = get_param_handle("UFCP_DVR_SWITCH_STATE")
+local RALT_SWITCH_STATE = get_param_handle("UFCP_RALT_SWITCH_STATE")
 
 -- Variables
 ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
@@ -293,6 +297,9 @@ function update()
     local ufcp_bright = get_cockpit_draw_argument_value(480)
     update_egir()
 
+    ufcp_com1_check()
+    ufcp_com2_check()
+
     UFCP_COM1_FREQ:set(ufcp_com1_frequency)
     UFCP_COM1_MOD:set(ufcp_com1_modulation)
     UFCP_COM1_SQL:set(ufcp_com1_sql and 1 or 0)
@@ -323,12 +330,11 @@ function update()
 
     -- UPDATE FORMATS
     if ufcp_sel_format == UFCP_FORMAT_IDS.MAIN then update_main()
-    elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT then update_wpt()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM1 then update_com1()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM2 or ufcp_sel_format == UFCP_FORMAT_IDS.COM2_NET then update_com2()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_AIDS then update_nav_aids()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.DA_H then update_da_h()
-    elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT then update_wpt()
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT or ufcp_sel_format == UFCP_FORMAT_IDS.WPT_UTM then update_wpt()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.XPDR then update_xpdr()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.TIME then update_time()
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.DL_MENU then update_dl_menu()
@@ -403,6 +409,19 @@ function update()
         UFCP_DRIFT_CO:set(0)
     end
 
+    -- UPDATE VUHF GUARD
+    if get_vuhf_guard_on() then -- Should it only work when both MDPs are off?
+        -- Set COM1 to 121.5
+        ufcp_com1_frequency_manual = 121.5
+        ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
+        ufcp_com1_frequency = ufcp_com1_frequency_manual
+
+        -- Set COM2 to 243.0
+        ufcp_com2_frequency_manual = 243
+        ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
+        ufcp_com2_frequency = ufcp_com2_frequency_manual
+    end
+
     UFCP_NAV_MODE:set(ufcp_nav_mode)
     UFCP_NAV_TIME:set(ufcp_nav_time)
 end
@@ -415,12 +434,17 @@ function post_initialize()
     local birth = LockOn_Options.init_conditions.birth_place
     alarm = GetDevice(devices.ALARM)
     hud = GetDevice(devices.HUD)
+    cmfd = GetDevice(devices.CMFD)
     if birth=="GROUND_HOT" or birth=="AIR_HOT" then
         dev:performClickableAction(device_commands.UFCP_DVR, 1, true)
         dev:performClickableAction(device_commands.UFCP_RALT, 1, true)
+        DVR_SWITCH_STATE:set(1)
+        RALT_SWITCH_STATE:set(1)
     elseif birth=="GROUND_COLD" then
         dev:performClickableAction(device_commands.UFCP_DVR, -1, true)
         dev:performClickableAction(device_commands.UFCP_RALT, 0, true)
+        DVR_SWITCH_STATE:set(-1)
+        RALT_SWITCH_STATE:set(0)
     end
     dev:performClickableAction(device_commands.UFCP_UFC, 1, true)
     dev:performClickableAction(device_commands.UFCP_DAY_NIGHT, 0, true)
@@ -431,6 +455,7 @@ end
 dev:listen_command(device_commands.UFCP_WARNRST)
 dev:listen_command(device_commands.UFCP_4)
 dev:listen_command(device_commands.UFCP_BARO_RALT)
+dev:listen_command(device_commands.UFCP_DVR)
 
 function SetCommandCommon(command, value)
     -- Control keys
@@ -446,7 +471,7 @@ function SetCommandCommon(command, value)
 end
 
 function SetCommand(command,value)
-    debug_message_to_user("ufcs: command "..tostring(command).." = "..tostring(value))
+    debug_message_to_user("ufcp: command "..tostring(command).." = "..tostring(value))
     if not ufcp_on() then return 0 end
     if command==device_commands.UFCP_WARNRST and value == 1 then
         alarm:SetCommand(command, value)
@@ -480,16 +505,14 @@ function SetCommand(command,value)
         end
     -- Master mode keys
     elseif command == device_commands.UFCP_A_G and value == 1 then
-        -- TODO select CCIP or CCIP R depending on the last selection
-        set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+        if not get_avionics_master_mode_ag() then
+            set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.A_G)
+        end
     elseif command == device_commands.UFCP_A_A and value == 1 then
         set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DGFT_B)
     elseif command == device_commands.UFCP_NAV and value == 1 then
         set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.NAV)
-
-
     elseif command == device_commands.UFCP_UFC then
-
     elseif command == device_commands.UFCP_JOY_LEFT and value == 1 then
         ufcp_edit_clear()
         ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
@@ -503,6 +526,11 @@ function SetCommand(command,value)
             ufcp_vvvah_mode_last = ufcp_vvvah_mode
             ufcp_vvvah_mode = UFCP_VVVAH_MODE_IDS.VV_VAH
         end
+    elseif command == device_commands.UFCP_DVR then
+        cmfd:SetCommand(command, value) -- This is not reached somehow...
+        DVR_SWITCH_STATE:set(value) -- So I set this.
+    elseif command == device_commands.UFCP_RALT  then
+        RALT_SWITCH_STATE:set(value)
     end
 
     SetCommandCommon(command, value)
@@ -513,7 +541,7 @@ function SetCommand(command,value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.NAV_AIDS then SetCommandNavAids(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.VVVAH then SetCommandVVVAH(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.DA_H then SetCommandDAH(command, value)
-    elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT then SetCommandWpt(command, value)
+    elseif ufcp_sel_format == UFCP_FORMAT_IDS.WPT or ufcp_sel_format == UFCP_FORMAT_IDS.WPT_UTM then SetCommandWpt(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.XPDR then SetCommandXPDR(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.TIME then SetCommandTime(command, value)
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.MARK then SetCommandMark(command, value)

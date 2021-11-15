@@ -135,6 +135,21 @@ object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterC
 object.element_params = {"HUD_BRIGHT", "HUD_FYT_OS"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
 
+-- OAP
+object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "8-oap"}, "CenterCenter", {0, 0})
+object.element_params = {"HUD_BRIGHT", "HUD_OAP_HIDE", "CMFD_NAV_FYT_VALID", "HUD_OAP_AZIMUTH", "HUD_OAP_ELEVATION"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_compare_with_number",1,0},
+	{"parameter_compare_with_number",2,1},
+	{"move_left_right_using_parameter", 3, 0.75},
+	{"move_up_down_using_parameter", 4, 0.75},
+}
+
+object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
+object.element_params = {"HUD_BRIGHT", "HUD_OAP_OS"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+
 
 -- CCRP
 local HUD_CCRP_origin = addPlaceholder(nil, {0,0})
@@ -143,12 +158,13 @@ HUD_CCRP_origin.controllers = {{"parameter_compare_with_number", 0, 1}}
 
 -- TD Target Designator
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "5-target"}, "CenterCenter", {0, 0}, HUD_CCRP_origin.name)
-object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_TD_AZIMUTH", "HUD_TD_ELEVATION"}
+object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_FYT_AZIMUTH", "HUD_FYT_ELEVATION", "HUD_CCIP_DELAYED"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
 	{"parameter_compare_with_number", 1, 0},
 	{"move_left_right_using_parameter", 2, 0.75},
 	{"move_up_down_using_parameter", 3, 0.75},
+	{"parameter_compare_with_number", 4, 0},
 }
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
 object.element_params = {"HUD_BRIGHT", "HUD_TD_OS"}
@@ -174,7 +190,7 @@ object.controllers = {
 }
 -- SI Solution Indicator
 object = addStrokeLine(nil, 10, {0,0}, 0, object.name)
-object.vertices = {{-10,0}, {10,0}}
+object.vertices = {{-5,0}, {5,0}}
 object.element_params = {"HUD_BRIGHT", "HUD_SI_HIDE", "HUD_SI_ELEVATION"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
@@ -243,9 +259,10 @@ object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_n
 
 -- CCIP Bomb
 local HUD_CCIP_BOMB_origin = addPlaceholder(nil, {0,0}, HUD_CCIP_origin.name)
-HUD_CCIP_BOMB_origin.element_params = {"WPN_SELECTED_WEAPON_TYPE"}
+HUD_CCIP_BOMB_origin.element_params = {"WPN_SELECTED_WEAPON_TYPE", "HUD_CCIP_DELAYED"}
 HUD_CCIP_BOMB_origin.controllers = {
 	{"parameter_compare_with_number",0,WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB},
+	{"parameter_compare_with_number",1,0},
 }
 
 -- CCIP Bomb cue
@@ -258,9 +275,10 @@ object.controllers = {
 }
 
 -- CCIP out of screen
-object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
-object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_HIDDEN"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+-- object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
+-- object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_HIDDEN"}
+-- object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+
 
 -- CCIP Bomb Line
 object = addSimpleLine(nil, 10, {0,0}, 0, HUD_CCIP_BOMB_origin.name, nil, 0.5, HUD_MAT_DEF)
@@ -270,6 +288,33 @@ object.controllers = {
 	{"line_object_set_point_using_parameters", 0, 1, 2, 0.75, 0.75},
 	{"line_object_set_point_using_parameters", 1, 3, 4, 0.75, 0.75},
 }
+
+-- CCIP Delayed Indicator
+object = addStrokeLine(nil, 10, {0,0}, 0, HUD_CCIP_BOMB_origin.name)
+object.vertices = {{-5,0}, {5,0}}
+object.element_params = {"HUD_BRIGHT", "HUD_CCIP_DELAYED_AZIMUTH", "HUD_CCIP_DELAYED_ELEVATION", "HUD_CCIP_PIPER_HIDDEN", "HUD_ROLL"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"move_left_right_using_parameter", 1, 0.75},
+	{"move_up_down_using_parameter", 2, 0.75},
+	{"parameter_compare_with_number", 3, 1},
+	{"rotate_using_parameter", 4},
+}
+
+
+-- CCIP Delayed Target Designator
+object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "4-impact-point"}, "CenterCenter", {0, 0}, HUD_CCRP_origin.name)
+object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_TD_AZIMUTH", "HUD_TD_ELEVATION", "HUD_CCIP_DELAYED"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_compare_with_number", 1, 0},
+	{"move_left_right_using_parameter", 2, 0.75},
+	{"move_up_down_using_parameter", 3, 0.75},
+	{"parameter_compare_with_number", 4, 1},
+}
+object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
+object.element_params = {"HUD_BRIGHT", "HUD_TD_OS"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
 
 -- INT
 local HUD_INT_origin = addPlaceholder(nil, {0,0})
@@ -427,7 +472,7 @@ object.controllers = {
 
 
 -- Flight Path Marker - FPM
-local HUD_FPM_origin = addPlaceholder("HUD_FPM_origin", {0, 0}, nil, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_FPM_Pos"}})
+local HUD_FPM_origin = addPlaceholder("HUD_FPM_origin", {0, 0})
 HUD_FPM_origin.element_params = {"HUD_DCLT", "HUD_BRIGHT"}
 HUD_FPM_origin.controllers = {{"parameter_compare_with_number",0,0}, {"opacity_using_parameter", 1}}
 

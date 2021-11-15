@@ -143,7 +143,10 @@ function SetCommand(command,value)
     debug_message_to_user("avionics: command "..tostring(command).." = "..tostring(value))
     if command==Keys.MasterModeSw then
         if value == 1 then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.NAV)
-        elseif value == 2 then set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+        elseif value == 2 then 
+            if not get_avionics_master_mode_ag() then
+                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.A_G)
+            end
         elseif value == 3 then 
             local param = get_param_handle("WPN_AA_SLV_SRC")
             local slv_src = param:get()

@@ -50,6 +50,109 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
+## Version 0.2.2b - 14 Nov 2021
+
+### Added
+- OAP UFCP menu and HUD cue.
+- WPT UTM format. 
+- JTAC communication.
+- In game Radio.
+- CCIP Delayed Mode.
+- CCIP Cluster Bomb calculations
+- CCIP High Drag Bomb calculations
+- QCHK and interactive OSSes to CMFD DTE.
+- CMFD FLIR dummy page.
+- Working CMFD DVR page.
+- Blank submenu pages to checklist.
+- UFCP FUEL format.
+- Alarm test.
+- Time to Impact for bombing.
+- A/G mode select with Stick Step button.
+- Going out and back to A/G mode uses last selection.
+- GBU12, MK20RE, MK81 and MK82SE.
+
+### Changes
+- CCIP Bomb calculations for better precision.
+- CCIP Rocket calculations for better precision.
+- CCIP GUN calculations for better precision.
+- Limited CCIP to HUD FOV.
+- Set FWD LCMFD as default DOI.
+- OSS Stroke Box can now have a width.
+- CMFD DTE QCHK will show the loaded values in the aircraft.
+- DTE will now look for theatre specific mission files.
+- Auto-rudder Engage position is now momentary.
+- RALT can now be turned on/off.
+- Electric system enhancements:
+    - ACFT INTC will show an advice when conditions meet.
+    - GEN CAUT will not turn on with aircraft on the ground and engine off.
+    - Main Bus and Main Avionics Bus gets disconnected when aircraft is airborne and engine is off.
+    - Flaps will only be commanded/change position when Main Bus is connected.
+    - Avionics will turn off when there is no Master MDP.
+    - Left CMFD will stay on if Right CMFD is off and Avionics Master is off.
+    - The MDPs will now take time to warm up.
+    - ELEC OVRD switch will now force the electric system into the emergency mode.
+- V/UHF Guard will switch the COM frequencies to 121.5 and 243.0.
+- Taxi lights should only turn on on auto when in air.
+- HSD:
+    - Zoom can now be set in manual.
+    - Added shortcut to ADHSI format.
+    - FYTs are displayed by filled circles and WPs by outlined circles
+    - HSD displays the original FYT position when DTK is on.
+- ADHSI:
+    - FYTs are displayed by filled circles and WPs by outlined circles
+    - FYT label is D when DTK is active.
+
+### Fixes
+- Remade the UFCP WPT.
+- FPM calculation was a little off with high roll angles.
+- UFCP LMTs not being highlighted when edited.
+- CCIP cue and bomb fall line.
+- UFCP COM2 data editing.
+
+### TODO
+- Thrust tables of FM
+- A/G Profiles
+- FIX is only cosmetic because currently there is only pure EGI/GPS navigation.
+- Create the alarms for the parameters in the LMT format.
+- Set the AA DGFT piper size relative to UFCP_WS (target wingspan in metres)
+- EGI state dictates NAV conditions.
+- Instant Action for sceneries other than Caucasus missing.
+- Warning msg when starting from Instant Action
+- Low res interior texture.
+- Strobe light in the wingtips has a black glare, while the lights do not glare when on.
+- Pilot change when ejecting?
+- Stall is weird (freezes in space), same when flying inverted, on apex of looping, etc.
+- Stall speeds too high? Even with low fuel and little load, stalls happen above 100 knots
+- Stall alarm not working
+- Roll speed too low ?
+- Parking brake without keyboard binding
+- Taxi light turns off when steering/not following nose gear movement
+- Taxing too stiff while turning? No effect of different weight loads.
+- Night/day switch not working
+- Light alarm test not working
+- Battery never runs out of juice, generator inoperative 
+- fuel pump switch inoperative, start works even when it is "off"
+- Gear light indicator too weak (gear maneuvering red light too bright at night)
+- Ground effect missing?
+- Storm light comes out nowhere/illuminates outside, but not visible when looking from outside view
+- Differential brake not working
+
+## Version 0.2.1b - 08 May 2021
+
+### Added
+- Several key bindings.
+- Added placeholder pages to CMFD.
+- Added template CMFD system pages.
+- Added UFCP format to CMFD.
+- Added DTE format to CMFD.
+- HSD Prototype.
+
+### Changes
+- Updated BFI.
+
+### Fixes
+- DA/H UFCP format will now show the correct QNH.
+
 ## Version 0.2.0b - 01 May 2021
 
 ### Added
@@ -91,37 +194,6 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - Altimeter pressure initial adjustment.
 - Flaps, Audio Normal/Bkp and Bleed/Cutoff left/right click behavior.
 - "Brake on" indicator still illuminated after battery is set to "off".
-
-### TODO
-- Remember A/G Gun Selection
-- Thrust tables of FM
-- A/G Profiles
-- A/G mode select with Stick Step button.
-- FIX is only cosmetic because currently there is only pure EGI/GPS navigation.
-- Create the alarms for the parameters in the LMT format.
-- Set the AA DGFT piper size relative to UFCP_WS (target wingspan in metres)
-- EGI state dictates NAV conditions.
-- Instant Action for sceneries other than Caucasus missing.
-- Warning msg when starting from Instant Action
-- Low res interior texture.
-- Strobe light in the wingtips has a black glare, while the lights do not glare when on.
-- Pilot change when ejecting?
-- Stall is weird (freezes in space), same when flying inverted, on apex of looping, etc.
-- Stall speeds too high? Even with low fuel and little load, stalls happen above 100 knots
-- Stall alarm not working
-- Roll speed too low ?
-- Parking brake without keyboard binding
-- Taxi light turns off when steering/not following nose gear movement
-- Taxing too stiff while turning? No effect of different weight loads.
-- Night/day switch not working
-- Light alarm test not working
-- Battery never runs out of juice, generator inoperative 
-- fuel pump switch innoperative, start works even when it is "off"
-
-- Gear light indicator too weak (gear maneuvering red light too bright at night)
-- Ground effect missing?
-- Storm light comes out nowhere/illuminates outside, but not visible when looking from outside view
-- Differential brake not working
 
 ## Version 0.1.8b - 04 April 2021 - Happy Easter
 

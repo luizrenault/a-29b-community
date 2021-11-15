@@ -3,6 +3,8 @@ dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
 
+local PANEL_ALARM_TEST = get_param_handle("PANEL_ALARM_TEST")
+
 -- dofile(LockOn_Options.script_path.."Systems/hydraulic_system_api.lua")
 
 startup_print("gear: load")
@@ -328,7 +330,7 @@ function update_gear()
         end
     end
 
-    if ( ((GEAR_NOSE_STATE+GEAR_LEFT_STATE+GEAR_RIGHT_STATE)/3) ~= gear_handle_pos) and get_elec_emergency_ok() then
+    if ( ((GEAR_NOSE_STATE+GEAR_LEFT_STATE+GEAR_RIGHT_STATE)/3) ~= gear_handle_pos or PANEL_ALARM_TEST:get() == 1) and get_elec_emergency_ok() then
         gear_light_param:set(1.0)
     else
         gear_light_param:set(0.0)

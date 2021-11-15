@@ -106,7 +106,7 @@ UFCP_COM_POWER_IDS = {
 
 UFCP_COM_MODULATION_IDS = {
     AM = 0,
-    FM= 1,
+    FM = 1,
 }
 
 UFCP_VVVAH_MODE_IDS = {
@@ -139,3 +139,7 @@ UFCP_EGI_STATE_IDS = {
     TEND = 13,
 
 }
+
+nav_fyt_list = {}
+nav_fyt = 1
+wpt_index = {}

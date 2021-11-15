@@ -7,6 +7,8 @@ dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 dofile(LockOn_Options.script_path.."Systems/engine_api.lua")
 dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
 
+local PANEL_ALARM_TEST = get_param_handle("PANEL_ALARM_TEST")
+
 -- dofile(LockOn_Options.script_path.."Systems/hydraulic_system_api.lua")
 
 local warnings = {}
@@ -127,10 +129,12 @@ local flash_period = 0.100
 local flash_elapsed = 0
 local warning_light = get_param_handle("WARNING_LIGHT")
 local caution_light = get_param_handle("CAUTION_LIGHT")
+local fire_light = get_param_handle("FIRE_LIGHT")
 
 function update_alerts()
   local i=1
   local warning_flash = 0
+  local fire_flash = 0
   for key, value in pairs(warnings) do
       if i >= 10 then  break end
       local text_param = get_param_handle("EICAS_ERROR".. tostring(i) .."_TEXT")
@@ -139,6 +143,7 @@ function update_alerts()
       if value.state == 1 then
           color_param:set(4)
           warning_flash = 1
+          if value.id == WARNING_ID.FIRE then fire_flash = 1 end
       elseif value.state == 2 then
           color_param:set(1)
       end
@@ -148,8 +153,8 @@ function update_alerts()
   set_hud_warning(warning_flash * (1-hud_warning_supress))
 
   flash_elapsed = flash_elapsed + update_time_step
-  if warning_flash == 1 then
-    if flash_elapsed > 2* flash_period then
+  if warning_flash == 1 or PANEL_ALARM_TEST:get() == 1 then
+    if flash_elapsed > 2* flash_period or PANEL_ALARM_TEST:get() == 1 then
       if get_elec_emergency_ok() then warning_light:set(1) end
     elseif flash_elapsed > flash_period then 
       warning_light:set(0)
@@ -157,7 +162,19 @@ function update_alerts()
   else
     warning_light:set(0)
   end
+
   if not get_elec_emergency_ok() then warning_light:set(0) end
+
+  if fire_flash == 1 then
+    if flash_elapsed > 2* flash_period then
+      if get_elec_emergency_ok() then fire_light:set(1) end
+    elseif flash_elapsed > flash_period then 
+      fire_light:set(0)
+    end
+  else
+    fire_light:set(0)
+  end
+  if not get_elec_emergency_ok() then fire_light:set(0) end
 
   local caution_flash = 0
   for key, value in pairs(cautions) do
@@ -174,8 +191,8 @@ function update_alerts()
       i = i + 1
   end
 
-  if caution_flash == 1 then
-    if flash_elapsed > 2* flash_period then
+  if caution_flash == 1 or PANEL_ALARM_TEST:get() == 1 then
+    if flash_elapsed > 2* flash_period or PANEL_ALARM_TEST:get() == 1 then
       if get_elec_emergency_ok() then caution_light:set(1) end
     elseif flash_elapsed > flash_period then 
       caution_light:set(0)
