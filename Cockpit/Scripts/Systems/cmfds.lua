@@ -204,8 +204,8 @@ function update()
     update_eicas()
    
 
-    CMFD1_BRIGHT:set(cmfd_bright[1])
-    CMFD2_BRIGHT:set(cmfd_bright[2])
+    CMFD1_BRIGHT:set(2^(-10+cmfd_bright[1]*10))
+    CMFD2_BRIGHT:set(2^(-10+cmfd_bright[2]*10))
     
     if DMSLeftElapsed > 0 then
         DMSLeftElapsed = DMSLeftElapsed - update_time_step
