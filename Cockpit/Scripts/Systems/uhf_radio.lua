@@ -28,8 +28,8 @@ agr = {
 }
 
 GUI = {
-	range = {min = 225E6, max = 399.975E6, step = 25E3}, --Hz
-	displayName = _('UHF Radio AN/ARC-164'),
+	range = {min = 108E6, max = 399.975E6, step = 25E3}, --Hz
+	displayName = _('V/UHF XT-6013'),
 	AM = true,
 	FM = true,
 }

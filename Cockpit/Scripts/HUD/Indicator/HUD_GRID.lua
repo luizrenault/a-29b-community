@@ -485,14 +485,15 @@ object = addStrokeSymbol("HUD_FPM_CO", {"a29b_stroke_symbols_HUD", "2-flightpath
 object.element_params = {"HUD_FPM_VERT", "UFCP_DRIFT_CO", "HUD_BRIGHT"}
 object.controllers = {{"move_up_down_using_parameter", 0, 0.75}, {"parameter_compare_with_number",1,1}, {"opacity_using_parameter", 2}}
 
+-- ILS
 object = addStrokeSymbol("HUD_ILS_LOC", {"a29b_stroke_symbols_HUD", "ils-loc"}, "FromSet", {0, 0}, "HUD_FPM", {{"HUD_FPM_Flash"}})
-object.element_params = {"NAV_ILS_LOC_DEV", "NAV_ILS_LOC_VALID", "HUD_BRIGHT", "AVIONICS_ANS_MODE"}
-object.controllers = {{"move_left_right_using_parameter", 0, 1}, {"parameter_compare_with_number",1,1}, {"opacity_using_parameter", 2}, {"parameter_compare_with_number",3,AVIONICS_ANS_MODE_IDS.ILS}}
+object.element_params = {"NAV_ILS_LOC_DEV", "NAV_ILS_LOC_VALID", "HUD_BRIGHT", "AVIONICS_ANS_MODE", "AVIONICS_MASTER_MODE"}
+object.controllers = {{"move_left_right_using_parameter", 0, 1}, {"parameter_compare_with_number",1,1}, {"opacity_using_parameter", 2}, {"parameter_compare_with_number",3,AVIONICS_ANS_MODE_IDS.ILS}, {"parameter_in_range", 4, AVIONICS_MASTER_MODE_ID.NAV - 0.05, AVIONICS_MASTER_MODE_ID.LANDING + 0.05}}
 
 object = addStrokeSymbol("HUD_ILS_GS", {"a29b_stroke_symbols_HUD", "ils-loc"}, "FromSet", {0, 0}, "HUD_FPM", {{"HUD_FPM_Flash"}})
 object.init_rot={-90};
-object.element_params = {"NAV_ILS_GS_DEV", "NAV_ILS_GS_VALID", "HUD_BRIGHT", "AVIONICS_ANS_MODE"}
-object.controllers = {{"move_left_right_using_parameter", 0, 1}, {"parameter_compare_with_number",1,1}, {"opacity_using_parameter", 2}, {"parameter_compare_with_number",3,AVIONICS_ANS_MODE_IDS.ILS}}
+object.element_params = {"NAV_ILS_GS_DEV", "NAV_ILS_GS_VALID", "HUD_BRIGHT", "AVIONICS_ANS_MODE", "AVIONICS_MASTER_MODE"}
+object.controllers = {{"move_left_right_using_parameter", 0, 1}, {"parameter_compare_with_number",1,1}, {"opacity_using_parameter", 2}, {"parameter_compare_with_number",3,AVIONICS_ANS_MODE_IDS.ILS}, {"parameter_in_range", 4, AVIONICS_MASTER_MODE_ID.NAV - 0.05, AVIONICS_MASTER_MODE_ID.LANDING + 0.05}}
 
 -- FPM cross
 object = addStrokeSymbol("HUD_FPM_Cross", {"a29b_stroke_symbols_HUD", "fpm-cross"}, "FromSet", {0, 0}, "HUD_FPM", {{"HUD_FPM_Cross"}})
