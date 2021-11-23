@@ -110,7 +110,10 @@ BFI_origin.isvisible      	= false -- IMPORTANT: do not show this MeshPoly, used
 BFI_origin.vertices 		= {{-GetHalfWidth(), GetHalfHeight()}, { GetHalfWidth(), GetHalfHeight()}, { GetHalfWidth(),-GetHalfHeight()}, {-GetHalfWidth(),-GetHalfHeight()}}
 BFI_origin.indices			= default_box_indices	
 BFI_origin.element_params  = {"BFI_brightness", "ELEC_EMERGENCY_RESERVE_OK"} 
-BFI_origin.controllers 	 = {{"parameter_compare_with_number",1,1}}
+BFI_origin.controllers 	 = 	{
+								{"opacity_using_parameter", 0},
+								{"parameter_compare_with_number",1,1}
+							}
 BFI_origin.use_mipfilter    = true
 Add(BFI_origin)
 
@@ -197,6 +200,25 @@ Add(BFIbank)
 
 local HDD001_PFD	    = CreateElement "ceTexPoly"
 HDD001_PFD.name 		= "BFIbase"
+HDD001_PFD.material   = "BFI_Back"   
+HDD001_PFD.vertices = {{-left, top},
+					  { left, top},
+					  { left,-top},
+					  {-left,-top}}
+HDD001_PFD.indices			= default_box_indices	
+HDD001_PFD.tex_coords = {{0,0},{1,0},{1,1},{0,1}}
+HDD001_PFD.init_pos   = {0,0} 
+-- HDD001_PFD.blend_mode = blend_mode.IBM_REGULAR_RGB_ONLY
+HDD001_PFD.level			= DISPLAY_DEFAULT_LEVEL
+HDD001_PFD.h_clip_relation  = h_clip_relations.REWRITE_LEVEL
+HDD001_PFD.parent_element = "BFI_origin"
+HDD001_PFD.element_params 	= {"BFI_brightness"}
+--HDD001_PFD.controllers 		= {{"opacity_using_parameter", 0}}
+HDD001_PFD.use_mipfilter    = true
+Add(HDD001_PFD)
+
+HDD001_PFD	    = CreateElement "ceTexPoly"
+HDD001_PFD.name 		= "BFIbase"
 HDD001_PFD.material   = "BFI_Background"   
 HDD001_PFD.vertices = {{-left, top},
 					  { left, top},
@@ -210,7 +232,7 @@ HDD001_PFD.level			= DISPLAY_DEFAULT_LEVEL
 HDD001_PFD.h_clip_relation  = h_clip_relations.REWRITE_LEVEL
 HDD001_PFD.parent_element = "BFI_origin"
 HDD001_PFD.element_params 	= {"BFI_brightness"}
--- HDD001_PFD.controllers 		= {{"opacity_using_parameter", 0}}
+HDD001_PFD.controllers 		= {{"opacity_using_parameter", 0}}
 HDD001_PFD.use_mipfilter    = true
 Add(HDD001_PFD)
 

@@ -5,7 +5,7 @@ declare_plugin(self_ID,
 installed 	 = true, -- if false that will be place holder , or advertising
 displayName     = _("A-29B"),
 developerName   =   "Fight's On BR",
-version		 = "0.2.2b",
+version		 = "0.3.1b",
 state		 = "installed",
 info		 = _("A-29B"),
 

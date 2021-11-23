@@ -19,6 +19,9 @@ local ADF_MODE_IDS = {
     BFO = 2,
 }
 
+local ADHSI_ILS_FREQ = get_param_handle("ADHSI_ILS_FREQ")
+
+
 -- Inits
 ufcp_navaids_on = true
 ufcp_navaids_ils = 110.3
@@ -263,6 +266,10 @@ function update_nav_aids()
     text = replace_pos(text, 123)
 
     UFCP_TEXT:set(text)
+
+    ADHSI_ILS_FREQ:set(ufcp_navaids_ils)
+
+    
 end
 
 function SetCommandNavAids(command,value)

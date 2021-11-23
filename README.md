@@ -50,6 +50,16 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
+## Version 0.3.1b - 15 Nov 2021
+
+### Added
+- ILS on HUD.
+
+### Changes
+
+### Fixes
+- CMFD and BFI brightness adjustments for NVG compatibility.
+
 ## Version 0.3.0b - 15 Nov 2021
 
 ### Added

@@ -110,7 +110,7 @@ function update()
 	IAS_param:set(sensor_data.getIndicatedAirSpeed()*MPS_TO_KNOTS)
 	BFI_ROLL_param:set(sensor_data.getRoll())
 	BFI_PITCH_param:set(sensor_data.getPitch())
-	BFI_brightness_param:set(bfi_bright)
+	BFI_brightness_param:set(2^(-10+bfi_bright*10))
 
 
 	BFI_MB_param:set(BFI_BARO_param:get()*33.8639)
