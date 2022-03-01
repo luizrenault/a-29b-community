@@ -1,12 +1,38 @@
 dofile(LockOn_Options.script_path .. "CMFD/CMFD_defs.lua")
 dofile(LockOn_Options.script_path .. "CMFD/CMFD_pageID_defs.lua")
+dofile(LockOn_Options.script_path .. "Indicator/Indicator_defs.lua")
+
+dofile(LockOn_Options.script_path.."utils.lua")
 
 local CMFDNumber=get_param_handle("CMFDNumber")
 local CMFDNu = CMFDNumber:get()
 
+local aspect = GetAspect()
+
+-- Content
+
+DEFAULT_LEVEL = 9
+default_material = CMFD_FONT_DEF
+stroke_font			= "cmfd_font_def"
+stroke_material		= "HUD"
+stroke_thickness  = 1 --0.25
+stroke_fuzziness  = 0.6
+additive_alpha		= true
+default_element_params={"CMFD"..tostring(CMFDNu).."_BRIGHT"}
+default_controllers={{"opacity_using_parameter", 0}}
+
 local page_root = create_page_root()
 page_root.element_params = {"CMFD"..CMFDNu.."Format"}
 page_root.controllers = {{"parameter_compare_with_number",0,SUB_PAGE_ID.BIT}}
+
+local object
+
+local CMFD_BIT_origin = addPlaceholder(nil, {0,0}, page_root.name)
+
+-- DTE format text
+object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0, 0.5}, CMFD_BIT_origin.name, nil, {"%s"})
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_BIT_TEXT"}
+object.controllers = {{"opacity_using_parameter", 0},{"text_using_parameter", 1, 0}}
 
 -- OSS Menus
 local HW = 0.15
