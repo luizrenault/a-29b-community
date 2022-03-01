@@ -20,6 +20,10 @@ local ADF_MODE_IDS = {
 }
 
 local ADHSI_ILS_FREQ = get_param_handle("ADHSI_ILS_FREQ")
+local UFCP_NAVAIDS_DTC_ADF_READ = get_param_handle("UFCP_NAVAIDS_DTC_ADF_READ")
+local UFCP_NAVAIDS_DTC_VOR_READ = get_param_handle("UFCP_NAVAIDS_DTC_VOR_READ")
+UFCP_NAVAIDS_DTC_ADF_READ:set("")
+UFCP_NAVAIDS_DTC_VOR_READ:set("")
 
 
 -- Inits
@@ -153,6 +157,27 @@ local function ufcp_navaids_crs_validate(text, save)
     return text
 end
 
+-- Reads data from a DTC, when DB or ALL is selected in CMFD DTE
+local function load_dtc()
+    if UFCP_NAVAIDS_DTC_ADF_READ:get() ~= "" then
+        dofile(UFCP_NAVAIDS_DTC_ADF_READ:get())
+
+        ufcp_navaids_adf = ADF.ADF.Freq.Mhz + ADF.ADF.Freq.Khz / 1000
+        ufcp_navaids_adf_next = ADF.ADF.Next.Mhz + ADF.ADF.Next.Khz / 1000
+        
+        UFCP_NAVAIDS_DTC_ADF_READ:set("")
+    end
+
+    if UFCP_NAVAIDS_DTC_VOR_READ:get() ~= "" then
+        dofile(UFCP_NAVAIDS_DTC_VOR_READ:get())
+        
+        ufcp_navaids_vor = VOR.VOR_Rec1.Freq.Mhz + VOR.VOR_Rec1.Freq.Khz / 1000
+        ufcp_navaids_vor_hold = VOR.VOR_Rec1.Freq.Mhz + VOR.VOR_Rec1.Freq.Khz / 1000
+
+        UFCP_NAVAIDS_DTC_VOR_READ:set("")
+    end
+end
+
 local FIELD_INFO = {
     [SEL_IDS.ILS] = {6, ufcp_navaids_ils_validate},
     [SEL_IDS.VOR] = {6, ufcp_navaids_vor_validate},
@@ -164,6 +189,9 @@ local FIELD_INFO = {
 local sel = 0
 local max_sel = 8
 function update_nav_aids()
+    -- Check for DTC load
+    pcall(load_dtc)
+
     local text = ""
     text = text .. "NAV AIDS "
 

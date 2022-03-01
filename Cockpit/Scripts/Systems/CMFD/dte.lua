@@ -41,8 +41,12 @@ local UFCP_FUEL_HMPT = get_param_handle("UFCP_FUEL_HMPT")
 -- When setting it to the DTC file path, the other systems will try to read their files
 local UFCP_COM1_DTC_READ = get_param_handle("UFCP_COM1_DTC_READ")
 local UFCP_COM2_DTC_READ = get_param_handle("UFCP_COM2_DTC_READ")
+local UFCP_NAVAIDS_DTC_ADF_READ = get_param_handle("UFCP_NAVAIDS_DTC_ADF_READ")
+local UFCP_NAVAIDS_DTC_VOR_READ = get_param_handle("UFCP_NAVAIDS_DTC_VOR_READ")
 UFCP_COM1_DTC_READ:set("")
 UFCP_COM2_DTC_READ:set("")
+UFCP_NAVAIDS_DTC_ADF_READ:set("")
+UFCP_NAVAIDS_DTC_VOR_READ:set("")
 
 local mission = ""
 local pilot = ""
@@ -91,10 +95,8 @@ local function read_ADD_SINV()
 end
 
 local function read_ADF()
-    dofile(mission_dir .. "ADF.lua")
-
-    -- TODO read data
-    error()
+    -- TODO validate file or throw error()
+    UFCP_NAVAIDS_DTC_ADF_READ:set(mission_dir .. "ADF.lua")
 end
 
 local function read_AIRFIELD()
@@ -126,7 +128,7 @@ local function read_CNT_LINE()
 end
 
 local function read_COMM1()
-    -- TODO fetch errors
+    -- TODO validate file or throw error()
     UFCP_COM1_DTC_READ:set(mission_dir .. "COMM1.lua")
     UFCP_COM2_DTC_READ:set(mission_dir .. "COMM2.lua")
 end
@@ -216,10 +218,8 @@ local function read_SMS_MISC()
 end
 
 local function read_VOR()
-    dofile(mission_dir .. "VOR.lua")
-
-    -- TODO read data
-    error()
+    -- TODO validate file or throw error()
+    UFCP_NAVAIDS_DTC_VOR_READ:set(mission_dir .. "VOR.lua")
 end
 
 local function read_WARNING()
@@ -330,6 +330,8 @@ local function load_db()
     -- DL messages
 
     if pcall(read_COMM1) and
+        pcall(read_ADF) and
+        pcall(read_VOR) and 
         pcall(read_DL_PTEXT) and 
         pcall(read_DL_SETUP)
     then
