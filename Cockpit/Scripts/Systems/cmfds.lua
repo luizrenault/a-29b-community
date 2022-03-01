@@ -180,9 +180,15 @@ local cmfd_bright = {}
 cmfd_bright[1] = 1
 cmfd_bright[2] = 1
 
+local function load_dtc()
+    pcall(cmfd_nav_load_dtc)
+end
+
 function update()
     CMFD1On:set((get_elec_avionics_ok() or (CMFD2SwOn:get() == 0 and get_elec_avionics_emergency_ok())) and 1 or 0)
     CMFD2On:set(get_elec_avionics_emergency_ok() and 1 or 0)
+
+    load_dtc()
 
     update_menu1()
     update_menu2()

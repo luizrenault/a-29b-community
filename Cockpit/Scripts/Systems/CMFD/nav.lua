@@ -93,6 +93,10 @@ local CMFD_NAV_GET_OAP_ELEV = get_param_handle("CMFD_NAV_GET_OAP_ELEV")
 local CMFD_NAV_GET_OAP_INDEX = get_param_handle("CMFD_NAV_GET_OAP_INDEX")
 local CMFD_NAV_GET_OAP_RDY = get_param_handle("CMFD_NAV_GET_OAP_RDY")
 
+local CMFD_NAV_DTC_WAYPOINT_READ = get_param_handle("CMFD_NAV_DTC_WAYPOINT_READ")
+local UFCP_WPT_NUM_LAST = get_param_handle("UFCP_WPT_NUM_LAST")
+CMFD_NAV_DTC_WAYPOINT_READ:set("")
+
 CMFD_NAV_SET_OAP_INDEX:set(-1)
 CMFD_NAV_GET_OAP_INDEX:set(-1)
 CMFD_NAV_GET_OAP_RDY:set(0)
@@ -103,6 +107,36 @@ CMFD_NAV_GET_INDEX:set(-1)
 CMFD_NAV_GET_RDY:set(0)
 
 CMFD.NAV_FYT_SET:set(-1) -- Whenever this value is set, it will try to switch the fyt to the set value. If it fails, it will maintain the current fit and ignore this
+
+-- Reads data from a DTC, when DB or ALL is selected in CMFD DTE
+function cmfd_nav_load_dtc()
+    if CMFD_NAV_DTC_WAYPOINT_READ:get() ~= "" then
+        dofile(CMFD_NAV_DTC_WAYPOINT_READ:get())
+
+        for _, value in pairs(WAYPOINT) 
+        do
+            local i = tonumber(value.ID)+1
+            local alt = tonumber(value.Elev)
+            local lat = tonumber(value.LAT) * 180
+            local lon = tonumber(value.LONG) * 180
+            local time = 0
+            if value.TOF_V.Validity == "TRUE" then
+                time = tonumber(string.sub(value.TOF_V.Value,1,2)) * 3600 + string.sub(value.TOF_V.Value,4,5) * 60 + string.sub(value.TOF_V.Value,7,8)
+            end
+
+            nav_fyt_list[i] = {}
+            nav_fyt_list[i].lat = lat
+            nav_fyt_list[i].lon = lon
+            nav_fyt_list[i].lat_m, nav_fyt_list[i].lon_m = Terrain.convertLatLonToMeters(lat, lon)
+            nav_fyt_list[i].altitude = alt
+            nav_fyt_list[i].time = time
+        end
+
+        UFCP_WPT_NUM_LAST:set(-1)
+        
+        CMFD_NAV_DTC_WAYPOINT_READ:set("")
+    end
+end
 
 local function get_distance(x1, y1, x2, y2)
     local x = x2 - x1

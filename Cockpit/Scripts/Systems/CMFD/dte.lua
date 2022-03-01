@@ -43,10 +43,12 @@ local UFCP_COM1_DTC_READ = get_param_handle("UFCP_COM1_DTC_READ")
 local UFCP_COM2_DTC_READ = get_param_handle("UFCP_COM2_DTC_READ")
 local UFCP_NAVAIDS_DTC_ADF_READ = get_param_handle("UFCP_NAVAIDS_DTC_ADF_READ")
 local UFCP_NAVAIDS_DTC_VOR_READ = get_param_handle("UFCP_NAVAIDS_DTC_VOR_READ")
+local CMFD_NAV_DTC_WAYPOINT_READ = get_param_handle("CMFD_NAV_DTC_WAYPOINT_READ")
 UFCP_COM1_DTC_READ:set("")
 UFCP_COM2_DTC_READ:set("")
 UFCP_NAVAIDS_DTC_ADF_READ:set("")
 UFCP_NAVAIDS_DTC_VOR_READ:set("")
+CMFD_NAV_DTC_WAYPOINT_READ:set("")
 
 local mission = ""
 local pilot = ""
@@ -230,10 +232,8 @@ local function read_WARNING()
 end
 
 local function read_WAYPOINT()
-    dofile(mission_dir .. "WAYPOINT.lua")
-
-    -- TODO read data
-    error()
+    -- TODO validate file or throw error()
+    CMFD_NAV_DTC_WAYPOINT_READ:set(mission_dir .. "WAYPOINT.lua")
 end
 
 function update_dte()
