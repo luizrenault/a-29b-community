@@ -38,6 +38,12 @@ local EICAS_FUEL_JOKER = get_param_handle("EICAS_FUEL_JOKER")
 local UFCP_FUEL_BINGO = get_param_handle("UFCP_FUEL_BINGO")
 local UFCP_FUEL_HMPT = get_param_handle("UFCP_FUEL_HMPT")
 
+-- When setting it to the DTC file path, the other systems will try to read their files
+local UFCP_COM1_DTC_READ = get_param_handle("UFCP_COM1_DTC_READ")
+local UFCP_COM2_DTC_READ = get_param_handle("UFCP_COM2_DTC_READ")
+UFCP_COM1_DTC_READ:set("")
+UFCP_COM2_DTC_READ:set("")
+
 local mission = ""
 local pilot = ""
 local copilot = ""
@@ -120,10 +126,9 @@ local function read_CNT_LINE()
 end
 
 local function read_COMM1()
-    dofile(mission_dir .. "COMM1.lua")
-
-    -- TODO read data
-    error()
+    -- TODO fetch errors
+    UFCP_COM1_DTC_READ:set(mission_dir .. "COMM1.lua")
+    UFCP_COM2_DTC_READ:set(mission_dir .. "COMM2.lua")
 end
 
 local function read_DL_PTEXT()
@@ -155,8 +160,8 @@ local function read_GENERAL()
     
     dofile(mission_dir .. "GENERAL.lua")
 
-    dtcid = string.sub(GENERAL.General.DTC_Name:upper(),1,12)
-    pilot = string.sub(GENERAL.General.Pilot_1_Name:upper(),1,12)
+    dtcid = string.sub(GENERAL["General"]["DTC_Name"]:upper(),1,12)
+    pilot = string.sub(GENERAL["General"]["Pilot_1_Name"]:upper(),1,12)
     copilot = string.sub(GENERAL.General.Pilot_2_Name:upper(),1,12)
     mission = string.sub(GENERAL.General.Mission_Name:upper(),1,12)
 end
@@ -468,13 +473,13 @@ function post_initialize_dte()
         theatre = "none"
     end
 
-    -- Set mission dir. It will look for the theatre dir inside mission, otherwise will load the files inside mission. 
-    -- Is this the ideal way? Or should it be in the user dir? People should have their own mission files, although
+    -- Set DTC dir. It will look for the theatre dir inside DTC, otherwise will load the files inside DTC. 
+    -- Is this the ideal way? Or should it be in the user dir? People should have their own DTC files, although
     -- I doubt anyone is gonna make them.
 
     if theatre ~= "none" then
-        mission_dir = LockOn_Options.script_path.."../../Mission/" .. theatre .. "/"
+        mission_dir = LockOn_Options.script_path.."../../DTC/" .. theatre .. "/"
     else
-        mission_dir = LockOn_Options.script_path.."../../Mission/"
+        mission_dir = LockOn_Options.script_path.."../../DTC/"
     end
 end

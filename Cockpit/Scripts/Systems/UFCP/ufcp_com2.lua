@@ -36,6 +36,9 @@ UFCP_COM2_ECCM_IDS[2] = "C"
 UFCP_COM2_ECCM_IDS[3] = "T"
 UFCP_COM2_ECCM_IDS[4] = "H"
 
+local UFCP_COM2_DTC_READ = get_param_handle("UFCP_COM2_DTC_READ")
+UFCP_COM2_DTC_READ:set("")
+
 -- Variables
 ufcp_com2_mode = UFCP_COM_MODE_IDS.TR
 ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
@@ -255,6 +258,20 @@ local function ufcp_com2_net_time_validate(text, save)
     return text
 end
 
+-- Reads data from a DTC, when DB or ALL is selected in CMFD DTE
+local function load_dtc()
+    if UFCP_COM2_DTC_READ:get() ~= "" then
+        dofile(UFCP_COM2_DTC_READ:get())
+
+        for _, value in pairs(COMM2) 
+        do
+            ufcp_com2_channels[value.ID + 1] = value.Freq.Mhz + value.Freq.Khz / 1000
+        end
+        
+        UFCP_COM2_DTC_READ:set("")
+    end
+end
+
 local FIELD_INFO = {
     [SEL_IDS.CHANNEL] = {2, ufcp_com2_channel_validate},
     [SEL_IDS.MAN_FREQUENCY] = {7, ufcp_com2_frequency_man_validate},
@@ -273,6 +290,9 @@ local max_sel = 10
 local net_sel = 0
 local net_max_sel = 8
 function update_com2()
+    -- Check for DTC load
+    pcall(load_dtc)
+
     local text = ""
 
     if ufcp_sel_format == UFCP_FORMAT_IDS.COM2 then
