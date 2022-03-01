@@ -124,8 +124,8 @@ function SetCommand(command,value)
     print_message_to_user("test: command "..tostring(command).." = "..tostring(value))
 
     if command == 74 then 
-        local radio = GetDevice(devices.UHF_RADIO)
-        dispatch_action(devices.UHF_RADIO, 179, 1)
+        local radio = GetDevice(devices.VUHF1_RADIO)
+        dispatch_action(devices.VUHF1_RADIO, 179, 1)
     elseif command == 179 then 
         -- print_message_to_user("Setup: " .. avSimplestRadio.avSimplestRadioSetup())
         -- local wpn = GetDevice(devices.WEAPON_SYSTEM)

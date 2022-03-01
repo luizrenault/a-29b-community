@@ -7,7 +7,7 @@ require('avSimplestRadio')
 local dev = GetSelf()
 
 function post_initialize()
-    avSimplestRadio.Setup(devices.UHF_RADIO, devices.INTERCOM, devices.ELECTRIC_SYSTEM)
+    avSimplestRadio.SetupRadios(devices.ELECTRIC_SYSTEM, devices.INTERCOM, 3, devices.VUHF1_RADIO, devices.VUHF2_RADIO, devices.HF3_RADIO)
 end
 
 dev:listen_command(179)
@@ -17,11 +17,11 @@ dev:listen_command(Keys.COM3)
 
 function SetCommand(command,value)
     if command==Keys.COM1 and value == 1 then
-        avSimplestRadio.PTT()
+        avSimplestRadio.PTT(1)
     elseif command==Keys.COM2 and value == 1 then
-        avSimplestRadio.PTT()
+        avSimplestRadio.PTT(2)
     elseif command==Keys.COM3 and value == 1 then
-        avSimplestRadio.PTT()
+        avSimplestRadio.PTT(3)
     end
 end
 

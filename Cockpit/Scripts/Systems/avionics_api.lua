@@ -120,7 +120,7 @@ end
 
 function set_avionics_master_mode(new_mode)
     local current_mode = get_avionics_master_mode()
-    if new_mode ~= current_mode and current_mode ~= AVIONICS_MASTER_MODE_ID.EJ and current_mode ~= AVIONICS_MASTER_MODE_ID.SJ then
+    if new_mode ~= current_mode and current_mode ~= AVIONICS_MASTER_MODE_ID.EJ and current_mode ~= AVIONICS_MASTER_MODE_ID.SJ and current_mode ~= AVIONICS_MASTER_MODE_ID.A_G then
         AVIONICS_MASTER_MODE_LAST:set(current_mode)
     end
 

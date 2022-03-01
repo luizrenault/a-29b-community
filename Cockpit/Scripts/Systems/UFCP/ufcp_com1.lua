@@ -42,27 +42,31 @@ ufcp_com1_modulation = UFCP_COM_MODULATION_IDS.AM
 ufcp_com1_sql = true
 
 ufcp_com1_memory = {
-    ufcp_com1_frequency_last = 0,
-    ufcp_com1_tx_last = false,
-    ufcp_com1_rx_last = false,
-    ufcp_com1_modulation_last = 0,
-    ufcp_com1_sql_last = 0, 
+    frequency_last = 0,
+    tx_last = false,
+    rx_last = false,
+    modulation_last = 0,
+    sql_last = 0, 
 }
 
 function ufcp_com1_check()
-    if ufcp_com1_frequency_last ~= ufcp_com1_frequency then
-        local radio = GetDevice(devices.UHF_RADIO)
-        radio:set_frequency(ufcp_com1_frequency * 1e6)
-        ufcp_com1_frequency_last = ufcp_com1_frequency
-    end
-    if ufcp_com1_modulation_last ~= ufcp_com1_modulation then
-        local radio = GetDevice(devices.UHF_RADIO)
-        if ufcp_com1_modulation == UFCP_COM_MODE_IDS.AM then
-            radio:set_modulation(MODULATION_AM)
-        elseif ufcp_com1_modulation == UFCP_COM_MODE_IDS.FM then
-            radio:set_modulation(MODULATION_FM)
+    if ufcp_com1_memory.frequency_last ~= ufcp_com1_frequency then
+        local radio = GetDevice(devices.VUHF1_RADIO)
+        if radio then
+            radio:set_frequency(ufcp_com1_frequency * 1e6)
         end
-        ufcp_com1_modulation_last = ufcp_com1_modulation
+        ufcp_com1_memory.frequency_last = ufcp_com1_frequency
+    end
+    if ufcp_com1_memory.modulation_last ~= ufcp_com1_modulation then
+        local radio = GetDevice(devices.VUHF1_RADIO)
+        if radio then
+            if ufcp_com1_modulation == UFCP_COM_MODE_IDS.AM then
+                radio:set_modulation(MODULATION_AM)
+            elseif ufcp_com1_modulation == UFCP_COM_MODE_IDS.FM then
+                radio:set_modulation(MODULATION_FM)
+            end
+        end
+        ufcp_com1_memory.modulation_last = ufcp_com1_modulation
     end
 end
 

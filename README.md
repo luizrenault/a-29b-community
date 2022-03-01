@@ -50,9 +50,22 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
-## Version 0.2.2b - 04 Nov 2021
+## Version 0.3.1b - 15 Nov 2021
 
 ### Added
+- ILS on HUD.
+
+### Changes
+
+### Fixes
+- CMFD and BFI brightness adjustments for NVG compatibility.
+
+## Version 0.3.0b - 15 Nov 2021
+
+### Added
+- OAP UFCP menu and HUD cue.
+- WPT UTM format. 
+- JTAC communication.
 - In game Radio.
 - CCIP Delayed Mode.
 - CCIP Cluster Bomb calculations
@@ -64,6 +77,9 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 - UFCP FUEL format.
 - Alarm test.
 - Time to Impact for bombing.
+- A/G mode select with Stick Step button.
+- Going out and back to A/G mode uses last selection.
+- GBU12, MK20RE, MK81 and MK82SE.
 
 ### Changes
 - CCIP Bomb calculations for better precision.
@@ -87,20 +103,25 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
     - ELEC OVRD switch will now force the electric system into the emergency mode.
 - V/UHF Guard will switch the COM frequencies to 121.5 and 243.0.
 - Taxi lights should only turn on on auto when in air.
+- HSD:
+    - Zoom can now be set in manual.
+    - Added shortcut to ADHSI format.
+    - FYTs are displayed by filled circles and WPs by outlined circles
+    - HSD displays the original FYT position when DTK is on.
+- ADHSI:
+    - FYTs are displayed by filled circles and WPs by outlined circles
+    - FYT label is D when DTK is active.
 
 ### Fixes
+- Remade the UFCP WPT.
 - FPM calculation was a little off with high roll angles.
 - UFCP LMTs not being highlighted when edited.
 - CCIP cue and bomb fall line.
-
-### Known Issues
-- Bombing range is still a little short
+- UFCP COM2 data editing.
 
 ### TODO
-- Remember A/G Gun Selection
 - Thrust tables of FM
 - A/G Profiles
-- A/G mode select with Stick Step button.
 - FIX is only cosmetic because currently there is only pure EGI/GPS navigation.
 - Create the alarms for the parameters in the LMT format.
 - Set the AA DGFT piper size relative to UFCP_WS (target wingspan in metres)

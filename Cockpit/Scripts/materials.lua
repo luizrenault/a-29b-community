@@ -27,6 +27,7 @@ fonts["font_Arial_red"]					= {fontdescription["font_Arial"], 10, materials["red
 fonts["font_Arial_black"]					= {fontdescription["font_Arial"], 10, materials["black"]}
 
 
+textures["BFI_Back"]			= {LockOn_Options.script_path.."BFI/Resources/a29b_BFI_Back.png", materials["white"]}
 textures["BFI_Background"]		= {LockOn_Options.script_path.."BFI/Resources/a29b_BFI_Background.png", materials["white"]}
 textures["BFI_Bank"]			= {LockOn_Options.script_path.."BFI/Resources/a29b_BFI_Bank.png", materials["white"]}
 textures["BFI_Horizon"]			= {LockOn_Options.script_path.."BFI/Resources/a29b_BFI_Horizon.bmp", materials["white"]}
@@ -34,7 +35,8 @@ textures["BFI_Ias"]				= {LockOn_Options.script_path.."BFI/Resources/a29b_BFI_Ia
 textures["BFI_Base"]			= {nil, materials["white"]}
 
 preload_texture={
-		LockOn_Options.script_path.."/BFI/Resources/a29b_BFI_Background.png",
+	LockOn_Options.script_path.."/BFI/Resources/a29b_BFI_Back.png",
+	LockOn_Options.script_path.."/BFI/Resources/a29b_BFI_Background.png",
 		LockOn_Options.script_path.."/BFI/Resources/a29b_BFI_Bank.png",
 		LockOn_Options.script_path.."/BFI/Resources/a29b_BFI_Horizon.bmp",
 		LockOn_Options.script_path.."/HDD/Resources/a29b_BFI_Ias.bmp",

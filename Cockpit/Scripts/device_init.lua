@@ -7,22 +7,7 @@ dofile(LockOn_Options.script_path.."materials.lua")
 
 layoutGeometry = {}
 
-MainPanel = {"ccMainPanel",LockOn_Options.script_path.."mainpanel_init.lua",
-{
-    --{"INTERCOM", devices.INTERCOM},
-    --{"UHF_Radio", devices.UHF_RADIO},
-    --{"OxygenSystem", devices.TEMP3},
-    --{"avSimpleElectricSystem", devices.ELECTRIC_SYSTEM}, -- DCS.log: ERROR   COCKPITBASE: devices_keeper::link_all: unable to find link target 'avSimpleElectricSystem' for device 'MAIN_PANEL'
-    --{"LightSystem", devices.TEMP1},
---[[
-    {
-    devices.INTERCOM, -- DCS.log: ERROR   COCKPITBASE: devices_keeper::link_all: unable to find link target '28' for device 'MAIN_PANEL'
-    devices.UHF_RADIO,
-    devices.ELECTRIC_SYSTEM,
-    },
---]]
-},
-}
+MainPanel = {"ccMainPanel",LockOn_Options.script_path.."mainpanel_init.lua", {},}
 
 -- Avionics devices initialization example
 --	items in <...> are optional
@@ -52,15 +37,20 @@ creators[devices.FLAPS]           = {"avLuaDevice"           ,LockOn_Options.scr
 creators[devices.EXTANIM]         = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/externalanimations.lua"}
 creators[devices.WEAPON_SYSTEM]   = {"avSimpleWeaponSystem"  ,LockOn_Options.script_path.."Systems/weapon_system.lua", {devices.CMFD}}
 creators[devices.RADIO]           = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/radio.lua"}
-creators[devices.INTERCOM]        = {"avIntercom"            ,LockOn_Options.script_path.."Systems/intercom.lua",{devices.UHF_RADIO} }
-creators[devices.UHF_RADIO]       = {"avUHF_ARC_164"         ,LockOn_Options.script_path.."Systems/uhf_radio.lua"                             ,{devices.INTERCOM    ,devices.ELECTRIC_SYSTEM} }
+creators[devices.VUHF1_RADIO]     = {"avUHF_ARC_164"         ,LockOn_Options.script_path.."Systems/uhf_radio.lua", {devices.ELECTRIC_SYSTEM}}
+creators[devices.VUHF2_RADIO]     = {"avUHF_ARC_164"         ,LockOn_Options.script_path.."Systems/uhf_radio.lua", {devices.ELECTRIC_SYSTEM}}
+creators[devices.HF3_RADIO]       = {"avUHF_ARC_164"         ,LockOn_Options.script_path.."Systems/uhf_radio.lua", {devices.ELECTRIC_SYSTEM}}
+
+creators[devices.INTERCOM]        = {"avIntercom"            ,LockOn_Options.script_path.."Systems/intercom.lua", {devices.VUHF1_RADIO, devices.ELECTRIC_SYSTEM}}
+
 creators[devices.UFCP]            = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/ufcp.lua", {devices.ALARM}}
 creators[devices.ALARM]           = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/alarm.lua"}--, {devices.CMFD}}
 creators[devices.AUTOPILOT]		  = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/autopilot.lua"}
 creators[devices.HELMET_DEVICE]	  = {"avNightVisionGoggles"}
+creators[devices.ILS]		      = {"avILS"                 , nil,                                                 {devices.ELECTRIC_SYSTEM}}
+creators[devices.ILS_DEVICE]	  = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/ils.lua"}
 
-
---creators[devices.TEST]		      = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/test_device.lua"}
+--creators[devices.TEST]		      = {"avILS"           ,LockOn_Options.script_path.."Systems/test_device.lua"}
 
 indicators                  = {}
 indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."CMFD/CMFD_Left_init.lua" , devices.CMFD,{{"CENTER_HDD001_PNT","DOWN_HDD001_PNT","RIGHT_HDD001_PNT"}, {},1},1}

@@ -135,6 +135,21 @@ object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterC
 object.element_params = {"HUD_BRIGHT", "HUD_FYT_OS"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
 
+-- OAP
+object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "8-oap"}, "CenterCenter", {0, 0})
+object.element_params = {"HUD_BRIGHT", "HUD_OAP_HIDE", "CMFD_NAV_FYT_VALID", "HUD_OAP_AZIMUTH", "HUD_OAP_ELEVATION"}
+object.controllers = {
+	{"opacity_using_parameter", 0}, 
+	{"parameter_compare_with_number",1,0},
+	{"parameter_compare_with_number",2,1},
+	{"move_left_right_using_parameter", 3, 0.75},
+	{"move_up_down_using_parameter", 4, 0.75},
+}
+
+object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
+object.element_params = {"HUD_BRIGHT", "HUD_OAP_OS"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+
 
 -- CCRP
 local HUD_CCRP_origin = addPlaceholder(nil, {0,0})
@@ -143,7 +158,7 @@ HUD_CCRP_origin.controllers = {{"parameter_compare_with_number", 0, 1}}
 
 -- TD Target Designator
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "5-target"}, "CenterCenter", {0, 0}, HUD_CCRP_origin.name)
-object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_TD_AZIMUTH", "HUD_TD_ELEVATION", "HUD_CCIP_DELAYED"}
+object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_FYT_AZIMUTH", "HUD_FYT_ELEVATION", "HUD_CCIP_DELAYED"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
 	{"parameter_compare_with_number", 1, 0},
@@ -469,6 +484,16 @@ object.controllers = {{"move_left_right_using_parameter", 0, 0.75}, {"move_up_do
 object = addStrokeSymbol("HUD_FPM_CO", {"a29b_stroke_symbols_HUD", "2-flightpath-marker-co"}, "FromSet", {0, 0}, HUD_FPM_origin.name, {{"HUD_FPM_Flash"}})
 object.element_params = {"HUD_FPM_VERT", "UFCP_DRIFT_CO", "HUD_BRIGHT"}
 object.controllers = {{"move_up_down_using_parameter", 0, 0.75}, {"parameter_compare_with_number",1,1}, {"opacity_using_parameter", 2}}
+
+-- ILS
+object = addStrokeSymbol("HUD_ILS_LOC", {"a29b_stroke_symbols_HUD", "ils-loc"}, "FromSet", {0, 0}, "HUD_FPM", {{"HUD_FPM_Flash"}})
+object.element_params = {"NAV_ILS_LOC_DEV", "NAV_ILS_LOC_VALID", "HUD_BRIGHT", "AVIONICS_ANS_MODE", "AVIONICS_MASTER_MODE"}
+object.controllers = {{"move_left_right_using_parameter", 0, 1}, {"parameter_compare_with_number",1,1}, {"opacity_using_parameter", 2}, {"parameter_compare_with_number",3,AVIONICS_ANS_MODE_IDS.ILS}, {"parameter_in_range", 4, AVIONICS_MASTER_MODE_ID.NAV - 0.05, AVIONICS_MASTER_MODE_ID.LANDING + 0.05}}
+
+object = addStrokeSymbol("HUD_ILS_GS", {"a29b_stroke_symbols_HUD", "ils-loc"}, "FromSet", {0, 0}, "HUD_FPM", {{"HUD_FPM_Flash"}})
+object.init_rot={-90};
+object.element_params = {"NAV_ILS_GS_DEV", "NAV_ILS_GS_VALID", "HUD_BRIGHT", "AVIONICS_ANS_MODE", "AVIONICS_MASTER_MODE"}
+object.controllers = {{"move_left_right_using_parameter", 0, 1}, {"parameter_compare_with_number",1,1}, {"opacity_using_parameter", 2}, {"parameter_compare_with_number",3,AVIONICS_ANS_MODE_IDS.ILS}, {"parameter_in_range", 4, AVIONICS_MASTER_MODE_ID.NAV - 0.05, AVIONICS_MASTER_MODE_ID.LANDING + 0.05}}
 
 -- FPM cross
 object = addStrokeSymbol("HUD_FPM_Cross", {"a29b_stroke_symbols_HUD", "fpm-cross"}, "FromSet", {0, 0}, "HUD_FPM", {{"HUD_FPM_Cross"}})

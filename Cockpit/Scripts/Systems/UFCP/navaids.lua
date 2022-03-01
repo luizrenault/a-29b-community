@@ -19,6 +19,9 @@ local ADF_MODE_IDS = {
     BFO = 2,
 }
 
+local ADHSI_ILS_FREQ = get_param_handle("ADHSI_ILS_FREQ")
+
+
 -- Inits
 ufcp_navaids_on = true
 ufcp_navaids_ils = 110.3
@@ -31,6 +34,7 @@ ufcp_navaids_crs = 0
 ufcp_navaids_adf_mode = ADF_MODE_IDS.ADF
 
 ADHSI_COURSE:set(ufcp_navaids_crs)
+ADHSI_ILS_FREQ:set(ufcp_navaids_ils)
 
 for i = 1,ufcp_com1_max_channel+1 do ufcp_com1_channels[i] = 118 end
 
@@ -237,16 +241,26 @@ function update_nav_aids()
     if sel == SEL_IDS.ILS and ufcp_edit_pos > 0 then
         text = replace_pos(text, 30)
         text = replace_pos(text, 37)
+    elseif AVIONICS_ANS_MODE:get() == AVIONICS_ANS_MODE_IDS.ILS then
+        text = replace_pos(text, 26)
+        text = replace_pos(text, 30)
     end
+
 
     if sel == SEL_IDS.VOR and ufcp_edit_pos > 0 then
         text = replace_pos(text, 55)
         text = replace_pos(text, 62)
+    elseif (AVIONICS_ANS_MODE:get() == AVIONICS_ANS_MODE_IDS.VOR) or (AVIONICS_ANS_MODE:get() == AVIONICS_ANS_MODE_IDS.EGI) then
+        text = replace_pos(text, 51)
+        text = replace_pos(text, 55)
     end
 
     if sel == SEL_IDS.ADF and ufcp_edit_pos > 0 then
         text = replace_pos(text, 80)
         text = replace_pos(text, 87)
+    elseif (AVIONICS_ANS_MODE:get() == AVIONICS_ANS_MODE_IDS.ILS) or (AVIONICS_ANS_MODE:get() == AVIONICS_ANS_MODE_IDS.VOR) then
+        text = replace_pos(text, 76)
+        text = replace_pos(text, 80)
     end
 
     if sel == SEL_IDS.ADF_NEXT and ufcp_edit_pos > 0 then
@@ -263,6 +277,9 @@ function update_nav_aids()
     text = replace_pos(text, 123)
 
     UFCP_TEXT:set(text)
+
+    ADHSI_ILS_FREQ:set(ufcp_navaids_ils)
+    
 end
 
 function SetCommandNavAids(command,value)

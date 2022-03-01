@@ -65,6 +65,12 @@ local HUD = {
     CCIP_DELAYED_AZIMUTH = get_param_handle("HUD_CCIP_DELAYED_AZIMUTH"),
     CCIP_DELAYED_ELEVATION = get_param_handle("HUD_CCIP_DELAYED_ELEVATION"),
     TIME_TO_IMPACT = get_param_handle("HUD_TIME_TO_IMPACT"),
+
+    OAP_HIDE = get_param_handle("HUD_OAP_HIDE"),
+    OAP_OS = get_param_handle("HUD_OAP_OS"),
+    OAP_AZIMUTH = get_param_handle("HUD_OAP_AZIMUTH"),
+    OAP_ELEVATION = get_param_handle("HUD_OAP_ELEVATION"),
+
 }
 local WPN = {
     TD_AZIMUTH = get_param_handle("WPN_TD_AZIMUTH"),
@@ -77,6 +83,14 @@ local WPN = {
     TIME_TO_IMPACT = get_param_handle("WPN_TIME_TO_IMPACT"),
 }
 
+local CMFD = {
+    NAV_OAP_AZIMUTH = get_param_handle("CMFD_NAV_OAP_AZIMUTH"),
+    NAV_OAP_ELEVATION = get_param_handle("CMFD_NAV_OAP_ELEVATION"),
+}
+
+local UFCP = {
+    OAP_ENABLED = get_param_handle("UFCP_OAP") -- 0disabled 1enabled
+}
 
 -- Visuals
 local HUD_DRIFT_CO = get_param_handle("HUD_DRIFT_CO")
@@ -362,6 +376,22 @@ local function update_ag()
     
 end
 
+local function update_oap()
+    if (UFCP.OAP_ENABLED:get() == 1) and (HUD.FYT_HIDE:get() == 0 or HUD.TD_HIDE:get() == 0) then
+        local oap_azimuth = CMFD.NAV_OAP_AZIMUTH:get()
+        local oap_elevation = CMFD.NAV_OAP_ELEVATION:get()
+        local oap_angle = math.atan2(oap_elevation - math.rad(1.2), oap_azimuth)
+        
+        local hud_oap_azimuth, hud_oap_elevation, hud_oap_os = limit_xy(CMFD.NAV_OAP_AZIMUTH:get(), CMFD.NAV_OAP_ELEVATION:get(), hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
+        HUD.OAP_AZIMUTH:set(hud_oap_azimuth)
+        HUD.OAP_ELEVATION:set(hud_oap_elevation)
+        HUD.OAP_OS:set(hud_oap_os)
+        HUD.OAP_HIDE:set(0)
+    else
+        HUD.OAP_HIDE:set(1)
+    end
+end
+
 local function update_td()
     local master_mode = get_avionics_master_mode()
 
@@ -456,6 +486,7 @@ function update()
     else HUD_RDY:set(0) end
 
     update_td()
+    update_oap()
 
     hud_warning:set((get_hud_warning() == 1 and blinking(0.2, 0.5)) and 1 or 0)
 

@@ -35,6 +35,11 @@ local CMFD = {
     NAV_FYT_OAP_DIST = get_param_handle("CMFD_NAV_FYT_OAP_DIST"),
     NAV_FYT_OAP_ELV = get_param_handle("CMFD_NAV_FYT_OAP_ELV"),
     NAV_FYT_SET = get_param_handle("CMFD_NAV_FYT_SET"),
+    NAV_OAP_AZIMUTH = get_param_handle("CMFD_NAV_OAP_AZIMUTH"),
+    NAV_OAP_ELEVATION = get_param_handle("CMFD_NAV_OAP_ELEVATION"),
+    NAV_OAP_LAT_M = get_param_handle("CMFD_NAV_OAP_LAT_M"),
+    NAV_OAP_LON_M = get_param_handle("CMFD_NAV_OAP_LON_M"),
+    NAV_OAP_ALT_M = get_param_handle("CMFD_NAV_OAP_ALT_M"),
 }
 local CMFD_NAV_ROUT_TEXT = get_param_handle("CMFD_NAV_ROUT_TEXT")
 local CMFD_NAV_ROUT_TEXT1 = get_param_handle("CMFD_NAV_ROUT_TEXT1")
@@ -46,6 +51,8 @@ local CMFD_NAV_AFLD_TEXT = get_param_handle("CMFD_NAV_AFLD_TEXT")
 local CMFD_NAV_MARK_TEXT = get_param_handle("CMFD_NAV_MARK_TEXT")
 
 local UFCP_TIP_DIR = get_param_handle("UFCP_TIP_DIR") -- -1Left 0Disabled 1Right
+
+local UFCP_OAP_ENABLED = get_param_handle("UFCP_OAP") -- 0disabled 1enabled
 
 local ADHSI_DTK_HDG = get_param_handle("ADHSI_DTK_HDG")
 local ADHSI_DTK_DIST = get_param_handle("ADHSI_DTK_DIST")
@@ -76,6 +83,20 @@ local CMFD_NAV_SET_LAT = get_param_handle("CMFD_NAV_SET_LAT")
 local CMFD_NAV_SET_LON = get_param_handle("CMFD_NAV_SET_LON")
 local CMFD_NAV_SET_ELV = get_param_handle("CMFD_NAV_SET_ELV")
 local CMFD_NAV_SET_TIME = get_param_handle("CMFD_NAV_SET_TIME")
+local CMFD_NAV_SET_OAP_BRG = get_param_handle("CMFD_NAV_SET_OAP_BRG")
+local CMFD_NAV_SET_OAP_RNG = get_param_handle("CMFD_NAV_SET_OAP_RNG")
+local CMFD_NAV_SET_OAP_ELEV = get_param_handle("CMFD_NAV_SET_OAP_ELEV")
+local CMFD_NAV_SET_OAP_INDEX = get_param_handle("CMFD_NAV_SET_OAP_INDEX")
+local CMFD_NAV_GET_OAP_BRG = get_param_handle("CMFD_NAV_GET_OAP_BRG")
+local CMFD_NAV_GET_OAP_RNG = get_param_handle("CMFD_NAV_GET_OAP_RNG")
+local CMFD_NAV_GET_OAP_ELEV = get_param_handle("CMFD_NAV_GET_OAP_ELEV")
+local CMFD_NAV_GET_OAP_INDEX = get_param_handle("CMFD_NAV_GET_OAP_INDEX")
+local CMFD_NAV_GET_OAP_RDY = get_param_handle("CMFD_NAV_GET_OAP_RDY")
+
+CMFD_NAV_SET_OAP_INDEX:set(-1)
+CMFD_NAV_GET_OAP_INDEX:set(-1)
+CMFD_NAV_GET_OAP_RDY:set(0)
+
 
 CMFD_NAV_SET_INDEX:set(-1)
 CMFD_NAV_GET_INDEX:set(-1)
@@ -183,6 +204,42 @@ wpt_index = get_valid_wpt_list()
 local distance_last = -1
 
 
+
+local function update_nav_get_oap()
+    local get_index = CMFD_NAV_GET_OAP_INDEX:get()
+    local get_rdy = CMFD_NAV_GET_OAP_RDY:get()
+
+    if get_index >= 0 and get_rdy == 0 then
+        if nav_fyt_list[get_index+1] then
+            CMFD_NAV_GET_OAP_BRG:set(nav_fyt_list[get_index+1].oap_brg or 0)
+            CMFD_NAV_GET_OAP_RNG:set(nav_fyt_list[get_index+1].oap_rng or 0)
+            CMFD_NAV_GET_OAP_ELEV:set(nav_fyt_list[get_index+1].oap_elev or 0)
+            CMFD_NAV_GET_OAP_RDY:set(1)
+        else 
+            CMFD_NAV_GET_OAP_BRG:set(0)
+            CMFD_NAV_GET_OAP_RNG:set(0)
+            CMFD_NAV_GET_OAP_ELEV:set(0)
+            CMFD_NAV_GET_OAP_RDY:set(1)
+        end
+    end
+end
+
+local function update_nav_set_oap()
+    local wpt_set_index = CMFD_NAV_SET_OAP_INDEX:get()+1
+    if wpt_set_index > 0 then
+        local brg = CMFD_NAV_SET_OAP_BRG:get()
+        local rng = CMFD_NAV_SET_OAP_RNG:get()
+        local elev = CMFD_NAV_SET_OAP_ELEV:get()
+        CMFD_NAV_SET_OAP_INDEX:set(-1)
+
+        if(nav_fyt_list[wpt_set_index]) then 
+            nav_fyt_list[wpt_set_index].oap_brg = brg
+            nav_fyt_list[wpt_set_index].oap_rng = rng
+            nav_fyt_list[wpt_set_index].oap_elev = elev
+        end
+    end
+end
+
 local function update_nav_get()
     local get_index = CMFD_NAV_GET_INDEX:get()
     local get_rdy = CMFD_NAV_GET_RDY:get()
@@ -248,6 +305,23 @@ local function update_nav_set()
     end
 end
 
+local function calc_brg_dist_elev(dest_lat_m, dest_lon_m, dest_alt_m, orig_lat_m, orig_lon_m, orig_alt_m)
+    local o_lat_m, o_alt_m, o_lon_m = sensor_data.getSelfCoordinates()
+    orig_lat_m = orig_lat_m or o_lat_m
+    orig_lon_m = orig_lon_m or o_lon_m
+    orig_alt_m = orig_alt_m or o_alt_m
+
+    local brg, dist, elev
+
+    local lat = dest_lat_m - orig_lat_m
+    local lon = dest_lon_m - orig_lon_m
+    elev = dest_alt_m - orig_alt_m
+
+    brg = math.atan2(lon, lat)
+    dist = math.sqrt(lat * lat + lon * lon)
+    return brg, dist, elev
+end
+
 local function calc_brg_dist_elev_time(dest_lat_m, dest_lon_m, dest_alt_m, orig_lat_m, orig_lon_m, orig_alt_m, orig_speed_m_s)
     local o_lat_m, o_alt_m, o_lon_m = sensor_data.getSelfCoordinates()
     orig_lat_m = orig_lat_m or o_lat_m
@@ -311,12 +385,40 @@ function update_fyt()
     end
 end
 
+function calc_az_el_from_brg_dist_elev (brg, distance, elev)
+    local plane_hdg = math.deg(-sensor_data.getHeading())
+    if plane_hdg < 0 then plane_hdg = 360 + plane_hdg end
+    plane_hdg = plane_hdg % 360
+    
+    local azimuth = brg - plane_hdg
+    if azimuth <= -180 then azimuth = azimuth + 360 end
+    if azimuth >   180 then azimuth = azimuth - 360 end
+    azimuth = math.rad(azimuth)
+    local elevation = math.atan2(elev,  distance)
+    local roll = sensor_data.getRoll()
+    local pitch = sensor_data.getPitch()
+    local s = math.sin(roll)
+    local c = math.cos(roll)
+
+    local new_azimuth = azimuth * c - elevation * s
+    local new_elevation = azimuth * s + elevation * c
+    azimuth = new_azimuth + pitch * s
+    elevation = new_elevation - pitch * c
+    return azimuth, elevation
+end
+
 function update_nav()
     update_fyt()
 
+    if nav_fyt_last ~= nav_fyt then
+        UFCP_OAP_ENABLED:set(0)
+    end
     CMFD_NAV_FORMAT:set(nav_format)
     CMFD.NAV_FYT:set(nav_fyt)
     calc_average_speed()
+    
+    update_nav_get_oap()
+    update_nav_set_oap()
     update_nav_get()
     update_nav_set()
 
@@ -326,6 +428,19 @@ function update_nav()
         local dest_lat_m = nav_fyt_list[nav_fyt+1].lat_m
         local dest_lon_m = nav_fyt_list[nav_fyt+1].lon_m
         local dest_alt_m = nav_fyt_list[nav_fyt+1].altitude / 3.28084
+
+        if UFCP_OAP_ENABLED:get() == 1 then 
+            local oap_lat_m, oap_lon_m = coord_project(dest_lat_m, dest_lon_m, nav_fyt_list[nav_fyt+1].oap_brg, nav_fyt_list[nav_fyt+1].oap_rng/3.28084)
+            local oap_alt_m = nav_fyt_list[nav_fyt+1].oap_elev / 3.28084
+            local oap_brg, oap_dist, oap_elev = calc_brg_dist_elev(oap_lat_m, oap_lon_m, oap_alt_m)
+            oap_brg = math.deg(oap_brg) % 360
+            local oap_az, oap_el = calc_az_el_from_brg_dist_elev(oap_brg, oap_dist, oap_elev)
+            CMFD.NAV_OAP_AZIMUTH:set(oap_az)
+            CMFD.NAV_OAP_ELEVATION:set(oap_el)
+            CMFD.NAV_OAP_LAT_M:set(oap_lat_m)
+            CMFD.NAV_OAP_LON_M:set(oap_lon_m)
+            CMFD.NAV_OAP_ALT_M:set(oap_alt_m)
+        end 
 
         if ADHSI_DTK:get() == 1 then 
             dest_lat_m, dest_lon_m = coord_project(dest_lat_m, dest_lon_m, ADHSI_DTK_HDG:get()+180, ADHSI_DTK_DIST:get()/0.000539957)
@@ -350,29 +465,6 @@ function update_nav()
             distance_last = distance
             nav_fyt_last = nav_fyt
         end
-
-        -- x = x - nav_fyt_list[nav_fyt+1].lat_m
-        -- y = y - nav_fyt_list[nav_fyt+1].altitude / 3.28084
-        -- z = z - nav_fyt_list[nav_fyt+1].lon_m
-
-
-        -- local distance = math.sqrt(x*x + z*z) * 0.000539957
-        -- local elev = y * 3.28084
-        
-
-        -- local hdg
-        -- if x ~= 0 then 
-        --     hdg= math.deg(math.atan(z/x))
-        -- else 
-        --     if z > 0  then hdg = 90 else hdg = -90 end
-        -- end
-        -- if x > 0 then hdg = hdg + 180 end
-        -- hdg = hdg % 360
-
-        -- local time = 100*60
-        -- if average_speed > 0 then 
-        --     time = math.sqrt(x*x + y*y + z*z) / average_speed
-        -- end
 
         local time_secs = math.floor(time % 60)
         local time_mins = math.floor((time - time_secs) / 60)
@@ -443,14 +535,9 @@ function update_nav()
         CMFD.NAV_FYT_LON_M:set(nav_fyt_list[nav_fyt+1].lon_m)
         CMFD.NAV_FYT_ALT_M:set(nav_fyt_list[nav_fyt+1].altitude/3.28084)
 
-
-        local oap_brg = hdg
-        local oap_dist = distance * 0.000539957
-        local oap_elv = elev * 3.28084
-
-        CMFD.NAV_FYT_OAP_BRG:set(oap_brg)
-        CMFD.NAV_FYT_OAP_DIST:set(oap_dist)
-        CMFD.NAV_FYT_OAP_ELV:set(oap_elv)
+        CMFD.NAV_FYT_OAP_BRG:set(nav_fyt_list[nav_fyt+1].oap_brg)
+        CMFD.NAV_FYT_OAP_DIST:set(nav_fyt_list[nav_fyt+1].oap_rng)
+        CMFD.NAV_FYT_OAP_ELV:set(nav_fyt_list[nav_fyt+1].oap_rng)
 
         CMFD.NAV_FYT_VALID:set(1)
     else
@@ -650,6 +737,10 @@ function post_initialize_nav()
             nav_fyt_list[i].code = Airdromes[k].code
             nav_fyt_list[i].hdg = 0
             nav_fyt_list[i].dis = 0
+            nav_fyt_list[i].oap_brg = 0
+            nav_fyt_list[i].oap_rng = 0
+            nav_fyt_list[i].oap_elev = Airdromes[k].elv
+
             i = i + 1
             if i >= 101 then break end
         end
@@ -669,7 +760,10 @@ function post_initialize_nav()
             nav_fyt_list[i].lon_m = route[i].y
             nav_fyt_list[i].speed = route[i].speed
             nav_fyt_list[i].time = 0
-            
+            nav_fyt_list[i].oap_brg = 0
+            nav_fyt_list[i].oap_rng = 0
+            nav_fyt_list[i].oap_elev = nav_fyt_list[i].altitude
+
             if i>1 then
                 nav_fyt_list[i-1].hdg = get_heading(nav_fyt_list[i].lat_m, nav_fyt_list[i].lon_m, nav_fyt_list[i-1].lat_m, nav_fyt_list[i-1].lon_m)
                 nav_fyt_list[i-1].dis = get_distance(nav_fyt_list[i].lat_m, nav_fyt_list[i].lon_m, nav_fyt_list[i-1].lat_m, nav_fyt_list[i-1].lon_m) * 0.000539957
