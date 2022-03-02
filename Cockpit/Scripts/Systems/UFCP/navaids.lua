@@ -158,7 +158,7 @@ local function ufcp_navaids_crs_validate(text, save)
 end
 
 -- Reads data from a DTC, when DB or ALL is selected in CMFD DTE
-local function load_dtc()
+function ufcp_navaids_load_dtc()
     if UFCP_NAVAIDS_DTC_ADF_READ:get() ~= "" then
         dofile(UFCP_NAVAIDS_DTC_ADF_READ:get())
 
@@ -189,9 +189,6 @@ local FIELD_INFO = {
 local sel = 0
 local max_sel = 8
 function update_nav_aids()
-    -- Check for DTC load
-    pcall(load_dtc)
-
     local text = ""
     text = text .. "NAV AIDS "
 

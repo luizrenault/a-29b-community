@@ -292,8 +292,15 @@ dofile(LockOn_Options.script_path.."Systems/UFCP/strm.lua")
 dofile(LockOn_Options.script_path.."Systems/UFCP/flir.lua")
 dofile(LockOn_Options.script_path.."Systems/UFCP/dl.lua")
 
+local function load_dtc()
+    pcall(ufcp_navaids_load_dtc)
+    pcall(ufcp_com1_load_dtc)
+    pcall(ufcp_com2_load_dtc)
+end
 
 function update()
+    load_dtc()
+    
     local ufcp_bright = get_cockpit_draw_argument_value(480)
     update_egir()
 

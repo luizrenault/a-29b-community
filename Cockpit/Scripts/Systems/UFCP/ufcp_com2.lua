@@ -288,7 +288,7 @@ local function ufcp_com2_net_time_validate(text, save)
 end
 
 -- Reads data from a DTC, when DB or ALL is selected in CMFD DTE
-local function load_dtc()
+function ufcp_com2_load_dtc()
     if UFCP_COM2_DTC_READ:get() ~= "" then
         dofile(UFCP_COM2_DTC_READ:get())
 
@@ -319,9 +319,6 @@ local max_sel = 10
 local net_sel = 0
 local net_max_sel = 8
 function update_com2()
-    -- Check for DTC load
-    pcall(load_dtc)
-
     local text = ""
 
     if ufcp_sel_format == UFCP_FORMAT_IDS.COM2 then

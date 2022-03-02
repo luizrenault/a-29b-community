@@ -172,7 +172,7 @@ local function ufcp_com1_frequency_next_validate(text, save)
 end
 
 -- Reads data from a DTC, when DB or ALL is selected in CMFD DTE
-local function load_dtc()
+function ufcp_com1_load_dtc()
     if UFCP_COM1_DTC_READ:get() ~= "" then
         dofile(UFCP_COM1_DTC_READ:get())
 
@@ -194,9 +194,6 @@ local FIELD_INFO = {
 
 local sel = 0
 function update_com1()
-    -- Check for DTC load
-    pcall(load_dtc)
-
     local text = ""
 
     -- Line 1
