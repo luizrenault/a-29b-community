@@ -159,6 +159,8 @@ end
 
 -- Reads data from a DTC, when DB or ALL is selected in CMFD DTE
 function ufcp_navaids_load_dtc()
+
+    -- ADF
     if UFCP_NAVAIDS_DTC_ADF_READ:get() ~= "" then
         dofile(UFCP_NAVAIDS_DTC_ADF_READ:get())
 
@@ -168,6 +170,7 @@ function ufcp_navaids_load_dtc()
         UFCP_NAVAIDS_DTC_ADF_READ:set("")
     end
 
+    -- VOR
     if UFCP_NAVAIDS_DTC_VOR_READ:get() ~= "" then
         dofile(UFCP_NAVAIDS_DTC_VOR_READ:get())
         

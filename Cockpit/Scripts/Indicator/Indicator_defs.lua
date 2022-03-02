@@ -273,7 +273,7 @@ function addStrokeLine(name, length, pos, rot, parent, controllers, dashed, stro
 	return line
 end
 
-function addSimpleLine(name, length, pos, rot, parent, controllers, width, material)
+function addSimpleLine(name, length, pos, rot, parent, controllers, width, dashed, stroke, gap, material)
 	local line		= CreateElement "ceSimpleLineObject"
 	setSymbolCommonProperties(line, name, pos, parent, controllers, material)
 	line.width = width or 1
@@ -282,7 +282,7 @@ function addSimpleLine(name, length, pos, rot, parent, controllers, width, mater
 		line.init_rot	= {rot}
 	end
 
-	local verts = buildStrokeLineVerts(length, nil, nil, nil)
+	local verts = buildStrokeLineVerts(length, dashed, stroke, gap)
 	line.vertices	= verts
 	line.tex_params     = {{0, 0.5}, {1, 0.5}, {1 / (1024 * 100 / 275), 1}}
 

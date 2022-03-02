@@ -140,6 +140,16 @@ UFCP_EGI_STATE_IDS = {
 
 }
 
-nav_fyt_list = {}
 nav_fyt = 1
 wpt_index = {}
+
+-- nav_fyt_list usage:
+-- [1] EGIR (Wpt 0)
+-- [2-79] Navigation (Wpt 1-78)
+-- [80] Datalink (Wpt 79)
+-- [81-90] Marks (Wpt 80-89)
+-- [91-100] Airports (Wpt 90-99)
+-- [101-105] Contact line
+-- [110-130] Avoid areas (Avd 1-30)
+-- [201-350] Flight areas (25 areas, 3-6 points each)
+nav_fyt_list = {}

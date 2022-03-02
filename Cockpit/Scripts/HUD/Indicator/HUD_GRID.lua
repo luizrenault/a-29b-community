@@ -281,7 +281,7 @@ object.controllers = {
 
 
 -- CCIP Bomb Line
-object = addSimpleLine(nil, 10, {0,0}, 0, HUD_CCIP_BOMB_origin.name, nil, 0.5, HUD_MAT_DEF)
+object = addSimpleLine(nil, 10, {0,0}, 0, HUD_CCIP_BOMB_origin.name, nil, 0.5, 0.5, 0.5, false, HUD_MAT_DEF)
 object.element_params = {"HUD_BRIGHT", "HUD_PIPER_LINE_A_X", "HUD_PIPER_LINE_A_Y", "HUD_PIPER_LINE_B_X", "HUD_PIPER_LINE_B_Y"}
 object.controllers = {
 	{"opacity_using_parameter", 0},
@@ -410,7 +410,7 @@ HUD_DGFT_LCOS_object.controllers = {
 }
 
 -- LCOS Line #2
-object = addSimpleLine(nil, 10, {0,0}, 0, HUD_DGFT_origin.name, nil, 0.5, HUD_MAT_DEF)
+object = addSimpleLine(nil, 10, {0,0}, 0, HUD_DGFT_origin.name, nil, 0.5, 0.5, 0.5, false, HUD_MAT_DEF)
 object.element_params = {"HUD_BRIGHT", "WPN_AA_SIGHT", "HUD_PIPER_LINE_A_X", "HUD_PIPER_LINE_A_Y"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
@@ -419,7 +419,7 @@ object.controllers = {
 }
 
 -- LCOS line #2
-object = addSimpleLine(nil, 10, {0,0}, 0, HUD_DGFT_origin.name, nil, 0.5, HUD_MAT_DEF)
+object = addSimpleLine(nil, 10, {0,0}, 0, HUD_DGFT_origin.name, nil, 0.5, 0.5, 0.5, false, HUD_MAT_DEF)
 object.element_params = {"HUD_BRIGHT", "WPN_AA_SIGHT", "HUD_PIPER_LINE_B_X", "HUD_PIPER_LINE_B_Y", "HUD_PIPER_LINE_C_X", "HUD_PIPER_LINE_C_Y"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
@@ -430,7 +430,7 @@ object.controllers = {
 
 
 -- SNAP Line #1
-local HUD_SNAP_LINE1_Object = addSimpleLine(nil, 10, {0,0}, 0, HUD_DGFT_origin.name, nil, 0.5, HUD_MAT_DEF)
+local HUD_SNAP_LINE1_Object = addSimpleLine(nil, 10, {0,0}, 0, HUD_DGFT_origin.name, nil, 0.5, 0.5, 0.5, false, HUD_MAT_DEF)
 HUD_SNAP_LINE1_Object.element_params = {"HUD_BRIGHT", "WPN_AA_SIGHT", "HUD_PIPER_LINE_A_X", "HUD_PIPER_LINE_A_Y"}
 HUD_SNAP_LINE1_Object.controllers = {
 	{"opacity_using_parameter", 0}, 
@@ -439,7 +439,7 @@ HUD_SNAP_LINE1_Object.controllers = {
 }
 
 -- SNAP Line #2
-local HUD_SNAP_LINE2_Object = addSimpleLine(nil, 10, {0,0}, 0, HUD_SNAP_LINE1_Object.name, nil, 0.5, HUD_MAT_DEF)
+local HUD_SNAP_LINE2_Object = addSimpleLine(nil, 10, {0,0}, 0, HUD_SNAP_LINE1_Object.name, nil, 0.5, 0.5, 0.5, false, HUD_MAT_DEF)
 HUD_SNAP_LINE2_Object.element_params = {"HUD_BRIGHT", "WPN_AA_SIGHT", "HUD_PIPER_LINE_A_X", "HUD_PIPER_LINE_A_Y", "HUD_PIPER_LINE_B_X", "HUD_PIPER_LINE_B_Y"}
 HUD_SNAP_LINE2_Object.controllers = {
 	{"opacity_using_parameter", 0}, 
@@ -451,7 +451,7 @@ HUD_SNAP_LINE2_Object.controllers = {
 object = addStrokeLine(nil, 30, {-15, 0}, -90, HUD_SNAP_LINE2_Object.name)
 
 -- SNAP Line #3
-local HUD_SNAP_LINE3_Object = addSimpleLine(nil, 10, {0,0}, 0, HUD_SNAP_LINE2_Object.name, nil, 0.5, HUD_MAT_DEF)
+local HUD_SNAP_LINE3_Object = addSimpleLine(nil, 10, {0,0}, 0, HUD_SNAP_LINE2_Object.name, nil, 0.5, 0.5, 0.5, false, HUD_MAT_DEF)
 HUD_SNAP_LINE3_Object.element_params = {"HUD_BRIGHT", "WPN_AA_SIGHT", "HUD_PIPER_LINE_B_X", "HUD_PIPER_LINE_B_Y", "HUD_PIPER_LINE_C_X", "HUD_PIPER_LINE_C_Y"}
 HUD_SNAP_LINE3_Object.controllers = {
 	{"opacity_using_parameter", 0}, 

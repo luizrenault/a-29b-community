@@ -142,6 +142,19 @@ for k=1,100 do
     object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 3, 0}, {"parameter_in_range",1,0.01,100}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 4, -math.rad(1)}}
 end
 
+-- Contact line
+for k=101,104 do
+    -- ERROR the line should be dashed. I changed the addSimpleLine method, but apparently, it didn't work.
+    object = addSimpleLine("CNT_LINE1", 0.2, {0, 0}, 0, HSI_Origin_Rot.name, nil, 0.005, 0.5, 0.5, true, "CMFD_IND_RED")
+    object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_CNTLINE" .. k .. "_DIST", "CMFD_HSD_CNTLINE" .. k .. "_BRG", "CMFD_HSD_CNTLINE" .. k .. "_BRG2", "CMFD_HSD_CNTLINE" .. k .. "_X", "CMFD_HSD_CNTLINE" .. k .. "_Y"}
+    object.controllers = {{"opacity_using_parameter", 0},{"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)},{"line_object_set_point_using_parameters", 1, 4, 5, 0.075 * HSI_radius, 0.075 * HSI_radius}}
+
+    -- TODO for DEBUG, remove me
+    --object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {0,0}, HSI_Origin_Rot.name, nil, {" %02.0f"}, CMFD_FONT_RED)
+    --object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_CNTLINE" .. k .. "_DIST", "CMFD_HSD_CNTLINE" .. k .. "_BRG", "CMFD_HSD_CNTLINE" .. k .. "_ID", "AVIONICS_HDG"}
+    --object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 3, 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 4, -math.rad(1)}}
+end
+
 local mesh_poly
 mesh_poly                   = CreateElement "ceTexPoly"
 mesh_poly.name              = "adhsi_background" 

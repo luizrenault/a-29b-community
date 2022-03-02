@@ -53,7 +53,8 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 ## Version 0.4 - xx xxx 2022
 
 ### Added
-- ADF, COMM1, COMM2, WAYPOINT and VOR data transfer.
+- Contact lines
+- ADF, COMM1, COMM2, CNT_LINE, WAYPOINT and VOR data transfer.
 
 ### Changes
 - Renamed the Mission folder to DTC.

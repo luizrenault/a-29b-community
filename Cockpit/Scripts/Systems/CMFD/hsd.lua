@@ -33,6 +33,8 @@ local function coord_project(orig_lat_m, orig_lon_m, brg, dist)
 end
 
 function update_hsd()
+
+    -- Waypoints
     for k=1,100 do
         if nav_fyt_list[k] and nav_fyt_list[k].lat >= -90 and nav_fyt_list[k].lat <= 90 and nav_fyt_list[k].lon >= -180 and nav_fyt_list[k].lon <= 180 then
 
@@ -66,6 +68,45 @@ function update_hsd()
             get_param_handle("CMFD_HSD_WP" .. k .. "_ID"):set(string.format("%02d", k-1))
             get_param_handle("CMFD_HSD_WP" .. k .. "_BRG"):set(0)
             get_param_handle("CMFD_HSD_WP" .. k .. "_DIST"):set(0)
+        end
+    end
+
+    -- Contact line
+    --for k=91,95 do -- TODO replace with 101 to 105. Currently reading airports for testing
+    for k=101,105 do
+        if nav_fyt_list[k] and nav_fyt_list[k].lat >= -90 and nav_fyt_list[k].lat <= 90 and nav_fyt_list[k].lon >= -180 and nav_fyt_list[k].lon <= 180 then
+            local origin_lat_m = nav_fyt_list[k].lat_m
+            local origin_lon_m = nav_fyt_list[k].lon_m
+            local hdg, distance = calc_brg_dist_elev_time(origin_lat_m, origin_lon_m, 0)
+
+            hdg = math.deg(hdg) % 360            
+
+            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_ID"):set(string.format("%02d", k-100))
+            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_BRG"):set(hdg) -- Rotation relative to the HSI center
+            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_DIST"):set(distance * 0.000539957 / hsd_rad_sel) -- Distance relative to the HSI center
+
+            if nav_fyt_list[k+1] and nav_fyt_list[k+1].lat >= -90 and nav_fyt_list[k+1].lat <= 90 and nav_fyt_list[k+1].lon >= -180 and nav_fyt_list[k+1].lon <= 180 then
+                local dest_lat_m = nav_fyt_list[k+1].lat_m
+                local dest_lon_m = nav_fyt_list[k+1].lon_m
+                local hdg2, distance2 = calc_brg_dist_elev_time(dest_lat_m, dest_lon_m, 0, origin_lat_m, origin_lon_m, 0)
+                hdg2 = math.deg(hdg2) % 360
+
+                get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_BRG2"):set(hdg2) -- Angle to next point
+                get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_X"):set(0)
+                get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_Y"):set(distance2 * 0.000539957 / hsd_rad_sel)
+            else
+                get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_BRG2"):set(0)
+                get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_X"):set(0)
+                get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_Y"):set(0)
+            end
+            
+        else
+            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_ID"):set(string.format("%02d", k-100))
+            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_BRG"):set(0)
+            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_DIST"):set(0)
+            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_BRG2"):set(0)
+            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_X"):set(0)
+            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_Y"):set(0)
         end
     end
 
