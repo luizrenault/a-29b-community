@@ -96,10 +96,12 @@ local CMFD_NAV_GET_OAP_RDY = get_param_handle("CMFD_NAV_GET_OAP_RDY")
 local CMFD_NAV_DTC_WAYPOINT_READ = get_param_handle("CMFD_NAV_DTC_WAYPOINT_READ")
 local CMFD_NAV_DTC_CNTLINE_READ = get_param_handle("CMFD_NAV_DTC_CNTLINE_READ")
 local CMFD_NAV_DTC_FLTAREA_READ = get_param_handle("CMFD_NAV_DTC_FLTAREA_READ")
+local CMFD_NAV_DTC_AVDAREA_READ = get_param_handle("CMFD_NAV_DTC_AVDAREA_READ")
 local UFCP_WPT_NUM_LAST = get_param_handle("UFCP_WPT_NUM_LAST")
 CMFD_NAV_DTC_WAYPOINT_READ:set("")
 CMFD_NAV_DTC_CNTLINE_READ:set("")
 CMFD_NAV_DTC_FLTAREA_READ:set("")
+CMFD_NAV_DTC_AVDAREA_READ:set("")
 
 CMFD_NAV_SET_OAP_INDEX:set(-1)
 CMFD_NAV_GET_OAP_INDEX:set(-1)
@@ -186,6 +188,33 @@ function cmfd_nav_load_dtc()
                 nav_fyt_list[i].time = 0
             end
         end
+
+        CMFD_NAV_DTC_FLTAREA_READ:set("")
+    end
+
+    -- Avoid areas
+    if CMFD_NAV_DTC_AVDAREA_READ:get() ~= "" then
+        dofile(CMFD_NAV_DTC_AVDAREA_READ:get())
+
+        for _, value in pairs(AVD_AREA) 
+        do
+            local i = tonumber(value.ID)+110
+            local alt = 0
+            local lat = tonumber(value.LAT) * 180
+            local lon = tonumber(value.LONG) * 180
+            local time = 0
+            local radius = tonumber(value.RADIUS)
+
+            nav_fyt_list[i] = {}
+            nav_fyt_list[i].lat = lat
+            nav_fyt_list[i].lon = lon
+            nav_fyt_list[i].lat_m, nav_fyt_list[i].lon_m = Terrain.convertLatLonToMeters(lat, lon)
+            nav_fyt_list[i].altitude = alt
+            nav_fyt_list[i].time = time
+            nav_fyt_list[i].radius = radius
+        end
+
+        CMFD_NAV_DTC_AVDAREA_READ:set("")
     end
 end
 

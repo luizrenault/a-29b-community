@@ -150,6 +150,6 @@ wpt_index = {}
 -- [81-90] Marks (Wpt 80-89)
 -- [91-100] Airports (Wpt 90-99)
 -- [101-105] Contact line
--- [110-130] Avoid areas (Avd 1-30)
+-- [111-130] Avoid areas (Avd 1-30)
 -- [201-350] Flight areas (25 areas, 3-6 points each)
 nav_fyt_list = {}

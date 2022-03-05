@@ -46,6 +46,7 @@ local UFCP_NAVAIDS_DTC_VOR_READ = get_param_handle("UFCP_NAVAIDS_DTC_VOR_READ")
 local CMFD_NAV_DTC_CNTLINE_READ = get_param_handle("CMFD_NAV_DTC_CNTLINE_READ")
 local CMFD_NAV_DTC_WAYPOINT_READ = get_param_handle("CMFD_NAV_DTC_WAYPOINT_READ")
 local CMFD_NAV_DTC_FLTAREA_READ = get_param_handle("CMFD_NAV_DTC_FLTAREA_READ")
+local CMFD_NAV_DTC_AVDAREA_READ = get_param_handle("CMFD_NAV_DTC_AVDAREA_READ")
 UFCP_COM1_DTC_READ:set("")
 UFCP_COM2_DTC_READ:set("")
 UFCP_NAVAIDS_DTC_ADF_READ:set("")
@@ -53,6 +54,7 @@ UFCP_NAVAIDS_DTC_VOR_READ:set("")
 CMFD_NAV_DTC_CNTLINE_READ:set("")
 CMFD_NAV_DTC_WAYPOINT_READ:set("")
 CMFD_NAV_DTC_FLTAREA_READ:set("")
+CMFD_NAV_DTC_AVDAREA_READ:set("")
 
 local mission = ""
 local pilot = ""
@@ -120,10 +122,8 @@ local function read_ALN_SLOT()
 end
 
 local function read_AVD_AREA()
-    dofile(mission_dir .. "AVD_AREA.lua")
-
-    -- TODO read data
-    error()
+    -- TODO validate file or throw error()
+    CMFD_NAV_DTC_AVDAREA_READ:set(mission_dir .. "AVD_AREA.lua")
 end
 
 local function read_CNT_LINE()
@@ -377,15 +377,12 @@ end
 local function load_hsd()
     -- Contact line (5 points)
     -- Avoid areas (30)
+    pcall(read_CNT_LINE)
+    pcall(read_FLT_AREA)
+    pcall(read_AVD_AREA) 
 
-    if pcall(read_CNT_LINE) and
-        pcall(read_FLT_AREA) and
-        pcall(read_AVD_AREA) 
-    then
-        hsd_state = CMFD_DTE_STATE_IDS.LOADED
-    else
-        hsd_state = CMFD_DTE_STATE_IDS.FAILED
-    end
+    hsd_state = CMFD_DTE_STATE_IDS.LOADED
+    -- hsd_state = CMFD_DTE_STATE_IDS.FAILED
 end
 
 local function load_sim_inv()

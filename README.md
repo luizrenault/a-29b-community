@@ -53,8 +53,10 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 ## Version 0.4 - xx xxx 2022
 
 ### Added
-- Contact lines
-- ADF, COMM1, COMM2, CNT_LINE, FLT_AREA, WAYPOINT and VOR data transfer.
+- Avoid areas on HSD
+- Contact lines on HSD
+- Flight areas on HSD
+- ADF, AVD_AREAS, COMM1, COMM2, CNT_LINE, FLT_AREA, WAYPOINT and VOR data transfer.
 
 ### Changes
 - Renamed the Mission folder to DTC.
