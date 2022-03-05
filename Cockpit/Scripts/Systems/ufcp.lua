@@ -296,6 +296,7 @@ local function load_dtc()
     pcall(ufcp_navaids_load_dtc)
     pcall(ufcp_com1_load_dtc)
     pcall(ufcp_com2_load_dtc)
+    pcall(ufcp_xpdr_load_dtc)
 end
 
 function update()

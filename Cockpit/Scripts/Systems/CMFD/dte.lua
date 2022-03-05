@@ -43,6 +43,7 @@ local UFCP_COM1_DTC_READ = get_param_handle("UFCP_COM1_DTC_READ")
 local UFCP_COM2_DTC_READ = get_param_handle("UFCP_COM2_DTC_READ")
 local UFCP_NAVAIDS_DTC_ADF_READ = get_param_handle("UFCP_NAVAIDS_DTC_ADF_READ")
 local UFCP_NAVAIDS_DTC_VOR_READ = get_param_handle("UFCP_NAVAIDS_DTC_VOR_READ")
+local UFCP_XPDR_DTC_READ = get_param_handle("UFCP_XPDR_DTC_READ")
 local CMFD_NAV_DTC_CNTLINE_READ = get_param_handle("CMFD_NAV_DTC_CNTLINE_READ")
 local CMFD_NAV_DTC_WAYPOINT_READ = get_param_handle("CMFD_NAV_DTC_WAYPOINT_READ")
 local CMFD_NAV_DTC_FLTAREA_READ = get_param_handle("CMFD_NAV_DTC_FLTAREA_READ")
@@ -51,6 +52,7 @@ UFCP_COM1_DTC_READ:set("")
 UFCP_COM2_DTC_READ:set("")
 UFCP_NAVAIDS_DTC_ADF_READ:set("")
 UFCP_NAVAIDS_DTC_VOR_READ:set("")
+UFCP_XPDR_DTC_READ:set("")
 CMFD_NAV_DTC_CNTLINE_READ:set("")
 CMFD_NAV_DTC_WAYPOINT_READ:set("")
 CMFD_NAV_DTC_FLTAREA_READ:set("")
@@ -67,7 +69,7 @@ local dvr_state = CMFD_DTE_DVR_STATE_IDS.DTE
 local mpd_state = CMFD_DTE_STATE_IDS.UNLOADED
 local db_state = CMFD_DTE_STATE_IDS.UNLOADED
 local prog_state = CMFD_DTE_STATE_IDS.UNLOADED
-local inv_state = CMFD_DTE_STATE_IDS.UNLOADED
+local inv_state = CMFD_DTE_STATE_IDS.LOADED
 local hsd_state = CMFD_DTE_STATE_IDS.UNLOADED
 local sim_inv_state = CMFD_DTE_STATE_IDS.UNLOADED
 local msmd_state = CMFD_DTE_STATE_IDS.UNLOADED
@@ -89,16 +91,14 @@ local terrainAirdromes = get_terrain_related_data("Airdromes") or {};
 -- BLANK: DVR OFF OR BIT RUNNING
 
 local function read_ADD_RINV()
-    dofile(mission_dir .. "ADD_RINV.lua")
-
-    -- TODO read data
+    -- The inventory is automatic, per aircraft loadout.
+    --dofile(mission_dir .. "ADD_RINV.lua")
     error()
 end
 
 local function read_ADD_SINV()
-    dofile(mission_dir .. "ADD_SINV.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "ADD_SINV.lua")
     error()
 end
 
@@ -108,16 +108,14 @@ local function read_ADF()
 end
 
 local function read_AIRFIELD()
-    dofile(mission_dir .. "AIRFIELD.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "AIRFIELD.lua")
     error()
 end
 
 local function read_ALN_SLOT()
-    dofile(mission_dir .. "ALN_SLOT.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "ALN_SLOT.lua")
     error()
 end
 
@@ -138,16 +136,14 @@ local function read_COMM1()
 end
 
 local function read_DL_PTEXT()
-    dofile(mission_dir .. "DL_PTEXT.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "DL_PTEXT.lua")
     error()
 end
 
 local function read_DL_SETUP()
-    dofile(mission_dir .. "DL_SETUP.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "DL_SETUP.lua")
     error()
 end
 
@@ -171,51 +167,43 @@ local function read_GENERAL()
 end
 
 local function read_IFF()
-    dofile(mission_dir .. "IFF.lua")
-
-    -- TODO read data
-    error()
+    -- TODO validate file or throw error()
+    UFCP_XPDR_DTC_READ:set(mission_dir .. "IFF.lua")
 end
 
 local function read_MSMD()
-    dofile(mission_dir .. "MSMD.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "MSMD.lua")
     error()
 end
 
 local function read_NAV_SYS()
-    dofile(mission_dir .. "NAV_SYS.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "NAV_SYS.lua")
     error()
 end
 
 local function read_PROG()
-    dofile(mission_dir .. "PROG.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "PROG.lua")
     error()
 end
 
 local function read_REAL_INV()
-    dofile(mission_dir .. "REAL_INV.lua")
-
-    -- TODO read data
+    -- The inventory is automatic, per aircraft loadout.
+    --dofile(mission_dir .. "REAL_INV.lua")
     error()
 end
 
 local function read_SIM_INV()
-    dofile(mission_dir .. "SIM_INV.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "SIM_INV.lua")
     error()
 end
 
 local function read_SMS_MISC()
-    dofile(mission_dir .. "SMS_MISC.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "SMS_MISC.lua")
     error()
 end
 
@@ -225,9 +213,8 @@ local function read_VOR()
 end
 
 local function read_WARNING()
-    dofile(mission_dir .. "WARNING.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "WARNING.lua")
     error()
 end
 
@@ -330,6 +317,7 @@ local function load_db()
     -- DL messages
 
     if pcall(read_COMM1) and
+        pcall(read_IFF) and 
         pcall(read_ADF) and
         pcall(read_VOR) and 
         pcall(read_DL_PTEXT) and 
