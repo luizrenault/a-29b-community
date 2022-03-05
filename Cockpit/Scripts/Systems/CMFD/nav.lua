@@ -95,9 +95,11 @@ local CMFD_NAV_GET_OAP_RDY = get_param_handle("CMFD_NAV_GET_OAP_RDY")
 
 local CMFD_NAV_DTC_WAYPOINT_READ = get_param_handle("CMFD_NAV_DTC_WAYPOINT_READ")
 local CMFD_NAV_DTC_CNTLINE_READ = get_param_handle("CMFD_NAV_DTC_CNTLINE_READ")
+local CMFD_NAV_DTC_FLTAREA_READ = get_param_handle("CMFD_NAV_DTC_FLTAREA_READ")
 local UFCP_WPT_NUM_LAST = get_param_handle("UFCP_WPT_NUM_LAST")
 CMFD_NAV_DTC_WAYPOINT_READ:set("")
 CMFD_NAV_DTC_CNTLINE_READ:set("")
+CMFD_NAV_DTC_FLTAREA_READ:set("")
 
 CMFD_NAV_SET_OAP_INDEX:set(-1)
 CMFD_NAV_GET_OAP_INDEX:set(-1)
@@ -160,6 +162,30 @@ function cmfd_nav_load_dtc()
         end
         
         CMFD_NAV_DTC_CNTLINE_READ:set("")
+    end
+
+    -- Flight areas
+    if CMFD_NAV_DTC_FLTAREA_READ:get() ~= "" then
+        dofile(CMFD_NAV_DTC_FLTAREA_READ:get())
+
+        for _, value in pairs(FLT_AREA) 
+        do
+            local code = value.Name
+            for point_id = 1, 6 do
+                local i = 200 + (value.ID - 1) * 6 + (point_id - 1) + 1 -- Simplify
+                local lat = tonumber(value["Point" .. point_id].LAT) * 180
+                local lon = tonumber(value["Point" .. point_id].LONG) * 180
+                -- local type = value["Point" .. point_id].Type
+
+                nav_fyt_list[i] = {}
+                nav_fyt_list[i].lat = lat
+                nav_fyt_list[i].lon = lon
+                nav_fyt_list[i].code = code
+                nav_fyt_list[i].lat_m, nav_fyt_list[i].lon_m = Terrain.convertLatLonToMeters(lat, lon)
+                nav_fyt_list[i].altitude = 0
+                nav_fyt_list[i].time = 0
+            end
+        end
     end
 end
 

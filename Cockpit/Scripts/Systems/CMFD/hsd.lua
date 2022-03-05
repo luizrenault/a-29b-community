@@ -72,7 +72,6 @@ function update_hsd()
     end
 
     -- Contact line
-    --for k=91,95 do -- TODO replace with 101 to 105. Currently reading airports for testing
     for k=101,105 do
         if nav_fyt_list[k] and nav_fyt_list[k].lat >= -90 and nav_fyt_list[k].lat <= 90 and nav_fyt_list[k].lon >= -180 and nav_fyt_list[k].lon <= 180 then
             local origin_lat_m = nav_fyt_list[k].lat_m
@@ -107,6 +106,82 @@ function update_hsd()
             get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_BRG2"):set(0)
             get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_X"):set(0)
             get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_Y"):set(0)
+        end
+    end
+
+    -- Flight areas
+    for area=1,25 do
+        local lat_sum = 0
+        local lon_sum = 0
+        local code = ""
+        local count = 0
+
+        for point=1,6 do
+            local k = 200 + (area - 1) * 6 + (point - 1) + 1
+
+            if nav_fyt_list[k] and nav_fyt_list[k].lat >= -90 and nav_fyt_list[k].lat <= 90 and nav_fyt_list[k].lon >= -180 and nav_fyt_list[k].lon <= 180 then
+                local origin_lat_m = nav_fyt_list[k].lat_m
+                local origin_lon_m = nav_fyt_list[k].lon_m
+                local hdg, distance = calc_brg_dist_elev_time(origin_lat_m, origin_lon_m, 0)
+
+                code = nav_fyt_list[k].code
+                lat_sum = lat_sum + origin_lat_m
+                lon_sum = lon_sum + origin_lon_m
+                count = count + 1
+
+                hdg = math.deg(hdg) % 360            
+
+                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_ID"):set(nav_fyt_list[k].code)
+                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_BRG"):set(hdg) -- Rotation relative to the HSI center
+                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_DIST"):set(distance * 0.000539957 / hsd_rad_sel) -- Distance relative to the HSI center
+
+                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_LABEL_BRG"):set(hdg) -- Rotation relative to the HSI center
+                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_LABEL_DIST"):set(distance * 0.000539957 / hsd_rad_sel) -- Distance relative to the HSI center
+
+                local l = k + 1
+                if point == 6 then
+                    l = 200 + (area - 1) * 6 + 1
+                end
+
+                if nav_fyt_list[l] and nav_fyt_list[l].lat >= -90 and nav_fyt_list[l].lat <= 90 and nav_fyt_list[l].lon >= -180 and nav_fyt_list[l].lon <= 180 then
+                    local dest_lat_m = nav_fyt_list[l].lat_m
+                    local dest_lon_m = nav_fyt_list[l].lon_m
+                    local hdg2, distance2 = calc_brg_dist_elev_time(dest_lat_m, dest_lon_m, 0, origin_lat_m, origin_lon_m, 0)
+                    hdg2 = math.deg(hdg2) % 360
+
+                    get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_BRG2"):set(hdg2) -- Angle to next point
+                    get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_X"):set(0)
+                    get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_Y"):set(distance2 * 0.000539957 / hsd_rad_sel)
+                else
+                    get_param_handle("CMFD_HSD_FLTAREAE" .. k .. "_BRG2"):set(0)
+                    get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_X"):set(0)
+                    get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_Y"):set(0)
+                end
+
+            else
+                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_ID"):set("")
+                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_BRG"):set(0)
+                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_DIST"):set(0)
+                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_BRG2"):set(0)
+                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_X"):set(0)
+                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_Y"):set(0)
+            end
+        end
+
+        if count > 0 then
+            local label_lat = lat_sum / count
+            local label_lon = lon_sum / count
+
+            local hdg, distance = calc_brg_dist_elev_time(label_lat, label_lon, 0)
+            hdg = math.deg(hdg) % 360  
+
+            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_ID"):set(code)
+            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_BRG"):set(hdg) -- Rotation relative to the HSI center
+            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_DIST"):set(distance * 0.000539957 / hsd_rad_sel) -- Rotation relative to the HSI center
+        else
+            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_ID"):set("")
+            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_BRG"):set(0) -- Rotation relative to the HSI center
+            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_DIST"):set(0) -- Rotation relative to the HSI center
         end
     end
 

@@ -148,11 +148,20 @@ for k=101,104 do
     object = addSimpleLine("CNT_LINE1", 0.2, {0, 0}, 0, HSI_Origin_Rot.name, nil, 0.005, 0.5, 0.5, true, "CMFD_IND_RED")
     object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_CNTLINE" .. k .. "_DIST", "CMFD_HSD_CNTLINE" .. k .. "_BRG", "CMFD_HSD_CNTLINE" .. k .. "_BRG2", "CMFD_HSD_CNTLINE" .. k .. "_X", "CMFD_HSD_CNTLINE" .. k .. "_Y"}
     object.controllers = {{"opacity_using_parameter", 0},{"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)},{"line_object_set_point_using_parameters", 1, 4, 5, 0.075 * HSI_radius, 0.075 * HSI_radius}}
+end
 
-    -- TODO for DEBUG, remove me
-    --object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "LeftCenter", {0,0}, HSI_Origin_Rot.name, nil, {" %02.0f"}, CMFD_FONT_RED)
-    --object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_CNTLINE" .. k .. "_DIST", "CMFD_HSD_CNTLINE" .. k .. "_BRG", "CMFD_HSD_CNTLINE" .. k .. "_ID", "AVIONICS_HDG"}
-    --object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 3, 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 4, -math.rad(1)}}
+-- Flight area
+for k=201,350 do
+    -- ERROR the line should be dashed. I changed the addSimpleLine method, but apparently, it didn't work.
+    object = addSimpleLine("CNT_LINE1", 0.2, {0, 0}, 0, HSI_Origin_Rot.name, nil, 0.005, 0.5, 0.5, true, "CMFD_IND_YELLOW")
+    object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA" .. k .. "_DIST", "CMFD_HSD_FLTAREA" .. k .. "_BRG", "CMFD_HSD_FLTAREA" .. k .. "_BRG2", "CMFD_HSD_FLTAREA" .. k .. "_X", "CMFD_HSD_FLTAREA" .. k .. "_Y"}
+    object.controllers = {{"opacity_using_parameter", 0},{"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)},{"line_object_set_point_using_parameters", 1, 4, 5, 0.075 * HSI_radius, 0.075 * HSI_radius}}
+end
+
+for k=1,25 do
+    object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0,0}, HSI_Origin_Rot.name, nil, {" %6s"}, CMFD_FONT_YELLOW)
+    object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_DIST", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_BRG", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_ID", "AVIONICS_HDG"}
+    object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 3, 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 4, -math.rad(1)}}
 end
 
 local mesh_poly

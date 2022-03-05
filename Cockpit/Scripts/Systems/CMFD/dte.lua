@@ -45,12 +45,14 @@ local UFCP_NAVAIDS_DTC_ADF_READ = get_param_handle("UFCP_NAVAIDS_DTC_ADF_READ")
 local UFCP_NAVAIDS_DTC_VOR_READ = get_param_handle("UFCP_NAVAIDS_DTC_VOR_READ")
 local CMFD_NAV_DTC_CNTLINE_READ = get_param_handle("CMFD_NAV_DTC_CNTLINE_READ")
 local CMFD_NAV_DTC_WAYPOINT_READ = get_param_handle("CMFD_NAV_DTC_WAYPOINT_READ")
+local CMFD_NAV_DTC_FLTAREA_READ = get_param_handle("CMFD_NAV_DTC_FLTAREA_READ")
 UFCP_COM1_DTC_READ:set("")
 UFCP_COM2_DTC_READ:set("")
 UFCP_NAVAIDS_DTC_ADF_READ:set("")
 UFCP_NAVAIDS_DTC_VOR_READ:set("")
 CMFD_NAV_DTC_CNTLINE_READ:set("")
 CMFD_NAV_DTC_WAYPOINT_READ:set("")
+CMFD_NAV_DTC_FLTAREA_READ:set("")
 
 local mission = ""
 local pilot = ""
@@ -150,10 +152,8 @@ local function read_DL_SETUP()
 end
 
 local function read_FLT_AREA()
-    dofile(mission_dir .. "FLT_AREA.lua")
-
-    -- TODO read data
-    error()
+    -- TODO validate file or throw error()
+    CMFD_NAV_DTC_FLTAREA_READ:set(mission_dir .. "FLT_AREA.lua")
 end
 
 local function read_GENERAL()
