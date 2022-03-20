@@ -1,4 +1,5 @@
 dofile(LockOn_Options.script_path.."CMFD/CMFD_NAV_ID_defs.lua")
+dofile(LockOn_Options.script_path.."CMFD/CMFD_HSD_ID_defs.lua")
 dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
 
 
@@ -173,11 +174,39 @@ function cmfd_nav_load_dtc()
         for _, value in pairs(FLT_AREA) 
         do
             local code = value.Name
-            for point_id = 1, 6 do
-                local i = 200 + (value.ID - 1) * 6 + (point_id - 1) + 1 -- Simplify
-                local lat = tonumber(value["Point" .. point_id].LAT) * 180
-                local lon = tonumber(value["Point" .. point_id].LONG) * 180
-                -- local type = value["Point" .. point_id].Type
+            local points = tonumber(value.Points_Cntr)
+            local typ = value.Type
+
+            for point_id = 1, points do
+                local  i = 200 + (value.ID - 1) * 6 + (point_id - 1) + 1 -- Simplify
+                local lat, lon
+
+                if point_id <= points then
+                    lat = tonumber(value["Point" .. point_id].LAT) * 180
+                    lon = tonumber(value["Point" .. point_id].LONG) * 180
+                else
+                    lat = tonumber(value["Point" .. points].LAT) * 180
+                    lon = tonumber(value["Point" .. points].LONG) * 180
+                end
+
+                local fltarea_type = CMFD_HSD_FLTAREA_TYPES.B
+                if typ == "A" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.A
+                elseif typ == "B" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.B
+                elseif typ == "C" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.C
+                elseif typ == "D" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.D
+                elseif typ == "E" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.E
+                elseif typ == "F" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.F
+                elseif typ == "G" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.G
+                elseif typ == "H" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.H
+                end
 
                 nav_fyt_list[i] = {}
                 nav_fyt_list[i].lat = lat
@@ -186,6 +215,9 @@ function cmfd_nav_load_dtc()
                 nav_fyt_list[i].lat_m, nav_fyt_list[i].lon_m = Terrain.convertLatLonToMeters(lat, lon)
                 nav_fyt_list[i].altitude = 0
                 nav_fyt_list[i].time = 0
+                nav_fyt_list[i].type = fltarea_type
+                nav_fyt_list[i].points = points
+
             end
         end
 

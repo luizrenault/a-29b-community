@@ -150,6 +150,7 @@ local function update_flight_areas()
         local lon_sum = 0
         local code = ""
         local count = 0
+        local color = CMFD_HSD_FLTAREA_COLORS.GREEN
 
         for point=1,6 do
             local k = 200 + (area - 1) * 6 + (point - 1) + 1
@@ -160,14 +161,27 @@ local function update_flight_areas()
                 local hdg, distance = calc_brg_dist_elev_time(origin_lat_m, origin_lon_m, 0)
 
                 code = nav_fyt_list[k].code
-                lat_sum = lat_sum + origin_lat_m
-                lon_sum = lon_sum + origin_lon_m
-                count = count + 1
 
-                hdg = math.deg(hdg) % 360            
+                if point <= nav_fyt_list[k].points then
+                    lat_sum = lat_sum + origin_lat_m
+                    lon_sum = lon_sum + origin_lon_m
+                    count = count + 1
+                end
+
+                hdg = math.deg(hdg) % 360 
+
+                if nav_fyt_list[k].type == CMFD_HSD_FLTAREA_TYPES.A or nav_fyt_list[k].type == CMFD_HSD_FLTAREA_TYPES.D or nav_fyt_list[k].type == CMFD_HSD_FLTAREA_TYPES.G then
+                    color = CMFD_HSD_FLTAREA_COLORS.YELLOW
+                elseif nav_fyt_list[k].type == CMFD_HSD_FLTAREA_TYPES.B or nav_fyt_list[k].type == CMFD_HSD_FLTAREA_TYPES.E then
+                    color = CMFD_HSD_FLTAREA_COLORS.GREEN
+                else
+                    color = CMFD_HSD_FLTAREA_COLORS.PURPLE
+                end
 
                 get_param_handle("CMFD_HSD_FLTAREA" .. k .. ""):set(1)
                 get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_ID"):set(nav_fyt_list[k].code)
+                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_TYPE"):set(nav_fyt_list[k].type)
+                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_COLOR"):set(color)
                 get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_BRG"):set(hdg) -- Rotation relative to the HSI center
                 get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_DIST"):set(distance * 0.000539957 / hsd_rad_sel) -- Distance relative to the HSI center
 
@@ -216,11 +230,13 @@ local function update_flight_areas()
             get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_ID"):set(code)
             get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_BRG"):set(hdg) -- Rotation relative to the HSI center
             get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_DIST"):set(distance * 0.000539957 / hsd_rad_sel) -- Rotation relative to the HSI center
+            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_COLOR"):set(color)
         else
             get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. ""):set(0)
             get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_ID"):set("")
             get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_BRG"):set(0) -- Rotation relative to the HSI center
             get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_DIST"):set(0) -- Rotation relative to the HSI center
+            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_COLOR"):set(0)
         end
     end
 end

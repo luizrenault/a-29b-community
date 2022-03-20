@@ -12,6 +12,23 @@ CMFD_HSD_DL_IDS = {
     NONE = 3
 }
 
+CMFD_HSD_FLTAREA_TYPES = {
+    A = 0,
+    B = 1,
+    C = 2,
+    D = 3,
+    E = 4,
+    F = 5,
+    G = 6,
+    H = 7
+}
+
+CMFD_HSD_FLTAREA_COLORS = {
+    YELLOW = 0,
+    GREEN = 1,
+    PURPLE = 2
+}
+
 CMFD_HSD_DL_IDS.ALL = "DL\nALL"
 CMFD_HSD_DL_IDS.FORM = "DL\nFORM"
 CMFD_HSD_DL_IDS.TGT = "DL\nTGT"

@@ -163,19 +163,97 @@ for k=101,104 do
 end
 
 -- Flight area
-for k=201,350 do
-    -- ERROR the line should be dashed. I changed the addSimpleLine method, but apparently, it didn't work.
-    object = addSimpleLine(nil, 0.2, {0, 0}, 0, HSI_Origin_Rot.name, nil, 0.005, 0.5, 0.5, true, "CMFD_IND_YELLOW")
-    object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA" .. k .. "_DIST", "CMFD_HSD_FLTAREA" .. k .. "_BRG", "CMFD_HSD_FLTAREA" .. k .. "_BRG2", "CMFD_HSD_FLTAREA" .. k .. "_X", "CMFD_HSD_FLTAREA" .. k .. "_Y", "CMFD_HSD_FLTAREA" .. k, "CMFD_HSD_SYM_CHECKED", "CMFD_HSD_FORMAT", "CMFD_HSD_AREA_CHECKED"}
-    object.controllers = {{"opacity_using_parameter", 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)},{"line_object_set_point_using_parameters", 1, 4, 5, 0.075 * HSI_radius, 0.075 * HSI_radius}, {"parameter_compare_with_number", 6, 1}, {"parameter_compare_with_number", 7, 0}, {"parameter_in_range", 8, CMFD_HSD_FORMAT_IDS.HSD-1, CMFD_HSD_FORMAT_IDS.DCTL+1}, {"parameter_compare_with_number", 9, 0}}
-end
+
+-- Yellow areas
+
+        -- Dotted
+        for k=201,350 do
+            -- ERROR the line should be dashed. I changed the addSimpleLine method, but apparently, it didn't work.
+            object = addSimpleLine(nil, 0.2, {0, 0}, 0, HSI_Origin_Rot.name, nil, 0.005, 0.5, 0.5, true, "CMFD_IND_YELLOW")
+            object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA" .. k .. "_DIST", "CMFD_HSD_FLTAREA" .. k .. "_BRG", "CMFD_HSD_FLTAREA" .. k .. "_BRG2", "CMFD_HSD_FLTAREA" .. k .. "_X", "CMFD_HSD_FLTAREA" .. k .. "_Y", "CMFD_HSD_FLTAREA" .. k, "CMFD_HSD_SYM_CHECKED", "CMFD_HSD_FORMAT", "CMFD_HSD_AREA_CHECKED", "CMFD_HSD_FLTAREA" .. k .. "_TYPE"}
+            object.controllers = {{"opacity_using_parameter", 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)},{"line_object_set_point_using_parameters", 1, 4, 5, 0.075 * HSI_radius, 0.075 * HSI_radius}, {"parameter_compare_with_number", 6, 1}, {"parameter_compare_with_number", 7, 0}, {"parameter_in_range", 8, CMFD_HSD_FORMAT_IDS.HSD-1, CMFD_HSD_FORMAT_IDS.DCTL+1}, {"parameter_compare_with_number", 9, 0}, {"parameter_compare_with_number", 10, CMFD_HSD_FLTAREA_TYPES.A}}
+        end
+
+        -- Dashed
+        for k=201,350 do
+            -- ERROR the line should be dashed. I changed the addSimpleLine method, but apparently, it didn't work.
+            object = addSimpleLine(nil, 0.2, {0, 0}, 0, HSI_Origin_Rot.name, nil, 0.005, 0.5, 0.5, true, "CMFD_IND_YELLOW")
+            object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA" .. k .. "_DIST", "CMFD_HSD_FLTAREA" .. k .. "_BRG", "CMFD_HSD_FLTAREA" .. k .. "_BRG2", "CMFD_HSD_FLTAREA" .. k .. "_X", "CMFD_HSD_FLTAREA" .. k .. "_Y", "CMFD_HSD_FLTAREA" .. k, "CMFD_HSD_SYM_CHECKED", "CMFD_HSD_FORMAT", "CMFD_HSD_AREA_CHECKED", "CMFD_HSD_FLTAREA" .. k .. "_TYPE"}
+            object.controllers = {{"opacity_using_parameter", 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)},{"line_object_set_point_using_parameters", 1, 4, 5, 0.075 * HSI_radius, 0.075 * HSI_radius}, {"parameter_compare_with_number", 6, 1}, {"parameter_compare_with_number", 7, 0}, {"parameter_in_range", 8, CMFD_HSD_FORMAT_IDS.HSD-1, CMFD_HSD_FORMAT_IDS.DCTL+1}, {"parameter_compare_with_number", 9, 0}, {"parameter_compare_with_number", 10, CMFD_HSD_FLTAREA_TYPES.D}}
+        end
+
+        -- Continuous
+        for k=201,350 do
+            object = addSimpleLine(nil, 0.2, {0, 0}, 0, HSI_Origin_Rot.name, nil, 0.005, nil, nil, false, "CMFD_IND_YELLOW")
+            object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA" .. k .. "_DIST", "CMFD_HSD_FLTAREA" .. k .. "_BRG", "CMFD_HSD_FLTAREA" .. k .. "_BRG2", "CMFD_HSD_FLTAREA" .. k .. "_X", "CMFD_HSD_FLTAREA" .. k .. "_Y", "CMFD_HSD_FLTAREA" .. k, "CMFD_HSD_SYM_CHECKED", "CMFD_HSD_FORMAT", "CMFD_HSD_AREA_CHECKED", "CMFD_HSD_FLTAREA" .. k .. "_TYPE"}
+            object.controllers = {{"opacity_using_parameter", 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)},{"line_object_set_point_using_parameters", 1, 4, 5, 0.075 * HSI_radius, 0.075 * HSI_radius}, {"parameter_compare_with_number", 6, 1}, {"parameter_compare_with_number", 7, 0}, {"parameter_in_range", 8, CMFD_HSD_FORMAT_IDS.HSD-1, CMFD_HSD_FORMAT_IDS.DCTL+1}, {"parameter_compare_with_number", 9, 0}, {"parameter_compare_with_number", 10, CMFD_HSD_FLTAREA_TYPES.G}}
+        end
+
+    -- Green areas
+
+        -- Dotted
+        for k=201,350 do
+            -- ERROR the line should be dashed. I changed the addSimpleLine method, but apparently, it didn't work.
+            object = addSimpleLine(nil, 0.2, {0, 0}, 0, HSI_Origin_Rot.name, nil, 0.005, 0.5, 0.5, true, "CMFD_IND_GREEN")
+            object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA" .. k .. "_DIST", "CMFD_HSD_FLTAREA" .. k .. "_BRG", "CMFD_HSD_FLTAREA" .. k .. "_BRG2", "CMFD_HSD_FLTAREA" .. k .. "_X", "CMFD_HSD_FLTAREA" .. k .. "_Y", "CMFD_HSD_FLTAREA" .. k, "CMFD_HSD_SYM_CHECKED", "CMFD_HSD_FORMAT", "CMFD_HSD_AREA_CHECKED", "CMFD_HSD_FLTAREA" .. k .. "_TYPE"}
+            object.controllers = {{"opacity_using_parameter", 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)},{"line_object_set_point_using_parameters", 1, 4, 5, 0.075 * HSI_radius, 0.075 * HSI_radius}, {"parameter_compare_with_number", 6, 1}, {"parameter_compare_with_number", 7, 0}, {"parameter_in_range", 8, CMFD_HSD_FORMAT_IDS.HSD-1, CMFD_HSD_FORMAT_IDS.DCTL+1}, {"parameter_compare_with_number", 9, 0}, {"parameter_compare_with_number", 10, CMFD_HSD_FLTAREA_TYPES.B}}
+        end
+
+        -- Dashed
+        for k=201,350 do
+            -- ERROR the line should be dashed. I changed the addSimpleLine method, but apparently, it didn't work.
+            object = addSimpleLine(nil, 0.2, {0, 0}, 0, HSI_Origin_Rot.name, nil, 0.005, 0.5, 0.5, true, "CMFD_IND_GREEN")
+            object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA" .. k .. "_DIST", "CMFD_HSD_FLTAREA" .. k .. "_BRG", "CMFD_HSD_FLTAREA" .. k .. "_BRG2", "CMFD_HSD_FLTAREA" .. k .. "_X", "CMFD_HSD_FLTAREA" .. k .. "_Y", "CMFD_HSD_FLTAREA" .. k, "CMFD_HSD_SYM_CHECKED", "CMFD_HSD_FORMAT", "CMFD_HSD_AREA_CHECKED", "CMFD_HSD_FLTAREA" .. k .. "_TYPE"}
+            object.controllers = {{"opacity_using_parameter", 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)},{"line_object_set_point_using_parameters", 1, 4, 5, 0.075 * HSI_radius, 0.075 * HSI_radius}, {"parameter_compare_with_number", 6, 1}, {"parameter_compare_with_number", 7, 0}, {"parameter_in_range", 8, CMFD_HSD_FORMAT_IDS.HSD-1, CMFD_HSD_FORMAT_IDS.DCTL+1}, {"parameter_compare_with_number", 9, 0}, {"parameter_compare_with_number", 10, CMFD_HSD_FLTAREA_TYPES.E}}
+        end
+
+    -- Purple areas
+
+        -- Dotted
+        for k=201,350 do
+            -- ERROR the line should be dashed. I changed the addSimpleLine method, but apparently, it didn't work.
+            object = addSimpleLine(nil, 0.2, {0, 0}, 0, HSI_Origin_Rot.name, nil, 0.005, 0.5, 0.5, true, "CMFD_IND_PINK")
+            object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA" .. k .. "_DIST", "CMFD_HSD_FLTAREA" .. k .. "_BRG", "CMFD_HSD_FLTAREA" .. k .. "_BRG2", "CMFD_HSD_FLTAREA" .. k .. "_X", "CMFD_HSD_FLTAREA" .. k .. "_Y", "CMFD_HSD_FLTAREA" .. k, "CMFD_HSD_SYM_CHECKED", "CMFD_HSD_FORMAT", "CMFD_HSD_AREA_CHECKED", "CMFD_HSD_FLTAREA" .. k .. "_TYPE"}
+            object.controllers = {{"opacity_using_parameter", 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)},{"line_object_set_point_using_parameters", 1, 4, 5, 0.075 * HSI_radius, 0.075 * HSI_radius}, {"parameter_compare_with_number", 6, 1}, {"parameter_compare_with_number", 7, 0}, {"parameter_in_range", 8, CMFD_HSD_FORMAT_IDS.HSD-1, CMFD_HSD_FORMAT_IDS.DCTL+1}, {"parameter_compare_with_number", 9, 0}, {"parameter_compare_with_number", 10, CMFD_HSD_FLTAREA_TYPES.C}}
+        end
+
+        -- Dashed
+        for k=201,350 do
+            -- ERROR the line should be dashed. I changed the addSimpleLine method, but apparently, it didn't work.
+            object = addSimpleLine(nil, 0.2, {0, 0}, 0, HSI_Origin_Rot.name, nil, 0.005, 0.5, 0.5, true, "CMFD_IND_PINK")
+            object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA" .. k .. "_DIST", "CMFD_HSD_FLTAREA" .. k .. "_BRG", "CMFD_HSD_FLTAREA" .. k .. "_BRG2", "CMFD_HSD_FLTAREA" .. k .. "_X", "CMFD_HSD_FLTAREA" .. k .. "_Y", "CMFD_HSD_FLTAREA" .. k, "CMFD_HSD_SYM_CHECKED", "CMFD_HSD_FORMAT", "CMFD_HSD_AREA_CHECKED", "CMFD_HSD_FLTAREA" .. k .. "_TYPE"}
+            object.controllers = {{"opacity_using_parameter", 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)},{"line_object_set_point_using_parameters", 1, 4, 5, 0.075 * HSI_radius, 0.075 * HSI_radius}, {"parameter_compare_with_number", 6, 1}, {"parameter_compare_with_number", 7, 0}, {"parameter_in_range", 8, CMFD_HSD_FORMAT_IDS.HSD-1, CMFD_HSD_FORMAT_IDS.DCTL+1}, {"parameter_compare_with_number", 9, 0}, {"parameter_compare_with_number", 10, CMFD_HSD_FLTAREA_TYPES.F}}
+        end
+
+        -- Continuous
+        for k=201,350 do
+            object = addSimpleLine(nil, 0.2, {0, 0}, 0, HSI_Origin_Rot.name, nil, 0.005, nil, nil, false, "CMFD_IND_PINK")
+            object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA" .. k .. "_DIST", "CMFD_HSD_FLTAREA" .. k .. "_BRG", "CMFD_HSD_FLTAREA" .. k .. "_BRG2", "CMFD_HSD_FLTAREA" .. k .. "_X", "CMFD_HSD_FLTAREA" .. k .. "_Y", "CMFD_HSD_FLTAREA" .. k, "CMFD_HSD_SYM_CHECKED", "CMFD_HSD_FORMAT", "CMFD_HSD_AREA_CHECKED", "CMFD_HSD_FLTAREA" .. k .. "_TYPE"}
+            object.controllers = {{"opacity_using_parameter", 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 3, -math.rad(1)},{"line_object_set_point_using_parameters", 1, 4, 5, 0.075 * HSI_radius, 0.075 * HSI_radius}, {"parameter_compare_with_number", 6, 1}, {"parameter_compare_with_number", 7, 0}, {"parameter_in_range", 8, CMFD_HSD_FORMAT_IDS.HSD-1, CMFD_HSD_FORMAT_IDS.DCTL+1}, {"parameter_compare_with_number", 9, 0}, {"parameter_compare_with_number", 10, CMFD_HSD_FLTAREA_TYPES.H}}
+        end
 
 -- Flight area names
-for k=1,25 do
-    object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0,0}, HSI_Origin_Rot.name, nil, {" %6s"}, CMFD_FONT_Y)
-    object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_DIST", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_BRG", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_ID", "AVIONICS_HDG", "CMFD_HSD_FLTAREA_LABEL" .. k, "CMFD_HSD_ANM_CHECKED", "CMFD_HSD_SYM_CHECKED", "CMFD_HSD_FORMAT", "CMFD_HSD_AREA_CHECKED"}
-    object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 3, 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 4, -math.rad(1)}, {"parameter_compare_with_number", 5, 1}, {"parameter_compare_with_number", 6, 0}, {"parameter_compare_with_number", 7, 0}, {"parameter_in_range", 8, CMFD_HSD_FORMAT_IDS.HSD-1, CMFD_HSD_FORMAT_IDS.DCTL+1}, {"parameter_compare_with_number", 9, 0}}
-end
+
+    -- Yellow
+    for k=1,25 do
+        object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0,0}, HSI_Origin_Rot.name, nil, {" %6s"}, CMFD_FONT_Y)
+        object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_DIST", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_BRG", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_ID", "AVIONICS_HDG", "CMFD_HSD_FLTAREA_LABEL" .. k, "CMFD_HSD_ANM_CHECKED", "CMFD_HSD_SYM_CHECKED", "CMFD_HSD_FORMAT", "CMFD_HSD_AREA_CHECKED", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_COLOR"}
+        object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 3, 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 4, -math.rad(1)}, {"parameter_compare_with_number", 5, 1}, {"parameter_compare_with_number", 6, 0}, {"parameter_compare_with_number", 7, 0}, {"parameter_in_range", 8, CMFD_HSD_FORMAT_IDS.HSD-1, CMFD_HSD_FORMAT_IDS.DCTL+1}, {"parameter_compare_with_number", 9, 0}, {"parameter_compare_with_number", 10, CMFD_HSD_FLTAREA_COLORS.YELLOW}}
+    end
+
+    -- Green
+    for k=1,25 do
+        object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0,0}, HSI_Origin_Rot.name, nil, {" %6s"}, CMFD_FONT_G)
+        object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_DIST", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_BRG", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_ID", "AVIONICS_HDG", "CMFD_HSD_FLTAREA_LABEL" .. k, "CMFD_HSD_ANM_CHECKED", "CMFD_HSD_SYM_CHECKED", "CMFD_HSD_FORMAT", "CMFD_HSD_AREA_CHECKED", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_COLOR"}
+        object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 3, 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 4, -math.rad(1)}, {"parameter_compare_with_number", 5, 1}, {"parameter_compare_with_number", 6, 0}, {"parameter_compare_with_number", 7, 0}, {"parameter_in_range", 8, CMFD_HSD_FORMAT_IDS.HSD-1, CMFD_HSD_FORMAT_IDS.DCTL+1}, {"parameter_compare_with_number", 9, 0}, {"parameter_compare_with_number", 10, CMFD_HSD_FLTAREA_COLORS.GREEN}}
+    end
+
+    -- Purple
+    for k=1,25 do
+        object = addStrokeText(nil, "", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0,0}, HSI_Origin_Rot.name, nil, {" %6s"}, CMFD_FONT_MAGENTA)
+        object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_DIST", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_BRG", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_ID", "AVIONICS_HDG", "CMFD_HSD_FLTAREA_LABEL" .. k, "CMFD_HSD_ANM_CHECKED", "CMFD_HSD_SYM_CHECKED", "CMFD_HSD_FORMAT", "CMFD_HSD_AREA_CHECKED", "CMFD_HSD_FLTAREA_LABEL" .. k .. "_COLOR"}
+        object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 3, 0}, {"rotate_using_parameter", 2, -math.rad(1)}, {"move_up_down_using_parameter", 1, 0.075 * HSI_radius}, {"rotate_using_parameter", 2, math.rad(1)}, {"rotate_using_parameter", 4, -math.rad(1)}, {"parameter_compare_with_number", 5, 1}, {"parameter_compare_with_number", 6, 0}, {"parameter_compare_with_number", 7, 0}, {"parameter_in_range", 8, CMFD_HSD_FORMAT_IDS.HSD-1, CMFD_HSD_FORMAT_IDS.DCTL+1}, {"parameter_compare_with_number", 9, 0}, {"parameter_compare_with_number", 10, CMFD_HSD_FLTAREA_COLORS.PURPLE}}
+    end
 
 -- Avoid areas
 for k=110,130 do
