@@ -1,4 +1,5 @@
 dofile(LockOn_Options.script_path.."CMFD/CMFD_NAV_ID_defs.lua")
+dofile(LockOn_Options.script_path.."CMFD/CMFD_HSD_ID_defs.lua")
 dofile(LockOn_Options.script_path.."Systems/ufcp_api.lua")
 
 
@@ -93,6 +94,16 @@ local CMFD_NAV_GET_OAP_ELEV = get_param_handle("CMFD_NAV_GET_OAP_ELEV")
 local CMFD_NAV_GET_OAP_INDEX = get_param_handle("CMFD_NAV_GET_OAP_INDEX")
 local CMFD_NAV_GET_OAP_RDY = get_param_handle("CMFD_NAV_GET_OAP_RDY")
 
+local CMFD_NAV_DTC_WAYPOINT_READ = get_param_handle("CMFD_NAV_DTC_WAYPOINT_READ")
+local CMFD_NAV_DTC_CNTLINE_READ = get_param_handle("CMFD_NAV_DTC_CNTLINE_READ")
+local CMFD_NAV_DTC_FLTAREA_READ = get_param_handle("CMFD_NAV_DTC_FLTAREA_READ")
+local CMFD_NAV_DTC_AVDAREA_READ = get_param_handle("CMFD_NAV_DTC_AVDAREA_READ")
+local UFCP_WPT_NUM_LAST = get_param_handle("UFCP_WPT_NUM_LAST")
+CMFD_NAV_DTC_WAYPOINT_READ:set("")
+CMFD_NAV_DTC_CNTLINE_READ:set("")
+CMFD_NAV_DTC_FLTAREA_READ:set("")
+CMFD_NAV_DTC_AVDAREA_READ:set("")
+
 CMFD_NAV_SET_OAP_INDEX:set(-1)
 CMFD_NAV_GET_OAP_INDEX:set(-1)
 CMFD_NAV_GET_OAP_RDY:set(0)
@@ -103,6 +114,141 @@ CMFD_NAV_GET_INDEX:set(-1)
 CMFD_NAV_GET_RDY:set(0)
 
 CMFD.NAV_FYT_SET:set(-1) -- Whenever this value is set, it will try to switch the fyt to the set value. If it fails, it will maintain the current fit and ignore this
+
+-- Reads data from a DTC, when MPD or ALL is selected in CMFD DTE
+function cmfd_nav_load_dtc()
+
+    -- Waypoints
+    if CMFD_NAV_DTC_WAYPOINT_READ:get() ~= "" then
+        dofile(CMFD_NAV_DTC_WAYPOINT_READ:get())
+
+        for _, value in pairs(WAYPOINT) 
+        do
+            local i = tonumber(value.ID)+1
+            local alt = tonumber(value.Elev)
+            local lat = tonumber(value.LAT) * 180
+            local lon = tonumber(value.LONG) * 180
+            local time = 0
+            if value.TOF_V.Validity == "TRUE" then
+                time = tonumber(string.sub(value.TOF_V.Value,1,2)) * 3600 + string.sub(value.TOF_V.Value,4,5) * 60 + string.sub(value.TOF_V.Value,7,8)
+            end
+
+            nav_fyt_list[i] = {}
+            nav_fyt_list[i].lat = lat
+            nav_fyt_list[i].lon = lon
+            nav_fyt_list[i].lat_m, nav_fyt_list[i].lon_m = Terrain.convertLatLonToMeters(lat, lon)
+            nav_fyt_list[i].altitude = alt
+            nav_fyt_list[i].time = time
+        end
+
+        UFCP_WPT_NUM_LAST:set(-1)
+        
+        CMFD_NAV_DTC_WAYPOINT_READ:set("")
+    end
+
+    -- Contact line
+    if CMFD_NAV_DTC_CNTLINE_READ:get() ~= "" then
+        dofile(CMFD_NAV_DTC_CNTLINE_READ:get())
+
+        for _, value in pairs(CNT_LINE) 
+        do
+            local i = tonumber(value.ID)+100
+            local lat = tonumber(value.LAT) * 180
+            local lon = tonumber(value.LONG) * 180
+
+            nav_fyt_list[i] = {}
+            nav_fyt_list[i].lat = lat
+            nav_fyt_list[i].lon = lon
+            nav_fyt_list[i].lat_m, nav_fyt_list[i].lon_m = Terrain.convertLatLonToMeters(lat, lon)
+            nav_fyt_list[i].altitude = 0
+            nav_fyt_list[i].time = 0
+        end
+        
+        CMFD_NAV_DTC_CNTLINE_READ:set("")
+    end
+
+    -- Flight areas
+    if CMFD_NAV_DTC_FLTAREA_READ:get() ~= "" then
+        dofile(CMFD_NAV_DTC_FLTAREA_READ:get())
+
+        for _, value in pairs(FLT_AREA) 
+        do
+            local code = value.Name
+            local points = tonumber(value.Points_Cntr)
+            local typ = value.Type
+
+            for point_id = 1, points do
+                local  i = 200 + (value.ID - 1) * 6 + (point_id - 1) + 1 -- Simplify
+                local lat, lon
+
+                if point_id <= points then
+                    lat = tonumber(value["Point" .. point_id].LAT) * 180
+                    lon = tonumber(value["Point" .. point_id].LONG) * 180
+                else
+                    lat = tonumber(value["Point" .. points].LAT) * 180
+                    lon = tonumber(value["Point" .. points].LONG) * 180
+                end
+
+                local fltarea_type = CMFD_HSD_FLTAREA_TYPES.B
+                if typ == "A" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.A
+                elseif typ == "B" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.B
+                elseif typ == "C" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.C
+                elseif typ == "D" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.D
+                elseif typ == "E" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.E
+                elseif typ == "F" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.F
+                elseif typ == "G" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.G
+                elseif typ == "H" then
+                    fltarea_type = CMFD_HSD_FLTAREA_TYPES.H
+                end
+
+                nav_fyt_list[i] = {}
+                nav_fyt_list[i].lat = lat
+                nav_fyt_list[i].lon = lon
+                nav_fyt_list[i].code = code
+                nav_fyt_list[i].lat_m, nav_fyt_list[i].lon_m = Terrain.convertLatLonToMeters(lat, lon)
+                nav_fyt_list[i].altitude = 0
+                nav_fyt_list[i].time = 0
+                nav_fyt_list[i].type = fltarea_type
+                nav_fyt_list[i].points = points
+
+            end
+        end
+
+        CMFD_NAV_DTC_FLTAREA_READ:set("")
+    end
+
+    -- Avoid areas
+    if CMFD_NAV_DTC_AVDAREA_READ:get() ~= "" then
+        dofile(CMFD_NAV_DTC_AVDAREA_READ:get())
+
+        for _, value in pairs(AVD_AREA) 
+        do
+            local i = tonumber(value.ID)+110
+            local alt = 0
+            local lat = tonumber(value.LAT) * 180
+            local lon = tonumber(value.LONG) * 180
+            local time = 0
+            local radius = tonumber(value.RADIUS)
+
+            nav_fyt_list[i] = {}
+            nav_fyt_list[i].lat = lat
+            nav_fyt_list[i].lon = lon
+            nav_fyt_list[i].lat_m, nav_fyt_list[i].lon_m = Terrain.convertLatLonToMeters(lat, lon)
+            nav_fyt_list[i].altitude = alt
+            nav_fyt_list[i].time = time
+            nav_fyt_list[i].radius = radius
+        end
+
+        CMFD_NAV_DTC_AVDAREA_READ:set("")
+    end
+end
 
 local function get_distance(x1, y1, x2, y2)
     local x = x2 - x1

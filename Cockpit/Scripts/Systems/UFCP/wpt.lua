@@ -12,6 +12,9 @@ local CMFD_NAV_SET_TIME = get_param_handle("CMFD_NAV_SET_TIME")
 local CMFD_NAV_FYT = get_param_handle("CMFD_NAV_FYT")
 local CMFD_NAV_FYT_SET = get_param_handle("CMFD_NAV_FYT_SET")
 
+local UFCP_WPT_NUM_LAST = get_param_handle("UFCP_WPT_NUM_LAST")
+UFCP_WPT_NUM_LAST:set(-1)
+
 -- Constants
 local GEO_SEL_IDS = {
     FYT = 0,
@@ -72,6 +75,8 @@ local ufcp_wpt_max_sel = 6
 -- Read LAT, LON, ELV and TIME when  CMFD_NAV_GET_RDY == 1
 -- Set CMFD_NAV_GET_RDY = -1 and CMFD_NAV_GET_RDY = 0 to release query
 local function ufcp_wpt_load()
+    ufcp_wpt_num_last = UFCP_WPT_NUM_LAST:get()
+
     if ufcp_wpt_num ~= ufcp_wpt_num_last then
         if CMFD_NAV_GET_INDEX:get() < 0 and CMFD_NAV_GET_RDY:get() == 0 then
             -- start query
@@ -85,6 +90,7 @@ local function ufcp_wpt_load()
             CMFD_NAV_GET_INDEX:set(-1)
             CMFD_NAV_GET_RDY:set(0)
             ufcp_wpt_num_last = ufcp_wpt_num
+            UFCP_WPT_NUM_LAST:set(ufcp_wpt_num)
 
             local mgrs = coordinate:LLtoMGRS(ufcp_wpt_lat, ufcp_wpt_lon)
             ufcp_wpt_utm.gridzone = mgrs.gridzone
