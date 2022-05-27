@@ -7,6 +7,8 @@ dofile(LockOn_Options.script_path.."CMFD/CMFD_HSD_ID_defs.lua")
 local CMFDNumber=get_param_handle("CMFDNumber")
 local CMFDNu = CMFDNumber:get()
 
+local AVD_AREA_VERTEX_COUNT = get_param_handle("HSD_AVD_AREA_VERTEX_COUNT")
+
 DEFAULT_LEVEL = 9
 default_material = CMFD_FONT_DEF
 stroke_font			= "cmfd_font_def"
@@ -257,7 +259,7 @@ end
 
 -- Avoid areas
 for k=110,130 do
-    for point=1,32 do
+    for point=1,AVD_AREA_VERTEX_COUNT:get() do
         -- ERROR the line should be dashed. I changed the addSimpleLine method, but apparently, it didn't work.
         object = addSimpleLine(nil, 0.2, {0, 0}, 0, HSI_Origin_Rot.name, nil, 0.005, 0.1, 0.1, true, "CMFD_IND_RED")
         object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point .. "_DIST", "CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point .. "_BRG", "CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point .. "_BRG2", "CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point .. "_X", "CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point .. "_Y", "CMFD_HSD_AVDAREA" .. k, "CMFD_HSD_FORMAT", "CMFD_HSD_INT_CHECKED"}

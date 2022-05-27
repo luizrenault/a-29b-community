@@ -44,6 +44,18 @@ HSD_DL_MODE:set(CMFD_HSD_DL_IDS.ALL)
 
 local format = CMFD_HSD_FORMAT_IDS.HSD
 
+local AVD_AREA_VERTEX_COUNT = 16
+local HSD_AVD_AREA_VERTEX_COUNT = get_param_handle("HSD_AVD_AREA_VERTEX_COUNT")
+HSD_AVD_AREA_VERTEX_COUNT:set(AVD_AREA_VERTEX_COUNT)
+
+local HSD = {
+    WP = {},
+    FLT_AREA = {},
+    FLT_AREA_LABEL = {},
+    CNT_LINE = {},
+    AVD_AREA = {}
+}
+
 local function calc_brg_dist_elev_time(dest_lat_m, dest_lon_m, dest_alt_m, orig_lat_m, orig_lon_m, orig_alt_m)
     local o_lat_m, o_alt_m, o_lon_m = sensor_data.getSelfCoordinates()
     orig_lat_m = orig_lat_m or o_lat_m
@@ -78,13 +90,13 @@ local function update_waypoints()
             local hdg, distance = calc_brg_dist_elev_time(dest_lat_m, dest_lon_m, dest_alt_m)
             hdg = math.deg(hdg) % 360
 
-            get_param_handle("CMFD_HSD_WP" .. k .. "_ID"):set(string.format("%02d", k-1))
-            get_param_handle("CMFD_HSD_WP" .. k .. "_BRG"):set(hdg)
-            get_param_handle("CMFD_HSD_WP" .. k .. "_DIST"):set(distance * 0.000539957 / hsd_rad_sel)
+            HSD.WP[k].ID:set(string.format("%02d", k-1))
+            HSD.WP[k].BRG:set(hdg)
+            HSD.WP[k].DIST:set(distance * 0.000539957 / hsd_rad_sel)
 
-            get_param_handle("CMFD_HSD_DTK" .. k .. "_BRG"):set(get_param_handle("CMFD_HSD_WP" .. k .. "_BRG"):get())
-            get_param_handle("CMFD_HSD_DTK" .. k .. "_DIST"):set(get_param_handle("CMFD_HSD_WP" .. k .. "_DIST"):get())
-            get_param_handle("CMFD_HSD_DTK" .. k):set((ADHSI_DTK:get() == 1 and CMFD_NAV_FYT:get() == k-1) and 1 or 0)
+            HSD.WP[k].DTK_BRG:set(hdg)
+            HSD.WP[k].DTK_DIST:set(distance * 0.000539957 / hsd_rad_sel)
+            HSD.WP[k].DTK:set((ADHSI_DTK:get() == 1 and CMFD_NAV_FYT:get() == k-1) and 1 or 0)
 
             if ADHSI_DTK:get() == 1 and CMFD_NAV_FYT:get() == k-1 then 
                 dest_lat_m, dest_lon_m = coord_project(dest_lat_m, dest_lon_m, ADHSI_DTK_HDG:get()+180, ADHSI_DTK_DIST:get()/0.000539957)
@@ -92,15 +104,15 @@ local function update_waypoints()
                 hdg, distance = calc_brg_dist_elev_time(dest_lat_m, dest_lon_m, dest_alt_m)
                 hdg = math.deg(hdg) % 360
 
-                get_param_handle("CMFD_HSD_WP" .. k .. "_BRG"):set(hdg)
-                get_param_handle("CMFD_HSD_WP" .. k .. "_DIST"):set(distance * 0.000539957 / hsd_rad_sel)
+                HSD.WP[k].BRG:set(hdg)
+                HSD.WP[k].DIST:set(distance * 0.000539957 / hsd_rad_sel)
             end
 
 
         else
-            get_param_handle("CMFD_HSD_WP" .. k .. "_ID"):set(string.format("%02d", k-1))
-            get_param_handle("CMFD_HSD_WP" .. k .. "_BRG"):set(0)
-            get_param_handle("CMFD_HSD_WP" .. k .. "_DIST"):set(0)
+            HSD.WP[k].ID:set(string.format("%02d", k-1))
+            HSD.WP[k].BRG:set(0)
+            HSD.WP[k].DIST:set(0)
         end
     end
 end
@@ -114,9 +126,9 @@ local function update_contact_line()
 
             hdg = math.deg(hdg) % 360            
 
-            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_ID"):set(string.format("%02d", k-100))
-            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_BRG"):set(hdg) -- Rotation relative to the HSI center
-            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_DIST"):set(distance * 0.000539957 / hsd_rad_sel) -- Distance relative to the HSI center
+            HSD.CNT_LINE[k].ID:set(string.format("%02d", k-100))
+            HSD.CNT_LINE[k].BRG:set(hdg) -- Rotation relative to the HSI center
+            HSD.CNT_LINE[k].DIST:set(distance * 0.000539957 / hsd_rad_sel) -- Distance relative to the HSI center
 
             if nav_fyt_list[k+1] and nav_fyt_list[k+1].lat >= -90 and nav_fyt_list[k+1].lat <= 90 and nav_fyt_list[k+1].lon >= -180 and nav_fyt_list[k+1].lon <= 180 then
                 local dest_lat_m = nav_fyt_list[k+1].lat_m
@@ -124,22 +136,22 @@ local function update_contact_line()
                 local hdg2, distance2 = calc_brg_dist_elev_time(dest_lat_m, dest_lon_m, 0, origin_lat_m, origin_lon_m, 0)
                 hdg2 = math.deg(hdg2) % 360
 
-                get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_BRG2"):set(hdg2) -- Angle to next point
-                get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_X"):set(0)
-                get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_Y"):set(distance2 * 0.000539957 / hsd_rad_sel)
+                HSD.CNT_LINE[k].BRG2:set(hdg2) -- Angle to next point
+                HSD.CNT_LINE[k].X:set(0)
+                HSD.CNT_LINE[k].Y:set(distance2 * 0.000539957 / hsd_rad_sel)
             else
-                get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_BRG2"):set(0)
-                get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_X"):set(0)
-                get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_Y"):set(0)
+                HSD.CNT_LINE[k].BRG2:set(0)
+                HSD.CNT_LINE[k].X:set(0)
+                HSD.CNT_LINE[k].Y:set(0)
             end
             
         else
-            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_ID"):set(string.format("%02d", k-100))
-            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_BRG"):set(0)
-            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_DIST"):set(0)
-            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_BRG2"):set(0)
-            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_X"):set(0)
-            get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_Y"):set(0)
+            HSD.CNT_LINE[k].ID:set(string.format("%02d", k-100))
+            HSD.CNT_LINE[k].BRG:set(0)
+            HSD.CNT_LINE[k].DIST:set(0)
+            HSD.CNT_LINE[k].BRG2:set(0)
+            HSD.CNT_LINE[k].X:set(0)
+            HSD.CNT_LINE[k].Y:set(0)
         end
     end
 end
@@ -178,15 +190,12 @@ local function update_flight_areas()
                     color = CMFD_HSD_FLTAREA_COLORS.PURPLE
                 end
 
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. ""):set(1)
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_ID"):set(nav_fyt_list[k].code)
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_TYPE"):set(nav_fyt_list[k].type)
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_COLOR"):set(color)
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_BRG"):set(hdg) -- Rotation relative to the HSI center
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_DIST"):set(distance * 0.000539957 / hsd_rad_sel) -- Distance relative to the HSI center
-
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_LABEL_BRG"):set(hdg) -- Rotation relative to the HSI center
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_LABEL_DIST"):set(distance * 0.000539957 / hsd_rad_sel) -- Distance relative to the HSI center
+                HSD.FLT_AREA[k].BOOL:set(1)
+                HSD.FLT_AREA[k].ID:set(nav_fyt_list[k].code)
+                HSD.FLT_AREA[k].TYPE:set(nav_fyt_list[k].type)
+                HSD.FLT_AREA[k].COLOR:set(color)
+                HSD.FLT_AREA[k].BRG:set(hdg) -- Rotation relative to the HSI center
+                HSD.FLT_AREA[k].DIST:set(distance * 0.000539957 / hsd_rad_sel) -- Distance relative to the HSI center
 
                 local l = k + 1
                 if point == 6 then
@@ -199,23 +208,23 @@ local function update_flight_areas()
                     local hdg2, distance2 = calc_brg_dist_elev_time(dest_lat_m, dest_lon_m, 0, origin_lat_m, origin_lon_m, 0)
                     hdg2 = math.deg(hdg2) % 360
 
-                    get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_BRG2"):set(hdg2) -- Angle to next point
-                    get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_X"):set(0)
-                    get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_Y"):set(distance2 * 0.000539957 / hsd_rad_sel)
+                    HSD.FLT_AREA[k].BRG2:set(hdg2) -- Angle to next point
+                    HSD.FLT_AREA[k].X:set(0)
+                    HSD.FLT_AREA[k].Y:set(distance2 * 0.000539957 / hsd_rad_sel)
                 else
-                    get_param_handle("CMFD_HSD_FLTAREAE" .. k .. "_BRG2"):set(0)
-                    get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_X"):set(0)
-                    get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_Y"):set(0)
+                    HSD.FLT_AREA[k].BRG2:set(0)
+                    HSD.FLT_AREA[k].X:set(0)
+                    HSD.FLT_AREA[k].Y:set(0)
                 end
 
             else
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. ""):set(0)
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_ID"):set("")
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_BRG"):set(0)
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_DIST"):set(0)
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_BRG2"):set(0)
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_X"):set(0)
-                get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_Y"):set(0)
+                HSD.FLT_AREA[k].BOOL:set(0)
+                HSD.FLT_AREA[k].ID:set("")
+                HSD.FLT_AREA[k].BRG:set(0)
+                HSD.FLT_AREA[k].DIST:set(0)
+                HSD.FLT_AREA[k].BRG2:set(0)
+                HSD.FLT_AREA[k].X:set(0)
+                HSD.FLT_AREA[k].Y:set(0)
             end
         end
 
@@ -226,26 +235,24 @@ local function update_flight_areas()
             local hdg, distance = calc_brg_dist_elev_time(label_lat, label_lon, 0)
             hdg = math.deg(hdg) % 360  
 
-            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. ""):set(1)
-            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_ID"):set(code)
-            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_BRG"):set(hdg) -- Rotation relative to the HSI center
-            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_DIST"):set(distance * 0.000539957 / hsd_rad_sel) -- Rotation relative to the HSI center
-            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_COLOR"):set(color)
+            HSD.FLT_AREA_LABEL[area].BOOL:set(1)
+            HSD.FLT_AREA_LABEL[area].ID:set(code)
+            HSD.FLT_AREA_LABEL[area].BRG:set(hdg) -- Rotation relative to the HSI center
+            HSD.FLT_AREA_LABEL[area].DIST:set(distance * 0.000539957 / hsd_rad_sel) -- Rotation relative to the HSI center
+            HSD.FLT_AREA_LABEL[area].COLOR:set(color)
         else
-            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. ""):set(0)
-            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_ID"):set("")
-            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_BRG"):set(0) -- Rotation relative to the HSI center
-            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_DIST"):set(0) -- Rotation relative to the HSI center
-            get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_COLOR"):set(0)
+            HSD.FLT_AREA_LABEL[area].BOOL:set(0)
+            HSD.FLT_AREA_LABEL[area].ID:set("")
+            HSD.FLT_AREA_LABEL[area].BRG:set(0) -- Rotation relative to the HSI center
+            HSD.FLT_AREA_LABEL[area].DIST:set(0) -- Rotation relative to the HSI center
+            HSD.FLT_AREA_LABEL[area].COLOR:set(0)
         end
     end
 end
 
 local function update_avoid_areas()
-    local vertex_count = 32
     for k=110,130 do
         if nav_fyt_list[k] and nav_fyt_list[k].lat >= -90 and nav_fyt_list[k].lat <= 90 and nav_fyt_list[k].lon >= -180 and nav_fyt_list[k].lon <= 180 then
-
             local dest_lat_m = nav_fyt_list[k].lat_m
             local dest_lon_m = nav_fyt_list[k].lon_m
             local dest_alt_m = nav_fyt_list[k].altitude / 3.28084
@@ -254,47 +261,47 @@ local function update_avoid_areas()
             local hdg, distance = calc_brg_dist_elev_time(dest_lat_m, dest_lon_m, dest_alt_m)
             hdg = math.deg(hdg) % 360
 
-            get_param_handle("CMFD_HSD_AVDAREA" .. k .. ""):set(1)
-            get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_ID"):set(string.format("%2d", k-110))
-            get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_BRG"):set(hdg)
-            get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_DIST"):set(distance * 0.000539957 / hsd_rad_sel)
+            HSD.AVD_AREA[k].BOOL:set(1)
+            HSD.AVD_AREA[k].ID:set(string.format("%2d", k-110))
+            HSD.AVD_AREA[k].BRG:set(hdg)
+            HSD.AVD_AREA[k].DIST:set(distance * 0.000539957 / hsd_rad_sel)
 
-            for point=1,vertex_count do
-                local point_bearing = point * 360 / vertex_count
+            for point=1,AVD_AREA_VERTEX_COUNT do
+                local point_bearing = point * 360 / AVD_AREA_VERTEX_COUNT
                 local point_origin_lat_m, point_origin_lon_m = coord_project(dest_lat_m, dest_lon_m, point_bearing, radius/0.000539957)
                 
                 hdg, distance = calc_brg_dist_elev_time(point_origin_lat_m, point_origin_lon_m, 0)
                 hdg = math.deg(hdg) % 360
 
-                get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point.. "_BRG"):set(hdg)
-                get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point.. "_DIST"):set(distance * 0.000539957 / hsd_rad_sel)
+                HSD.AVD_AREA[k].POINT[point].BRG:set(hdg)
+                HSD.AVD_AREA[k].POINT[point].DIST:set(distance * 0.000539957 / hsd_rad_sel)
 
                 local next_point = point + 1
-                if point == vertex_count then
+                if point == AVD_AREA_VERTEX_COUNT then
                     next_point = 1
                 end
-                point_bearing = next_point * 360 / vertex_count
+                point_bearing = next_point * 360 / AVD_AREA_VERTEX_COUNT
 
                 local point_dest_lat_m, point_dest_lon_m = coord_project(dest_lat_m, dest_lon_m, point_bearing, radius/0.000539957)
                 hdg, distance = calc_brg_dist_elev_time(point_dest_lat_m, point_dest_lon_m, 0, point_origin_lat_m, point_origin_lon_m, 0)
                 hdg = math.deg(hdg) % 360
 
-                get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point.. "_BRG2"):set(hdg) -- Angle to next point
-                get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point.. "_X"):set(0)
-                get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point.. "_Y"):set(distance * 0.000539957 / hsd_rad_sel)
+                HSD.AVD_AREA[k].POINT[point].BRG2:set(hdg) -- Angle to next point
+                HSD.AVD_AREA[k].POINT[point].X:set(0)
+                HSD.AVD_AREA[k].POINT[point].Y:set(distance * 0.000539957 / hsd_rad_sel)
             end
         else
-            get_param_handle("CMFD_HSD_AVDAREA" .. k .. ""):set(0)
-            get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_ID"):set(string.format("%2d", k-110))
-            get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_BRG"):set(0)
-            get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_DIST"):set(0)
+            HSD.AVD_AREA[k].BOOL:set(0)
+            HSD.AVD_AREA[k].ID:set(string.format("%2d", k-110))
+            HSD.AVD_AREA[k].BRG:set(0)
+            HSD.AVD_AREA[k].DIST:set(0)
 
-            for point=1,16 do
-                get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT_" .. point.. "_BRG"):set(0)
-                get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT_" .. point.. "_BRG2"):set(0)
-                get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT_" .. point.. "_DIST"):set(0)
-                get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT_" .. point.. "_X"):set(0)
-                get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT_" .. point.. "_Y"):set(0)
+            for point=1,AVD_AREA_VERTEX_COUNT do
+                HSD.AVD_AREA[k].POINT[point].BRG:set(0)
+                HSD.AVD_AREA[k].POINT[point].BRG2:set(0)
+                HSD.AVD_AREA[k].POINT[point].DIST:set(0)
+                HSD.AVD_AREA[k].POINT[point].X:set(0)
+                HSD.AVD_AREA[k].POINT[point].Y:set(0)
             end
         end
     end
@@ -424,5 +431,72 @@ function SetCommandHsd(command,value, CMFD)
 end
 
 function post_initialize_hsd()
+    for k=1,100 do
+        HSD.WP[k] = {
+            ID = get_param_handle("CMFD_HSD_WP" .. k .. "_ID"),
+            BRG = get_param_handle("CMFD_HSD_WP" .. k .. "_BRG"),
+            DIST = get_param_handle("CMFD_HSD_WP" .. k .. "_DIST"),
+            DTK_BRG = get_param_handle("CMFD_HSD_DTK" .. k .. "_BRG"),
+            DTK_DIST = get_param_handle("CMFD_HSD_DTK" .. k .. "_DIST"),
+            DTK = get_param_handle("CMFD_HSD_DTK" .. k)
+        }
+    end
+
+    for area=1,25 do
+        for point=1,6 do
+            local k = 200 + (area - 1) * 6 + (point - 1) + 1
+
+            HSD.FLT_AREA[k] = {
+                BOOL = get_param_handle("CMFD_HSD_FLTAREA" .. k .. ""),
+                ID = get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_ID"),
+                TYPE = get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_TYPE"),
+                COLOR = get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_COLOR"),
+                BRG = get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_BRG"),
+                DIST = get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_DIST"),
+                BRG2 = get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_BRG2"),
+                X = get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_X"),
+                Y = get_param_handle("CMFD_HSD_FLTAREA" .. k .. "_Y")
+            }
+        end
+        
+        HSD.FLT_AREA_LABEL[area] = {
+            BOOL = get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. ""),
+            ID = get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_ID"),
+            BRG = get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_BRG"),
+            DIST = get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_DIST"),
+            COLOR = get_param_handle("CMFD_HSD_FLTAREA_LABEL" .. area .. "_COLOR")
+        }
+    end
+
+    for k=101,105 do
+        HSD.CNT_LINE[k] = {
+            ID = get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_ID"),
+            BRG = get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_BRG"),
+            DIST = get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_DIST"),
+            BRG2 = get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_BRG2"),
+            X = get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_X"),
+            Y = get_param_handle("CMFD_HSD_CNTLINE" .. k .. "_Y")
+        }
+    end
+
+    for k=110,130 do
+        HSD.AVD_AREA[k] = {
+            BOOL = get_param_handle("CMFD_HSD_AVDAREA" .. k .. ""),
+            ID = get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_ID"),
+            BRG = get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_BRG"),
+            DIST = get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_DIST"),
+            POINT = {}
+        }
+
+        for point=1,AVD_AREA_VERTEX_COUNT do
+            HSD.AVD_AREA[k].POINT[point] = {
+                BRG = get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point .. "_BRG"),
+                BRG2 = get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point .. "_BRG2"),
+                DIST = get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point .. "_DIST"),
+                X = get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point .. "_X"),
+                Y = get_param_handle("CMFD_HSD_AVDAREA" .. k .. "_POINT" .. point .. "_Y")
+            }
+        end
+    end
 
 end
