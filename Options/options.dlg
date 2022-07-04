@@ -3,89 +3,40 @@ dialog = {
 		["containerPlugin"] = {
 			["children"] = {
 				["CPLabelLabel"] = {
-					["children"] = {
-					},
 					["params"] = {
 						["bounds"] = {
-							[1] = {
-								["h"] = 25,
-								["w"] = 200,
-								["x"] = 57,
-								["y"] = 84,
-							},
+							["h"] = 25,
+							["w"] = 188,
+							["x"] = 58,
+							["y"] = 205,
 						},
-						["enabled"] = {
-							[1] = true,
-						},
-						["pictureFile"] = {
-						},
-						["skinName"] = {
-						},
-						["text"] = {
-							[1] = "$CPDICT",
-						},
-						["tooltip"] = {
-							[1] = "",
-						},
-						["visible"] = {
-							[1] = true,
-						},
-						["zindex"] = {
-							[1] = 0,
-						},
+						["enabled"] = true,
+						["text"] = "$CPDICT",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
 					},
 					["skin"] = {
 						["params"] = {
 							["name"] = "staticOptionsCaptionSkin",
 						},
-						["states"] = {
-							["released"] = {
-								[1] = {
-									["text"] = {
-										["horzAlign"] = {
-											["offset"] = 0,
-											["type"] = "min",
-										},
-									},
-								},
-							},
-						},
 					},
 					["type"] = "Static",
 				},
 				["CPLocalListComboList"] = {
-					["children"] = {
-					},
 					["params"] = {
 						["bounds"] = {
-							[1] = {
-								["h"] = 25,
-								["w"] = 151,
-								["x"] = 273,
-								["y"] = 84,
-							},
+							["h"] = 25,
+							["w"] = 180,
+							["x"] = 261,
+							["y"] = 205,
 						},
-						["enabled"] = {
-							[1] = true,
-						},
-						["pictureFile"] = {
-						},
-						["skinName"] = {
-						},
-						["tabOrder"] = {
-							[1] = 0,
-						},
-						["text"] = {
-						},
-						["tooltip"] = {
-							[1] = "",
-						},
-						["visible"] = {
-							[1] = true,
-						},
-						["zindex"] = {
-							[1] = 0,
-						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "Item1",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
 					},
 					["skin"] = {
 						["params"] = {
@@ -94,37 +45,108 @@ dialog = {
 					},
 					["type"] = "ComboList",
 				},
-				["nameLabel"] = {
-					["children"] = {
-					},
+				["aiHelperCheckbox"] = {
 					["params"] = {
 						["bounds"] = {
-							[1] = {
-								["h"] = 18,
-								["w"] = 367,
-								["x"] = 57,
-								["y"] = 41,
-							},
+							["h"] = 18,
+							["w"] = 300,
+							["x"] = 57,
+							["y"] = 168,
 						},
-						["enabled"] = {
-							[1] = true,
+						["enabled"] = true,
+						["state"] = false,
+						["tabOrder"] = 0,
+						["text"] = "$AIHELPER",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "checkBoxSkin_options",
 						},
-						["pictureFile"] = {
+					},
+					["type"] = "CheckBox",
+				},
+				["autoLeanToAimA29BCheckbox"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = 18,
+							["w"] = 300,
+							["x"] = 57,
+							["y"] = 85,
 						},
-						["skinName"] = {
+						["enabled"] = true,
+						["state"] = false,
+						["tabOrder"] = 0,
+						["text"] = "$AUTO_LEAN_TO_AIM",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "checkBoxSkin_options",
 						},
-						["text"] = {
-							[1] = "$modName",
+					},
+					["type"] = "CheckBox",
+				},
+				["gunCameraComboList"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = 24,
+							["w"] = 180,
+							["x"] = 261,
+							["y"] = 125,
 						},
-						["tooltip"] = {
-							[1] = "",
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "Item1",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "comboListSkin_options",
 						},
-						["visible"] = {
-							[1] = true,
+					},
+					["type"] = "ComboList",
+				},
+				["gunCameraLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = 24,
+							["w"] = 188,
+							["x"] = 57,
+							["y"] = 125,
 						},
-						["zindex"] = {
-							[1] = 0,
+						["enabled"] = true,
+						["text"] = "$GUN_CAMERA_BEHAVIOUR",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = {
+						["params"] = {
+							["name"] = "staticOptionsCaptionSkin",
 						},
+					},
+					["type"] = "Static",
+				},
+				["nameLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = 18,
+							["w"] = 383,
+							["x"] = 57,
+							["y"] = 42,
+						},
+						["enabled"] = true,
+						["text"] = "$A29B",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
 					},
 					["skin"] = {
 						["params"] = {
@@ -136,36 +158,16 @@ dialog = {
 			},
 			["params"] = {
 				["bounds"] = {
-					[1] = {
-						["h"] = 600,
-						["w"] = 974,
-						["x"] = 0,
-						["y"] = 0,
-					},
+					["h"] = 600,
+					["w"] = 974,
+					["x"] = 0,
+					["y"] = 0,
 				},
-				["enabled"] = {
-					[1] = true,
-				},
-				["layout"] = {
-					[1] = {
-					},
-				},
-				["pictureFile"] = {
-				},
-				["skinName"] = {
-				},
-				["text"] = {
-					[1] = "",
-				},
-				["tooltip"] = {
-					[1] = "",
-				},
-				["visible"] = {
-					[1] = true,
-				},
-				["zindex"] = {
-					[1] = 2,
-				},
+				["enabled"] = true,
+				["text"] = "",
+				["tooltip"] = "",
+				["visible"] = true,
+				["zindex"] = 2,
 			},
 			["skin"] = {
 				["params"] = {
@@ -177,46 +179,20 @@ dialog = {
 	},
 	["params"] = {
 		["bounds"] = {
-			[1] = {
-				["h"] = 851,
-				["w"] = 1135,
-				["x"] = 0,
-				["y"] = 0,
-			},
+			["h"] = 851,
+			["w"] = 1135,
+			["x"] = 0,
+			["y"] = 0,
 		},
-		["draggable"] = {
-			[1] = true,
-		},
-		["enabled"] = {
-			[1] = true,
-		},
-		["hasCursor"] = {
-			[1] = true,
-		},
-		["layout"] = {
-			[1] = {
-			},
-		},
-		["lockFlow"] = {
-			[1] = false,
-		},
-		["modal"] = {
-			[1] = false,
-		},
-		["offscreen"] = {
-			[1] = false,
-		},
-		["resizable"] = {
-			[1] = false,
-		},
-		["skinName"] = {
-		},
-		["text"] = {
-			[1] = "New dialog",
-		},
-		["zOrder"] = {
-			[1] = 0,
-		},
+		["draggable"] = true,
+		["enabled"] = true,
+		["hasCursor"] = true,
+		["lockFlow"] = false,
+		["modal"] = false,
+		["offscreen"] = false,
+		["resizable"] = false,
+		["text"] = "New dialog",
+		["zOrder"] = 0,
 	},
 	["skin"] = {
 		["params"] = {

@@ -762,7 +762,6 @@ device_commands =
 -- iCommandPlane_R_800_Modulation_change	616
 -- iCommandPlane_I251_Contrast_Down	845
 -- iCommandGEmissionToggle	1624
--- iCommandPlaneRadarHorizontalAbs	2027
 -- iCommand_FireExting_TestGroups	931
 -- iCommandPlane_HOTAS_TargetManagementSwitchUp	544
 -- iCommandViewCockpitSetGunnerSeat2	1606
@@ -832,11 +831,9 @@ device_commands =
 -- iCommandTrackEditInsert	320
 -- iCommandViewAWACSUnitInfoOn	423
 -- iCommandTrainingUserRespondedBack	1628
--- iCommandPlaneDesignate_CageOn_vertical	441
 -- iCommandPlaneDLK_Target1_up	780
 -- iCommandPlaneEmerTrimNoseDn	1102
 -- iCommandPlaneLeftMFD_OSB10	651
--- iOculusRiftYaw	2144
 -- iCommandPlaneDown	186
 -- iCommandPlaneCircuitBreaker_26	1140
 -- iCommand_FuelSysInterf_FuelQuantityIndTestOn	909
@@ -948,7 +945,6 @@ device_commands =
 -- iCommandPlaneShipTakeOff	120
 -- iCommandPlaneCDU_MINUS	1294
 -- iCommandPlaneNavChangePanelModeLeft	456
--- iCommandPlaneDesignate_CageOn	439
 -- iCommandPlaneNav_PB8	467
 -- iCommand_VMS_ALMAZ_UP_Repeat	915
 -- iCommandPlaneUHF10MhzSelectorDec	1206
@@ -957,7 +953,6 @@ device_commands =
 -- iCommand_CPT_MECH_VMG_HYDRO_EKRAN_Cover	891
 -- iCommandPlaneFeedbackTrimmer	2035
 -- iCommandViewSnapView5	401
--- iCommandPlaneRadarOnOff	86
 -- iCommandEjectingSystemPower1	730
 -- iCommandPlane_HOTAS_MIC_SwitchRight	575
 -- iCommandPlaneRightMFD_OSB6_Off	1012
@@ -994,16 +989,19 @@ device_commands =
 -- iCommandPlaneFSQuantityIndicatorSelectorEXTCTR	1096
 -- iCommandViewAWACSClearDistance	436
 -- iCommandPlaneSAUHRadio	60
--- iOculusRiftHeadPosZ	2149
 -- iCommandPlaneModeBore	108
 -- iCommandViewUpLeftSlow	213
 -- iCommandWheelBrake	2101
 -- iCommandPlaneFuelOn	79
 -- iCommandPlane_L_ENG_FUEL_FLOW_Override	1064
--- iOculusRiftHeadPosY	2148
 -- iCommandPlane_Oxygen_Normal	1504
 -- iCommandPlaneStabHbarHeading	636
+-- iOculusRiftHeadPosX	2147
+-- iOculusRiftHeadPosY	2148
+-- iOculusRiftHeadPosZ	2149
+-- iOculusRiftRoll	2146
 -- iOculusRiftPitch	2145
+-- iOculusRiftYaw	2144
 -- iCommandPlaneTrimPitch	2019
 -- iCommandPlaneRightMFD_OSB12	683
 -- iServiceInformAboutUserHAngle	2142
@@ -1034,14 +1032,12 @@ device_commands =
 -- iCommandChangeRippleIntervalDown	308
 -- iCommandPlaneLeftMFD_SYM_Stop	1006
 -- iCommandPlaneNav_INU_normal_align	474
--- iCommand_TDC_AbsolutePositionHorizontal	2130
 -- iCommandViewAWACSTargetXChanged	2128
 -- iCommandPlaneThrustLeft	2005
 -- iCommandHelicopter_Rotor_Anti_Icing_Dust_Protection_System	912
 -- iCommandPlaneRightMFD_BRT_Stop	1029
 -- iCommandPlaneNavSetFixtakingMode	457
 -- iCommandDebugAxis10	2097
--- iCommandPlaneRadarDown	91
 -- iCommandPlane_VHF_FM_Preset_Dec	1471
 -- iCommandPlaneLeftMFD_OSB20	661
 -- iCommandRotateMinus	2
@@ -1146,7 +1142,6 @@ device_commands =
 -- iCommandViewAWACSInfoTargetButton	2079
 -- iCommandPlaneLeftMFD_OSB4_Off	985
 -- iCommandPlaneCircuitBreaker_10	1124
--- iCommandPlane_HOTAS_TDC_depress_off	635
 -- iCommandPlaneNMSP_STRPT	1402
 -- iCommandViewTempCockpitOn	17
 -- iCommandViewAWACSTargetPointerY	2077
@@ -1229,15 +1224,12 @@ device_commands =
 -- iCommandPlaneIntercomUHFDecrease	1170
 -- iCommandPlaneMFDZoomAbs	2030
 -- iCommandPlaneMFDZoom	2029
--- iCommandPlaneRadarVerticalAbs	2028
 -- iCommandPointOfViewDownRight	219
 -- iCommandPlane_TACAN_Mode_AAREC	1428
--- iCommandPlaneRadarVertical	2026
 -- iCommandPlane_ABRIS_Axis_Push	503
 -- iCommandPlane_Env_FlowLevel_Increase	1521
 -- ICommandMenuItem3	968
 -- iCommandGZoomNormal	1577
--- iCommandPlaneRadarHorizontal	2025
 -- iCommandHelicopter_PPR_BAR_RV	595
 -- iCommandPlanePickleOff	351
 -- iCommandPlaneTrimRollAbs	2023
@@ -1380,7 +1372,6 @@ device_commands =
 -- iCommandGFireStop	1575
 -- iCommandPlane_HOTAS_MIC_SwitchOff	576
 -- iCommandPlaneDLK_Wingman3_up	786
--- iCommandPlaneRadarUpLeft	234
 -- iCommandGReloadWeapon	1573
 -- iCommandViewAir	8
 -- iCommandPlaneTrimOn	957
@@ -1431,7 +1422,6 @@ device_commands =
 -- iCommandPlaneRightMFD_OSB18_Off	1024
 -- iCommandIFFAntennaBoth	1551
 -- iCommandViewAWACSUnitInfoOff	424
--- iCommandPlane_LockOn_start	509
 -- iCommandIFFAntennaUpper	1550
 -- iCommandCanopyJettisonUnlockButton	1549
 -- iCommand_FireExting_Discharge_Left	1407
@@ -1503,7 +1493,6 @@ device_commands =
 -- iCommandPlane_Env_AirConditioner_HOT	1523
 -- iCommandPlane_L_ENG_OPER_Norm	1058
 -- iCommandGLaserRangerOn	1630
--- iCommand_TDC_AbsolutePositionVertical	2131
 -- iCommandPlaneTrimDown	96
 -- iCommandPlaneCobra	121
 -- iCommandPlaneNightVisionLTSOFF	1196
@@ -1525,7 +1514,6 @@ device_commands =
 -- iCommandPlane_R_828_ASU_up	794
 -- iCommand_FireExting_Reservoirs	928
 -- iCommandPlaneLeftMFD_OSB17	658
--- iOculusRiftHeadPosX	2147
 -- iCommandPlaneNav_PB5_off	863
 -- iCommandSoundMicOff	124
 -- iCommand_IlluminationInterf_Panels_Illumination_brightness_down	939
@@ -1569,7 +1557,6 @@ device_commands =
 -- iCommandPlane_DescentMode	507
 -- iCommandPlane_VHF_FM_1MHz_Inc	1476
 -- iCommandPlane_VHF_FM_1MHz_Dec	1475
--- iCommandPlane_HOTAS_TDC_depress_on	634
 -- iCommandPlaneIntercomHM	1187
 -- iCommandAntiGSuitTest	1546
 -- iCommandMechClock_RightLever_Rotate_right	760
@@ -1699,7 +1686,6 @@ device_commands =
 -- iCommandPlaneAHCPAltSCEDelta	1385
 -- iCommand_UV26_Power	897
 -- iCommandPlane_R_800_4th_wheel_down	614
--- iCommandPlaneRadarLeft	88
 -- iCommandPlaneFSLeftMainFillDisable	1089
 -- iCommandPlaneAHCPLaserTrain	1382
 -- iCommandPlaneAHCPLaserArm	1380
@@ -1726,7 +1712,6 @@ device_commands =
 -- iCommandPlane_HARS_MagneticVar_Plus15	1451
 -- iCommandHelicopter_Selected_Engine_interrupt_start_up	803
 -- iCommandPlaneCMSP_MODE_SEMI	1345
--- iCommandPlaneUHFFunctionDialMAIN	1219
 -- iCommandPlaneUFC_7	1301
 -- iCommandPlane_VHF_AM_1MHz_Inc	1498
 -- iCommandPlaneCMSP_DISP_MENU	1340
@@ -1750,7 +1735,6 @@ device_commands =
 -- iCommandPlaneNav_Steerpoints_off	868
 -- iCommandPlane_VHF_FM_025MHz_Dec	1479
 -- iCommandPlane_K041_Power	525
--- iCommandPlane_LockOn_finish	510
 -- iCommandViewAll	26
 -- iCommandPlaneUFC_DATA_DOWN	1317
 -- iCommandPlaneUFC_DATA_UP	1316
@@ -1797,7 +1781,6 @@ device_commands =
 -- iCommandPlaneCDU_X	1277
 -- iCommandPlaneCDU_W	1276
 -- iCommandPlane_ABRIS_Axis_Decrease	502
--- iCommandPlaneRadarRight	89
 -- iCommandPlaneCDU_R	1271
 -- iCommandMechClock_RightLever_Down_up	758
 -- iCommandPlane_RouteMode	506
@@ -1871,7 +1854,6 @@ device_commands =
 -- iCommandAltimeterPressureStop	318
 -- iCommandPlaneCDU_0	1251
 -- iCommandViewBtn2Down	1597
--- iCommandPlaneUHFFreqModeDialMNL	1222
 -- iCommandPlaneLevitation	959
 -- iCommandPlaneUHFPresetChannelSelectorDec	1200
 -- iCommandPlaneUHFFunctionDialBOTH	1220
@@ -2010,7 +1992,6 @@ device_commands =
 -- iCommandPlaneQuickPadlockOn	1067
 -- iCommandHelicopter_SignalFlares_switch_OnOff	828
 -- iCommandViewSpeedUp	159
--- iCommandPlaneRadarDownRight	232
 -- iCommandPlane_R_ENG_FUEL_FLOW_Override	1066
 -- iCommandPlane_R_ENG_FUEL_FLOW_Norm	1065
 -- iCommandPlane_L_ENG_FUEL_FLOW_Norm	1063
@@ -2065,7 +2046,6 @@ device_commands =
 -- iCommandPlaneRightMFD_OSB7_Off	1013
 -- iCommandPlaneNav_Targets_off	874
 -- iCommandPlaneRightMFD_OSB16_Off	1022
--- iCommandPlaneRadarStop	235
 -- iCommandAltimeterPressureDecrease	317
 -- iCommandPlaneRightMFD_OSB15_Off	1021
 -- iCommandDebugAxis1	2088
@@ -2217,7 +2197,6 @@ device_commands =
 -- iCommandPlane_ADF_Receiver_Mode_change	585
 -- iCommand_FireExting_LeftEngineExting	921
 -- iCommandPlane_HOTAS_BoatSwitchAft	564
--- iOculusRiftRoll	2146
 -- iCommandPlaneLeftMFD_OSB5	646
 -- iCommandPlaneLGPDownlockOverride	1395
 -- iCommandPlaneWheelBrakeOff	75
@@ -2240,7 +2219,6 @@ device_commands =
 -- iCommandPlaneGearDown	431
 -- iCommandAutoLockOnClear	384
 -- iCommandPlaneCDU_LSK_9R	1235
--- iCommandPlaneRadarUp	90
 -- iCommandPlaneRightMFD_BRTMODE_NIGHT	1531
 -- iCommandPlaneAirBrake	73
 -- iCommandEnginesStart	309
@@ -2251,7 +2229,6 @@ device_commands =
 -- iCommandPlaneTrimCancel	97
 -- iCommandExtCargoHook	1633
 -- iCommandRollForward	251
--- iCommandPlaneDesignate_CageOff	440
 -- iCommandPlaneNav_THeadingTimeRangeF_off	881
 -- iCommandViewIR	425
 -- iCommandPlaneUFC_STEER_DOWN	1315
@@ -2281,7 +2258,6 @@ device_commands =
 -- iCommandPlaneNav_PB9	468
 -- iCommandPlane_I251_Brightness_Down	843
 -- iCommandAutoLockOnPreviousAircraft	275
--- iCommandPlaneRadarDownLeft	233
 -- iCommandViewPitCameraMoveBack	489
 -- iCommandPlane_Helmet_Brightess_Down	841
 -- iCommandPlaneCollectiveStop	839
@@ -2320,7 +2296,6 @@ device_commands =
 -- iCommandPlane_AirborneTarget_up	797
 -- iCommandGChangeSpeedH	1578
 -- iCommandSelecterRight	140
--- iCommandPlaneRadarChangeMode	285
 -- iCommandPlaneEOSOnOff	87
 -- iCommandPlaneNav_SelfCoord_off	878
 -- iCommandFuelPumpsTankRear	718
@@ -2366,7 +2341,6 @@ device_commands =
 -- iCommandHelicopter_Right_Engine_Lock	601
 -- iCommandPlaneAUTDecreaseRegimeLeft	166
 -- iCommandPlane_ADF_Test_up	792
--- iCommandPlaneRadarCenter	92
 -- iCommandHelicopter_Engine_Select	599
 -- iCommandPlane_VHF_FM_Mode_EMERFM	1461
 -- iCommandPlane_HOTAS_MIC_SwitchLeft	574
@@ -2376,7 +2350,6 @@ device_commands =
 -- iCommandViewCoordinatesInLinearUnits	245
 -- iCommandViewPitCameraMoveRight	487
 -- iCommandPlane_HOTAS_BoatSwitchForward	563
--- iCommandPlaneDesignate_CageOn_horizontal	442
 -- iCommandPlane_HOTAS_DataManagementSwitchLeft	551
 -- iCommandSlaveToTanker	1610
 -- iCommand_FireDetectorsTest2ndGroup	955
@@ -2394,7 +2367,39 @@ device_commands =
 -- iCommandPlaneNav_INU_precise_align	472
 -- iCommandAPUFuelValveShutOff	726
 -- iCommandPlaneCockpitIlluminationGauges	494
--- iCommandPlaneRadarUpRight	231
 -- iCommandRotatePlus	1
 -- iCommandMarkerState	261
 
+
+-- iCommandPlane_LockOn_start	                509
+-- iCommandPlane_LockOn_finish	                510
+-- iCommandPlaneRadarOnOff	                    86
+-- iCommandPlaneRadarLeft	                    88
+-- iCommandPlaneRadarRight	                    89
+-- iCommandPlaneRadarUp	                        90
+-- iCommandPlaneRadarDown	                    91
+-- iCommandPlaneRadarCenter	                    92
+-- iCommandPlaneRadarUpRight	                231
+-- iCommandPlaneRadarDownRight	                232
+-- iCommandPlaneRadarDownLeft	                233
+-- iCommandPlaneRadarUpLeft	                    234
+-- iCommandPlaneRadarStop	                    235
+-- iCommandPlaneRadarChangeMode	                285
+-- iCommandPlaneRadarHorizontal	                2025
+-- iCommandPlaneRadarVertical	                2026
+-- iCommandPlaneRadarHorizontalAbs	            2027
+-- iCommandPlaneRadarVerticalAbs	            2028
+
+-- iCommandPlaneUHFFunctionDialMAIN             1219
+-- iCommandPlaneUHFFreqModeDialMNL	            1222
+
+-- iCommandPlane_HOTAS_TDC_depress_on	634
+-- iCommandPlane_HOTAS_TDC_depress_off	635
+-- iCommand_TDC_AbsolutePositionHorizontal	2130
+-- iCommand_TDC_AbsolutePositionVertical	2131
+
+
+-- iCommandPlaneDesignate_CageOn	439
+-- iCommandPlaneDesignate_CageOff	440
+-- iCommandPlaneDesignate_CageOn_vertical	441
+-- iCommandPlaneDesignate_CageOn_horizontal	442

@@ -22,7 +22,7 @@ STROKE_FNT_UFCP	    		= #stringdefs+1
 
 width = GetHalfWidth()*2
 height = GetHalfHeight()*2
-stringdefs[STROKE_FNT_UFCP]			    = {height/5, height/5 * 64 / 52, -height/5 * 64 / 52 /2.5, 0}
+stringdefs[STROKE_FNT_UFCP]			    = {height/5, 2*width/24, -width/24, 0}
 
 
 function create_page_root()

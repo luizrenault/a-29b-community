@@ -30,10 +30,10 @@ local object
 
 -- FLIR format text
 
-object = addStrokeText(nil, "FLIR DEGRADED\nOR NOT AVAILABLE", CMFD_STRINGDEFS_DEF_X15, "CenterCenter", {0, -0.9}, CMFD_FLIR_origin.name, nil, {"%s"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
-object.controllers = {{"opacity_using_parameter", 0}}
-object.material    = CMFD_FONT_R
+-- object = addStrokeText(nil, "FLIR DEGRADED\nOR NOT AVAILABLE", CMFD_STRINGDEFS_DEF_X15, "CenterCenter", {0, -0.9}, CMFD_FLIR_origin.name, nil, {"%s"})
+-- object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
+-- object.controllers = {{"opacity_using_parameter", 0}}
+-- object.material    = CMFD_FONT_R
 
 -- OSS Menus
 
@@ -50,3 +50,17 @@ object = addOSSText(22, "BRT/C", page_root.name)
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
 object.controllers = {{"opacity_using_parameter", 0}}
 
+picture					 = CreateElement "ceTexPoly"
+picture.name			 = "picture"
+picture.vertices		 = {{-1, 1},
+							{ 1, 1},
+							{ 1,-1},
+							{-1,-1}}
+picture.indices			 = {0, 1, 2, 0, 2, 3}
+picture.tex_coords		 = {{0, 0},
+                            {1, 0},
+                            {1, 1},
+                            {0, 1}}
+picture.material		 = "render_target_1"
+picture.parent_element = default_parent
+Add(picture)

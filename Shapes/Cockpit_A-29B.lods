@@ -1,5 +1,0 @@
-model = {
-	lods = {		
-		{"Cockpit_A-29B.edm",20000.000000},
-	};
-}
