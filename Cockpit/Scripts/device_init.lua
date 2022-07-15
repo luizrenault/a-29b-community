@@ -50,9 +50,9 @@ creators[devices.HELMET_DEVICE]	  = {"avNightVisionGoggles"}
 creators[devices.ILS]		      = {"avILS"                 , nil,                                                 {devices.ELECTRIC_SYSTEM}}
 creators[devices.ILS_DEVICE]	  = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/ils.lua"}
 
-creators[devices.FLIR]		      = {"LR::avSimplestFLIR"    ,LockOn_Options.script_path.."Systems/flir.lua"}
+creators[devices.FLIR]		      = {"LR::avSimplestFLIR"    ,LockOn_Options.script_path.."FLIR/device.lua"}
 
--- creators[devices.TEST]		      = {"avLrDevice"           ,LockOn_Options.script_path.."Systems/test_device.lua"}
+-- creators[devices.TEST]		      = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/test_device.lua"}
 
 indicators                  = {}
 indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."CMFD/CMFD_Left_init.lua" , devices.CMFD,{{"CENTER_HDD001_PNT","DOWN_HDD001_PNT","RIGHT_HDD001_PNT"}, {},1},1}
@@ -62,7 +62,7 @@ indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."HUD/I
 indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."UFCP/UFCP_page_init.lua" , devices.UFCP ,	{ {"PTR-UFCP-CENTER", "PTR-UFCP-DOWN", "PTR-UFCP-RIGHT"},{},2},2}
 
 --indicators[#indicators + 1] = {"ccGunCamera", LockOn_Options.script_path.."Systems/sai.lua" , nil,{{"CENTER_BFI_PNT","DOWN_BFI_PNT","RIGHT_BFI_PNT"}, {}}}
-indicators[#indicators + 1] = {"LR::ccCamera", LockOn_Options.script_path.."GunCamera/init.lua", devices.FLIR,	{{}}}
+indicators[#indicators + 1] = {"LR::ccCamera", LockOn_Options.script_path.."FLIR/indicator.lua", devices.FLIR,	{{}}}
 
 -- indicators[#indicators + 1] = {"LR::ccSimplestFLIR", LockOn_Options.script_path.."FLIR/init.lua",	{{}}}
 

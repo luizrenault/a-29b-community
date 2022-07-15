@@ -146,10 +146,13 @@ function launch_station(station)
 
 end
 
+-- dofile(LockOn_Options.script_path.."dump.lua")
+
 local function update_storages()
     wpn_sto_total_count = {}
     for i = 0, station_count-1 do
         local station_info = dev:get_station_info(i)
+        -- dump("STA", station_info )
         local wname = get_wpn_weapon_name(station_info["CLSID"])
         wpn_sto_name[i+1] = wname
         wpn_sto_count[i+1] = station_info["count"]

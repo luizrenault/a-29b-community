@@ -5,6 +5,7 @@ declare_plugin(self_ID,
 installed 	 = true, -- if false that will be place holder , or advertising
 displayName     = _("A-29B"),
 developerName   =   "Fight's On BR",
+developerLink   = "https://github.com/luizrenault/a-29b-community",
 version		 = "0.3.1b",
 state		 = "installed",
 info		 = _("A-29B"),

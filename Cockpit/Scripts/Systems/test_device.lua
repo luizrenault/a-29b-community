@@ -11,6 +11,9 @@ dofile(LockOn_Options.script_path.."dump.lua")
 dump("_G",_G)
 dump("_G",getmetatable(_G))
 
+dump("plugins_by_id",plugins_by_id)
+dump("_plugins_by_id",getmetatable(plugins_by_id))
+
 
 --dump("list_indication",getmetatable(list_indication()))
 

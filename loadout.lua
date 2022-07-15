@@ -298,3 +298,37 @@ declare_loadout(
 						}}
 	}
 )
+
+declare_loadout(
+	{
+		category		= CAT_PODS,
+		CLSID			= "{FLIR-STAR-SAFIRE}",
+		attribute		= {4,	15,	44,	WSTYPE_PLACEHOLDER},			
+		Weight			= 43.2,
+		Count 			= 1,
+		Cx_pil			= 0.0005949,
+		Picture			= "starsafire.png",
+		PictureBlendColor= '0xffffffff',		
+		displayName		= _("FLIR Star Safire Turret"),
+		shape_table_data = 
+		{
+			{
+				file	= "FLIR-STAR-SAFIRE";
+				life	= 1;
+				fire	= { 0, 1};
+				username	= "FLIR-STAR-SAFIRE";
+				index	= WSTYPE_PLACEHOLDER;
+			},
+		},
+		
+		Elements		={
+			{
+				ShapeName	=	"FLIR-STAR-SAFIRE", 
+			}
+		},
+		Sensors	 = 
+		{
+			OPTIC  = {"FLIR Star Safire"},
+		},
+	}
+)
