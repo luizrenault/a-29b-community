@@ -516,9 +516,9 @@ A_29B =  {
 					{ CLSID = "<CLEAN>", arg_value = 1 }, -- CLEAN --
 				}
 			),
-			pylon(6, 0, 0.6, -0.13, 0.0,
+			pylon(6, 0, 1.0, -1.13, 0.0,
 				{
-					connector = 'flir', arg = 307 ,arg_value = 0,
+					connector = 'flir',
 					use_full_connector_position = false,
 				    DisplayName 	= "FLIR",
 				},

@@ -17,3 +17,4 @@ camera = -- superseeded by ccSimplestFLIR when used with it.
 
 update_screenspace_diplacement(36/24,false,0)
 dedicated_viewport_arcade = dedicated_viewport
+

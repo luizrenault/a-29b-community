@@ -108,6 +108,7 @@ Keys =
     Cage        	     = __custom_counter(),
     TDCX        	     = __custom_counter(),
     TDCY        	     = __custom_counter(),
+    TDC_Depress   	     = __custom_counter(),
     AirBrake           = __custom_counter(),
     Cutoff            = __custom_counter(),
 
