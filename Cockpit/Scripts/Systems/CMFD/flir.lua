@@ -142,7 +142,7 @@ function text_from_lua_function_flir (number)
                 alt
             )
         else
-            return "TARGET\nX  XX`XX.XX'\nX XXX`XX.XX'\n 000 FT"
+            return "TARGET\nX  XX`XX.XX'\nX XXX`XX.XX'\n    X FT"
         end
     end
 

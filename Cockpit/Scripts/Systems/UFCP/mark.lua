@@ -31,7 +31,6 @@ local function get_ontop()
     local lat_m, alt_m, lon_m = sensor_data.getSelfCoordinates()
     local lat, lon = Terrain.convertMetersToLatLon(lat_m, lon_m)
     local elev = alt_m * 3.28084
-
     return lat, lon, elev
 end
 
@@ -44,11 +43,24 @@ local function get_hud()
     return lat, lon, elev
 end
 
+local FLIR_TGT_LAT = get_param_handle("FLIR_TGT_LAT")
+local FLIR_TGT_LON = get_param_handle("FLIR_TGT_LON")
+local FLIR_TGT_ALT = get_param_handle("FLIR_TGT_ALT")
+
+
 local function get_flir()
     -- Get FLIR coordinates
-    local lat = nil
-    local lon = nil
-    local elev = nil
+    local lat_m = FLIR_TGT_LAT:get()
+    local lon_m = FLIR_TGT_LON:get()
+    local alt_m = FLIR_TGT_ALT:get()
+
+    local lat, lon = Terrain.convertMetersToLatLon(lat_m, lon_m)
+    local elev = alt_m * 3.28084
+    if lat_m == 0 and lon_m == 0 and alt_m == 0 then
+        lat = nil
+        lon = nil
+        elev = nil
+    end
 
     return lat, lon, elev
 end
@@ -98,9 +110,9 @@ function update_mark()
         elev = ufcp_mark_elev
     elseif ufcp_mark_mode == UFCP_MARK_MODE_IDS.ONTOP then
         lat, lon, elev = get_ontop()
-    elseif ufcp_mark_mode == UFCP_MARK_MODE_IDS.ONTOP then
+    elseif ufcp_mark_mode == UFCP_MARK_MODE_IDS.HUD then
         lat, lon, elev = get_hud()
-    elseif ufcp_mark_mode == UFCP_MARK_MODE_IDS.ONTOP then
+    elseif ufcp_mark_mode == UFCP_MARK_MODE_IDS.FLIR then
         lat, lon, elev = get_flir()
     end
 

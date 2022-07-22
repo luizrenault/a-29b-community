@@ -171,12 +171,9 @@ object.element_params = {CMFD_BRIGHT, "FLIR_STATUS"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 2, -1}}
 
 local FLIR_Info_On = addPlaceholder(nil, {0, 0}, FLIR_Info.name)
-object = addStrokeText(nil, "TARGET", CMFD_STRINGDEFS_DEF_X06, "LeftTop", {-0.5,0.25}, FLIR_Info_On.name)
-object.element_params = {CMFD_BRIGHT}
-object.controllers = { {"opacity_using_parameter", 0}, {"text_from_lua_function", CMFD_TEXT.FLIR_TARGET, 0.5}}
-
-
-
+object = addStrokeText(nil, "TARGET", CMFD_STRINGDEFS_DEF_X08, "LeftTop", {-0.5,0.25}, FLIR_Info_On.name)
+object.element_params = {CMFD_BRIGHT, "FLIR_STATUS"}
+object.controllers = { {"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1, 1}, {"text_from_lua_function", CMFD_TEXT.FLIR_TARGET, 0.5}}
 
 -- OSS Menus
 

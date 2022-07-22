@@ -56,9 +56,9 @@ end
 function update_misc()
     local text = ""
     text = text .. "MISC\n"
-    text = text .. "1C/F  2PARA 3FTI  C  \n"
-    text = text .. "4DCLT 5CRUS 6DRFT EDL\n"
-    text = text .. "7TK/L 8STRM 9FLIR O  \n"
+    text = text .. "1C/F  2PARA 3FTI  C   \n"
+    text = text .. "4DCLT 5CRUS 6DRFT E DL\n"
+    text = text .. "7TK/L 8STRM 9FLIR O   \n"
     UFCP_TEXT:set(text)
 end
 

@@ -271,6 +271,7 @@ local function get_heading(x1, y1, x2, y2)
     if x == 0 and y == 0 then return get_avionics_hdg() end
     return hdg
 end
+
 local function cmfd_nav_sel_next_wpt()
     local nav_fyt_next = (nav_fyt + 1) % 100
     local limit = 0
@@ -553,8 +554,51 @@ function calc_az_el_from_brg_dist_elev (brg, distance, elev)
     return azimuth, elevation
 end
 
+local FLIR = {
+    look_wpt = 0,
+    LOOK_WPT = get_param_handle("FLIR_LOOK_WPT"),
+    LOOK_MODE = get_param_handle("FLIR_LOOK_MODE"),
+    LOOK_WPT_SET = get_param_handle("FLIR_LOOK_WPT_SET"),
+    LOOK_LAT = get_param_handle("FLIR_LOOK_LAT"),
+    LOOK_LON = get_param_handle("FLIR_LOOK_LON"),
+    LOOK_ALT = get_param_handle("FLIR_LOOK_ALT"),
+}
+
+function update_flir()
+    local wpt_set = FLIR.LOOK_WPT_SET:get()
+    if wpt_set == -2 then
+        local wpt = FLIR.LOOK_WPT:get()
+        local wpt_new = (wpt + 1) % 100
+        while(nav_fyt_list[wpt_new+1]==nil and wpt_new ~= wpt)
+        do 
+            wpt_new = (wpt_new + 1) % 100
+        end
+        wpt_set = wpt_new
+    elseif wpt_set == -3 then
+        local wpt = FLIR.LOOK_WPT:get()
+        local wpt_new = (wpt - 1) % 100
+        while(nav_fyt_list[wpt_new+1]==nil and wpt_new ~= wpt)
+        do 
+            wpt_new = (wpt_new - 1) % 100
+        end
+        wpt_set = wpt_new
+    end
+    
+    if  wpt_set >= 0 then
+        FLIR.look_wpt = wpt_set
+        if nav_fyt_list[FLIR.look_wpt+1]~=nil then
+            FLIR.LOOK_WPT:set(FLIR.look_wpt)
+            FLIR.LOOK_ALT:set(nav_fyt_list[FLIR.look_wpt+1].altitude / 3.28084)
+            FLIR.LOOK_LAT:set(nav_fyt_list[FLIR.look_wpt+1].lat_m)
+            FLIR.LOOK_LON:set(nav_fyt_list[FLIR.look_wpt+1].lon_m)
+        end
+        FLIR.LOOK_WPT_SET:set(-1)
+    end
+end
+
 function update_nav()
     update_fyt()
+    update_flir()
 
     if nav_fyt_last ~= nav_fyt then
         UFCP_OAP_ENABLED:set(0)

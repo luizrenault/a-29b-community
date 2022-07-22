@@ -123,6 +123,8 @@ mat_tbl = {
     "cmfd_font_d",
     "cmfd_font_r",
     "ufcp_font_def",
+
+    "render_target_1",
 }
 
 -- MFCD Colors
