@@ -180,9 +180,15 @@ local cmfd_bright = {}
 cmfd_bright[1] = 1
 cmfd_bright[2] = 1
 
+local function load_dtc()
+    pcall(cmfd_nav_load_dtc)
+end
+
 function update()
     CMFD1On:set((get_elec_avionics_ok() or (CMFD2SwOn:get() == 0 and get_elec_avionics_emergency_ok())) and 1 or 0)
     CMFD2On:set(get_elec_avionics_emergency_ok() and 1 or 0)
+
+    load_dtc()
 
     update_menu1()
     update_menu2()
@@ -336,6 +342,9 @@ function SetCommand(command,value)
         CMFD[cmfdnumber]["SwOn"]:set(value)
     end
 
+    if cmfdnumber == 0 then
+        cmfdnumber = CMFDDoi:get()
+    end
     if CMFD[cmfdnumber]["On"]:get() == 0 then return end
 
     if CMFD[cmfdnumber]["Format"]:get() == SUB_PAGE_ID.MENU1 then SetCommandMenu1(command,value, CMFD[cmfdnumber]) 
@@ -528,6 +537,14 @@ function CockpitEvent(command, val)
     
 end
 
+dofile(LockOn_Options.script_path.."Systems/CMFD/cmfd_text.lua")
+
+function text_from_lua_function (number)
+    return (
+        text_from_lua_function_flir(number) or
+        "CMFD TEST"
+    )
+end
 
 startup_print("CMFD2: load end")
 need_to_be_closed = false -- close lua state after initialization

@@ -11,6 +11,9 @@ dofile(LockOn_Options.script_path.."dump.lua")
 dump("_G",_G)
 dump("_G",getmetatable(_G))
 
+dump("plugins_by_id",plugins_by_id)
+dump("_plugins_by_id",getmetatable(plugins_by_id))
+
 
 --dump("list_indication",getmetatable(list_indication()))
 
@@ -150,6 +153,12 @@ function SetCommand(command,value)
         -- dispatch_action(nil,iPlaneAirBrakeOn)
     end
 end
+
+function release()
+    log.alert("----------------------------------")
+    log.alert("avLrDevice Release!")
+end
+
 
 startup_print("test: load end")
 need_to_be_closed = false -- close lua state after initialization
@@ -1191,3 +1200,33 @@ avWeap_ReleaseTimer_Activity
 -- _G["Factory"]["_M"] = ->_G["Factory"]
 -- _G["Factory"]["create"] = function: 000001BF4D80B260
 -- _G["Factory"]["setBaseClass"] = function: 000001BF4D80B5F0
+
+
+
+--[[
+
+mesh_poly.controllers       = {{"parameter_compare_with_number", 0, 1}}
+mesh_poly.controllers       = {{"compare_parameters", 0, 1}}
+mesh_poly.controllers       = {{"change_color_when_parameter_equal_to_number",0,1, -1,-1,-1}}
+mesh_poly.controllers       = {{"parameter_in_range", 0, -0.05, 0.05}}
+
+{"change_color_when_parameter_equal_to_number", param_nr, number, red, green, blue}
+{"text_using_parameter", param_nr, format_nr}
+{"move_left_right_using_parameter", param_nr, gain}
+{"move_up_down_using_parameter", param_nr, gain}
+{"opacity_using_parameter", param_nr}
+{"rotate_using_parameter", param_nr, gain}
+{"compare_parameters", param1_nr, param2_nr, comparison} -- -1 less, 0 equal, +1 greater
+{"parameter_in_range", param_nr, greaterthanvalue, lessthanvalue} -- if greaterthanvalue < param < lessthanvalue then visible
+{"parameter_compare_with_number", param_nr, number} -- if param == number then visible
+{"line_object_set_point_using_parameters", point_nr, param_x, param_y, gain_x, gain_y}
+{"scale", scale_x, scale_y, scale_z}
+
+{"change_texture_state_using_parameter",???} -- exists but crashed DCS when used with one argument.
+{"change_color_using_parameter", ???} -- exists but crashed DCS when used with one to five arguments.
+{"fov_control", ???}
+{"increase_render_target_counter", ???}
+
+draw_argument_in_range
+
+]]

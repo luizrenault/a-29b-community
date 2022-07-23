@@ -20,6 +20,10 @@ local ADF_MODE_IDS = {
 }
 
 local ADHSI_ILS_FREQ = get_param_handle("ADHSI_ILS_FREQ")
+local UFCP_NAVAIDS_DTC_ADF_READ = get_param_handle("UFCP_NAVAIDS_DTC_ADF_READ")
+local UFCP_NAVAIDS_DTC_VOR_READ = get_param_handle("UFCP_NAVAIDS_DTC_VOR_READ")
+UFCP_NAVAIDS_DTC_ADF_READ:set("")
+UFCP_NAVAIDS_DTC_VOR_READ:set("")
 
 
 -- Inits
@@ -34,6 +38,7 @@ ufcp_navaids_crs = 0
 ufcp_navaids_adf_mode = ADF_MODE_IDS.ADF
 
 ADHSI_COURSE:set(ufcp_navaids_crs)
+ADHSI_ILS_FREQ:set(ufcp_navaids_ils)
 
 for i = 1,ufcp_com1_max_channel+1 do ufcp_com1_channels[i] = 118 end
 
@@ -152,6 +157,30 @@ local function ufcp_navaids_crs_validate(text, save)
     return text
 end
 
+-- Reads data from a DTC, when DB or ALL is selected in CMFD DTE
+function ufcp_navaids_load_dtc()
+
+    -- ADF
+    if UFCP_NAVAIDS_DTC_ADF_READ:get() ~= "" then
+        dofile(UFCP_NAVAIDS_DTC_ADF_READ:get())
+
+        ufcp_navaids_adf = ADF.ADF.Freq.Mhz + ADF.ADF.Freq.Khz / 1000
+        ufcp_navaids_adf_next = ADF.ADF.Next.Mhz + ADF.ADF.Next.Khz / 1000
+        
+        UFCP_NAVAIDS_DTC_ADF_READ:set("")
+    end
+
+    -- VOR
+    if UFCP_NAVAIDS_DTC_VOR_READ:get() ~= "" then
+        dofile(UFCP_NAVAIDS_DTC_VOR_READ:get())
+        
+        ufcp_navaids_vor = VOR.VOR_Rec1.Freq.Mhz + VOR.VOR_Rec1.Freq.Khz / 1000
+        ufcp_navaids_vor_hold = VOR.VOR_Rec1.Freq.Mhz + VOR.VOR_Rec1.Freq.Khz / 1000
+
+        UFCP_NAVAIDS_DTC_VOR_READ:set("")
+    end
+end
+
 local FIELD_INFO = {
     [SEL_IDS.ILS] = {6, ufcp_navaids_ils_validate},
     [SEL_IDS.VOR] = {6, ufcp_navaids_vor_validate},
@@ -240,16 +269,26 @@ function update_nav_aids()
     if sel == SEL_IDS.ILS and ufcp_edit_pos > 0 then
         text = replace_pos(text, 30)
         text = replace_pos(text, 37)
+    elseif AVIONICS_ANS_MODE:get() == AVIONICS_ANS_MODE_IDS.ILS then
+        text = replace_pos(text, 26)
+        text = replace_pos(text, 30)
     end
+
 
     if sel == SEL_IDS.VOR and ufcp_edit_pos > 0 then
         text = replace_pos(text, 55)
         text = replace_pos(text, 62)
+    elseif (AVIONICS_ANS_MODE:get() == AVIONICS_ANS_MODE_IDS.VOR) or (AVIONICS_ANS_MODE:get() == AVIONICS_ANS_MODE_IDS.EGI) then
+        text = replace_pos(text, 51)
+        text = replace_pos(text, 55)
     end
 
     if sel == SEL_IDS.ADF and ufcp_edit_pos > 0 then
         text = replace_pos(text, 80)
         text = replace_pos(text, 87)
+    elseif (AVIONICS_ANS_MODE:get() == AVIONICS_ANS_MODE_IDS.ILS) or (AVIONICS_ANS_MODE:get() == AVIONICS_ANS_MODE_IDS.VOR) then
+        text = replace_pos(text, 76)
+        text = replace_pos(text, 80)
     end
 
     if sel == SEL_IDS.ADF_NEXT and ufcp_edit_pos > 0 then
@@ -268,7 +307,6 @@ function update_nav_aids()
     UFCP_TEXT:set(text)
 
     ADHSI_ILS_FREQ:set(ufcp_navaids_ils)
-
     
 end
 

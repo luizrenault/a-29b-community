@@ -5,10 +5,11 @@ declare_plugin(self_ID,
 installed 	 = true, -- if false that will be place holder , or advertising
 displayName     = _("A-29B"),
 developerName   =   "Fight's On BR",
+developerLink   = "https://github.com/luizrenault/a-29b-community",
 version		 = "0.3.1b",
 state		 = "installed",
 info		 = _("A-29B"),
-
+binaries 	 = {'avSimplest'},
 InputProfiles =
 {
     ["A-29B"] = current_mod_path .. '/Input/A-29B',
@@ -39,6 +40,16 @@ LogBook =
 			type		= "A-29B",
 		},
 	},		
+Options =
+	{
+		{
+			name		= _("A-29B"),
+			nameId		= "A-29B",
+			dir			= "Options",
+			CLSID		= "{A-29B Super Tucano Options}"
+		},
+	},
+
 })
 
 mount_vfs_texture_path  (current_mod_path ..  "/Theme/ME")--for simulator loading window

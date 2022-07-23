@@ -38,6 +38,26 @@ local EICAS_FUEL_JOKER = get_param_handle("EICAS_FUEL_JOKER")
 local UFCP_FUEL_BINGO = get_param_handle("UFCP_FUEL_BINGO")
 local UFCP_FUEL_HMPT = get_param_handle("UFCP_FUEL_HMPT")
 
+-- When setting it to the DTC file path, the other systems will try to read their files
+local UFCP_COM1_DTC_READ = get_param_handle("UFCP_COM1_DTC_READ")
+local UFCP_COM2_DTC_READ = get_param_handle("UFCP_COM2_DTC_READ")
+local UFCP_NAVAIDS_DTC_ADF_READ = get_param_handle("UFCP_NAVAIDS_DTC_ADF_READ")
+local UFCP_NAVAIDS_DTC_VOR_READ = get_param_handle("UFCP_NAVAIDS_DTC_VOR_READ")
+local UFCP_XPDR_DTC_READ = get_param_handle("UFCP_XPDR_DTC_READ")
+local CMFD_NAV_DTC_CNTLINE_READ = get_param_handle("CMFD_NAV_DTC_CNTLINE_READ")
+local CMFD_NAV_DTC_WAYPOINT_READ = get_param_handle("CMFD_NAV_DTC_WAYPOINT_READ")
+local CMFD_NAV_DTC_FLTAREA_READ = get_param_handle("CMFD_NAV_DTC_FLTAREA_READ")
+local CMFD_NAV_DTC_AVDAREA_READ = get_param_handle("CMFD_NAV_DTC_AVDAREA_READ")
+UFCP_COM1_DTC_READ:set("")
+UFCP_COM2_DTC_READ:set("")
+UFCP_NAVAIDS_DTC_ADF_READ:set("")
+UFCP_NAVAIDS_DTC_VOR_READ:set("")
+UFCP_XPDR_DTC_READ:set("")
+CMFD_NAV_DTC_CNTLINE_READ:set("")
+CMFD_NAV_DTC_WAYPOINT_READ:set("")
+CMFD_NAV_DTC_FLTAREA_READ:set("")
+CMFD_NAV_DTC_AVDAREA_READ:set("")
+
 local mission = ""
 local pilot = ""
 local copilot = ""
@@ -49,7 +69,7 @@ local dvr_state = CMFD_DTE_DVR_STATE_IDS.DTE
 local mpd_state = CMFD_DTE_STATE_IDS.UNLOADED
 local db_state = CMFD_DTE_STATE_IDS.UNLOADED
 local prog_state = CMFD_DTE_STATE_IDS.UNLOADED
-local inv_state = CMFD_DTE_STATE_IDS.UNLOADED
+local inv_state = CMFD_DTE_STATE_IDS.LOADED
 local hsd_state = CMFD_DTE_STATE_IDS.UNLOADED
 local sim_inv_state = CMFD_DTE_STATE_IDS.UNLOADED
 local msmd_state = CMFD_DTE_STATE_IDS.UNLOADED
@@ -71,80 +91,65 @@ local terrainAirdromes = get_terrain_related_data("Airdromes") or {};
 -- BLANK: DVR OFF OR BIT RUNNING
 
 local function read_ADD_RINV()
-    dofile(mission_dir .. "ADD_RINV.lua")
-
-    -- TODO read data
+    -- The inventory is automatic, per aircraft loadout.
+    --dofile(mission_dir .. "ADD_RINV.lua")
     error()
 end
 
 local function read_ADD_SINV()
-    dofile(mission_dir .. "ADD_SINV.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "ADD_SINV.lua")
     error()
 end
 
 local function read_ADF()
-    dofile(mission_dir .. "ADF.lua")
-
-    -- TODO read data
-    error()
+    -- TODO validate file or throw error()
+    UFCP_NAVAIDS_DTC_ADF_READ:set(mission_dir .. "ADF.lua")
 end
 
 local function read_AIRFIELD()
-    dofile(mission_dir .. "AIRFIELD.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "AIRFIELD.lua")
     error()
 end
 
 local function read_ALN_SLOT()
-    dofile(mission_dir .. "ALN_SLOT.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "ALN_SLOT.lua")
     error()
 end
 
 local function read_AVD_AREA()
-    dofile(mission_dir .. "AVD_AREA.lua")
-
-    -- TODO read data
-    error()
+    -- TODO validate file or throw error()
+    CMFD_NAV_DTC_AVDAREA_READ:set(mission_dir .. "AVD_AREA.lua")
 end
 
 local function read_CNT_LINE()
-    dofile(mission_dir .. "CNT_LINE.lua")
-
-    -- TODO read data
-    error()
+    -- TODO validate file or throw error()
+    CMFD_NAV_DTC_CNTLINE_READ:set(mission_dir .. "CNT_LINE.lua")
 end
 
 local function read_COMM1()
-    dofile(mission_dir .. "COMM1.lua")
-
-    -- TODO read data
-    error()
+    -- TODO validate file or throw error()
+    UFCP_COM1_DTC_READ:set(mission_dir .. "COMM1.lua")
+    UFCP_COM2_DTC_READ:set(mission_dir .. "COMM2.lua")
 end
 
 local function read_DL_PTEXT()
-    dofile(mission_dir .. "DL_PTEXT.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "DL_PTEXT.lua")
     error()
 end
 
 local function read_DL_SETUP()
-    dofile(mission_dir .. "DL_SETUP.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "DL_SETUP.lua")
     error()
 end
 
 local function read_FLT_AREA()
-    dofile(mission_dir .. "FLT_AREA.lua")
-
-    -- TODO read data
-    error()
+    -- TODO validate file or throw error()
+    CMFD_NAV_DTC_FLTAREA_READ:set(mission_dir .. "FLT_AREA.lua")
 end
 
 local function read_GENERAL()
@@ -155,80 +160,67 @@ local function read_GENERAL()
     
     dofile(mission_dir .. "GENERAL.lua")
 
-    dtcid = string.sub(GENERAL.General.DTC_Name:upper(),1,12)
-    pilot = string.sub(GENERAL.General.Pilot_1_Name:upper(),1,12)
+    dtcid = string.sub(GENERAL["General"]["DTC_Name"]:upper(),1,12)
+    pilot = string.sub(GENERAL["General"]["Pilot_1_Name"]:upper(),1,12)
     copilot = string.sub(GENERAL.General.Pilot_2_Name:upper(),1,12)
     mission = string.sub(GENERAL.General.Mission_Name:upper(),1,12)
 end
 
 local function read_IFF()
-    dofile(mission_dir .. "IFF.lua")
-
-    -- TODO read data
-    error()
+    -- TODO validate file or throw error()
+    UFCP_XPDR_DTC_READ:set(mission_dir .. "IFF.lua")
 end
 
 local function read_MSMD()
-    dofile(mission_dir .. "MSMD.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "MSMD.lua")
     error()
 end
 
 local function read_NAV_SYS()
-    dofile(mission_dir .. "NAV_SYS.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "NAV_SYS.lua")
     error()
 end
 
 local function read_PROG()
-    dofile(mission_dir .. "PROG.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "PROG.lua")
     error()
 end
 
 local function read_REAL_INV()
-    dofile(mission_dir .. "REAL_INV.lua")
-
-    -- TODO read data
+    -- The inventory is automatic, per aircraft loadout.
+    --dofile(mission_dir .. "REAL_INV.lua")
     error()
 end
 
 local function read_SIM_INV()
-    dofile(mission_dir .. "SIM_INV.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "SIM_INV.lua")
     error()
 end
 
 local function read_SMS_MISC()
-    dofile(mission_dir .. "SMS_MISC.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "SMS_MISC.lua")
     error()
 end
 
 local function read_VOR()
-    dofile(mission_dir .. "VOR.lua")
-
-    -- TODO read data
-    error()
+    -- TODO validate file or throw error()
+    UFCP_NAVAIDS_DTC_VOR_READ:set(mission_dir .. "VOR.lua")
 end
 
 local function read_WARNING()
-    dofile(mission_dir .. "WARNING.lua")
-
-    -- TODO read data
+    -- TODO validate file or throw error()
+    --dofile(mission_dir .. "WARNING.lua")
     error()
 end
 
 local function read_WAYPOINT()
-    dofile(mission_dir .. "WAYPOINT.lua")
-
-    -- TODO read data
-    error()
+    -- TODO validate file or throw error()
+    CMFD_NAV_DTC_WAYPOINT_READ:set(mission_dir .. "WAYPOINT.lua")
 end
 
 function update_dte()
@@ -325,6 +317,9 @@ local function load_db()
     -- DL messages
 
     if pcall(read_COMM1) and
+        pcall(read_IFF) and 
+        pcall(read_ADF) and
+        pcall(read_VOR) and 
         pcall(read_DL_PTEXT) and 
         pcall(read_DL_SETUP)
     then
@@ -370,15 +365,12 @@ end
 local function load_hsd()
     -- Contact line (5 points)
     -- Avoid areas (30)
+    pcall(read_CNT_LINE)
+    pcall(read_FLT_AREA)
+    pcall(read_AVD_AREA) 
 
-    if pcall(read_FLT_AREA) and
-        pcall(read_CNT_LINE) and
-        pcall(read_AVD_AREA) 
-    then
-        hsd_state = CMFD_DTE_STATE_IDS.LOADED
-    else
-        hsd_state = CMFD_DTE_STATE_IDS.FAILED
-    end
+    hsd_state = CMFD_DTE_STATE_IDS.LOADED
+    -- hsd_state = CMFD_DTE_STATE_IDS.FAILED
 end
 
 local function load_sim_inv()
@@ -468,13 +460,13 @@ function post_initialize_dte()
         theatre = "none"
     end
 
-    -- Set mission dir. It will look for the theatre dir inside mission, otherwise will load the files inside mission. 
-    -- Is this the ideal way? Or should it be in the user dir? People should have their own mission files, although
+    -- Set DTC dir. It will look for the theatre dir inside DTC, otherwise will load the files inside DTC. 
+    -- Is this the ideal way? Or should it be in the user dir? People should have their own DTC files, although
     -- I doubt anyone is gonna make them.
 
     if theatre ~= "none" then
-        mission_dir = LockOn_Options.script_path.."../../Mission/" .. theatre .. "/"
+        mission_dir = LockOn_Options.script_path.."../../DTC/" .. theatre .. "/"
     else
-        mission_dir = LockOn_Options.script_path.."../../Mission/"
+        mission_dir = LockOn_Options.script_path.."../../DTC/"
     end
 end

@@ -253,6 +253,20 @@ function addFillArrowBox(name, sideX, sideY, align, pos, parent, controllers, ma
 	return box
 end
 
+function addFillArrow(name, sideX, sideY, align, pos, parent, controllers, material)
+	local box		= CreateElement "ceMeshPoly"
+	setSymbolCommonProperties(box, name, pos, parent, controllers, material)
+	setSymbolAlignment(box, align)
+
+	local halfSideX	= sideX / 2
+	local halfSideY	= sideY / 2
+    box.primitivetype = "triangles"
+    box.vertices	= {{-halfSideX, 0}, {halfSideX, halfSideY}, {halfSideX, -halfSideY}}
+    box.indices = {0, 1, 2}
+	Add(box)
+	return box
+end
+
 -- Stroke line
 -- rot (CCW in degrees from up)
 -- pos (position of beginning of the line)
@@ -273,7 +287,7 @@ function addStrokeLine(name, length, pos, rot, parent, controllers, dashed, stro
 	return line
 end
 
-function addSimpleLine(name, length, pos, rot, parent, controllers, width, material)
+function addSimpleLine(name, length, pos, rot, parent, controllers, width, dashed, stroke, gap, material)
 	local line		= CreateElement "ceSimpleLineObject"
 	setSymbolCommonProperties(line, name, pos, parent, controllers, material)
 	line.width = width or 1
@@ -282,7 +296,7 @@ function addSimpleLine(name, length, pos, rot, parent, controllers, width, mater
 		line.init_rot	= {rot}
 	end
 
-	local verts = buildStrokeLineVerts(length, nil, nil, nil)
+	local verts = buildStrokeLineVerts(length, dashed, stroke, gap)
 	line.vertices	= verts
 	line.tex_params     = {{0, 0.5}, {1, 0.5}, {1 / (1024 * 100 / 275), 1}}
 
@@ -683,4 +697,30 @@ function SetMeshCircle(object, radius, numpts)
     object.vertices = verts
     object.indices  = inds
     return object
+end
+
+function addTextureBox(name, sideX, sideY, align, pos, parent, controllers, material)
+	local box		= CreateElement "ceTexPoly"
+	setSymbolCommonProperties(box, name, pos, parent, controllers, material)
+	setSymbolAlignment(box, align)
+
+	local halfSideX	= sideX / 2
+	local halfSideY	= sideY / 2
+	if align == "LeftCenter" then
+		box.vertices	= {{0, halfSideY}, {2*halfSideX, halfSideY}, {2*halfSideX, -halfSideY}, {0, -halfSideY}}
+	elseif align == "LeftTop" then
+		box.vertices	= {{0, 0}, {2 * halfSideX, 0}, {2 * halfSideX, - 2 * halfSideY}, {0, - 2 * halfSideY}}
+	elseif align == "RightCenter" then
+		box.vertices	= {{-2*halfSideX, halfSideY}, {0, halfSideY}, {0, -halfSideY}, {-2*halfSideX, -halfSideY}}
+	elseif align == "CenterTop" then
+		box.vertices	= {{-halfSideX, 0}, {halfSideX, 0}, {halfSideX, -2*halfSideY}, {-halfSideX, -2*halfSideY}}
+	elseif align == "CenterBottom" then
+		box.vertices	= {{-halfSideX, 2*halfSideY}, {halfSideX, 2*halfSideY}, {halfSideX, 0}, {-halfSideX, 0}}
+	else 
+		box.vertices	= {{-halfSideX, halfSideY}, {halfSideX, halfSideY}, {halfSideX, -halfSideY}, {-halfSideX, -halfSideY}}
+	end
+	box.indices		= default_box_indices
+	box.tex_coords	= {{0, 0},	{1, 0},	{1, 1},	{0, 1}}
+	Add(box)
+	return box
 end

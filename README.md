@@ -50,6 +50,26 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
+## Version 0.5 - 23 Jul 2022
+
+### Added
+- Working FLIR (Star Safire specs)
+- New front panel and instruments 3d model.
+
+## Version 0.4 - 20 Jul 2022
+
+### Added
+- Avoid areas on HSD
+- Contact lines on HSD
+- Flight areas on HSD
+- HSD decluttering
+- ADF, AVD_AREAS, COMM1, COMM2, CNT_LINE, FLT_AREA, IFF, WAYPOINT and VOR data transfer.
+
+### Changes
+- Renamed the Mission folder to DTC.
+
+### Fixes
+
 ## Version 0.3.1b - 15 Nov 2021
 
 ### Added

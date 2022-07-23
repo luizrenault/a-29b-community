@@ -102,6 +102,7 @@ local misc_sel = 0
 local max_sel = 3
 local misc_max_sel = 9
 function update_nav()
+
     local text = ""
     if ufcp_sel_format == UFCP_FORMAT_IDS.NAV_MODE then 
         -- Format

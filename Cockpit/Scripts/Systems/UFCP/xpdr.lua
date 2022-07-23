@@ -15,6 +15,10 @@ local MODE_IDS = {
     ALT = 2,
 }
 
+
+local UFCP_XPDR_DTC_READ = get_param_handle("UFCP_XPDR_DTC_READ")
+UFCP_XPDR_DTC_READ:set("")
+
 -- Inits
 ufcp_xpdr_mode = MODE_IDS.STBY
 ufcp_xpdr_ident = false
@@ -40,6 +44,17 @@ local function ufcp_xpdr_code_validate(text, save)
         end
     end
     return text
+end
+
+-- Reads data from a DTC, when DB or ALL is selected in CMFD DTE
+function ufcp_xpdr_load_dtc()
+    if UFCP_XPDR_DTC_READ:get() ~= "" then
+        dofile(UFCP_XPDR_DTC_READ:get())
+        
+        ufcp_xpdr_code = IFF.IFF_REC.IFF.M3_Code
+
+        UFCP_XPDR_DTC_READ:set("")
+    end
 end
 
 local FIELD_INFO = {

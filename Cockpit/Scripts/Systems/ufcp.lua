@@ -144,6 +144,18 @@ function ufcp_continue_edit(text, field_info, save)
     ufcp_edit_pos = ufcp_edit_string:len()  -- update the cursor position
 end
 
+function ufcp_edit_replace(text)
+    if ufcp_edit_pos > 0 and ufcp_edit_field_info~= nil and ufcp_edit_field_info[3] ~= nil then
+        local text_copy = text:sub(1,ufcp_edit_field_info[3]-2)
+        text_copy = text_copy .. replace_char(text:sub(ufcp_edit_field_info[3]-1,ufcp_edit_field_info[3]-1))
+        text_copy = text_copy .. ufcp_print_edit(true)
+        text_copy = text_copy .. replace_char(text:sub(ufcp_edit_field_info[3]+ufcp_edit_field_info[1],ufcp_edit_field_info[3]+ufcp_edit_field_info[1]))
+        text_copy = text_copy .. text:sub(ufcp_edit_field_info[3]+ufcp_edit_field_info[1]+1, -1)
+        return text_copy
+    end
+    return text
+end
+
 function replace_text(text, c_start, c_size)
     if ufcp_edit_pos == 0 then return text end
     local text_copy = text:sub(1,c_start-1)
@@ -168,6 +180,32 @@ function replace_text(text, c_start, c_size)
     text_copy = text_copy .. text:sub(c_start + c_size)
     return text_copy
 end
+
+function replace_select(text, c_start, c_size)
+    local text_copy = text:sub(1,c_start-1) .. "*" .. text:sub(c_start+1, c_start + c_size ) .. "*" .. text:sub(c_start + 2 + c_size)
+    return text_copy
+end
+
+function replace_char(c)
+    local val = string.byte(c,1)
+    if     val >= string.byte("A") and val <= string.byte("Z") then val = val + 32
+    elseif val >= string.byte("0") and val <= string.byte("9") then val = val - 34
+    elseif val >= string.byte(" ") and val <= string.byte("+") then val = val - 31
+    elseif val >= string.byte(",") and val <= string.byte("/") then val = val - 20
+    elseif val == string.byte(":") then val = val - 30
+    end
+    return string.char(val)
+end
+
+function replace_enable(text, c_start, c_size)
+    local text_copy = text:sub(1,c_start-1) 
+    text_copy = text_copy .. replace_char(text:sub(c_start, c_start))
+    text_copy = text_copy .. text:sub(c_start+1, c_start + c_size ) 
+    text_copy = text_copy .. replace_char(text:sub(c_start+1+c_size, c_start+1+c_size))
+    text_copy = text_copy .. text:sub(c_start + 2 + c_size)
+    return text_copy
+end
+
 
 function blink_text(text, c_start, c_size)
     local text_copy = text:sub(1,c_start-1)
@@ -292,8 +330,16 @@ dofile(LockOn_Options.script_path.."Systems/UFCP/strm.lua")
 dofile(LockOn_Options.script_path.."Systems/UFCP/flir.lua")
 dofile(LockOn_Options.script_path.."Systems/UFCP/dl.lua")
 
+local function load_dtc()
+    pcall(ufcp_navaids_load_dtc)
+    pcall(ufcp_com1_load_dtc)
+    pcall(ufcp_com2_load_dtc)
+    pcall(ufcp_xpdr_load_dtc)
+end
 
 function update()
+    load_dtc()
+    
     local ufcp_bright = get_cockpit_draw_argument_value(480)
     update_egir()
 
@@ -448,6 +494,8 @@ function post_initialize()
     end
     dev:performClickableAction(device_commands.UFCP_UFC, 1, true)
     dev:performClickableAction(device_commands.UFCP_DAY_NIGHT, 0, true)
+
+    flir_post_initialize()
 
     startup_print("ufcs: postinit end")
 end

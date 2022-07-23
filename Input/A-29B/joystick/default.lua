@@ -102,6 +102,7 @@ join(res.keyCommands,{
 {down = Keys.TDCX,                                          up = Keys.TDCX,                                     name = _('TDC Slew Right'),                                     category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
 {down = Keys.TDCY,                                          up = Keys.TDCY,                                     name = _('TDC Slew Up'),                                        category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
 {down = Keys.TDCY,                                          up = Keys.TDCY,                                     name = _('TDC Slew Down'),                                      category = {_('Throttle'), _('HOTAS')}, value_down =  -1.0,		value_up = 0.0},
+{down = Keys.TDC_Depress,                                   up = Keys.TDC_Depress,                              name = _('TDC Depress'),                                        category = {_('Throttle'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
 {down = Keys.COM1,                                          up = Keys.COM1,                                     name = _('COM Fwd - COM1 (V/UHF1)'),                            category = {_('Throttle'), _('HOTAS'), _('Communications')}, value_down =  1.0,		value_up = 0.0},
 {down = Keys.COM2,                                          up = Keys.COM2,                                     name = _('COM Aft - COM2 (V/UHF2)'),                            category = {_('Throttle'), _('HOTAS'), _('Communications')}, value_down =  1.0,		value_up = 0.0},
 {down = Keys.COM3,                                          up = Keys.COM3,                                     name = _('COM Up - COM3 (HF)'),                                 category = {_('Throttle'), _('HOTAS'), _('Communications')}, value_down =  1.0,		value_up = 0.0},
@@ -232,73 +233,29 @@ join(res.keyCommands,{
 -- mirrors
 {down = iCommandToggleMirrors,                                                                                  name = _('Toggle Mirrors'),                   category = {_('View Cockpit')}},
 
--- -- Weapons                                                                        
--- {combos = defaultDeviceAssignmentFor("fire"),	down = iCommandPlaneFire, up = iCommandPlaneFireOff, name = _('Weapon Fire'),	category = _('Weapons')},
--- {combos = {{key = 'JOY_BTN2'}},                 down = Keys.WeaponReleaseOn,	up = Keys.WeaponReleaseOff, name = _('Weapon Release Button (WRB)'), category = _('Weapons')},
--- {combos = {{key = 'JOY_BTN4'}},					down = iCommandPlaneChangeWeapon,				name = _('Weapon Change'),		category = _('Weapons')},
--- {combos = {{key = 'JOY_BTN5'}},					down = iCommandPlaneModeCannon,					name = _('Cannon'),				category = _('Weapons')},
-
-
-
--- {down = iCommandPlaneAutopilot, name = _('Autopilot'), category = _('Autopilot')},
--- {down = iCommandPlaneAUTOnOff, name = _('Autothrust'), category = _('Autopilot')},
--- {down = iCommandPlaneSAUHBarometric, name = _('Autopilot - Barometric Altitude Hold \'H\''), category = _('Autopilot')},
---{down = iCommandPlaneAutopilotOverrideOn, up = iCommandPlaneAutopilotOverrideOff, name = _('Autopilot override (Su-25T)'), category = _('Autopilot')},
--- {down = iCommandPlaneStabTangBank, name = _('Autopilot - Attitude Hold'), category = _('Autopilot')},
--- {down = iCommandPlaneStabHbarBank, name = _('Autopilot - Altitude And Roll Hold'), category = _('Autopilot')},
--- {down = iCommandPlaneStabHorizon,	name = _('Autopilot - Transition To Level Flight Control'), category = _('Autopilot')},
--- {down = iCommandPlaneStabHbar, name = _('Autopilot - Barometric Altitude Hold'), category = _('Autopilot')},
--- {down = iCommandPlaneStabHrad, name = _('Autopilot - Radar Altitude Hold'), category = _('Autopilot')},
--- {down = iCommandPlaneRouteAutopilot, name = _('Autopilot - \'Route following\''), category = _('Autopilot')},
--- {down = iCommandPlaneStabCancel, name = _('Autopilot Disengage'), category = _('Autopilot')},
-
--- -- Systems
--- {down = iCommandPlaneAirRefuel, name = _('Refueling Boom'), category = _('Systems')},
--- {down = iCommandPlaneHook, name = _('Tail Hook'), category = _('Systems')},
--- {down = iCommandPlanePackWing, name = _('Folding Wings'), category = _('Systems')},
--- {down = iCommandPlaneTrimCancel, name = _('Trim Reset'), category = _('Flight Control')},
-
--- -- Modes
--- {down = iCommandPlaneModeBVR, name = _('(2) Beyond Visual Range Mode'), category = _('Modes')},
--- {down = iCommandPlaneModeVS, name = _('(3) Close Air Combat Vertical Scan Mode'), category = _('Modes')},
--- {down = iCommandPlaneModeBore, name = _('(4) Close Air Combat Bore Mode'), category = _('Modes')},
--- {down = iCommandPlaneModeHelmet, name = _('(5) Close Air Combat HMD Helmet Mode'), category = _('Modes')},
--- {down = iCommandPlaneModeFI0, name = _('(6) Longitudinal Missile Aiming Mode'), category = _('Modes')},
--- {down = iCommandPlaneModeGround, name = _('(7) Air-To-Ground Mode'), category = _('Modes')},
--- {down = iCommandPlaneModeGrid, name = _('(8) Gunsight Reticle Switch'), category = _('Modes')},
-
--- -- Sensors
--- {combos = {{key = 'JOY_BTN3'}}, down = iCommandPlaneChangeLock, up = iCommandPlaneChangeLockUp, name = _('Target Lock'), category = _('Sensors')},
--- {down = iCommandSensorReset, name = _('Return To Search'), category = _('Sensors')},
--- {down = iCommandPlaneRadarOnOff, name = _('Radar On/Off'), category = _('Sensors')},
--- {down = iCommandPlaneRadarChangeMode, name = _('Radar RWS/TWS Mode Select'), category = _('Sensors')},
--- {down = iCommandPlaneRadarCenter, name = _('Target Designator To Center'), category = _('Sensors')},
--- {down = iCommandPlaneChangeRadarPRF, name = _('Radar Pulse Repeat Frequency Select'), category = _('Sensors')},
--- {down = iCommandPlaneEOSOnOff, name = _('Electro-Optical System On/Off'), category = _('Sensors')},
--- {pressed = iCommandPlaneRadarUp, up = iCommandPlaneRadarStop, name = _('Target Designator Up'), category = _('Sensors')},
--- {pressed = iCommandPlaneRadarDown, up = iCommandPlaneRadarStop, name = _('Target Designator Down'), category = _('Sensors')},
--- {pressed = iCommandPlaneRadarLeft, up = iCommandPlaneRadarStop, name = _('Target Designator Left'), category = _('Sensors')},
--- {pressed = iCommandPlaneRadarRight, up = iCommandPlaneRadarStop, name = _('Target Designator Right'), category = _('Sensors')},
--- {pressed = iCommandSelecterUp, up = iCommandSelecterStop, name = _('Scan Zone Up'), category = _('Sensors')},
--- {pressed = iCommandSelecterDown, up = iCommandSelecterStop, name = _('Scan Zone Down'), category = _('Sensors')},
--- {pressed = iCommandSelecterLeft, up = iCommandSelecterStop, name = _('Scan Zone Left'), category = _('Sensors')},
--- {pressed = iCommandSelecterRight, up = iCommandSelecterStop, name = _('Scan Zone Right'), category = _('Sensors')},
--- {down = iCommandPlaneZoomIn, name = _('Display Zoom In'), category = _('Sensors')},
--- {down = iCommandPlaneZoomOut, name = _('Display Zoom Out'), category = _('Sensors')},
--- --{down = iCommandPlaneLaunchPermissionOverride, name = _('Launch Permission Override'), category = _('Sensors')},
--- {down = iCommandDecreaseRadarScanArea, name = _('Radar Scan Zone Decrease'), category = _('Sensors')},
--- {down = iCommandIncreaseRadarScanArea, name = _('Radar Scan Zone Increase'), category = _('Sensors')},
--- {pressed = iCommandPlaneIncreaseBase_Distance, up = iCommandPlaneStopBase_Distance, name = _('Target Specified Size Increase'), category = _('Sensors')},
--- {pressed = iCommandPlaneDecreaseBase_Distance, up = iCommandPlaneStopBase_Distance, name = _('Target Specified Size Decrease'), category = _('Sensors')},
--- {down = iCommandChangeRWRMode, name = _('RWR/SPO Mode Select'), category = _('Sensors')},
--- {down = iCommandPlaneThreatWarnSoundVolumeDown, name = _('RWR/SPO Sound Signals Volume Down'), category = _('Sensors')},
--- {down = iCommandPlaneThreatWarnSoundVolumeUp, name = _('RWR/SPO Sound Signals Volume Up'), category = _('Sensors')},
-
--- -- Weapons                                                                        
--- {down = iCommandPlaneSalvoOnOff, name = _('Salvo Mode'), category = _('Weapons')},
--- {down = iCommandChangeGunRateOfFire, name = _('Cut Of Burst select'), category = _('Weapons')},
--- {down = iCommandPlaneHUDFilterOnOff, name = _('HUD Filter On Off'), category = _('Weapons')},
--- {down = iCommandPlaneRightMFD_OSB1 , name = _('MFD HUD Repeater Mode On Off'), category = _('Systems')},
+--FLIR
+{down = flir_commands.WFOV,                          up = flir_commands.WFOV,                    name = _('FLIR WFOV'),                                          category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.NFOV,                          up = flir_commands.NFOV,                    name = _('FLIR NFOV'),                                          category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.Menu,                          up = flir_commands.Menu,                    name = _('FLIR Menu'),                                          category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.Hook,                          up = flir_commands.Hook,                    name = _('FLIR Hook'),                                          category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.Lock,                          up = flir_commands.Lock,                    name = _('FLIR Lock'),                                          category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.Freeze,                        up = flir_commands.Freeze,                  name = _('FLIR Freeze'),                                        category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.TrackBrk,                      up = flir_commands.TrackBrk,                name = _('FLIR Track / Break'),                                 category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.Power,                         up = flir_commands.Power,                   name = _('FLIR Power'),                                         category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.FocusOut,                      up = flir_commands.FocusOut,                name = _('FLIR Focus Out'),                                     category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.FocusIn,                       up = flir_commands.FocusIn,                 name = _('FLIR Focus In'),                                      category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.Cage,                          up = flir_commands.Cage,                    name = _('FLIR Cage'),                                          category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.IPHH,                          up = flir_commands.IPHH,                    name = _('FLIR IPHH'),                                          category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.Polarity,                      up = flir_commands.Polarity,                name = _('FLIR Polarity'),                                      category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.SlewLeft,                      up = flir_commands.SlewLeft,                name = _('FLIR Slew Left'),                                     category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.SlewRight,                     up = flir_commands.SlewRight,               name = _('FLIR Slew Right'),                                    category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.SlewUp,                        up = flir_commands.SlewUp,                  name = _('FLIR Slew Up'),                                       category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.SlewDown,                      up = flir_commands.SlewDown,                name = _('FLIR Slew Down'),                                     category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.GainUp,                        up = flir_commands.GainUp,                  name = _('FLIR Gain Up'),                                       category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.GainDown,                      up = flir_commands.GainDown,                name = _('FLIR Gain Down'),                                     category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.LevelUp,                       up = flir_commands.LevelUp,                 name = _('FLIR Level Up'),                                      category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.LevelDown,                     up = flir_commands.LevelDown,               name = _('FLIR Level Down'),                                    category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.AutoGain,                      up = flir_commands.AutoGain,                name = _('FLIR Auto Gain'),                                     category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
 
 
 })
@@ -314,8 +271,8 @@ join(res.axisCommands,{
     {												action = iCommandLeftWheelBrake,	name = _('Wheel Brake Left'),	category = {_('Systems')}},
     {												action = iCommandRightWheelBrake,	name = _('Wheel Brake Right'),	category = {_('Systems')}},
     {												action = iCommandRightWheelBrake,	name = _('Wheel Brake Right'),	category = {_('Systems')}},
-    {                                               action = Keys.TDCX,                 name = _('TDC Slew Vertical'),  category = {_('Throttle'), _('HOTAS')}},
-    {                                               action = Keys.TDCY,                 name = _('TDC Slew Horizontal'),category = {_('Throttle'), _('HOTAS')}},
+    {                                               action = Keys.TDCY,                 name = _('TDC Slew Vertical'),  category = {_('Throttle'), _('HOTAS')}},
+    {                                               action = Keys.TDCX,                 name = _('TDC Slew Horizontal'),category = {_('Throttle'), _('HOTAS')}},
 })
 
 return res

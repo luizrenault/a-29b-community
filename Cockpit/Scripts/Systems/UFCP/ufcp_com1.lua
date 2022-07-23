@@ -23,6 +23,9 @@ UFCP_COM2_SQL = get_param_handle("UFCP_COM2_SQL")
 UFCP_COM2_PWR = get_param_handle("UFCP_COM2_PWR")
 UFCP_COM2_MODE = get_param_handle("UFCP_COM2_MODE")
 
+local UFCP_COM1_DTC_READ = get_param_handle("UFCP_COM1_DTC_READ")
+UFCP_COM1_DTC_READ:set("")
+
 -- Inits
 ufcp_com1_mode = UFCP_COM_MODE_IDS.TR
 ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
@@ -32,7 +35,7 @@ ufcp_com1_tx = false
 ufcp_com1_rx = false
 ufcp_com1_channels = {}
 ufcp_com1_max_channel = 79
-ufcp_com1_frequency_manual = 118.0
+ufcp_com1_frequency_manual = 121.0
 ufcp_com1_frequency_next = 136.0
 ufcp_com1_power = UFCP_COM_POWER_IDS.HIGH
 ufcp_com1_modulation = UFCP_COM_MODULATION_IDS.AM
@@ -168,14 +171,26 @@ local function ufcp_com1_frequency_next_validate(text, save)
     return text
 end
 
+-- Reads data from a DTC, when DB or ALL is selected in CMFD DTE
+function ufcp_com1_load_dtc()
+    if UFCP_COM1_DTC_READ:get() ~= "" then
+        dofile(UFCP_COM1_DTC_READ:get())
+
+        for _, value in pairs(COMM1) 
+        do
+            ufcp_com1_channels[value.ID + 1] = value.Freq.Mhz + value.Freq.Khz / 1000
+        end
+        
+        UFCP_COM1_DTC_READ:set("")
+    end
+end
+
 local FIELD_INFO = {
     [SEL_IDS.CHANNEL] = {2, ufcp_com1_channel_validate},
     [SEL_IDS.MAN_FREQUENCY] = {7, ufcp_com1_frequency_man_validate},
     [SEL_IDS.PRST_FREQUENCY] = {7, ufcp_com1_frequency_prst_validate},
     [SEL_IDS.NEXT_FREQUENCY] = {7, ufcp_com1_frequency_next_validate},
 }
-
-
 
 local sel = 0
 function update_com1()

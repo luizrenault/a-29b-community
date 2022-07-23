@@ -84,6 +84,8 @@ local adjust = true
 
 local EICAS_NP = get_param_handle("EICAS_NP")
 
+local EICAS_RPM = get_param_handle(8)
+
 function update()
 	if adjust then -- workaround for getBarometricAltitude
 		local x, y, z = sensor_data.getSelfCoordinates()
@@ -117,11 +119,13 @@ function update()
 
 	ALT_param:set(sensor_data.getBarometricAltitude() * meters_to_feet)
 	-- ALT_param:set(sensor_data.getBarometricAltitude()*meters_to_feet+(BFI_BARO_param:get()-ALT_PRESSURE_STD)*1000)
-
+	
 	local propRPM = EICAS_NP:get() / 100 * propMaxRPM
 	--sensor is from 0 to 100 so it is divided by 100 and multiplied by the prop max RPM.
-	
+	EICAS_RPM:set(propRPM)
 	local propStep = propRPM / 60 * update_time_step
+	propState = (propState + propStep)%1
+	set_aircraft_draw_argument_value(370,propState)
 
 	--keeps prop animation between 0 and 1
 	if propRPM < 800 then

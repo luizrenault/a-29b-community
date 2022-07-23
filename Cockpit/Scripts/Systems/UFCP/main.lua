@@ -45,25 +45,25 @@ function update_main()
     if ans_mode == AVIONICS_ANS_MODE_IDS.GPS then
         text = text .. "XX"
     else
-        text = text .. string.format("%-2d", CMFD_NAV_FYT:get())
+        text = text .. string.format("%2d", CMFD_NAV_FYT:get())
     end
     if ufcp_main_sel == SEL_IDS.FYT then text = text .. "^" else text = text .. " " end 
     text = text .. " "
     text = text .. UFCP_NAV_SOLUTION_IDS[ufcp_nav_solution]
     text = text .. " "
-    text = text .. "ERR<" .. string.format("%03.0f", ufcp_nav_egi_error)
-    text = text .. "\n"
+    text = text .. "ERR<" .. string.format("%4.0f", ufcp_nav_egi_error)
+    text = text .. " \n"
 
     -- Line 2
     text = text .. "COM1 "
     if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
         text = text .. string.format("%-2d", ufcp_com1_channel)
         if ufcp_main_sel == SEL_IDS.COM1 then text = text .. "^" else text = text .. " " end 
-        text = text .. string.format("[%07.3f]     ", ufcp_com1_frequency)
+        text = text .. string.format("[%07.3f]       ", ufcp_com1_frequency)
     else
         text = text .. string.format("%07.3f", ufcp_com1_frequency)
         if ufcp_main_sel == SEL_IDS.COM1 then text = text .. "^" else text = text .. " " end 
-        text = text .. "         "
+        text = text .. "           "
     end
     text = text .. "\n"
 
@@ -73,11 +73,11 @@ function update_main()
     if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
         text = text .. string.format("%-2d", ufcp_com2_channel)
         if ufcp_main_sel == SEL_IDS.COM2 then text = text .. "^" else text = text .. " " end 
-        text = text .. string.format("[%07.3f]  ", ufcp_com2_frequency)
+        text = text .. string.format("[%07.3f]    ", ufcp_com2_frequency)
     else
         text = text .. string.format("%07.3f", ufcp_com2_frequency)
         if ufcp_main_sel == SEL_IDS.COM2 then text = text .. "^" else text = text .. " " end 
-        text = text .. "      "
+        text = text .. "        "
     end
     if ufcp_com2_sync then text = text .. "SOK" else text = text .. "   " end
     text = text .. "\n"
@@ -106,7 +106,7 @@ function update_main()
         text = text .. seconds_to_string(ufcp_main_stopwatch)
     end
     if ufcp_main_sel == SEL_IDS.TIME then text = text .. "^" else text = text .. " " end 
-    text = text .. "       "
+    text = text .. "         "
 
     if ufcp_com2_por then text = text .. "POR" else text = text .. "   " end
     text = text .. "\n"
@@ -115,7 +115,7 @@ function update_main()
     local ufcp_total_fuel = EICAS_FUEL_INIT:get()
     local ufcp_xpdr = UFCP_XPDR_CODE:get()
     text = text .. string.format("%04.0fKG      %04.0f  ", ufcp_total_fuel, ufcp_xpdr)
-    if ufcp_ident and ufcp_ident_blink then text = text .. "IDNT" else text = text .. "    " end
+    if ufcp_ident and ufcp_ident_blink then text = text .. "IDNT" else text = text .. "      " end
 
     UFCP_TEXT:set(text)
 end
