@@ -1,3 +1,4 @@
+
 dofile(LockOn_Options.common_script_path.."devices_defs.lua")
 dofile(LockOn_Options.script_path.."devices.lua")
 dofile(LockOn_Options.script_path.."command_defs.lua")
@@ -14,10 +15,17 @@ require('avSimplestWeaponSystem')
 
 local dev = GetSelf()
 
+-- dofile(LockOn_Options.script_path.."dump.lua")
+-- dump("Weapon", dev)
+-- dump("Weapon_", getmetatable(dev))
+
+
 local update_time_step = 0.02 --update will be called 50 times per second
 make_default_activity(update_time_step)
 
 local sensor_data = get_base_data()
+
+
 
 local sms_search_sequence = {
     {1, 5, 2, 4, 3},
@@ -134,15 +142,6 @@ WPN_RP:set(1)
 WPN_IS_M:set(12)
 
 function wpn_get_weapon_type(station)
-
-end
-
-function launch_station(station)
-    if WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
-        avSimplestWeaponSystem.LaunchGBU(station, 1688)
-    else
-        dev:launch_station(station)
-    end
 
 end
 
@@ -879,11 +878,11 @@ function update()
                     for i=1,5 do
                         local param = get_param_handle("WPN_POS_"..i.."_SEL")
                         if param:get() == 1 then
-                            launch_station(i-1)
+                            dev:launch_station(i-1)
                         end
                     end
                 else 
-                    launch_station(wpn_ag_sel-1)
+                    dev:launch_station(wpn_ag_sel-1)
                 end
                 update_storages()
                 update_ag_sel_next(true)
@@ -1035,7 +1034,7 @@ function SetCommand(command,value)
             WPN.WEAPON_RELEASE:set(0)
         end
         if get_wpn_aa_msl_ready() and value == 1 then 
-            launch_station(wpn_aa_sel-1)
+            dev:launch_station(wpn_aa_sel-1)
             WPN_RELEASE:set(1)
             wpn_release = true
             wpn_release_elapsed = 0.5
@@ -1112,11 +1111,11 @@ function SetCommand(command,value)
                     for i=1,5 do
                         local param = get_param_handle("WPN_POS_"..i.."_SEL")
                         if param:get() == 1 then
-                            launch_station(i-1)
+                            dev:launch_station(i-1)
                         end
                     end
                 else 
-                    launch_station(wpn_ag_sel-1)
+                    dev:launch_station(wpn_ag_sel-1)
                 end
                 update_storages()
                 update_ag_sel_next(true)

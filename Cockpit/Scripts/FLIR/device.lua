@@ -4,7 +4,6 @@ local dev = GetSelf()
 
 local update_time_step = 0.02 --update will be called 50 times per second
 make_default_activity(update_time_step)
--- show_param_handles_list()
 
 export_prefix = "FLIR"
 

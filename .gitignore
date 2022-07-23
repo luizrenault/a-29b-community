@@ -1,2 +1,6 @@
 Dev
 Textures/A-29B
+DTC
+*.exp
+*.pdb
+*.lib

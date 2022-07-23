@@ -50,7 +50,13 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
-## Version 0.4 - xx xxx 2022
+## Version 0.5 - 23 Jul 2022
+
+### Added
+- Working FLIR (Star Safire specs)
+- New front panel and instruments 3d model.
+
+## Version 0.4 - 20 Jul 2022
 
 ### Added
 - Avoid areas on HSD

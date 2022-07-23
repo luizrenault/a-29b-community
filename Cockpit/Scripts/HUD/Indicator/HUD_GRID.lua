@@ -17,6 +17,8 @@ stroke_material		= default_material
 stroke_thickness  = 1 --0.25
 stroke_fuzziness  = 0.6
 
+xScale = GetScale() * math.sqrt(GetAspect()) * 1000
+yScale = GetScale() * 1000
 
 local lclScale = GetScale()
 
@@ -128,8 +130,8 @@ object.controllers = {
 	{"opacity_using_parameter", 0}, 
 	{"parameter_compare_with_number", 1, 0},
 	{"parameter_compare_with_number",2,1},
-	{"move_left_right_using_parameter", 3, 0.75},
-	{"move_up_down_using_parameter", 4, 0.75},
+	{"move_left_right_using_parameter", 3, xScale},
+	{"move_up_down_using_parameter", 4, yScale},
 }
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
 object.element_params = {"HUD_BRIGHT", "HUD_FYT_OS"}
@@ -142,8 +144,8 @@ object.controllers = {
 	{"opacity_using_parameter", 0}, 
 	{"parameter_compare_with_number",1,0},
 	{"parameter_compare_with_number",2,1},
-	{"move_left_right_using_parameter", 3, 0.75},
-	{"move_up_down_using_parameter", 4, 0.75},
+	{"move_left_right_using_parameter", 3, xScale},
+	{"move_up_down_using_parameter", 4, yScale},
 }
 
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
@@ -162,10 +164,11 @@ object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_FYT_AZIMUTH", "HUD_FY
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
 	{"parameter_compare_with_number", 1, 0},
-	{"move_left_right_using_parameter", 2, 0.75},
-	{"move_up_down_using_parameter", 3, 0.75},
+	{"move_left_right_using_parameter", 2, xScale},
+	{"move_up_down_using_parameter", 3, yScale},
 	{"parameter_compare_with_number", 4, 0},
 }
+
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
 object.element_params = {"HUD_BRIGHT", "HUD_TD_OS"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
@@ -185,7 +188,7 @@ object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_SL_AZIMUTH", "HUD_ROL
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
 	{"parameter_compare_with_number", 1, 0},
-	{"move_left_right_using_parameter", 2, 0.75},
+	{"move_left_right_using_parameter", 2, xScale},
 	{"rotate_using_parameter", 3,1},
 }
 -- SI Solution Indicator
@@ -195,7 +198,7 @@ object.element_params = {"HUD_BRIGHT", "HUD_SI_HIDE", "HUD_SI_ELEVATION"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
 	{"parameter_compare_with_number", 1, 0},
-	{"move_up_down_using_parameter", 2, 0.75},
+	{"move_up_down_using_parameter", 2, yScale},
 }
 
 -- Max Range Circle
@@ -216,8 +219,8 @@ object = addStrokeCircle(nil, 16, {0,0}, HUD_CCIP_GUN_origin.name)
 object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_AZIMUTH", "HUD_CCIP_PIPER_ELEVATION"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
-	{"move_left_right_using_parameter", 1, 0.75},
-	{"move_up_down_using_parameter", 2, 0.75},
+	{"move_left_right_using_parameter", 1, xScale},
+	{"move_up_down_using_parameter", 2, yScale},
 }
 object = addStrokeCircle(nil, 1, {0,0}, object.name)
 
@@ -247,8 +250,8 @@ object = addStrokeCircle(nil, 16, {0,0}, HUD_CCIP_ROCKET_origin.name)
 object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_AZIMUTH", "HUD_CCIP_PIPER_ELEVATION"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
-	{"move_left_right_using_parameter", 1, 0.75},
-	{"move_up_down_using_parameter", 2, 0.75},
+	{"move_left_right_using_parameter", 1, xScale},
+	{"move_up_down_using_parameter", 2, yScale},
 }
 object = addStrokeCircle(nil, 1, {0,0}, object.name)
 
@@ -270,8 +273,8 @@ object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "4-impact-point"}, "Ce
 object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_AZIMUTH", "HUD_CCIP_PIPER_ELEVATION"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
-	{"move_left_right_using_parameter", 1, 0.75},
-	{"move_up_down_using_parameter", 2, 0.75},
+	{"move_left_right_using_parameter", 1, xScale},
+	{"move_up_down_using_parameter", 2, yScale},
 }
 
 -- CCIP out of screen
@@ -285,8 +288,8 @@ object = addSimpleLine(nil, 10, {0,0}, 0, HUD_CCIP_BOMB_origin.name, nil, 0.5, 0
 object.element_params = {"HUD_BRIGHT", "HUD_PIPER_LINE_A_X", "HUD_PIPER_LINE_A_Y", "HUD_PIPER_LINE_B_X", "HUD_PIPER_LINE_B_Y"}
 object.controllers = {
 	{"opacity_using_parameter", 0},
-	{"line_object_set_point_using_parameters", 0, 1, 2, 0.75, 0.75},
-	{"line_object_set_point_using_parameters", 1, 3, 4, 0.75, 0.75},
+	{"line_object_set_point_using_parameters", 0, 1, 2, xScale, yScale},
+	{"line_object_set_point_using_parameters", 1, 3, 4, xScale, yScale},
 }
 
 -- CCIP Delayed Indicator
@@ -295,8 +298,8 @@ object.vertices = {{-5,0}, {5,0}}
 object.element_params = {"HUD_BRIGHT", "HUD_CCIP_DELAYED_AZIMUTH", "HUD_CCIP_DELAYED_ELEVATION", "HUD_CCIP_PIPER_HIDDEN", "HUD_ROLL"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
-	{"move_left_right_using_parameter", 1, 0.75},
-	{"move_up_down_using_parameter", 2, 0.75},
+	{"move_left_right_using_parameter", 1, xScale},
+	{"move_up_down_using_parameter", 2, yScale},
 	{"parameter_compare_with_number", 3, 1},
 	{"rotate_using_parameter", 4},
 }
@@ -308,8 +311,8 @@ object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_TD_AZIMUTH", "HUD_TD_
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
 	{"parameter_compare_with_number", 1, 0},
-	{"move_left_right_using_parameter", 2, 0.75},
-	{"move_up_down_using_parameter", 3, 0.75},
+	{"move_left_right_using_parameter", 2, xScale},
+	{"move_up_down_using_parameter", 3, yScale},
 	{"parameter_compare_with_number", 4, 1},
 }
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
@@ -338,8 +341,8 @@ object.element_params = {"HUD_BRIGHT", "WPN_MSL_CAGED", "HUD_IR_MISSILE_TARGET_A
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
 	{"parameter_compare_with_number",1,0},
-	{"move_left_right_using_parameter", 2, 0.75},
-	{"move_up_down_using_parameter", 3, 0.75},
+	{"move_left_right_using_parameter", 2, xScale},
+	{"move_up_down_using_parameter", 3, yScale},
 }
 
 -- IR out of screen
@@ -375,8 +378,8 @@ object.element_params = {"HUD_BRIGHT", "WPN_MSL_CAGED", "HUD_IR_MISSILE_TARGET_A
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
 	{"parameter_compare_with_number",1,0},
-	{"move_left_right_using_parameter", 2, 0.75},
-	{"move_up_down_using_parameter", 3, 0.75},
+	{"move_left_right_using_parameter", 2, xScale},
+	{"move_up_down_using_parameter", 3, yScale},
 }
 
 -- IR out of screen
@@ -479,11 +482,11 @@ HUD_FPM_origin.controllers = {{"parameter_compare_with_number",0,0}, {"opacity_u
 
 object = addStrokeSymbol("HUD_FPM", {"a29b_stroke_symbols_HUD", "2-flightpath-marker"}, "FromSet", {0, 0}, HUD_FPM_origin.name, {{"HUD_FPM_Flash"}})
 object.element_params = {"HUD_FPM_SLIDE", "HUD_FPM_VERT", "UFCP_DRIFT_CO", "HUD_BRIGHT"}
-object.controllers = {{"move_left_right_using_parameter", 0, 0.75}, {"move_up_down_using_parameter", 1, 0.75}, {"parameter_compare_with_number",2,0}, {"opacity_using_parameter", 3}}
+object.controllers = {{"move_left_right_using_parameter", 0, xScale}, {"move_up_down_using_parameter", 1, yScale}, {"parameter_compare_with_number",2,0}, {"opacity_using_parameter", 3}}
 
 object = addStrokeSymbol("HUD_FPM_CO", {"a29b_stroke_symbols_HUD", "2-flightpath-marker-co"}, "FromSet", {0, 0}, HUD_FPM_origin.name, {{"HUD_FPM_Flash"}})
 object.element_params = {"HUD_FPM_VERT", "UFCP_DRIFT_CO", "HUD_BRIGHT"}
-object.controllers = {{"move_up_down_using_parameter", 0, 0.75}, {"parameter_compare_with_number",1,1}, {"opacity_using_parameter", 2}}
+object.controllers = {{"move_up_down_using_parameter", 0, yScale}, {"parameter_compare_with_number",1,1}, {"opacity_using_parameter", 2}}
 
 -- ILS
 object = addStrokeSymbol("HUD_ILS_LOC", {"a29b_stroke_symbols_HUD", "ils-loc"}, "FromSet", {0, 0}, "HUD_FPM", {{"HUD_FPM_Flash"}})
@@ -512,7 +515,7 @@ object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_n
 -- Pitch Ladder (PL)
 local PL_origin = addPlaceholder("HUD_PL_origin", {0, 0}, HUD_FPM_origin.name, {{"HUD_AA_Gun_HideIfActive"}, {"HUD_PitchLadder_Show"}, {"HUD_PitchLadder_PosRot"}})
 PL_origin.element_params            = {"HUD_PITCH", "HUD_ROLL", "HUD_PL_SLIDE"}
-PL_origin.controllers 		        = {{"move_left_right_using_parameter", 2, 0.75}, {"rotate_using_parameter",1, 1 }, {"move_up_down_using_parameter",0,-0.75}, }
+PL_origin.controllers 		        = {{"move_left_right_using_parameter", 2, xScale}, {"rotate_using_parameter",1, 1 }, {"move_up_down_using_parameter",0,-yScale}, }
 
 local PL_horizon_line_half_gap		= 16
 local PL_long_horizon_line_width	= 70
@@ -532,7 +535,7 @@ object = add_PL_line("PL_horizon_long_line", PL_long_horizon_line_width, PL_hori
 -- object.element_params = {"HUD_PITCH"}
 -- object.controllers = {{"parameter_in_range",0,-10, math.rad(-5)}}
 
-object = add_PL_line("PL_horizon_25_line", PL_pitch_line_width*0.75, PL_pitch_line_half_gap, 0, DegToMil(-2.5), 0, nil, PL_origin.name)
+object = add_PL_line("PL_horizon_25_line", PL_pitch_line_width*xScale, PL_pitch_line_half_gap, 0, DegToMil(-2.5), 0, nil, PL_origin.name)
 object.element_params = {"AVIONICS_MASTER_MODE"}
 object.controllers = {{"parameter_compare_with_number", 0, AVIONICS_MASTER_MODE_ID.LANDING}}
 
@@ -591,7 +594,7 @@ HUD_VelScale_origin.controllers = {{"parameter_compare_with_number",0,1}, {"opac
 
 local HUD_VelScale_originLong  = addPlaceholder("HUD_VelScale_originLong", {-velScaleShortTickLen, 0}, HUD_VelScale_origin.name, {{"HUD_VelScaleVerPos", 0, Mil_PerOneKnots}})
 HUD_VelScale_originLong.element_params = {"HUD_VEL_SCALE_MOVE"}
-HUD_VelScale_originLong.controllers = { {"move_up_down_using_parameter",0, -velScale20KnotsStep/20/1000*0.75}}
+HUD_VelScale_originLong.controllers = { {"move_up_down_using_parameter",0, -velScale20KnotsStep/20/1000*yScale}}
 
 local HUD_VelScale_originShort = {}
 for j = 1,4 do
@@ -631,7 +634,7 @@ end
 
 local HUD_Velocity_CueOrigin = addPlaceholder("HUD_Velocity_CueOrigin", {0,0}, HUD_VelScale_origin.name)
 HUD_Velocity_CueOrigin.element_params = {"HUD_VEL_CUE_MOVE", "HUD_VEL_CUE_VALUE"}
-HUD_Velocity_CueOrigin.controllers = {{"move_up_down_using_parameter",0, velScale20KnotsStep/20/1000*0.75}, {"parameter_in_range", 1, 0, 999}}
+HUD_Velocity_CueOrigin.controllers = {{"move_up_down_using_parameter",0, velScale20KnotsStep/20/1000*yScale}, {"parameter_in_range", 1, 0, 999}}
 object = addStrokeSymbol("HUD_Velocity_Cue", {"a29b_stroke_symbols_HUD", "AA-DLZ-range"}, "RightCenter", {0, 0}, HUD_Velocity_CueOrigin.name)
 object.init_rot = {180}
 object = addStrokeText("HUD_VelCueNumerics", 0, STROKE_FNT_DFLT_100_NARROW, "LeftCenter", {7,0}, HUD_Velocity_CueOrigin.name, nil, {"%02.0f"})
@@ -671,7 +674,7 @@ HUD_AltScale_origin.controllers = {{"parameter_compare_with_number",0,1}}
 
 local HUD_AltScale_originLong  = addPlaceholder("HUD_AltScale_originLong", {altScaleShortTickLen, 0}, HUD_AltScale_origin.name, {{"HUD_AltScaleVerPos", 0, Mil_Per100Feet}})
 HUD_AltScale_originLong.element_params = {"HUD_ALT_SCALE_MOVE"}
-HUD_AltScale_originLong.controllers = { {"move_up_down_using_parameter",0, -altScale500FeetStep/500/1000*0.75}}
+HUD_AltScale_originLong.controllers = { {"move_up_down_using_parameter",0, -altScale500FeetStep/500/1000*yScale}}
 
 local HUD_AltScale_originShort = {}
 for j = 1,4 do
@@ -706,7 +709,7 @@ addStrokeLine("HUD_AltScaleLine", 10, {-10, 0}, -90, HUD_AltScale_origin.name)
 
 local HUD_Alt_Cue_origin = addPlaceholder(nil, {0,0}, HUD_AltScale_origin.name)
 HUD_Alt_Cue_origin.element_params = {"HUD_ALT_CUE_MOVE", "HUD_ALT_CUE_VALUE"}
-HUD_Alt_Cue_origin.controllers = {{"move_up_down_using_parameter",0, altScale500FeetStep/500/1000*0.75}, {"parameter_in_range", 1, -0.05, 50000}}
+HUD_Alt_Cue_origin.controllers = {{"move_up_down_using_parameter",0, altScale500FeetStep/500/1000*yScale}, {"parameter_in_range", 1, -0.05, 50000}}
 object = addStrokeSymbol("HUD_Alt_Cue", {"a29b_stroke_symbols_HUD", "AA-DLZ-range"}, "RightCenter", {0, 0}, HUD_Alt_Cue_origin.name)
 object = addStrokeText("HUD_AltCueNumerics", 0, STROKE_FNT_DFLT_100_NARROW, "RightCenter", {-7,0}, HUD_Alt_Cue_origin.name, nil, {"%04.1f"})
 object.element_params = {"HUD_BRIGHT", "HUD_ALT_CUE_MOVE", "HUD_ALT_CUE_VALUE"}
@@ -738,7 +741,7 @@ for i = 1, 5 do
 end
 local HUD_VS_Cue_origin = addPlaceholder(nil, {0,0}, HUD_VSScale_origin.name)
 HUD_VS_Cue_origin.element_params = {"HUD_VS_CUE_MOVE", "HUD_VS_CUE_VALUE"}
-HUD_VS_Cue_origin.controllers = {{"move_up_down_using_parameter",0, VSScale1000FeetStep/1000/1000*0.75}, {"parameter_in_range", 1, -0.05, 50000}}
+HUD_VS_Cue_origin.controllers = {{"move_up_down_using_parameter",0, VSScale1000FeetStep/1000/1000*yScale}, {"parameter_in_range", 1, -0.05, 50000}}
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "AA-DLZ-range"}, "RightCenter", {0, 0}, HUD_VS_Cue_origin.name)
 
 
@@ -763,7 +766,7 @@ HUD_HdgScale_origin.controllers = {{"parameter_compare_with_number",0,1}, {"opac
 
 local HUD_HdgScale_originLong  = addPlaceholder("HUD_HdgScale_originLong", {0, -hdgScaleTextShiftY}, HUD_HdgScale_origin.name, {{"HUD_HdgScaleHorPos", 0, Mil_PerOneDegree}})
 HUD_HdgScale_originLong.element_params = {"HUD_HDG_SCALE_MOVE"}
-HUD_HdgScale_originLong.controllers = { {"move_left_right_using_parameter",0, -hdgScaleTenDegreesStep/10/1000*0.75}}
+HUD_HdgScale_originLong.controllers = { {"move_left_right_using_parameter",0, -hdgScaleTenDegreesStep/10/1000*xScale}}
 
 local HUD_HdgScale_originShort = addPlaceholder("HUD_HdgScale_originShort", {0, 0}, HUD_HdgScale_originLong.name, {{"HUD_HdgScaleHorPos", -5, Mil_PerOneDegree}})
 
@@ -799,7 +802,7 @@ end
 
 local HUD_Hdg_Cue_origin = addPlaceholder(nil, {0,0}, HUD_HdgScale_origin.name)
 HUD_Hdg_Cue_origin.element_params = {"HUD_HDG_CUE_MOVE", "HUD_HDG_CUE_VALUE"}
-HUD_Hdg_Cue_origin.controllers = {{"move_left_right_using_parameter",0, hdgScaleTenDegreesStep/10/1000*0.75}, {"parameter_in_range", 1, -0.05, 360}}
+HUD_Hdg_Cue_origin.controllers = {{"move_left_right_using_parameter",0, hdgScaleTenDegreesStep/10/1000*xScale}, {"parameter_in_range", 1, -0.05, 360}}
 object = addStrokeSymbol("HUD_Hdg_Cue", {"a29b_stroke_symbols_HUD", "AA-DLZ-range"}, "RightCenter", {0, 0}, HUD_Hdg_Cue_origin.name)
 object.init_rot = {-90}
 
