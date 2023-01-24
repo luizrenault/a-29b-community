@@ -15,14 +15,11 @@ Keys =
     iCommandPlaneJettisonFuelTanks  = 178,
     iCommandPlaneJettisonFuelTanksUp= 170,
 
-    iCommandPlaneFire               = 84,     -- PickleOn + iCommandPlaneFire = FireBurst without burst limit
-    iCommandPlaneFireOff            = 85,     -- PickleOn + iCommandPlaneFireOff = Stop Burst
-
 
 
     iCommandSwitchMasterArm	        = 283,      --Toggles MasterArm
-
-
+    iCommandPlaneFire               = 84,     -- PickleOn + iCommandPlaneFire = FireBurst without burst limit
+    iCommandPlaneFireOff            = 85,     -- PickleOn + iCommandPlaneFireOff = Stop Burst
     PlanePickleOn	                = 350,
 	PlanePickleOff	                = 351,
     
@@ -626,6 +623,7 @@ flir_commands =
 	LevelDown			= counter();
 	LevelUp				= counter();
 	AutoGain			= counter();
+    LaserOn 			= counter();
 }
 
 
@@ -661,7 +659,6 @@ flir_commands =
 -- iCommandPlane_Helmet_Brightess_Up	840
 -- iCommandLaserRangeModeSwitchCover	886
 -- iCommandHelicopter_SignalFlares_RED	830
--- iCommandPlaneUHFTestDisplay	1213
 -- iCommandPlaneCMSC_JMR	1347
 -- iCommandPlaneLeftMFD_OSB13	654
 -- iCommandPlaneNav_PB2_off	860
@@ -752,7 +749,6 @@ flir_commands =
 -- iCommand_CPT_MECH_WindscreenWiper_Speed	883
 -- iCommandAutoLockOnNextSurfaceTarget	278
 -- iCommandViewSnapView6	402
--- iCommandPlaneUHFVolumeDec	1216
 -- iCommand_LWS_Power	895
 -- iCommandPlaneVOID_1	1280
 -- iCommandPlaneModeNAV	105
@@ -766,7 +762,6 @@ flir_commands =
 -- iCommandPlaneCDU_DIM	1287
 -- iCommandPlane_VHF_AM_Volume_Inc	1482
 -- iCommandElectricalPowerInverter	713
--- iCommandPlaneUHFFreqModeDialGRD	1224
 -- iCommandPlaneModeGround	111
 -- iCommandPlaneFSLeftWingBoostPump	1083
 -- iCommandPlaneIntercomFMPress	1166
@@ -885,7 +880,6 @@ flir_commands =
 -- iCommandPlane_TACAN_Mode_Off	1425
 -- iCommandPlaneRouteAutopilot	429
 -- iCommandViewSlowDown	160
--- iCommandPlaneUHF01MhzSelectorDec	1210
 -- iCommandPlaneFormationLights	521
 -- iCommandInfoOnOff	152
 -- iCommandViewPitCameraMoveDown	485
@@ -982,7 +976,6 @@ flir_commands =
 -- iCommandPlaneNavChangePanelModeLeft	456
 -- iCommandPlaneNav_PB8	467
 -- iCommand_VMS_ALMAZ_UP_Repeat	915
--- iCommandPlaneUHF10MhzSelectorDec	1206
 -- iCommandPlaneIntercomILSDecrease	1179
 -- iCommandViewDownRightSlow	211
 -- iCommand_CPT_MECH_VMG_HYDRO_EKRAN_Cover	891
@@ -1055,7 +1048,6 @@ flir_commands =
 -- iCommandPlaneAUTDecreaseRegimeRight	168
 -- iCommandHSI_CourseRotaryRight	765
 -- iCommandViewDownLeftSlow	212
--- iCommandPlaneUHFSquelch	1226
 -- iCommandPlaneIntercomUHFPress	1172
 -- iCommandPlaneRightMFD_BRTMODE_DAY	1532
 -- iCommandPlaneThreatWarnSoundVolumeUp	410
@@ -1086,7 +1078,6 @@ flir_commands =
 -- iCommandPlaneNav_POS_corrMode	471
 -- iCommandViewAWACSKeyState	2120
 -- iCommandPlaneAHCPGUNArm	1379
--- iCommandUHFAntennaUpper	1553
 -- iCommandViewTerrainLock	184
 -- iCommandPlaneTrimLeft	93
 -- iCommandPlane_HOTAS_SpeedBrakeSwitchCenter	579
@@ -1226,7 +1217,6 @@ flir_commands =
 -- iCommandViewAWACSMapMouseMove	2042
 -- iCommandViewHorTransAbs	2049
 -- iCommandPlane_R_800_Power_on_off	621
--- iCommandPlaneUHFPanelCover	1227
 -- iCommandHelicopter_Engines_Anti_Icing_Dust_Protection_System	819
 -- iCommandViewRollAbs	2047
 -- iCommandPlane_AAP_SteerSw_Down	1424
@@ -1283,7 +1273,6 @@ flir_commands =
 -- iCommandSelecterUpLeft	229
 -- iCommandViewFriends	23
 -- iCommandBatteryPower	1073
--- iCommandPlaneUHFStatus	1214
 -- iCommandPlaneNav_PB1	460
 -- iCommandPlane_Oxygen_100Oxygen	1507
 -- iCommandPlaneIntercomUHFIncrease	1171
@@ -1368,7 +1357,6 @@ flir_commands =
 -- iCommandPlaneJoinUp	117
 -- iCommandPromotePlane	287
 -- iCommandViewFree	16
--- iCommandPlaneUHFFreqModeDialPRESET	1223
 -- iCommandThreatMissilePadlock	258
 -- iCommandPlane_SPU9_PTT_on	1589
 -- iCommandTrackEditReplace	319
@@ -1451,8 +1439,6 @@ flir_commands =
 -- iCommandPlane_HOTAS_LeftThrottleButton_Off	1557
 -- iCommandPlaneJettisonFuelTanksUp	170
 -- iCommandPlane_ILS_Power	1438
--- iCommandUHFAntennaLower	1555
--- iCommandUHFAntennaAuto	1554
 -- iCommandViewAWACSTargetRemoveButton	2082
 -- iCommandPlaneRightMFD_OSB18_Off	1024
 -- iCommandIFFAntennaBoth	1551
@@ -1558,7 +1544,6 @@ flir_commands =
 -- iCommandPlaneCMSP_DISP_ON	1341
 -- iCommandPlaneNav_SelfCoord	479
 -- iCommandPlane_HOTAS_DataManagementSwitchRight	552
--- iCommandPlaneUHFFunctionDialOFF	1218
 -- iCommandPlaneDLK_None	945
 -- iCommandPlaneNav_Steerpoints	469
 -- iCommandPlane_HOTAS_TriggerFirstStage	555
@@ -1579,7 +1564,6 @@ flir_commands =
 -- iCommandRALT_Test	778
 -- iCommandBKOMode	761
 -- iCommandChangeReleaseMode	284
--- iCommandPlaneUHF01MhzSelectorInc	1209
 -- iCommandPlaneRightMFD_OSB1_Off	1007
 -- iCommandPlane_VHF_AM_Mode_EMERAM	1484
 -- iCommandPlaneCircuitBreaker_33	1147
@@ -1636,7 +1620,6 @@ flir_commands =
 -- iCommandViewAWACSSetColumnAltitude	2138
 -- iCommandPlaneDLK_Target1	443
 -- iCommandPlane_ILS_KHz_Decrease	1441
--- iCommandEGI_HQ_TOD	1556
 -- iCommandPlane_TACAN_Test	1437
 -- iCommandViewInfoControlPanelOnOff	1637
 -- iCommandPlaneCDU_NAV	1237
@@ -1662,7 +1645,6 @@ flir_commands =
 -- iCommandPlane_DescentModeOff	508
 -- iCommandViewLeftMirrorOn	127
 -- iCommandPlaneRightMFD_SYM_Stop	1031
--- iCommandPlaneUHF100MhzSelector1	1201
 -- iCommandPlane_AAP_SteerPt_FLTPLAN	1420
 -- iCommandViewPitCameraMoveForward	488
 -- iCommandPlane_HeadOnAspect_up	798
@@ -1705,7 +1687,6 @@ flir_commands =
 -- iCommandPlaneDropSnarOnceOff	536
 -- iCommandPlane_HOTAS_CMS_Down	557
 -- iCommandPlaneLGPAntiSkid	1394
--- iCommandPlaneUHFVolumeInc	1217
 -- iCommandScreenShot	257
 -- iCommandPlaneJump	192
 -- iCommandGroundPowerDC	704
@@ -1847,10 +1828,8 @@ flir_commands =
 -- iCommandPlane_EAC_ARM	1050
 -- iCommandPlaneCDU_A	1254
 -- iCommandPlaneCDU_SLASH	1253
--- iCommandPlaneUHFTTone	1225
 -- iCommandPlaneIntercomILSPress	1181
 -- iCommandViewCameraDownRightSlow	356
--- iCommandPlaneUHF1MhzSelectorDec	1208
 -- iCommandPlaneIntercomVolumeIncrease	1186
 -- iCommandPlaneCDU_8	1249
 -- iCommandPlane_HOTAS_CMS_Right	559
@@ -1890,27 +1869,19 @@ flir_commands =
 -- iCommandPlaneCDU_0	1251
 -- iCommandViewBtn2Down	1597
 -- iCommandPlaneLevitation	959
--- iCommandPlaneUHFPresetChannelSelectorDec	1200
--- iCommandPlaneUHFFunctionDialBOTH	1220
 -- iCommandPlaneFormation	116
 -- iCommandPlaneAHCPIFFCCTest	1392
 -- iCommandPlaneRightMFD_DSP_Stop	1028
--- iCommandPlaneUHFLoad	1215
 -- iCommandViewZoomAbs	2012
 -- iCommandPlaneCircuitBreaker_27	1141
 -- iCommandPointOfViewLeft	222
 -- iCommandPlaneUFC_DEPR_DOWN	1321
 -- iCommandPlane_ChangeDeliveryMode_left	531
--- iCommandPlaneUHF1MhzSelectorInc	1207
 -- iCommandPlaneAUTIncreaseRight	163
 -- ICommandMenuItem8	973
--- iCommandPlaneUHF10MhzSelectorInc	1205
--- iCommandPlaneUHF100MhzSelectorA	1204
--- iCommandPlaneUHF100MhzSelector3	1203
 -- iCommandPlane_L_ENG_OPER_Motor	1059
 -- iCommandPlane_HOTAS_BoatSwitchCenter	565
 -- iCommandPlaneCircuitBreaker_36	1150
--- iCommandPlaneUHFPresetChannelSelectorInc	1199
 -- iCommandPlaneFireDetectBleedAirTest	1198
 -- iCommandViewWeaponAndTarget	135
 -- iCommandMechClock_LeftLever_Down	752
@@ -1966,7 +1937,6 @@ flir_commands =
 -- iCommandPlane_FLAPS_MNR_from_UP	1568
 -- iCommandViewCameraUpLeftSlow	353
 -- iCommandPlaneCircuitBreaker_29	1143
--- iCommandPlaneUHF0025MhzSelectorDec	1212
 -- iCommandPlaneRightMFD_OSB4	675
 -- iCommandViewAWACSLastZoomX2	2059
 -- iCommandPlaneUFC_DEPR_UP	1320
@@ -2032,7 +2002,6 @@ flir_commands =
 -- iCommandPlane_L_ENG_FUEL_FLOW_Norm	1063
 -- iCommandPlaneRightMFD_OSB20_Off	1026
 -- iCommandPlane_R_ENG_OPER_Motor	1062
--- iCommandPlaneUHF100MhzSelector2	1202
 -- iCommandPlane_L_ENG_OPER_Ign	1057
 -- iCommandRightEngineStart	312
 -- iCommandViewNavy	13
@@ -2192,7 +2161,6 @@ flir_commands =
 -- iCommandViewUp	30
 -- iCommandPlaneWheelBrakeLeftOn	961
 -- iCommandPlaneEmergencyBrake	960
--- iCommandPlaneUHFFunctionDialADF	1221
 -- iCommandAWACSBanditBearing	269
 -- iCommand_FireDetectorsTest3rdGroup	956
 -- iCommandBrakeGo	52
@@ -2355,7 +2323,6 @@ flir_commands =
 -- iCommandRollbackSave	249
 -- iCommandPowerBattery2_Cover	709
 -- iCommandPlaneEmergencyDisconnectLever	965
--- iCommandPlaneUHF0025MhzSelectorInc	1211
 -- iCommandDebriefing	1537
 -- iCommandViewUpSlow	34
 -- iCommandMechClock_LeftLever_Down_up	753
@@ -2425,8 +2392,6 @@ flir_commands =
 -- iCommandPlaneRadarHorizontalAbs	            2027
 -- iCommandPlaneRadarVerticalAbs	            2028
 
--- iCommandPlaneUHFFunctionDialMAIN             1219
--- iCommandPlaneUHFFreqModeDialMNL	            1222
 
 -- iCommandPlane_HOTAS_TDC_depress_on	634
 -- iCommandPlane_HOTAS_TDC_depress_off	635
@@ -2440,3 +2405,37 @@ flir_commands =
 -- iCommandPlaneDesignate_CageOn_horizontal	442
 
 
+-- iCommandPlaneUHFPresetChannelSelectorInc	1199
+-- iCommandPlaneUHFPresetChannelSelectorDec	1200
+-- iCommandPlaneUHF100MhzSelector1	1201
+-- iCommandPlaneUHF100MhzSelector2	1202
+-- iCommandPlaneUHF100MhzSelector3	1203
+-- iCommandPlaneUHF100MhzSelectorA	1204
+-- iCommandPlaneUHF10MhzSelectorInc	1205
+-- iCommandPlaneUHF10MhzSelectorDec	1206
+-- iCommandPlaneUHF1MhzSelectorInc	1207
+-- iCommandPlaneUHF1MhzSelectorDec	1208
+-- iCommandPlaneUHF01MhzSelectorInc	1209
+-- iCommandPlaneUHF01MhzSelectorDec	1210
+-- iCommandPlaneUHF0025MhzSelectorInc	1211
+-- iCommandPlaneUHF0025MhzSelectorDec	1212
+-- iCommandPlaneUHFTestDisplay	1213
+-- iCommandPlaneUHFStatus	1214
+-- iCommandPlaneUHFLoad	1215
+-- iCommandPlaneUHFVolumeDec	1216
+-- iCommandPlaneUHFVolumeInc	1217
+-- iCommandPlaneUHFFunctionDialOFF	1218
+-- iCommandPlaneUHFFunctionDialMAIN             1219
+-- iCommandPlaneUHFFunctionDialBOTH	1220
+-- iCommandPlaneUHFFunctionDialADF	1221
+-- iCommandPlaneUHFFreqModeDialMNL	            1222
+-- iCommandPlaneUHFFreqModeDialPRESET	1223
+-- iCommandPlaneUHFFreqModeDialGRD	1224
+-- iCommandPlaneUHFTTone	1225
+-- iCommandPlaneUHFSquelch	1226
+-- iCommandPlaneUHFPanelCover	1227
+
+-- iCommandUHFAntennaUpper	1553
+-- iCommandUHFAntennaAuto	1554
+-- iCommandUHFAntennaLower	1555
+-- iCommandEGI_HQ_TOD	1556

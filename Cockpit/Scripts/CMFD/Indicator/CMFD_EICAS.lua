@@ -447,7 +447,7 @@ Poly_Text.init_pos          = {0.23, 0.148, 0}
 Poly_Text.alignment         = "CenterCenter"
 Poly_Text.formats           = {"%03.0f"}
 Poly_Text.parent_element    = page_root.name
-Poly_Text.element_params    = {"EICAS_BAT_AMP", "EICAS_BAT_AMP_COR", "CMFD"..tostring(CMFDNu).."_BRIGHT"}
+Poly_Text.element_params    = {"EICAS_GEN_AMP", "EICAS_GEN_AMP_COR", "CMFD"..tostring(CMFDNu).."_BRIGHT"}
 Poly_Text.controllers       = {{"text_using_parameter",0,0},
                                 {"change_color_when_parameter_equal_to_number",1 , 1, 1,1,0},
                                 {"opacity_using_parameter", 2}
@@ -463,7 +463,7 @@ mesh_poly.primitivetype     = "lines"
 mesh_poly.vertices          = { {-0.06, 0.03}, {0.06,0.03}, {0.06,-0.03}, {-0.06, -0.03} }
 mesh_poly.indices           = {0,1, 1,2, 2,3, 3,0}
 mesh_poly.isvisible         = true
-mesh_poly.element_params    = {"EICAS_BAT_AMP_COR", "CMFD"..tostring(CMFDNu).."_BRIGHT"}
+mesh_poly.element_params    = {"EICAS_GEN_AMP_COR", "CMFD"..tostring(CMFDNu).."_BRIGHT"}
 mesh_poly.controllers       = {{"parameter_in_range",0 , 0.95, 1.05}, {"opacity_using_parameter", 1}}
 AddElementObject(mesh_poly)
 mesh_poly = nil

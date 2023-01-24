@@ -555,7 +555,7 @@ need_to_be_closed = false -- close lua state after initialization
 -- RIGHT_BRAKE_PEDAL:0.000000\
 -- STORM_LIGHT:0.000000\
 -- ADHSI_HDG_SEL:0.000000\
--- WPN_GUNS_L:0.000000\
+-- WPN_GUNS_1:0.000000\
 -- EICAS_SPD_BRK_TXT:0.000000\
 -- HDD002_PFD:0.000000\
 -- BASE_SENSOR_YAW_RATE:0.000000\

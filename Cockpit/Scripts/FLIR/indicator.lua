@@ -7,6 +7,7 @@ page_subsets    	 = {LockOn_Options.script_path.."FLIR/page.lua"}
 pages 				 = {{1}}
 init_pageID     	 = 1
 
+used_render_mask = "interleave"
 
 camera = -- superseeded by ccSimplestFLIR when used with it.
 {

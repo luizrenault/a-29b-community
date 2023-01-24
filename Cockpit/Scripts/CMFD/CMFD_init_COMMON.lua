@@ -158,6 +158,8 @@ color_sensitive_materials      = {
     "cmfd_wpn_font_g",
     --"cmfd_wpn_svg_font_def",
     "ufcp_font_def",
+    "render_target_1",
+
 }
 
 is_colored         = true

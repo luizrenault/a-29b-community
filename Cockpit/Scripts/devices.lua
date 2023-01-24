@@ -6,6 +6,7 @@ end
 -------DEVICE ID-------
 devices                     = {}
 devices["ELECTRIC_SYSTEM"]  = counter()
+devices["ELECTRIC_SYSTEM_"]  = counter()
 devices["ENGINE"]           = counter()
 devices["FUEL"]           = counter()
 devices["EXTLIGHTS"]           = counter()
@@ -39,3 +40,4 @@ devices["SAI"]     = counter()
 devices["ILS"]     = counter()
 devices["ILS_DEVICE"]     = counter()
 devices["FLIR"]     = counter()
+devices["MAP"]     = counter()

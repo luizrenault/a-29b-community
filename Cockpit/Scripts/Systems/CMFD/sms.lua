@@ -244,10 +244,10 @@ local function SetCommandSmsAg(command,value, CMFD)
         elseif command==device_commands.CMFD1OSS27 or command==device_commands.CMFD2OSS27 then
             set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.MAN)
             sms_mode = SMS_MODE_IDS.AG
-        elseif command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26 and WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
+        elseif command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26 and WPN_SELECTED_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_BOMB then
             set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCRP)
             sms_mode = SMS_MODE_IDS.AG
-        elseif command==device_commands.CMFD1OSS25 or command==device_commands.CMFD2OSS25 and WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
+        elseif command==device_commands.CMFD1OSS25 or command==device_commands.CMFD2OSS25 and WPN_SELECTED_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_BOMB then
             set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DTOS)
             sms_mode = SMS_MODE_IDS.AG
         end
@@ -255,6 +255,7 @@ local function SetCommandSmsAg(command,value, CMFD)
 
         if command==device_commands.CMFD1OSS1 or command==device_commands.CMFD2OSS1 then
             -- implement last option to return
+            local wpn = GetDevice(devices.WEAPON_SYSTEM)
             if get_avionics_master_mode_ag_gun() then
                 set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
             else
@@ -275,10 +276,10 @@ local function SetCommandSmsAg(command,value, CMFD)
             -- SMS_TIME_ALT_SEL:set((SMS_TIME_ALT_SEL:get() + 1)% 3)
         elseif command==device_commands.CMFD1OSS24 or command==device_commands.CMFD2OSS24 then 
             if not get_avionics_master_mode_ag_gun() then 
-                    local weapon_type = WPN_SELECTED_WEAPON_TYPE:get()
-                if weapon_type == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET then 
+                    local weapon_type = WPN_SELECTED_TYPE:get()
+                if weapon_type == WPN_WEAPON_TYPE_IDS.AG_ROCKET then 
                     CallEditFormat(sms_is_time_data)
-                elseif weapon_type == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then 
+                elseif weapon_type == WPN_WEAPON_TYPE_IDS.AG_BOMB then 
                     CallEditFormat(sms_is_dist_data)
                 end
             end

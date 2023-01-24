@@ -73,14 +73,17 @@ local HUD = {
 
 }
 local WPN = {
-    TD_AZIMUTH = get_param_handle("WPN_TD_AZIMUTH"),
-    TD_ELEVATION = get_param_handle("WPN_TD_ELEVATION"),
+    TD_AZ = get_param_handle("WPN_TD_AZ"),
+    TD_EL = get_param_handle("WPN_TD_EL"),
     CCRP_TIME = get_param_handle("WPN_CCRP_TIME"),
     TIME_MAX_RANGE = get_param_handle("WPN_TIME_MAX_RANGE"),
     WEAPON_RELEASE = get_param_handle("WPN_WEAPON_RELEASE"),
     CCIP_DELAYED_TIME = get_param_handle("WPN_CCIP_DELAYED_TIME"),
     CCIP_DELAYED = get_param_handle("WPN_CCIP_DELAYED"),
     TIME_TO_IMPACT = get_param_handle("WPN_TIME_TO_IMPACT"),
+    CCIP_AZ = get_param_handle("WPN_CCIP_AZ");
+    CCIP_EL = get_param_handle("WPN_CCIP_EL");
+    CCIP_STATE = get_param_handle("WPN_CCIP_STATE");
 }
 
 local CMFD = {
@@ -195,35 +198,12 @@ local function update_piper_ccip()
     local slide = HUD_FPM_SLIDE:get()
     local vert = HUD_FPM_VERT:get()
 
-    local az = WPN_CCIP_PIPER_AZIMUTH:get() 
-    local el = WPN_CCIP_PIPER_ELEVATION:get()
-    local limited
+    local az = WPN.CCIP_AZ:get()
+    local el = WPN.CCIP_EL:get()
 
-    --if WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then az = az + slide end
-    local roll = sensor_data:getRoll()
+    local roll = math.atan2(slide-az , vert-el)
     local s=math.sin(roll)
     local c=math.cos(roll)
-
-    local az1 = az-- * c - el * s
-    local el1 = el-- * c + az * s
-    az1 = az1 - slide
-    el1 = el1 - vert
-    
-    local size = math.sqrt(az1 * az1 + el1 * el1)
-    az1, el1, limited = limit_xy(az1, el1, hud_limit.x - slide, hud_limit.y - vert, -hud_limit.x - slide, -hud_limit.y * 1.3 - vert)
-
-    az = az1 + slide
-    el = el1 + vert
-
-    HUD_CCIP_PIPER_AZIMUTH:set(az)
-    HUD_CCIP_PIPER_ELEVATION:set(el)
-    HUD_CCIP_PIPER_HIDDEN:set(limited)
-
-    HUD_CCIP_DELAYED:set(WPN.CCIP_DELAYED:get())
-
-    roll = math.atan2(-az1 , -el1)
-    s=math.sin(roll)
-    c=math.cos(roll)
     
     HUD_PIPER_LINE_A_X:set(slide - 0.004 * s)
     HUD_PIPER_LINE_A_Y:set(vert  - 0.004 * c)
@@ -395,8 +375,8 @@ end
 local function update_td()
     local master_mode = get_avionics_master_mode()
 
-    local td_azimuth = WPN.TD_AZIMUTH:get()
-    local td_elevation = WPN.TD_ELEVATION:get()
+    local td_azimuth = WPN.TD_AZ:get()
+    local td_elevation = WPN.TD_EL:get()
     local td_angle = math.atan2(td_elevation - math.rad(1.2), td_azimuth)
     
     local hud_fyt_azimuth, hud_fyt_elevation, hud_fyt_os, hud_fyt_lim_x, hud_fyt_lim_y = limit_xy(CMFD_NAV_FYT_DTK_AZIMUTH:get(), CMFD_NAV_FYT_DTK_ELEVATION:get(), hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)

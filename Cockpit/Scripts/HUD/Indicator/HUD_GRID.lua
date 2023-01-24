@@ -153,51 +153,55 @@ object.element_params = {"HUD_BRIGHT", "HUD_OAP_OS"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
 
 
--- CCRP
-local HUD_CCRP_origin = addPlaceholder(nil, {0,0})
-HUD_CCRP_origin.element_params = {"HUD_CCRP"}
-HUD_CCRP_origin.controllers = {{"parameter_compare_with_number", 0, 1}}
+-- A/G
+local HUD_AG_origin = addPlaceholder(nil, {0,0})
+HUD_AG_origin.element_params = {"WPN_MASTER_MODE"}
+HUD_AG_origin.controllers = {{"parameter_compare_with_number", 0, 3}}
 
--- TD Target Designator
+-- CCRP
+local HUD_CCRP_origin = addPlaceholder(nil, {0,0}, HUD_AG_origin.name)
+HUD_CCRP_origin.element_params = {"WPN_AG_MODE"}
+HUD_CCRP_origin.controllers = {{"parameter_compare_with_number", 0, 2}}
+
+-- TD Target Designator (Square)
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "5-target"}, "CenterCenter", {0, 0}, HUD_CCRP_origin.name)
-object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_FYT_AZIMUTH", "HUD_FYT_ELEVATION", "HUD_CCIP_DELAYED"}
+object.element_params = {"HUD_BRIGHT", "WPN_TD_AZ", "WPN_TD_EL", "WPN_TD_STATE"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
-	{"parameter_compare_with_number", 1, 0},
-	{"move_left_right_using_parameter", 2, xScale},
-	{"move_up_down_using_parameter", 3, yScale},
-	{"parameter_compare_with_number", 4, 0},
+	{"move_left_right_using_parameter", 1, xScale},
+	{"move_up_down_using_parameter", 2, yScale},
+	{"parameter_in_range", 3, 0, 2},
 }
 
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
-object.element_params = {"HUD_BRIGHT", "HUD_TD_OS"}
+object.element_params = {"HUD_BRIGHT", "WPN_TD_STATE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
 
 -- TLL Target Locator Line
-object = addStrokeLine(nil, 30, {0,DegToMil(1.2)}, 0, HUD_CCRP_origin.name)
+object = addStrokeLine(nil, 30, {0,DegToMil(1.2)}, 0, HUD_AG_origin.name)
 object.vertices = {{8, 0}, {40,0}}
-object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_TD_ANGLE"}
+object.element_params = {"HUD_BRIGHT", "WPN_TD_STATE", "WPN_TD_ANGLE"}
 object.controllers = {{"opacity_using_parameter", 0}, 
-						{"parameter_compare_with_number",1,1},
+						{"parameter_compare_with_number",1,1,1},
 						{"rotate_using_parameter", 2, 1}}
 
 -- SL Steering Line
-object = addStrokeLine(nil, 30, {0,0}, 0, HUD_CCRP_origin.name)
+object = addStrokeLine(nil, 30, {0,0}, 0, HUD_AG_origin.name)
 object.vertices = {{0, 200}, {0,-200}}
-object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_SL_AZIMUTH", "HUD_ROLL"}
+object.element_params = {"HUD_BRIGHT", "WPN_TD_STATE", "WPN_TD_ANGLE", "WPN_TD_DEV"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
-	{"parameter_compare_with_number", 1, 0},
-	{"move_left_right_using_parameter", 2, xScale},
-	{"rotate_using_parameter", 3,1},
+	{"parameter_in_range", 1, -1, 2},
+	{"rotate_using_parameter", 2,1},
+	{"move_left_right_using_parameter", 3, xScale},
 }
 -- SI Solution Indicator
 object = addStrokeLine(nil, 10, {0,0}, 0, object.name)
 object.vertices = {{-5,0}, {5,0}}
-object.element_params = {"HUD_BRIGHT", "HUD_SI_HIDE", "HUD_SI_ELEVATION"}
+object.element_params = {"HUD_BRIGHT", "WPN_TD_STATE", "HUD_SI_ELEVATION"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
-	{"parameter_compare_with_number", 1, 0},
+	{"parameter_in_range", 1, -0.5, 1.5},
 	{"move_up_down_using_parameter", 2, yScale},
 }
 
@@ -230,19 +234,19 @@ object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_HIDDEN"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
 
 -- CCIP
-local HUD_CCIP_origin = addPlaceholder(nil, {0,0})
-HUD_CCIP_origin.element_params = {"AVIONICS_MASTER_MODE", "WPN_MASS", "WPN_SELECTED_WEAPON_TYPE"}
+local HUD_CCIP_origin = addPlaceholder(nil, {0,0}, HUD_AG_origin.name)
+HUD_CCIP_origin.element_params = {"WPN_AG_MODE", "WPN_MASS", "WPN_SELECTED_TYPE"}
 HUD_CCIP_origin.controllers = {
-	{"parameter_in_range",0,AVIONICS_MASTER_MODE_ID.CCIP-0.5, AVIONICS_MASTER_MODE_ID.CCIP_R + 0.5},
+	{"parameter_in_range",0,1},
 	{"parameter_compare_with_number", 1, WPN_MASS_IDS.LIVE},
-	{"parameter_in_range",2, WPN_WEAPON_TYPE_IDS.AG_WEAPON_BEG, WPN_WEAPON_TYPE_IDS.AG_WEAPON_END},
+	{"parameter_compare_with_number", 2, 0, 1},
 }
 
 -- CCIP Rocket
 local HUD_CCIP_ROCKET_origin = addPlaceholder(nil, {0,0}, HUD_CCIP_origin.name)
-HUD_CCIP_ROCKET_origin.element_params = {"WPN_SELECTED_WEAPON_TYPE"}
+HUD_CCIP_ROCKET_origin.element_params = {"WPN_SELECTED_TYPE"}
 HUD_CCIP_ROCKET_origin.controllers = {
-	{"parameter_compare_with_number",0,WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET},
+	{"parameter_compare_with_number",0,WPN_WEAPON_TYPE_IDS.AG_ROCKET},
 }
 
 -- CCIP Rocket cue
@@ -255,22 +259,22 @@ object.controllers = {
 }
 object = addStrokeCircle(nil, 1, {0,0}, object.name)
 
--- CCIP out of screen
+-- CCIP Rocket out of screen
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
-object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_HIDDEN"}
+object.element_params = {"HUD_BRIGHT", "WPN_CCIP_STATE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
 
 -- CCIP Bomb
 local HUD_CCIP_BOMB_origin = addPlaceholder(nil, {0,0}, HUD_CCIP_origin.name)
-HUD_CCIP_BOMB_origin.element_params = {"WPN_SELECTED_WEAPON_TYPE", "HUD_CCIP_DELAYED"}
+HUD_CCIP_BOMB_origin.element_params = {"WPN_SELECTED_TYPE", "WPN_CCIP_STATE"}
 HUD_CCIP_BOMB_origin.controllers = {
-	{"parameter_compare_with_number",0,WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB},
-	{"parameter_compare_with_number",1,0},
+	{"parameter_compare_with_number",0,WPN_WEAPON_TYPE_IDS.AG_BOMB},
+	{"parameter_compare_with_number",1,-1,1},
 }
 
 -- CCIP Bomb cue
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "4-impact-point"}, "CenterCenter", {0, 0}, HUD_CCIP_BOMB_origin.name)
-object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_AZIMUTH", "HUD_CCIP_PIPER_ELEVATION"}
+object.element_params = {"HUD_BRIGHT", "WPN_CCIP_AZ", "WPN_CCIP_EL"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
 	{"move_left_right_using_parameter", 1, xScale},
@@ -278,46 +282,48 @@ object.controllers = {
 }
 
 -- CCIP out of screen
--- object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
--- object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_HIDDEN"}
--- object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
+object.element_params = {"HUD_BRIGHT", "WPN_CCIP_STATE"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
 
 
 -- CCIP Bomb Line
 object = addSimpleLine(nil, 10, {0,0}, 0, HUD_CCIP_BOMB_origin.name, nil, 0.5, 0.5, 0.5, false, HUD_MAT_DEF)
-object.element_params = {"HUD_BRIGHT", "HUD_PIPER_LINE_A_X", "HUD_PIPER_LINE_A_Y", "HUD_PIPER_LINE_B_X", "HUD_PIPER_LINE_B_Y"}
+object.element_params = {"HUD_BRIGHT", "HUD_PIPER_LINE_A_X", "HUD_PIPER_LINE_A_Y", "HUD_PIPER_LINE_B_X", "HUD_PIPER_LINE_B_Y", "WPN_CCIP_STATE"}
 object.controllers = {
 	{"opacity_using_parameter", 0},
 	{"line_object_set_point_using_parameters", 0, 1, 2, xScale, yScale},
 	{"line_object_set_point_using_parameters", 1, 3, 4, xScale, yScale},
+	{"parameter_in_range", 5, -0.5, 2.5}
 }
 
 -- CCIP Delayed Indicator
 object = addStrokeLine(nil, 10, {0,0}, 0, HUD_CCIP_BOMB_origin.name)
 object.vertices = {{-5,0}, {5,0}}
-object.element_params = {"HUD_BRIGHT", "HUD_CCIP_DELAYED_AZIMUTH", "HUD_CCIP_DELAYED_ELEVATION", "HUD_CCIP_PIPER_HIDDEN", "HUD_ROLL"}
+object.element_params = {"HUD_BRIGHT", "HUD_CCIP_DELAYED_AZIMUTH", "HUD_CCIP_DELAYED_ELEVATION", "WPN_CCIP_STATE", "HUD_ROLL"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
 	{"move_left_right_using_parameter", 1, xScale},
 	{"move_up_down_using_parameter", 2, yScale},
-	{"parameter_compare_with_number", 3, 1},
+	{"parameter_compare_with_number", 3, 2},
 	{"rotate_using_parameter", 4},
 }
 
-
 -- CCIP Delayed Target Designator
-object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "4-impact-point"}, "CenterCenter", {0, 0}, HUD_CCRP_origin.name)
-object.element_params = {"HUD_BRIGHT", "HUD_TD_HIDE", "HUD_TD_AZIMUTH", "HUD_TD_ELEVATION", "HUD_CCIP_DELAYED"}
+object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "4-impact-point"}, "CenterCenter", {0, 0}, HUD_CCIP_BOMB_origin.name)
+object.element_params = {"HUD_BRIGHT", "WPN_TD_AZ", "WPN_TD_EL", "WPN_TD_STATE"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
-	{"parameter_compare_with_number", 1, 0},
-	{"move_left_right_using_parameter", 2, xScale},
-	{"move_up_down_using_parameter", 3, yScale},
-	{"parameter_compare_with_number", 4, 1},
+	{"move_left_right_using_parameter", 1, xScale},
+	{"move_up_down_using_parameter", 2, yScale},
+	{"parameter_in_range", 3, -1, 2},
 }
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)
-object.element_params = {"HUD_BRIGHT", "HUD_TD_OS"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number",1,1}}
+object.element_params = {"HUD_BRIGHT", "WPN_TD_STATE"}
+object.controllers = {
+						{"opacity_using_parameter", 0},
+						{"parameter_compare_with_number",1,1}
+					}
 
 -- INT
 local HUD_INT_origin = addPlaceholder(nil, {0,0})

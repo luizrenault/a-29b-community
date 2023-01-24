@@ -32,6 +32,7 @@ local meters_to_feet = 3.2808399
 local BFI_BARO_param = get_param_handle("BFI_BARO")
 local BFI_MB_param = get_param_handle("BFI_MB")
 
+local PROP_RPM_param = get_param_handle("BASE_SENSOR_PROPELLER_RPM")
 
 dev:listen_command(device_commands.AltPressureKnob)
 dev:listen_command(device_commands.AltPressureStd)
@@ -66,7 +67,7 @@ function post_initialize()
     dev:performClickableAction(device_commands.EmerSpdBrk, -1, true)
     dev:performClickableAction(device_commands.AUDIO_COM1_VOL, 1, true)
     dev:performClickableAction(device_commands.AUDIO_COM2_VOL, 0.8, true)
-
+	PROP_RPM_param:set(900)
 end
 
 
@@ -126,6 +127,8 @@ function update()
 	local propStep = propRPM / 60 * update_time_step
 	propState = (propState + propStep)%1
 	set_aircraft_draw_argument_value(370,propState)
+
+	-- PROP_RPM_param:set(propRPM)
 
 	--keeps prop animation between 0 and 1
 	if propRPM < 800 then

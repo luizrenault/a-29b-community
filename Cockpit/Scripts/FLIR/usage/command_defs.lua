@@ -30,4 +30,5 @@ flir_commands =
 	LevelDown			= counter();
 	LevelUp				= counter();
 	AutoGain			= counter();
+	LaserOn 			= counter();
 }

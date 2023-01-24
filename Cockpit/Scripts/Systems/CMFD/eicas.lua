@@ -1,5 +1,6 @@
 dofile(LockOn_Options.script_path.."Systems/engine_api.lua")
 
+local weather = require("Weather")
 
 local EICAS_TQ = get_param_handle("EICAS_TQ")
 local EICAS_TQ_ROT = get_param_handle("EICAS_TQ_ROT")
@@ -35,8 +36,8 @@ local EICAS_HYD_COR = get_param_handle("EICAS_HYD_COR")
 local EICAS_CAB_PRESS = get_param_handle("EICAS_CAB_PRESS")
 local EICAS_CAB_PRESS_COR = get_param_handle("EICAS_CAB_PRESS_COR")
 
-local EICAS_BAT_AMP = get_param_handle("EICAS_BAT_AMP")
-local EICAS_BAT_AMP_COR = get_param_handle("EICAS_BAT_AMP_COR")
+local EICAS_GEN_AMP = get_param_handle("EICAS_GEN_AMP")
+local EICAS_GEN_AMP_COR = get_param_handle("EICAS_GEN_AMP_COR")
 
 local EICAS_BAT_VOLT = get_param_handle("EICAS_BAT_VOLT")
 local EICAS_BAT_VOLT_COR = get_param_handle("EICAS_BAT_VOLT_COR")
@@ -78,15 +79,15 @@ EICAS_FUEL_JOKER:set(fuel_joker)
 
 local torque_tempo = -1
 local np_tempo = -1
-local oat_base = 25
 
 local engine_limits_warning = 0
 local fuel_imbalance_caution = 0
 local fuel_joker_voice = 0
 local fuel_bingo_caution = 0
 
-
 local cabin_press_cor=0
+
+local elec
 
 local function calc_dist(dest_lat_m, dest_lon_m, orig_lat_m, orig_lon_m)
     local o_lat_m, o_alt_m, o_lon_m = sensor_data.getSelfCoordinates()
@@ -100,16 +101,27 @@ local function calc_dist(dest_lat_m, dest_lon_m, orig_lat_m, orig_lon_m)
 
 end
 
+dofile(LockOn_Options.script_path.."dump.lua")
+
 function update_eicas()
     if sensor_data.getWOW_LeftMainLandingGear()==0 then EICAS_INIT:set(0)   -- INIT -> DETOT
     elseif get_elec_main_bar_ok() then EICAS_INIT:set(1) end                    -- DETOT -> INIT
 
 
     ----------------- temperatura do ar externo
-    -- TODO: - obter / modelar temperatura do ar
-    if oat_base < -30 then oat_base = -30 end
-    if oat_base > 70 then oat_base = 70 end
-    local oat = round_to(oat_base - 6.5*sensor_data.getBarometricAltitude()/1000,1)
+    local x, y, z = sensor_data.getSelfCoordinates()
+    local pos={}
+    pos["position"]={}
+    pos["position"]["x"] = x
+    pos["position"]["y"] = y
+    pos["position"]["z"] = z
+
+    local oat, pressure = weather.getTemperatureAndPressureAtPoint(pos)
+
+    local dens = weather.getCloudsDensity({rectangle = {x1=x-1000, x2=x+1000, z1=z-1000, z2=z+1000, step=100}})
+    dump("Dens", dens)
+
+
     if oat < -70 then oat = -70 end
     if oat > 70 then oat = 70 end
 
@@ -351,15 +363,14 @@ function update_eicas()
     end
 
     ------------------- indicador digital de bateria
-    local bat_amp = 127
-    bat_amp = round_to(bat_amp,5)
-    if bat_amp < 0 then bat_amp = 0 end
-    if bat_amp > 950 then bat_amp = 950 end
-    if bat_amp <= 400 then bat_amp_cor = 0 
-    else bat_amp_cor = 1 end
+    local gen_amp = elec:get_generator_current()
+    gen_amp = -1 * gen_amp
+    gen_amp = round_to(gen_amp,5)
+    if gen_amp < 0 then gen_amp = 0 end
+    if gen_amp > 950 then gen_amp = 950 end
+    if gen_amp <= 400 then gen_amp_cor = 0 else gen_amp_cor = 1 end
 
-    local bat_volt = 24
-    if get_generator_on() and get_engine_on() then bat_volt = 28.8 end
+    local bat_volt = elec:get_emer_bar_voltage()
 
     bat_volt = round_to(bat_volt,0.1)
     if bat_volt < 0 then bat_volt = 0 end
@@ -367,7 +378,7 @@ function update_eicas()
     if bat_volt <= 30 then bat_volt_cor = 0 
     else bat_volt_cor = 2 end
 
-    local bat_temp = 37
+    local bat_temp = elec:get_battery_temperature()
     bat_temp = round_to(bat_temp,1)
     if bat_temp < -30 then bat_temp = -30 end
     if bat_temp > 100 then bat_temp = 100 end
@@ -520,8 +531,8 @@ function update_eicas()
     EICAS_CAB_PRESS:set(cabin_press)
     EICAS_CAB_PRESS_COR:set(cabin_press_cor)
 
-    EICAS_BAT_AMP:set(bat_amp)
-    EICAS_BAT_AMP_COR:set(bat_amp_cor)
+    EICAS_GEN_AMP:set(gen_amp)
+    EICAS_GEN_AMP_COR:set(gen_amp_cor)
 
     EICAS_BAT_VOLT:set(bat_volt)
     EICAS_BAT_VOLT_COR:set(bat_volt_cor)
@@ -580,8 +591,6 @@ function SetCommandEicas(command,value, CMFD)
         elseif (command==device_commands.CMFD1OSS12 or command==device_commands.CMFD2OSS12) and EICAS_INIT:get() == 1 then
             fuel_init = fuel_init - 5
             EICAS_FUEL_INIT:set(fuel_init)
-        elseif command==device_commands.CMFD1OSS25 or command==device_commands.CMFD2OSS25 then oat_base = oat_base - 1
-        elseif command==device_commands.CMFD1OSS26 or command==device_commands.CMFD2OSS26 then oat_base = oat_base + 1
         end
     end
 end
@@ -596,4 +605,5 @@ function post_initialize_eicas()
     end
     fuel_init=round_to(sensor_data.getTotalFuelWeight() + fuel_random,5)
     fuel_joker=round_to(fuel_init/2,5)
+    elec = GetDevice(devices.ELECTRIC_SYSTEM_)
 end

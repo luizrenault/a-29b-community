@@ -565,8 +565,8 @@ function SetCommand(command,value)
         ufcp_edit_clear()
         ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
     elseif command == device_commands.UFCP_BARO_RALT and value == 1 then
-        WPN_RALT:set((WPN_RALT:get() + 1) % 2)
-    -- TODO is this still used? Yes, because has to monitor changes from CMFD.
+        local sms=GetDevice(devices.WEAPON_SYSTEM)
+        sms:set_alt_mode((sms:get_alt_mode() + 1) % 2)
     elseif command == device_commands.UFCP_VV and value == 1 then
         if ufcp_vvvah_mode == UFCP_VVVAH_MODE_IDS.VV_VAH then 
             ufcp_vvvah_mode = ufcp_vvvah_mode_last

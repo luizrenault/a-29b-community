@@ -120,6 +120,7 @@ end
 
 function set_avionics_master_mode(new_mode)
     local current_mode = get_avionics_master_mode()
+
     if new_mode ~= current_mode and current_mode ~= AVIONICS_MASTER_MODE_ID.EJ and current_mode ~= AVIONICS_MASTER_MODE_ID.SJ and current_mode ~= AVIONICS_MASTER_MODE_ID.A_G then
         AVIONICS_MASTER_MODE_LAST:set(current_mode)
     end
@@ -129,6 +130,37 @@ function set_avionics_master_mode(new_mode)
         UFCP_DTK_ENABLED:set(0)
     end
     AVIONICS_MASTER_MODE:set(new_mode)
+
+    if new_mode ~= current_mode then
+        local wpn = GetDevice(devices.WEAPON_SYSTEM)
+        if (get_avionics_master_mode_aa(new_mode)) then
+            wpn:set_master_mode(wpn.MasterModeAA)
+        elseif (get_avionics_master_mode_ag(new_mode)) then
+            wpn:set_master_mode(wpn.MasterModeAG)
+
+            if new_mode == AVIONICS_MASTER_MODE_ID.CCIP or new_mode == AVIONICS_MASTER_MODE_ID.CCIP_R then
+                wpn:set_ag_mode(wpn.AGModeCCIP)
+            elseif new_mode == AVIONICS_MASTER_MODE_ID.CCRP or new_mode == AVIONICS_MASTER_MODE_ID.CCRP_R then
+                wpn:set_ag_mode(wpn.AGModeCCRP)
+            elseif new_mode == AVIONICS_MASTER_MODE_ID.DTOS or new_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then
+                wpn:set_ag_mode(wpn.AGModeDTOS)
+            elseif new_mode == AVIONICS_MASTER_MODE_ID.GUN or new_mode == AVIONICS_MASTER_MODE_ID.GUN_R then
+                wpn:set_ag_mode(wpn.AGModeGunCCIP)
+            elseif new_mode == AVIONICS_MASTER_MODE_ID.GUN_M then
+                wpn:set_ag_mode(wpn.AGModeGunMan)
+            else
+                wpn:set_ag_mode(wpn.AGModeMan)
+            end
+
+            if new_mode == AVIONICS_MASTER_MODE_ID.CCIP_R or new_mode == AVIONICS_MASTER_MODE_ID.CCRP_R or new_mode == AVIONICS_MASTER_MODE_ID.DTOS_R or new_mode == AVIONICS_MASTER_MODE_ID.GUN_R then
+                wpn:set_alt_mode(wpn.AltModeRalt) -- Ralt
+            else
+                wpn:set_alt_mode(wpn.AltModeBaro) -- Baro
+            end
+        else
+            wpn:set_master_mode(wpn.MasterModeNone)
+        end
+    end
 end
 
 function get_avionics_master_mode_aa(master_mode)
@@ -136,7 +168,8 @@ function get_avionics_master_mode_aa(master_mode)
     return  master_mode == AVIONICS_MASTER_MODE_ID.DGFT_B or
         master_mode == AVIONICS_MASTER_MODE_ID.DGFT_L or
         master_mode == AVIONICS_MASTER_MODE_ID.INT_B or 
-        master_mode == AVIONICS_MASTER_MODE_ID.INT_L
+        master_mode == AVIONICS_MASTER_MODE_ID.INT_L or
+        master_mode == AVIONICS_MASTER_MODE_ID.A_A
 end
 
 function get_avionics_master_mode_aa_int(master_mode)
@@ -158,7 +191,7 @@ end
 
 function get_avionics_master_mode_ag(master_mode)
     master_mode = master_mode or get_avionics_master_mode()
-    return master_mode >= AVIONICS_MASTER_MODE_ID.GUN and master_mode <= AVIONICS_MASTER_MODE_ID.MAN
+    return (master_mode >= AVIONICS_MASTER_MODE_ID.GUN and master_mode <= AVIONICS_MASTER_MODE_ID.MAN) or master_mode == AVIONICS_MASTER_MODE_ID.A_G
 end
 
 function get_avionics_gs()

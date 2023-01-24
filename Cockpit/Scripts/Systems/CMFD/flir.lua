@@ -15,6 +15,8 @@ end
 dev:listen_command(Keys.Cage)
 dev:listen_command(Keys.TDCX)
 dev:listen_command(Keys.TDCY)
+dev:listen_command(Keys.TDC_Depress)
+
 
 function SetCommandFlir(command,value, CMFD)
     local flir = GetDevice(devices.FLIR)

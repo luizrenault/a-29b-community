@@ -27,3 +27,14 @@ as desired.
 similar to FLIR\page.lua contents, but with is_visible = true
 
 7) Configure FLIR commands and start the mod.
+
+8) For onscreen telemetry from FLIR, CMFD_FLIR.lua and flir_device.lua can be used as a reference.
+
+LR::avSimplestWeaponSystem commands:
+
+dev:select_station(station)
+dev:set_laser_code(code)                    -- selects the laser code to be used by launch_station
+dev:launch_station(station)                 -- will set GBU laser code uppon launch
+dev:set_ccrp_target(lat_m, alt_m, lon_m)    -- selects the ccrp target coordinates
+dev:update_ccrp_sight()                     -- calculate seconds left until ccrp launch
+

@@ -51,24 +51,24 @@ mesh_poly = nil
 local object
 
 object = addStrokeText("SMS_GUNS_L", "100", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {-0.134, 0.85}, CMFD_SMS_BG_origin.name, nil,{"%03.0f"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_L"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_1"}
 object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}}
 object = addStrokeBox(nil, 0.15, 0.062, "CenterCenter", {0,0}, object.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_L_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_1_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
 object = addStrokeBoxDashed(nil, 0.15, 0.062, 0.02, 0.02, {0,0}, object.parent_element)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_L_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_1_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 2}}
 
 
 object = addStrokeText("SMS_GUNS_R", "100", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0.134, 0.85}, CMFD_SMS_BG_origin.name, nil,{"%03.0f"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_R"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_2"}
 object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}}
 object = addStrokeBox(nil, 0.15, 0.062, "CenterCenter", {0,0}, object.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_R_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_2_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
 object = addStrokeBoxDashed(nil, 0.15, 0.062, 0.02, 0.02, {0,0}, object.parent_element)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_R_SEL"}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_GUNS_2_SEL"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 2}}
 
 object = addStrokeText("SMS_POS_5_TEXT", "TANK", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {0.53, -0.518}, CMFD_SMS_BG_origin.name, nil,{"%s"})
@@ -387,8 +387,8 @@ SMS_mode_ag_nogun.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONI
 SMS_mode_ag_nogun.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, AVIONICS_MASTER_MODE_ID.DTOS-0.5, AVIONICS_MASTER_MODE_ID.MAN + 0.05}}
 
 object = addOSSText(28, "QTY TYPE", SMS_mode_ag_nogun.name, nil, nil, {"%01.0f ", "%s"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_AG_QTY", "WPN_AG_NAME"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, -0.05, 999}, {"text_using_parameter", 1, 0}, {"text_using_parameter", 2, 1}}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_QTY", "WPN_SELECTED_NAME"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 0, 1}, {"text_using_parameter", 1, 0}, {"text_using_parameter", 2, 1}}
 
 object = addOSSText(8, "REL", SMS_mode_ag_nogun.name)
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
@@ -415,64 +415,64 @@ object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SD"}
 object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}}
 
 object = addOSSText(9, "N+T", SMS_mode_ag_nogun.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_FUSE_SEL", "WPN_SELECTED_WEAPON_TYPE"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_FUSE_SEL_IDS.NT}, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_FUSE_SEL", "WPN_SELECTED_TYPE"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_FUSE_SEL_IDS.NT}, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_BOMB}}
 
 object = addOSSText(9, "N", SMS_mode_ag_nogun.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_FUSE_SEL", "WPN_SELECTED_WEAPON_TYPE"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_FUSE_SEL_IDS.N}, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_FUSE_SEL", "WPN_SELECTED_TYPE"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_FUSE_SEL_IDS.N}, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_BOMB}}
 
 object = addOSSText(9, "T", SMS_mode_ag_nogun.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_FUSE_SEL", "WPN_SELECTED_WEAPON_TYPE"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_FUSE_SEL_IDS.T}, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_FUSE_SEL", "WPN_SELECTED_TYPE"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_FUSE_SEL_IDS.T}, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_BOMB}}
 
 object = addOSSText(9, "SAFE", SMS_mode_ag_nogun.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_FUSE_SEL", "WPN_SELECTED_WEAPON_TYPE"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_FUSE_SEL_IDS.SAFE}, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_FUSE_SEL", "WPN_SELECTED_TYPE"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_FUSE_SEL_IDS.SAFE}, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_BOMB}}
 
 object = addOSSText(10, "IMPC", SMS_mode_ag_nogun.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_FUSE_TYPE", "WPN_SELECTED_WEAPON_TYPE"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_FUSE_TYPE_IDS.IMPC}, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_FUSE_TYPE", "WPN_SELECTED_TYPE"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_FUSE_TYPE_IDS.IMPC}, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_BOMB}}
 
 object = addOSSText(10, "PROX", SMS_mode_ag_nogun.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_FUSE_TYPE", "WPN_SELECTED_WEAPON_TYPE"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_FUSE_TYPE_IDS.PROX}, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_FUSE_TYPE", "WPN_SELECTED_TYPE"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_FUSE_TYPE_IDS.PROX}, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_BOMB}}
 
 object = addOSSText(10, "1TIME", SMS_mode_ag_nogun.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_FUSE_TYPE", "WPN_SELECTED_WEAPON_TYPE"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_FUSE_TYPE_IDS.ONETIME}, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_FUSE_TYPE", "WPN_SELECTED_TYPE"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_FUSE_TYPE_IDS.ONETIME}, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_BOMB}}
 
 -- object = addOSSText(11, "AD", SMS_mode_ag_nogun.name, nil, nil, {"AD %04.1f"})
--- object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_TIME_ALT_SEL", "WPN_SELECTED_WEAPON_TYPE"}
--- object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_TIME_ALT_SEL_IDS.AD}, {"text_using_parameter", 1, 0 }, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}}
+-- object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_TIME_ALT_SEL", "WPN_SELECTED_TYPE"}
+-- object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_TIME_ALT_SEL_IDS.AD}, {"text_using_parameter", 1, 0 }, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_BOMB}}
 
 -- object = addOSSText(11, "ADBA", SMS_mode_ag_nogun.name, nil, nil, {"AD %04.1f\nBA %04i"})
--- object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_TIME_ALT_SEL", "WPN_SELECTED_WEAPON_TYPE"}
--- object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_TIME_ALT_SEL_IDS.ADBA}, {"text_using_parameter", 1, 0 }, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}}
+-- object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_TIME_ALT_SEL", "WPN_SELECTED_TYPE"}
+-- object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_TIME_ALT_SEL_IDS.ADBA}, {"text_using_parameter", 1, 0 }, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_BOMB}}
 
 -- object = addOSSText(11, "FDBA", SMS_mode_ag_nogun.name, nil, nil, {"FD %04.1f\nBA %04i"})
--- object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_TIME_ALT_SEL", "WPN_SELECTED_WEAPON_TYPE"}
--- object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_TIME_ALT_SEL_IDS.FDBA}, {"text_using_parameter", 1, 0 }, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}}
+-- object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "SMS_TIME_ALT_SEL", "WPN_SELECTED_TYPE"}
+-- object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, SMS_TIME_ALT_SEL_IDS.FDBA}, {"text_using_parameter", 1, 0 }, {"parameter_compare_with_number", 2 , WPN_WEAPON_TYPE_IDS.AG_BOMB}}
 
 object = addOSSText(24, "IS", SMS_mode_ag_nogun.name, nil, nil, {"%03.0fM"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_WEAPON_TYPE", "AVIONICS_MASTER_MODE", "WPN_IS_M"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}, {"parameter_in_range", 2, AVIONICS_MASTER_MODE_ID.DTOS - 0.05, AVIONICS_MASTER_MODE_ID.CCIP_R + 0.05}, {"text_using_parameter", 3, 0 }}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_TYPE", "AVIONICS_MASTER_MODE", "WPN_IS_M"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_BOMB}, {"parameter_in_range", 2, AVIONICS_MASTER_MODE_ID.DTOS - 0.05, AVIONICS_MASTER_MODE_ID.CCIP_R + 0.05}, {"text_using_parameter", 3, 0 }}
 
 object = addOSSText(24, "IS", SMS_mode_ag_nogun.name, nil, nil, {"%04.0fMS"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_WEAPON_TYPE", "WPN_IS_TIME"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET}, {"text_using_parameter", 2, 0 }}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_TYPE", "WPN_IS_TIME"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_ROCKET}, {"text_using_parameter", 2, 0 }}
 
 object = addOSSText(24, "IS", SMS_mode_ag_nogun.name, nil, nil, {"%04.0fMS"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_WEAPON_TYPE", "AVIONICS_MASTER_MODE", "WPN_IS_TIME"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}, {"parameter_compare_with_number", 2, AVIONICS_MASTER_MODE_ID.MAN}, {"text_using_parameter", 3, 0 }}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_TYPE", "AVIONICS_MASTER_MODE", "WPN_IS_TIME"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_BOMB}, {"parameter_compare_with_number", 2, AVIONICS_MASTER_MODE_ID.MAN}, {"text_using_parameter", 3, 0 }}
 
 object = addOSSText(25, "RPBR", SMS_mode_ag_nogun.name, nil, nil, {"RP%02.0f\n","(BR%02.0f)"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_WEAPON_TYPE", "WPN_RP", "WPN_RP_TOTAL"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}, {"text_using_parameter", 2, 0 }, {"text_using_parameter", 3, 1 }}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_TYPE", "WPN_RP", "WPN_RP_TOTAL"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_BOMB}, {"text_using_parameter", 2, 0 }, {"text_using_parameter", 3, 1 }}
 
 object = addOSSText(25, "RPBR", SMS_mode_ag_nogun.name, nil, nil, {"RP%02.0f\n","(RR%02.0f)"})
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_WEAPON_TYPE", "WPN_RP", "WPN_RP_TOTAL"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET}, {"text_using_parameter", 2, 0 }, {"text_using_parameter", 3, 1 }}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_TYPE", "WPN_RP", "WPN_RP_TOTAL"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_ROCKET}, {"text_using_parameter", 2, 0 }, {"text_using_parameter", 3, 1 }}
 
 object = addOSSText(26, "SGL", SMS_mode_ag_nogun.name)
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_LAUNCH_OP"}
@@ -525,15 +525,15 @@ object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_MASTER_M
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_MASTER_MODE_ID.MAN}}
 
 object = addOSSText(26, "CCRP", CMFD_SMS_AG_CD_Origin.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_WEAPON_TYPE"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_TYPE"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_BOMB}}
 object = addOSSStrokeBox(26, 1, CMFD_SMS_AG_CD_Origin.name)
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_MASTER_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, AVIONICS_MASTER_MODE_ID.CCRP}}
 
 object = addOSSText(25, "DTOS", CMFD_SMS_AG_CD_Origin.name)
-object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_WEAPON_TYPE"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB}}
+object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "WPN_SELECTED_TYPE"}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, WPN_WEAPON_TYPE_IDS.AG_BOMB}}
 object = addOSSStrokeBox(25, 1, CMFD_SMS_AG_CD_Origin.name)
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "AVIONICS_MASTER_MODE"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_in_range", 1, AVIONICS_MASTER_MODE_ID.DTOS - 0.05, AVIONICS_MASTER_MODE_ID.DTOS_R + 0.05}}

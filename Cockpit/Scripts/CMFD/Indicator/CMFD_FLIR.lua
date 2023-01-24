@@ -175,6 +175,10 @@ object = addStrokeText(nil, "TARGET", CMFD_STRINGDEFS_DEF_X08, "LeftTop", {-0.5,
 object.element_params = {CMFD_BRIGHT, "FLIR_STATUS"}
 object.controllers = { {"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1, 1}, {"text_from_lua_function", CMFD_TEXT.FLIR_TARGET, 0.5}}
 
+object = addStrokeText(nil, "LASER ON", CMFD_STRINGDEFS_DEF_X08, "LeftTop", {0.5,0.25}, FLIR_Info_On.name)
+object.element_params = {CMFD_BRIGHT, "FLIR_LASER_ON"}
+object.controllers = { {"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
+
 -- OSS Menus
 
 local HW = 0.15
