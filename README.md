@@ -50,6 +50,15 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
+## Version 0.5.2 - 25 Jan 2023
+
+### Fixes
+- DCS 2.8.2.35632 Open Beta Compatibility. From now on Will have one update per DCS version.
+
+
+### Fixes
+- DCS 2.8 Compatibility. No longer works with 2.7.
+
 ## Version 0.5.1 - 30 Oct 2022
 
 ### Fixes
