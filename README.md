@@ -11,6 +11,8 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 [Download Latest Release](https://github.com/luizrenault/a-29b-community/archive/refs/heads/main.zip)
 
+[Download Latest Release DLL only for DCS 2.8.3.37556 Open Beta](https://github.com/luizrenault/a-29b-community/raw/main/bin/avSimplest.dll) 
+
 [Livery Pack](https://mega.nz/file/UAxUmYAY#0PyL3pO6i5x2QTrBWEkE5LsqeKFW5IuSJG_Er42PAas)
 
 # Tutorial videos 
