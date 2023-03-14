@@ -92,8 +92,12 @@ local function get_elec_primary_dc_ok()
     return true;
 end
 
+local function get_elec_emergency_ok()
+    return true
+end
+
 function SetCommand(command,value)
-    debug_message_to_user("gear: command "..tostring(command).." = "..tostring(value))
+    print_message_to_user("gear: command "..tostring(command).." = "..tostring(value))
 
  --[[
 	if command == Hook then
@@ -116,20 +120,20 @@ function SetCommand(command,value)
     -- TODO: prevent gear handle being moved if retraction_release_solenoid is false
     if command == Keys.PlaneGear then
         if gear_handle_pos==1 then
-            if not get_elec_retraction_release_ground() then
+            -- if not get_elec_retraction_release_ground() then
                 dev:performClickableAction(device_commands.LndGear, 0, false)
-            end
+            -- end
         elseif gear_handle_pos==0 then
             dev:performClickableAction(device_commands.LndGear, 1, false)
         end
     elseif command == Keys.PlaneGearUp then
-        if (get_elec_retraction_release_airborne()) then
+        -- if (get_elec_retraction_release_airborne()) then
             dev:performClickableAction(device_commands.LndGear, 0, false)                -- gear handle animation:  0 = retracted, 1 = extended
-        end
+        -- end
     elseif command == Keys.PlaneGearDown then
-        if (get_elec_retraction_release_airborne()) then
+        -- if (get_elec_retraction_release_airborne()) then
             dev:performClickableAction(device_commands.LndGear, 1, false)                -- gear handle animation:  0 = retracted, 1 = extended
-        end
+        -- end
     elseif command == device_commands.LndGear then
         if value ~= GEAR_TARGET then
             if get_hyd_utility_ok() then
@@ -183,7 +187,7 @@ local dev_gear_right = get_param_handle("GEAR_RIGHT_LIGHT")
 function update_gear()
     local gear_handle_pos = get_cockpit_draw_argument_value(821)  -- 1==down, 0==up
     local retraction_release_solenoid = get_elec_primary_ac_ok()    -- according to NATOPS, if system is on emer gen power, the safety solenoid opens, allowing the gear handle to be moved up and gear retracted.  However, see gyrovague's notes at end of this file.
-    local retraction_release_airborne = get_elec_retraction_release_airborne()
+    local retraction_release_airborne = true --get_elec_retraction_release_airborne()
     -- gear retraction is allowed if retraction_release_solenoid is powered AND aircraft is airborne.
     local allowRetract = (retraction_release_solenoid) and (retraction_release_airborne)
     --[[
@@ -292,9 +296,9 @@ function update_gear()
 	-- efm_data_bus.fm_setLeftGear(GEAR_LEFT_STATE)
 	-- efm_data_bus.fm_setRightGear(GEAR_RIGHT_STATE)
 
-    set_aircraft_draw_argument_value(0,GEAR_NOSE_STATE) -- nose gear draw angle
-    set_aircraft_draw_argument_value(3,GEAR_RIGHT_STATE) -- right gear draw angle
-    set_aircraft_draw_argument_value(5,GEAR_LEFT_STATE) -- left gear draw angle
+    -- set_aircraft_draw_argument_value(0,GEAR_NOSE_STATE) -- nose gear draw angle
+    -- set_aircraft_draw_argument_value(3,GEAR_RIGHT_STATE) -- right gear draw angle
+    -- set_aircraft_draw_argument_value(5,GEAR_LEFT_STATE) -- left gear draw angle
 
     
 
@@ -383,9 +387,9 @@ function post_initialize()
 	end
 
 
-    set_aircraft_draw_argument_value(0,GEAR_NOSE_STATE)     -- nose gear draw angle
-    set_aircraft_draw_argument_value(3,GEAR_RIGHT_STATE)    -- right gear draw angle
-    set_aircraft_draw_argument_value(5,GEAR_LEFT_STATE)     -- left gear draw angle
+    -- set_aircraft_draw_argument_value(0,GEAR_NOSE_STATE)     -- nose gear draw angle
+    -- set_aircraft_draw_argument_value(3,GEAR_RIGHT_STATE)    -- right gear draw angle
+    -- set_aircraft_draw_argument_value(5,GEAR_LEFT_STATE)     -- left gear draw angle
 
     -- set_aircraft_draw_argument_value(25,HOOK_TARGET)
     startup_print("gear: postinit end")

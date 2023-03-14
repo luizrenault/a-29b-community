@@ -115,7 +115,7 @@ function update_eicas()
 
 
     ------------------ mostrador de torque
-    local torque = sensor_data.getEngineLeftRPM()
+    local torque = sensor_data.getEngineLeftRPM() * 100
     if torque < 84 then 
         torque = (torque - 64.6) / 19.4 * 10
     else
@@ -179,7 +179,7 @@ function update_eicas()
     end
 
     ------------------- pressão de óleo
-    local oil_press=sensor_data.getEngineLeftRPM()
+    local oil_press=sensor_data.getEngineLeftRPM() * 100
     if oil_press > 45 then oil_press = 99+(oil_press-45)/20*13
     elseif oil_press > 35 then oil_press = 92+(oil_press-35)/10*7
     elseif oil_press > 28 then oil_press = 64+(oil_press-28)/7*28
@@ -211,7 +211,7 @@ function update_eicas()
     end
 
     ------------------- temperatura do óleo
-    local oil_temp=oat + sensor_data.getEngineLeftRPM()*0.76
+    local oil_temp=oat + sensor_data.getEngineLeftRPM() * 0.76 * 100
 
     if oil_temp < -50 then oil_temp = -50 end
     if oil_temp > 150 then oil_temp = 150 end
@@ -236,7 +236,7 @@ function update_eicas()
     end
     
     ------------------- rotação da hélice %
-    local np = sensor_data.getEngineLeftRPM()
+    local np = sensor_data.getEngineLeftRPM() * 100
 
     if get_avionics_onground() then
         if np > 70 then np = 100
@@ -280,7 +280,7 @@ function update_eicas()
     end
 
     ----------------- rotação do gerador de gases
-    local ng = sensor_data.getEngineLeftRPM()
+    local ng = sensor_data.getEngineLeftRPM() * 100
     if ng < 0 then ng = 0 end
     if ng > 130 then ng = 130 end
 
@@ -307,7 +307,7 @@ function update_eicas()
     end
 
     ------------------- indicador digital de pressão hidráulica
-    local hyd=sensor_data.getEngineLeftRPM()*50
+    local hyd=sensor_data.getEngineLeftRPM() * 50 * 100
     if hyd > 3200 then hyd = 3200 end -- simulação
     
     if hyd < 0 then hyd = 0 end

@@ -45,12 +45,12 @@ function update()
     if ENGINE_state == ENGINE_STATE_IDS.ON then
         throttle_clickable_ref:hide(throttle>0.01)
     elseif ENGINE_state == ENGINE_STATE_IDS.ST then
-        if sensor_data.getEngineLeftRPM()>55 and throttle > 0.01 then ENGINE_state = ENGINE_STATE_IDS.ON end
+        if sensor_data.getEngineLeftRPM()*100>55 and throttle > 0.01 then ENGINE_state = ENGINE_STATE_IDS.ON end
         throttle_clickable_ref:hide(false)
         throttle = -0.5
     elseif ENGINE_state == ENGINE_STATE_IDS.CUTOFF then 
         throttle_clickable_ref:hide(false)
-        local rpm = sensor_data.getEngineLeftRPM()
+        local rpm = sensor_data.getEngineLeftRPM()*100
         if rpm >=15 then engine_stop() end
         throttle = -1
     end
@@ -151,7 +151,7 @@ function engine_try_start()
 end
 
 function engine_try_start_interrupt()
-    if sensor_data.getEngineLeftRPM() <= 50 then
+    if sensor_data.getEngineLeftRPM()*100 <= 50 then
         debug_message_to_user("Starter Interrupt")
         dispatch_action(nil,iCommandEnginesStop,0)
     end

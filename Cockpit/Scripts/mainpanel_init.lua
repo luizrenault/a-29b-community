@@ -55,13 +55,13 @@ HideStick.input                 	= {0.0, 1.0}
 HideStick.output                	= {0.0, 1.0}
 
 StickPitch							= CreateGauge()
-StickPitch.arg_number				= 2
+StickPitch.arg_number				= 3
 StickPitch.input					= {-100, 100}
 StickPitch.output					= {-1, 1}
 StickPitch.controller				= controllers.base_gauge_StickPitchPosition
 
 StickBank							= CreateGauge()
-StickBank.arg_number				= 3
+StickBank.arg_number				= 2
 StickBank.input						= {-100, 100}
 StickBank.output					= {1, -1}
 StickBank.controller				= controllers.base_gauge_StickRollPosition
