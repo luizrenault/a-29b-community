@@ -6,33 +6,15 @@ declare_loadout({
 
 	LandRWCategories = 
     {
-        [1] = 
-        {
-			Name = "AircraftCarrier",
-        },
-        [2] = 
-        {
-            Name = "AircraftCarrier With Catapult",
-        }, 
-        [3] = 
-        {
-            Name = "AircraftCarrier With Tramplin",
-        }, 
+        [1] = { Name = "AircraftCarrier",},
+        [2] = { Name = "AircraftCarrier With Catapult",}, 
+        [3] = { Name = "AircraftCarrier With Tramplin",}, 
     }, -- end of LandRWCategories
     TakeOffRWCategories = 
     {
-        [1] = 
-        {
-			Name = "AircraftCarrier",
-        },
-        [2] = 
-        {
-            Name = "AircraftCarrier With Catapult",
-        }, 
-        [3] = 
-        {
-            Name = "AircraftCarrier With Tramplin",
-        }, 
+        [1] = {Name = "AircraftCarrier",},
+        [2] = {Name = "AircraftCarrier With Catapult",}, 
+        [3] = { Name = "AircraftCarrier With Tramplin",}, 
     }, -- end of TakeOffRWCategories
 
 	Picture			 = "ptb2.png",
@@ -304,7 +286,7 @@ declare_loadout(
 		category		= CAT_PODS,
 		CLSID			= "{FLIR-STAR-SAFIRE}",
 		attribute		= {4,	15,	44,	WSTYPE_PLACEHOLDER},			
-		Weight			= 43.2,
+		Weight			= 47.2 + 11.1 + 1.1 + 2.1, 
 		Count 			= 1,
 		Cx_pil			= 0.0005949,
 		Picture			= "starsafire.png",

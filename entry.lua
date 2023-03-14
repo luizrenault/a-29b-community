@@ -66,6 +66,19 @@ dofile(current_mod_path.."/Views.lua")
 make_view_settings('A-29B', ViewSettings, SnapViews)
 mount_vfs_sound_path (current_mod_path.."/Sounds/")
 
+local cfg_path = current_mod_path.."/ConfigFM.lua"
+dofile(cfg_path)  
+
+
+local FM = 
+{
+	[1] = self_ID,
+	[2] = 'avSimplest',
+	config_path	= cfg_path,
+	center_of_mass		=	{ empty_cg_position , spinner_tip_position[2] , 0.0},		-- center of mass position relative to object 3d model center for empty aircraft
+	moment_of_inertia  	= 	{14056.0, 40927.0, 30700.0},   	-- moment of inertia of empty aircraft
+	disable_built_in_oxygen_system	= true,
+}
 
 ----------------------------------------------------------------------------------------
 make_flyable('A-29B', current_mod_path..'/Cockpit/Scripts/' , nil , current_mod_path..'/comm.lua')

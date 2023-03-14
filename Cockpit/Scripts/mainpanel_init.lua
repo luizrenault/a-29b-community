@@ -25,7 +25,7 @@ local controllers = LoRegisterPanelControls()
 
 mirrors_data =
 {
-    center_point 	= {0.493,0.092,0.00},
+    center_point 	= {0.493,0,0.00},
     width 		 	= 1.0, --1.2,
     aspect 		 	= 1.0,
 	rotation 	 	= math.rad(-1);
@@ -291,7 +291,7 @@ Z_test =
 	far  = 4.0,
 }
 
-livery = "FAB"
+-- livery = "FAB"
 
 --[[ available functions
 

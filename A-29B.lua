@@ -8,6 +8,10 @@ mount_vfs_texture_path  (current_mod_path.."/Textures/A-29B.zip")
 mount_vfs_texture_path  (current_mod_path.."/Textures/")
 mount_vfs_sound_path    (current_mod_path.."/Sounds")
 
+spinner_tip_position = {3.594, -0.552, 0}
+empty_cg_position = (spinner_tip_position[1] - 3.454) - 1.820 * 0.335
+
+
 A_29B =  {
 	Name 				=   'A-29B',
 	DisplayName			= _('A-29B'),
@@ -131,7 +135,7 @@ A_29B =  {
 		has_differential_stabilizer	= false, -- differential stabilizers
 
 		main_gear_pos 				= 	{-0.66,	-2.13,	1.813}, --{-1,	-2.03,	2.},
-		nose_gear_pos 				= 	{2.544, -2.184,  -0.011}, --{2.808,	-2.09,	0},
+		nose_gear_pos 				= 	{2.544, -2.184,  0}, --{2.808,	-2.09,	0},
 		tand_gear_max				=	0.363970234, -- tangent of degrees of rotation max of nose wheel steering
 
 		nose_gear_amortizer_direct_stroke        = 0.00,    -- down from nose_gear_pos !!!
@@ -148,6 +152,7 @@ A_29B =  {
 
 		wing_area 					= 19.4, -- wing area in m2
 		wing_span 					= 11.135, -- wing span in m
+		wing_chord					= 1.82,
 		wing_type 					= 0,
 
 		thrust_sum_max 				= 17000, -- thrust in kg (44kN)
@@ -574,6 +579,8 @@ A_29B =  {
 	-- },
    
 
+	-- center_of_mass		=	{ empty_cg_position , spinner_tip_position[2] , 0.0},		-- center of mass position relative to object 3d model center for empty aircraft
+	-- moment_of_inertia  	= 	{14056.0, 40927.0, 30700.0},   	-- moment of inertia of empty aircraft
 
 	SFM_Data = {
 		aerodynamics = 
@@ -581,8 +588,8 @@ A_29B =  {
 			Cy0	=	0.1933, -- Coefficient of lift at zero angle of attack -- Always 0 for symmetrical airfoil
 			Mzalfa	=	4.355, -- Horizontal tail pitch coefficient
 			Mzalfadt	=	0.8,  -- Wing pitch coefficient
-			kjx = 2.25, -- Roll rate acceleration constant in radians / second  -- Inertia parametre X - Dimension (clean) airframe drag coefficient at X (Top) Simply the wing area in square meters (as that is a major factor in drag calculations) - smaller = massive inertia
-			kjz = 0.00125,  -- Unknown pitch constant. All planes use 0.00125 -- -- Inertia parametre Z - Dimension (clean) airframe drag coefficient at Z (Front) Simply the wing area in square meters (as that is a major factor in drag calculations)
+			kjx = 2.25, -- Roll rate dampening 
+			kjz = 0.00125,  -- Pitch rate dampening
 
 			Czbe = -0.056, -- Directional stability coefficient  -- coefficient, along Z axis (perpendicular), affects yaw, negative value means force orientation in FC coordinate system
 			
@@ -693,7 +700,6 @@ A_29B =  {
 			prop_pitch_feather	= 80.0,	-- prop pitch feather position, degrees if feather < prop_pitch_max no feathering available
 			Nominal_RPM = 2000,
 			Nominal_Fan_RPM = 2000,
-			Startup_Prework = 1.0,
 			Startup_RPMs = {
 				{0.0, 0},
 				{1.0, 60},
@@ -701,6 +707,7 @@ A_29B =  {
 				{8.6, 880},
 				{13.0, 601},
 			},
+			Startup_Prework = 1.0,
 			Startup_Ignition_Time = 8.3,
 			Shutdown_Duration = 9.8,
 
@@ -726,57 +733,57 @@ A_29B =  {
 
             extended =
                 {
-                
-						TSFC_max =  -- thrust specific fuel consumption by altitude and Mach number for RPM  100%, 2d table
-						{			-- factor = kg/h /2000
-                            M 		 = {0/666.739, 140/666.739, 160/666.739, 200/666.739, 220/666.739, 260/666.739, 300/666.739},
-							H		 = {0, 1524, 3048, 4572, 6096, 7620, 9144},
-							TSFC	 = {-- KT 0      	140     	160			200     	220 		260		300--0.1264
-										{   150/1800,  195/1800,  205/1800,    243/1800,  271/1800, 347/1800, 380/1800},--H = 0       -- SL
-										{   140/1800,  180/1800,  188/1800,    218/1800,  240/1800, 300/1800, 360/1800},--H = 1524    -- 5000' 
-										{   130/1800,  152/1800,  175/1800,    195/1800,  215/1800, 268/1800, 330/1800},--H = 3048    -- 10000'
-										{   120/1800,  120/1800,  160/1800,    177/1800,  191/1800, 234/1800, 285/1800},--H = 4572    -- 15000'
-										{   115/1800,  115/1800,  135/1800,    165/1800,  175/1800, 210/1800, 250/1800},--H = 6096    -- 20000'
-										{   110/1800,  110/1800,  110/1800,    160/1800,  165/1800, 195/1800, 210/1800},--H = 7620    -- 25000'
-										{   110/1800,  110/1800,  110/1800,    152/1800,  165/1800, 175/1800, 175/1800},--H = 9144    -- 30000'
-							}
+					thrust_max = -- thrust interpolation table by altitude and mach number, 2d table
+					{ -- Minimum thrust 2000 kN, maximum thrust 16700 kN
+						M 		 = {0/666.739,100/666.739,120/666.739,140/666.739,160/666.739,200/666.739,220/666.739,280/666.739,320/666.739,400/666.739},
+						H		 = {0,3048,6096,9144,10500,12192},
+						thrust	 = {--KCAS 0       100      120      140      160     200     220     280      320     400
+									{    17000,   17000,   17000,   17000,   17000,  17000,  17000,  17000,   16925,  17000 },--H = 0 (sea level)
+									{    16000,   16000,   16000,   16000,   16000,  16000,  16000,  16000,   16000,  16000 },--H = 3048 (10kft)
+									{    11500,   11500,   11500,   11500,   11500,  11500,  11500,  11500,   11500,  11500 },--H = 6096 (20kft)
+									{     7000,    7000,    7000,    7000,    7000,   7000,   7000,   7000,    7000,   7000 },--H = 9144 (30kft)
+									{     5000,    5000,    5000,    5000,    5000,   5000,   5000,   5000,    5000,   5000 },--H = 10500 (34kft)
+									{     5000,    5000,    5000,    5000,    5000,   5000,   5000,   5000,    5000,   5000 },--H = 12192 (40kft)
+									
 						},
+					},
 
-						-- TSFC_afterburner =  -- thrust specific fuel consumption by altitude and Mach number for RPM  100%, 2d table
-						-- {			-- factor = kg/h /2000
-                        --  M 		 = {0/666.739, 140/666.739, 160/666.739, 200/666.739, 220/666.739, 260/666.739, 300/666.739},
-						-- 	H		 = {0, 1524, 3048, 4572, 6096, 7620, 9144},
-						-- 	TSFC	 = {-- KT 0      	140     	160			200     	220 		260		300--0.1264
-						-- 				{   150/1800,  195/1800,  205/1800,    243/1800,  271/1800, 347/1800, 380/1800},--H = 0       -- SL
-						-- 				{   140/1800,  180/1800,  188/1800,    218/1800,  240/1800, 300/1800, 360/1800},--H = 1524    -- 5000' 
-						-- 				{   130/1800,  152/1800,  175/1800,    195/1800,  215/1800, 268/1800, 330/1800},--H = 3048    -- 10000'
-						-- 				{   120/1800,  120/1800,  160/1800,    177/1800,  191/1800, 234/1800, 285/1800},--H = 4572    -- 15000'
-						-- 				{   115/1800,  115/1800,  135/1800,    165/1800,  175/1800, 210/1800, 250/1800},--H = 6096    -- 20000'
-						-- 				{   110/1800,  110/1800,  110/1800,    160/1800,  165/1800, 195/1800, 210/1800},--H = 7620    -- 25000'
-						-- 				{   110/1800,  110/1800,  110/1800,    152/1800,  165/1800, 175/1800, 175/1800},--H = 9144    -- 30000'
-						-- 	}
-						-- },
+
+					TSFC_max =  -- thrust specific fuel consumption by altitude and Mach number for RPM  100%, 2d table
+					{			-- factor = kg/h /2000
+						M 		 = {0/666.739, 140/666.739, 160/666.739, 200/666.739, 220/666.739, 260/666.739, 300/666.739},
+						H		 = {0, 1524, 3048, 4572, 6096, 7620, 9144},
+						TSFC	 = {-- KT 0      	140     	160			200     	220 		260		300--0.1264
+									{   150/1800,  195/1800,  205/1800,    243/1800,  271/1800, 347/1800, 380/1800},--H = 0       -- SL
+									{   140/1800,  180/1800,  188/1800,    218/1800,  240/1800, 300/1800, 360/1800},--H = 1524    -- 5000' 
+									{   130/1800,  152/1800,  175/1800,    195/1800,  215/1800, 268/1800, 330/1800},--H = 3048    -- 10000'
+									{   120/1800,  120/1800,  160/1800,    177/1800,  191/1800, 234/1800, 285/1800},--H = 4572    -- 15000'
+									{   115/1800,  115/1800,  135/1800,    165/1800,  175/1800, 210/1800, 250/1800},--H = 6096    -- 20000'
+									{   110/1800,  110/1800,  110/1800,    160/1800,  165/1800, 195/1800, 210/1800},--H = 7620    -- 25000'
+									{   110/1800,  110/1800,  110/1800,    152/1800,  165/1800, 175/1800, 175/1800},--H = 9144    -- 30000'
+						}
+					},
+
+					-- TSFC_afterburner =  -- thrust specific fuel consumption by altitude and Mach number for RPM  100%, 2d table
+					-- {			-- factor = kg/h /2000
+					--  M 		 = {0/666.739, 140/666.739, 160/666.739, 200/666.739, 220/666.739, 260/666.739, 300/666.739},
+					-- 	H		 = {0, 1524, 3048, 4572, 6096, 7620, 9144},
+					-- 	TSFC	 = {-- KT 0      	140     	160			200     	220 		260		300--0.1264
+					-- 				{   150/1800,  195/1800,  205/1800,    243/1800,  271/1800, 347/1800, 380/1800},--H = 0       -- SL
+					-- 				{   140/1800,  180/1800,  188/1800,    218/1800,  240/1800, 300/1800, 360/1800},--H = 1524    -- 5000' 
+					-- 				{   130/1800,  152/1800,  175/1800,    195/1800,  215/1800, 268/1800, 330/1800},--H = 3048    -- 10000'
+					-- 				{   120/1800,  120/1800,  160/1800,    177/1800,  191/1800, 234/1800, 285/1800},--H = 4572    -- 15000'
+					-- 				{   115/1800,  115/1800,  135/1800,    165/1800,  175/1800, 210/1800, 250/1800},--H = 6096    -- 20000'
+					-- 				{   110/1800,  110/1800,  110/1800,    160/1800,  165/1800, 195/1800, 210/1800},--H = 7620    -- 25000'
+					-- 				{   110/1800,  110/1800,  110/1800,    152/1800,  165/1800, 175/1800, 175/1800},--H = 9144    -- 30000'
+					-- 	}
+					-- },
 
 						TSFC_throttle_responce =  -- correction to TSFC for different engine RPM, 1d table
 						{
 							RPM = {0, 70, 80, 90, 100},
 							K   = {1,  1,  1,  1,   1},
 						},
-
-						thrust_max = -- thrust interpolation table by altitude and mach number, 2d table
-                        { -- Minimum thrust 2000 kN, maximum thrust 16700 kN
-                            M 		 = {0*666.739,100*666.739,120*666.739,140*666.739,160*666.739,200*666.739,220*666.739,280*666.739,320*666.739,400*666.739},
-                            H		 = {0,3048,6096,9144,10500,12192},
-                            thrust	 = {--KCAS 0       100      120      140      160     200     220     280      320     400
-                                        {    17000,   17000,   17000,   17000,   17000,  17000,  17000,  17000,   16925,  17000 },--H = 0 (sea level)
-                                        {    16000,   16000,   16000,   16000,   16000,  16000,  16000,  16000,   16000,  16000 },--H = 3048 (10kft)
-                                        {    11500,   11500,   11500,   11500,   11500,  11500,  11500,  11500,   11500,  11500 },--H = 6096 (20kft)
-                                        {     7000,    7000,    7000,    7000,    7000,   7000,   7000,   7000,    7000,   7000 },--H = 9144 (30kft)
-                                        {     5000,    5000,    5000,    5000,    5000,   5000,   5000,   5000,    5000,   5000 },--H = 10500 (34kft)
-										{     5000,    5000,    5000,    5000,    5000,   5000,   5000,   5000,    5000,   5000 },--H = 12192 (40kft)
-                                        
-                            },
-                        },
 
 						-- thrust_afterburner =  -- thrust interpolation table by altitude and mach number, 2d table
                         -- { -- Minimum thrust 2000 kN, maximum thrust 16700 kN
@@ -852,12 +859,6 @@ A_29B =  {
 			defValue  = 1,
 			wCtrl     = 150
 		},
-
-		{ id = "LGB1000", control = 'spinbox',  label = _('Laser Code 1st Digit'), defValue = 1, min = 1, max = 1, dimension = ' ', playerOnly = true}, -- only for completeness
-        { id = "LGB100", control = 'spinbox',  label = _('Laser Code 2nd Digit'), defValue = 6, min = 5, max = 7, dimension = ' ', playerOnly = true},
-        { id = "LGB10", control = 'spinbox',  label = _('Laser Code 3rd Digit'), defValue = 8, min = 1, max = 8, dimension = ' ', playerOnly = true},
-        { id = "LGB1", control = 'spinbox',  label = _('Laser Code 4th Digit'), defValue = 8, min = 1, max = 8, dimension = ' ', playerOnly = true},
-
     },
 	--damage , index meaning see in  Scripts\Aircrafts\_Common\Damage.lua
 	Damage = {
