@@ -125,18 +125,17 @@ function update()
 	EICAS_RPM:set(propRPM)
 	local propStep = propRPM / 60 * update_time_step
 	propState = (propState + propStep)%1
-	set_aircraft_draw_argument_value(370,propState)
 
 	--keeps prop animation between 0 and 1
 	if propRPM < 800 then
 		propState = (propState + propStep)%1
 		set_aircraft_draw_argument_value(475,0)
+		set_aircraft_draw_argument_value(1475,0)
 		set_aircraft_draw_argument_value(DRAW_FAN,propState)
-		set_aircraft_draw_argument_value(413,1)
 	else
 		propState = (propState + propStep/100)%1
-		set_aircraft_draw_argument_value(413,0)
-		set_aircraft_draw_argument_value(475,-1)
+		set_aircraft_draw_argument_value(475,1)
+		set_aircraft_draw_argument_value(1475,1)
 		set_aircraft_draw_argument_value(DRAW_FAN,propState)
 	end
 

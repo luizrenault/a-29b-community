@@ -50,10 +50,16 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
+## Version 0.5.3 - 18 Mar 2023
+
+### Fixes
+- DCS 2.8.3.37854.1 Open Beta.
+- Crashing when releasing weapons.
+
 ## Version 0.5.2 Hotfix - 12 Mar 2023
 
 ### Fixes
--  DCS 2.8.3.37556 Open Beta.
+- DCS 2.8.3.37556 Open Beta.
 
 ## Version 0.5.2 - 25 Jan 2023
 

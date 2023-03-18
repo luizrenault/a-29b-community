@@ -1,4 +1,3 @@
-
 dofile(LockOn_Options.common_script_path.."devices_defs.lua")
 dofile(LockOn_Options.script_path.."devices.lua")
 dofile(LockOn_Options.script_path.."command_defs.lua")
@@ -9,13 +8,11 @@ dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
 
 startup_print("weapon: load")
 
-package.cpath 			= package.cpath..";".. LockOn_Options.script_path.. "..\\..\\bin\\?.dll"
-require('avSimplestWeaponSystem')
-
-
 local dev = GetSelf()
 
 -- dofile(LockOn_Options.script_path.."dump.lua")
+-- dump("G_", _G)
+
 -- dump("Weapon", dev)
 -- dump("Weapon_", getmetatable(dev))
 
@@ -419,7 +416,7 @@ local function  update_ccrp()
 
         local max_range = calculate_ccip_max_range(dy)
 
-        local valid, az, el, travel_dist = avSimplestWeaponSystem.Calculate()
+        local valid, az, el, travel_dist = Calculate()
         local vx, vy, vz = sensor_data.getSelfVelocity()
         local gs = math.sqrt(vx*vx + vz*vz)
         fly_time=travel_dist/gs
@@ -485,7 +482,7 @@ local function  update_ccip_delayed()
         target_elevation = new_elevation - p_pitch * c
 
 
-        local valid, az, el, travel_dist = avSimplestWeaponSystem.Calculate()
+        local valid, az, el, travel_dist = Calculate()
         local vx, vy, vz = sensor_data.getSelfVelocity()
         local gs = math.sqrt(vx*vx + vz*vz)
         fly_time=travel_dist/gs
@@ -546,10 +543,10 @@ local function  update_ccip()
             end
         end
  
-        avSimplestWeaponSystem.set_target_level(h0)
+        set_target_level(h0)
 
         if master_mode == AVIONICS_MASTER_MODE_ID.GUN or master_mode == AVIONICS_MASTER_MODE_ID.GUN_R then
-            local _valid, tx, ty, tz, fly_time, breakaway = avSimplestWeaponSystem.CalculateGunA2G(V0)
+            local _valid, tx, ty, tz, fly_time, breakaway = CalculateGunA2G(V0)
             valid = _valid
             if _valid then
                 local dx = -x + tx
@@ -579,10 +576,10 @@ local function  update_ccip()
                 el = target_elevation
             end
         elseif wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
-            valid, az, el, travel_dist = avSimplestWeaponSystem.Calculate()
+            valid, az, el, travel_dist = Calculate()
             fly_time=travel_dist / gs
         elseif wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET then
-            valid, az, el, travel_dist = avSimplestWeaponSystem.CalculateRocket()
+            valid, az, el, travel_dist = CalculateRocket()
             fly_time=travel_dist / gs
         end
     end
@@ -719,6 +716,7 @@ end
 local function update_aa()
     check_sidewinder()
 
+
     if get_wpn_aa_msl_ready() or get_wpn_guns_ready() then WPN_READY:set(1) else WPN_READY:set(0) end
     if get_wpn_aa_msl_sim_ready() or get_wpn_guns_sim_ready() then WPN_SIM_READY:set(1) else WPN_SIM_READY:set(0) end
 
@@ -839,9 +837,12 @@ local wpn_ripple_elapsed = 0
 local time_elapsed = 0
 
 function update()
+
     time_elapsed = time_elapsed + update_time_step
     update_storages()
     update_master_mode_changed()
+
+
     if get_avionics_master_mode_aa() then update_aa()
     elseif get_avionics_master_mode_ag() then update_ag()
     elseif master_mode == AVIONICS_MASTER_MODE_ID.SJ then  update_sj()
@@ -903,6 +904,7 @@ function update()
             wpn_guns_on = false
         end
     end
+
     if wpn_release_elapsed ~= -1 then
         wpn_release_elapsed = wpn_release_elapsed - update_time_step
         if wpn_release_elapsed <= 0 then
@@ -912,6 +914,8 @@ function update()
             end
         end
     end
+
+    
 end
 
 function post_initialize()
@@ -931,8 +935,6 @@ function post_initialize()
     update_ag_sel_next(false)
 
     WPN.CCIP_DELAYED:set(0);
-    avSimplestWeaponSystem.Setup()
-
     startup_print("weapon: postinit end")
 end
 
@@ -1196,7 +1198,6 @@ function SetCommand(command,value)
             dev:set_target_range(travel_dist)
         end
     elseif command == iCommandPlaneDropFlareOnce then
-        avSimplestWeaponSystem.Setup()
         if dev:get_flare_count() > 1 then 
             dev:drop_flare()
         end
