@@ -115,6 +115,7 @@ join(res.keyCommands,{
 {                                                                       down = flir_commands.LevelUp,                       up = flir_commands.LevelUp,                 name = _('FLIR Level Up'),                                      category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
 {                                                                       down = flir_commands.LevelDown,                     up = flir_commands.LevelDown,               name = _('FLIR Level Down'),                                    category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
 {                                                                       down = flir_commands.AutoGain,                      up = flir_commands.AutoGain,                name = _('FLIR Auto Gain'),                                     category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{                                                                       down = flir_commands.LaserOn,                       up = flir_commands.LaserOn,                 name = _('FLIR Laser On/Off'),                                  category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
 
 
 
