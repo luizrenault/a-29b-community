@@ -1,10 +1,11 @@
 debug = false
+nws = true
 
 
 --NOSEGEAR
 nose_amortizer_min_length 					= 0.00
-nose_amortizer_max_length 					= 0.156 --0.32
-nose_amortizer_basic_length 				= 0.056
+nose_amortizer_max_length 					= 0.25
+nose_amortizer_basic_length 				= 0.14
 nose_amortizer_reduce_length 				= 0.01
 
 
@@ -25,8 +26,8 @@ nose_wheel_moment_of_inertia 				= 0.6
 
 --MAINGEAR2
 main_amortizer_min_length 					= 0.00
-main_amortizer_max_length 					= 0.156 --0.7
-main_amortizer_basic_length 				= 0.056 --0.7
+main_amortizer_max_length 					= 0.19 --0.7
+main_amortizer_basic_length 				= 0.13 --0.7
 --This is the length over which the amortizer will reduce. Smaller values mean higher ride height, larger values lower ride height.
 main_amortizer_reduce_length 				= 0.01  --yes you read that right, 28 metres.
 
@@ -49,7 +50,7 @@ main_wheel_moment_of_inertia 				= 2.65
 
 wheel_static_friction_factor_COMMON 		= 0.75
 wheel_side_friction_factor_COMMON 			= 0.6
-wheel_roll_friction_factor_COMMON 			= 0.04
+wheel_roll_friction_factor_COMMON 			= 0.0125
 wheel_glide_friction_factor_COMMON 			= 0.15 --this needs to be low to go from standstill to moving smoothly
 
 brake_moment_main 							= 5500.0
@@ -82,7 +83,7 @@ suspension =
 		wheel_axle_offset 						= 0.0,
 		self_attitude 							= true,
 		--axle_angle
-		yaw_limit 								= math.rad(90.0), --so apparently this must be set to half the animation angle for some reason
+		yaw_limit 								= math.rad(20),
 		--moment_limit
 		damper_coeff 							= main_damper_coeff,
 		--wheel_ground_block_flag
@@ -115,7 +116,7 @@ suspension =
 		--amortizer_back_damper2_force_factor
 
 		wheel_moment_of_inertia					= nose_wheel_moment_of_inertia,
-		wheel_radius 							= 0.433,
+		wheel_radius 							= 0.425,
 		wheel_static_friction_factor 			= wheel_static_friction_factor_COMMON,
 		wheel_side_friction_factor 				= wheel_side_friction_factor_COMMON,--affects the abillity to slide in turns - decrease for better turning
 		wheel_roll_friction_factor 				= wheel_roll_friction_factor_COMMON,
@@ -130,12 +131,11 @@ suspension =
 		--anti_skid_installed
 
 		--damper_coeff = damper_coeff_tail_wheel,
-		--arg_post 								= 999,
 		arg_amortizer 							= 1,
 		arg_wheel_rotation 						= 76,
 		arg_wheel_yaw 							= 2,
 		--arg_wheel_damage						= 999,
-		--arg_post								= 999,
+		arg_post								= 0,
 		collision_shell_name					= "WHEEL_F",
 		--filter_yaw							= 999,???
 		--noise_k
@@ -171,7 +171,7 @@ suspension =
 		amortizer_direct_damper_force_factor 	= main_amortizer_direct_damper_force_factor,
 		amortizer_back_damper_force_factor 		= main_amortizer_back_damper_force_factor,
 	
-		wheel_radius 							= 0.563,
+		wheel_radius 							= 0.53,
 		wheel_static_friction_factor 			= wheel_static_friction_factor_COMMON,
 		wheel_side_friction_factor 				= wheel_side_friction_factor_COMMON,
 		wheel_roll_friction_factor 				= wheel_roll_friction_factor_COMMON,
@@ -186,11 +186,14 @@ suspension =
 		damper_coeff 							= main_damper_coeff,
 
 		--damper_coeff = damper_coeff_main_wheel,
-		--arg_post = 5,
+		arg_post = 5,
 		arg_amortizer 							= 6,
 		arg_wheel_rotation 						= 77,
 		arg_wheel_yaw 							= -1,
 		collision_shell_name 					= "WHEEL_R",
+
+		track_width								= 0.2,
+
     },
 
     --MAINGEAR RIGHT
@@ -216,7 +219,7 @@ suspension =
 		amortizer_direct_damper_force_factor 	= main_amortizer_direct_damper_force_factor/2.0,
 		amortizer_back_damper_force_factor 		= main_amortizer_back_damper_force_factor,
 		
-		wheel_radius 							= 0.563,
+		wheel_radius 							= 0.53,
 		wheel_static_friction_factor 			= wheel_static_friction_factor_COMMON,
 		wheel_side_friction_factor 				= wheel_side_friction_factor_COMMON,
 		wheel_roll_friction_factor 				= wheel_roll_friction_factor_COMMON,
@@ -231,10 +234,13 @@ suspension =
 		damper_coeff 							= main_damper_coeff,
 
 		--damper_coeff = damper_coeff_main_wheel,
-		--arg_post = 3,
+		arg_post 								= 3,
 		arg_amortizer 							= 4,
-		arg_wheel_rotation 						= 77,
+		arg_wheel_rotation 						= 103,
 		arg_wheel_yaw 							= -1,
 		collision_shell_name 					= "WHEEL_R",
-    },
+ 
+		track_width								= 0.2,
+
+	},
 }

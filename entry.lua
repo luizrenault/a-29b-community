@@ -81,6 +81,6 @@ local FM =
 }
 
 ----------------------------------------------------------------------------------------
-make_flyable('A-29B', current_mod_path..'/Cockpit/Scripts/' , nil , current_mod_path..'/comm.lua')
+make_flyable('A-29B', current_mod_path..'/Cockpit/Scripts/' , FM , current_mod_path..'/comm.lua')
 ----------------------------------------------------------------------------------------
 plugin_done()

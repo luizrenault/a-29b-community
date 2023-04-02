@@ -136,6 +136,7 @@ A_29B =  {
 
 		main_gear_pos 				= 	{-0.66,	-2.13,	1.813}, --{-1,	-2.03,	2.},
 		nose_gear_pos 				= 	{2.544, -2.184,  0}, --{2.808,	-2.09,	0},
+		wheel_steering_angle_max	=   math.rad(20), -- radians
 		tand_gear_max				=	0.363970234, -- tangent of degrees of rotation max of nose wheel steering
 
 		nose_gear_amortizer_direct_stroke        = 0.00,    -- down from nose_gear_pos !!!
@@ -860,47 +861,6 @@ A_29B =  {
 			wCtrl     = 150
 		},
     },
-	--damage , index meaning see in  Scripts\Aircrafts\_Common\Damage.lua
-	Damage = {
-		[0]		= {critical_damage = 5, args = {146}},
-		[3]		= {critical_damage = 20,args = {65}}  ,
-		[4]		= {critical_damage = 20, args = {150}},
-		[5]		= {critical_damage = 20, args = {147}},
-		[7]		= {critical_damage = 4, args = {249}} ,
-		[9]		= {critical_damage = 3, args = {154}},
-		[10]	= {critical_damage = 3, args = {153}},
-		[11]	= {critical_damage = 3, args = {167}},
-		[12]	= {critical_damage = 3, args = {161}},
-		[15]	= {critical_damage = 5, args = {267}},
-		[16]	= {critical_damage = 5, args = {266}},
-		[23]	= {critical_damage = 8, args = {223}, deps_cells = {25}},
-		[24]	= {critical_damage = 8, args = {213}, deps_cells = {26, 60}},
-		[25]	= {critical_damage = 3, args = {226}},
-		[26]	= {critical_damage = 3, args = {216}},
-		[29]	= {critical_damage = 9, args = {224}, deps_cells = {31, 25, 23}},
-		[30]	= {critical_damage = 9, args = {214}, deps_cells = {32, 26, 24, 60}},
-		[31]	= {critical_damage = 4, args = {229}},
-		[32]	= {critical_damage = 4, args = {219}},
-		[35]	= {critical_damage = 10, args = {225}, deps_cells = {29, 31, 25, 23}},
-		[36]	= {critical_damage = 10, args = {215}, deps_cells = {30, 32, 26, 24, 60}} ,
-		[37]	= {critical_damage = 4, args = {227}},
-		[38]	= {critical_damage = 4, args = {217}},
-		[39]	= {critical_damage = 7,	args = {244}, deps_cells = {53}},
-		[40]	= {critical_damage = 7, args = {241}, deps_cells = {54}},
-		[45]	= {critical_damage = 9, args = {235}, deps_cells = {39, 51, 53}},
-		[46]	= {critical_damage = 9, args = {233}, deps_cells = {40, 52, 54}},
-		[51]	= {critical_damage = 3, args = {239}},
-		[52]	= {critical_damage = 3, args = {237}},
-		[53]	= {critical_damage = 3, args = {248}},
-		[54]	= {critical_damage = 3, args = {247}},
-		[55]	= {critical_damage = 20, args = {81}, deps_cells = {39, 40, 45, 46, 51, 52, 53, 54}},
-		[59]	= {critical_damage = 5, args = {148}},
-		[60]	= {critical_damage = 1, args = {144}},
-
-		[83]	= {critical_damage = 3, args = {134}} ,-- nose wheel
-		[84]	= {critical_damage = 3, args = {136}}, -- left wheel
-		[85]	= {critical_damage = 3, args = {135}} ,-- right wheel
-	},
 
 	DamageParts = 
 	{  
@@ -923,6 +883,48 @@ A_29B =  {
 		{ id = 'mfd',  		label = _('MFD'), 		enable = false, hh = 0, mm = 0, mmint = 1, prob = 100 },		
 	},
 
+		--damage , index meaning see in  Scripts\Aircrafts\_Common\Damage.lua
+		Damage = {
+			[0]		= {critical_damage = 5, args = {146}},
+			[3]		= {critical_damage = 20,args = {65}}  ,
+			[4]		= {critical_damage = 20, args = {150}},
+			[5]		= {critical_damage = 20, args = {147}},
+			[7]		= {critical_damage = 4, args = {249}} ,
+			[9]		= {critical_damage = 3, args = {154}},
+			[10]	= {critical_damage = 3, args = {153}},
+			[11]	= {critical_damage = 3, args = {167}},
+			[12]	= {critical_damage = 3, args = {161}},
+			[15]	= {critical_damage = 5, args = {267}},
+			[16]	= {critical_damage = 5, args = {266}},
+			[23]	= {critical_damage = 8, args = {223}, deps_cells = {25}},
+			[24]	= {critical_damage = 8, args = {213}, deps_cells = {26, 60}},
+			[25]	= {critical_damage = 3, args = {226}},
+			[26]	= {critical_damage = 3, args = {216}},
+			[29]	= {critical_damage = 9, args = {224}, deps_cells = {31, 25, 23}},
+			[30]	= {critical_damage = 9, args = {214}, deps_cells = {32, 26, 24, 60}},
+			[31]	= {critical_damage = 4, args = {229}},
+			[32]	= {critical_damage = 4, args = {219}},
+			[35]	= {critical_damage = 10, args = {225}, deps_cells = {29, 31, 25, 23}},
+			[36]	= {critical_damage = 10, args = {215}, deps_cells = {30, 32, 26, 24, 60}} ,
+			[37]	= {critical_damage = 4, args = {227}},
+			[38]	= {critical_damage = 4, args = {217}},
+			[39]	= {critical_damage = 7,	args = {244}, deps_cells = {53}},
+			[40]	= {critical_damage = 7, args = {241}, deps_cells = {54}},
+			[45]	= {critical_damage = 9, args = {235}, deps_cells = {39, 51, 53}},
+			[46]	= {critical_damage = 9, args = {233}, deps_cells = {40, 52, 54}},
+			[51]	= {critical_damage = 3, args = {239}},
+			[52]	= {critical_damage = 3, args = {237}},
+			[53]	= {critical_damage = 3, args = {248}},
+			[54]	= {critical_damage = 3, args = {247}},
+			[55]	= {critical_damage = 20, args = {81}, deps_cells = {39, 40, 45, 46, 51, 52, 53, 54}},
+			[59]	= {critical_damage = 5, args = {148}},
+			[60]	= {critical_damage = 1, args = {144}},
+	
+			[83]	= {critical_damage = 3, args = {134}} ,-- nose wheel
+			[84]	= {critical_damage = 3, args = {136}}, -- left wheel
+			[85]	= {critical_damage = 3, args = {135}} ,-- right wheel
+		},
+	
 	lights_data = {
         typename = "collection",
         lights = {
