@@ -107,9 +107,9 @@ end
 
 function post_initialize()
     local birth = LockOn_Options.init_conditions.birth_place
-    if birth=="GROUND_HOT" or birth=="AIR_HOT" then
+    if birth=="AIR_HOT" then
         dev:performClickableAction(device_commands.flaps, 0, true)
-    elseif birth=="GROUND_COLD" then
+    elseif birth=="GROUND_HOT" or birth=="GROUND_COLD" then
         dev:performClickableAction(device_commands.flaps, 1, true)
         FLAPS_STATE = 1
         FLAPS_TARGET = 1
