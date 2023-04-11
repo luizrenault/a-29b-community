@@ -57,23 +57,30 @@ make_default_activity(update_time_step)
 local sensor_data = get_base_data()
 
 
-local bat_pcp_v=28             -- main battery voltage
+local bat_pcp_v=24             -- main battery voltage
 local bat_pcp_vmin=22          -- main battery minimum voltage
+local bat_pcp_vmax=25          -- main battery maximum voltage
 local bat_pcp_a=0              -- main battery curent
 local bat_pcp_res=0            -- main battery resistance
 local bat_pcp_ah=56            -- main battery capacity
 local bat_pcp_t=25             -- main battery temperature
 local bat_pcp_prot = false     -- main baterry protection
+local bat_pcp_next_discharge = -1.0
+local bat_pcp_next_recharge = -1.0
 
 local bat_res_v=24             -- reserve battery voltage
+local bat_res_vmax=24          -- reserve battery maximum voltage
+local bat_res_vmin=22          -- reserve battery minimum voltage
 local bat_res_a=0              -- reserve battery current
 local bat_res_res=0            -- reserve battery resistance
 local bat_res_ah=11            -- reserve battery capacity
+local bat_res_next_discharge = -1.0
+local bat_res_next_recharge = -1.0
 
 -- CPM1 -> fonte externa
 local ext_pwr_on = false
 local ext_on = false
-local ext_v = 0
+local ext_v = 28.5
 local ext_vnom = 28.5
 
 
@@ -82,7 +89,7 @@ local ext_vnom = 28.5
 -- Gerador -> off/reset reinicia os circuitos de proteção do gerador
 -- Falha no gerador, EDS liga bateria para alimentar cargas para pouso automaticamente
 local gen_on = false
-local gen_v = 0
+local gen_v = 28
 local gen_vnom = 30
 local gen_amax=400
 
@@ -91,13 +98,15 @@ local avoinics_master_on_delay = 2
 local mdp_switch_delay = 2
 
 -- Contactoras
-local contact_cfe = false
-local contact_clg = false
-local contact_cpm1 = false
-local contact_cpm2 = false
-local contact_cb = false
-local contact_cbe1 = false
-local contact_cbe2 = false
+local contact_cfe = false -- contactor de fonte externa
+local contact_clg = false -- contactor do gerador
+local contact_cpm1 = false -- contactor de partida do motor 1
+local contact_cpm2 = false -- contactor de partida do motor 2
+local contact_cb = false -- contactor de bateria
+local contact_cbe1 = false -- contactor de barra de emergência 1
+local contact_cbe2 = false -- contactor de barra de emergência 2
+local contact_avi_mst = false -- contactor avionics master
+local contact_avi_mst_emer = false -- contactor avionics master emergência
 
 
 -- Disjuntores
@@ -133,64 +142,317 @@ local sw_ar_solo = false
 local sw_avi_mst = false
 
 
+-- Relés
+local relay_rbr = false -- relés de barra reserva
+
+
 -- Barras
 local bar_pcp_dc_v = 0
+local bar_pcp_dc_vmin = 22
 local bar_pcp_dc_a = 0
 local bar_pcp_dc_res = 0
 
 local bar_hot_v = 0
+local bar_hot_vmin = 22
 local bar_hot_a = 0
 local bar_hot_res = 0
 
 local bar_hot_res_v = 0
+local bar_hot_res_vmin = 22
 local bar_hot_res_a = 0
 local bar_hot_res_res = 0
 
 local bar_emer_dc_v = 0
+local bar_emer_dc_vmin = 22
 local bar_emer_dc_a = 0
 local bar_emer_dc_res = 0
 
 local bar_res1_v = 0
+local bar_res1_vmin = 22
 local bar_res1_a = 0
 local bar_res1_res = 0
 
 local bar_res2_v = 0
+local bar_res2_vmin = 22
 local bar_res2_a = 0
 local bar_res2_res = 0
 
 local bar_emer_res_v = 0
+local bar_emer_res_vmin = 22
 local bar_emer_res_a = 0
 local bar_emer_res_res = 0
 
 local bar_avi_mst_pcp_dc_v = 0
+local bar_avi_mst_pcp_dc_vmin = 22
 local bar_avi_mst_pcp_dc_a = 0
 local bar_avi_mst_pcp_dc_res = 0
 
 local bar_avi_mst_emer_dc_v = 0
+local bar_avi_mst_emer_dc_vmin = 22
 local bar_avi_mst_emer_dc_a = 0
 local bar_avi_mst_emer_dc_res = 0
 
 -- controls
 local ctl_sw_ext_pwr_on = false
 
-local battery_caution = 0
+local emer_bus_caution = 0
 local gen_caution = 0
+local battery_caution = 0
+local bkup_bat_caution = 0
 
 local elec_avionics_emergency_warm_up_until = 0
 local elec_avionics_warm_up_until = 0
 
 function update()
-    if get_batt_on() or
-    (get_generator_on() and get_engine_on())  then -- Generator On and Engine On
-        elec_main_bar_ok:set(((sensor_data.getWOW_LeftMainLandingGear() > 0 or get_engine_on()) and not get_emer_ovrd()) and 1 or 0)
-        if elec_emergency_ok:get() == 0 then set_caution(CAUTION_ID.EMER_BUS,0) end
-        elec_emergency_ok:set(1)
-        
-        if get_batt_on() and get_cockpit_draw_argument_value(964) == 1 then 
-            elec_emergency_reserve_ok:set(1) 
-        else 
-            elec_emergency_reserve_ok:set(0) 
+
+    -- Reset the buses
+    bar_pcp_dc_v = 0
+    bar_hot_v = 0
+    bar_hot_res_v = 0
+    bar_emer_dc_v = 0
+    bar_res1_v = 0
+    bar_res2_v = 0
+    bar_emer_res_v = 0
+    bar_avi_mst_pcp_dc_v = 0
+    bar_avi_mst_emer_dc_v = 0
+
+    -- -- Systems checks
+
+    -- TODO check if the external power is connected to the aircraft
+    ext_on = true
+
+    -- If engine is on, the generator is on
+    -- TODO check if NG is above 50%
+    if get_engine_on() and sensor_data.getEngineLeftRPM() >= 50 then
+        gen_on = true
+    else
+        gen_on = false
+    end
+
+    -- Switches and contactors checks
+
+    -- If external power is connected, the CFE is connected to the main bus
+    if get_ext_pwr_on() and ext_on and sensor_data.getWOW_LeftMainLandingGear() > 0 then
+        contact_cfe = true
+    else
+        contact_cfe = false
+    end
+
+    -- If the generator switch is on, the generator is on, the external power is disconnected and the CPM1 and CPM2 are disconnected, 
+    -- the CLG is connected to the main bus
+    if get_generator_on() and gen_on and not contact_cfe and not (contact_cpm1 or contact_cpm2) then
+        contact_clg = true
+    else
+        contact_clg = false
+    end
+
+    -- Connect the main bus and emer bus if gen is on or aircraft is on the ground
+    if contact_clg or sensor_data.getWOW_LeftMainLandingGear() > 0 then
+        contact_cbe1 = true
+        contact_cbe2 = false
+    else
+        contact_cbe1 = false
+        contact_cbe2 = true
+    end
+
+    -- If battery switch is on and (generator is on and connected or aircraft is on the ground), the battery is connected to the main bus
+    if get_batt_on() and (contact_clg or sensor_data.getWOW_LeftMainLandingGear() > 0) then
+        contact_cb = true
+    else
+        contact_cb = false
+    end
+
+    -- If emer override switch is in EMER, the CBE2 is connected and CB and CBE1 are disconnected
+    if get_emer_ovrd() then
+        contact_cbe2 = true
+        contact_cb = false
+        contact_cbe1 = false
+    else
+        -- No effect
+    end
+
+    -- If backup battery switch is on, 
+    if get_bkp_on() then
+        -- If the aircraft is not on the ground, or the (battery is or the generator is on or external power is connected)
+        if (sensor_data.getWOW_LeftMainLandingGear() == 0 or gen_on or get_batt_on() or contact_cfe) then
+            relay_rbr = true
+        else
+            relay_rbr = false
         end
+    else
+        relay_rbr = false
+    end
+
+    -- If the avionics master switch is on, the avi_mst contactors are connected
+    if get_avionics_on() then
+        contact_avi_mst = true
+        contact_avi_mst_emer = true
+    else
+        contact_avi_mst = false
+        contact_avi_mst_emer = false
+    end
+
+    -- -- Power distribution
+
+    -- Hot bus should have the same voltage as the main battery
+    bar_hot_v = bat_pcp_v
+
+    -- Hot reserve bus should have the same voltage as the reserve battery
+    bar_hot_res_v = bat_res_v
+
+    -- If external power is connected and CFE is connected, power up the main bus
+    if ext_on and contact_cfe and bar_pcp_dc_v < ext_v then
+        bar_pcp_dc_v = ext_v
+
+    -- If the generator is on and the CLG is connected, power up the main bus
+    elseif gen_on and contact_clg and bar_pcp_dc_v < gen_v then
+        bar_pcp_dc_v = gen_v
+
+    -- If the battery is connected, power up the main bus
+    elseif contact_cb and bar_pcp_dc_v < bar_hot_v then
+        bar_pcp_dc_v = bar_hot_v
+    end
+
+    -- If the relay is closed, power up the reserve buses
+    if relay_rbr then
+        bar_res1_v = bar_hot_res_v
+        bar_res2_v = bar_hot_res_v
+        bar_emer_res_v = bar_hot_res_v -- TODO there is something about air/ground in the manual?
+    end
+
+    -- If CBE1 is connected, power up the emergency bus from the main bus
+    if contact_cbe1 and bar_pcp_dc_v > bar_emer_dc_v then
+        bar_emer_dc_v = bar_pcp_dc_v
+    end
+
+    -- If CBE2 is connected, power up the emergency bus from the hot bus
+    if contact_cbe2 and bar_hot_v > bar_emer_dc_v then
+        bar_emer_dc_v = bar_hot_v 
+    end
+
+    -- If the avionics master contactor is connected, power up the avionics master bus
+    if contact_avi_mst then
+        bar_avi_mst_pcp_dc_v = bar_pcp_dc_v
+    end
+
+    -- If the avionics master emergency contactor is connected, power up the avionics master emergency bus
+    if contact_avi_mst_emer then
+        bar_avi_mst_emer_dc_v = bar_emer_dc_v
+    end
+
+    elec_emer_dc_v:set(bar_emer_dc_v)
+
+    -- -- Drain or charge batteries
+
+    -- Main bus is powered up and there is no generator or external power
+    if not contact_clg and not contact_cfe and (bar_pcp_dc_v > 0 or bar_emer_dc_v > 0) then
+
+        -- Drain the main battery, proportional to what's powered on
+        -- TODO consider the actual systems that are powered on (Landing lights, etc)
+        local bat_pcp_discharge_rate = 0.0
+        if bar_pcp_dc_v > 0 then
+            bat_pcp_discharge_rate = bat_pcp_discharge_rate + 0.5 / 600
+        end
+        if bar_emer_dc_v > 0 then
+            bat_pcp_discharge_rate = bat_pcp_discharge_rate + 0.5 / 600
+        end
+        if bar_avi_mst_pcp_dc_v > 0 then
+            bat_pcp_discharge_rate = bat_pcp_discharge_rate + 0.5 / 600
+        end
+        if bar_avi_mst_emer_dc_v > 0 then
+            bat_pcp_discharge_rate = bat_pcp_discharge_rate + 0.5 / 600
+        end
+
+        -- Discharge every 1 second
+        if bat_pcp_next_discharge == -1.0 then
+            bat_pcp_next_discharge = get_absolute_model_time() + 1
+        elseif get_absolute_model_time() > bat_pcp_next_discharge then
+            bat_pcp_next_discharge = get_absolute_model_time() + 1
+            bat_pcp_v = math.max(bat_pcp_v - bat_pcp_discharge_rate, bat_pcp_vmin)
+        end
+
+    -- Main bus and emergency bus are disconnected, but the emer bus is powered up
+    elseif not contact_cbe1 and bar_emer_dc_v > 0 then
+
+        -- Drain the main battery, proportional to what's powered on
+        -- TODO consider the actual systems that are powered on (Landing lights, etc)
+        local bat_pcp_discharge_rate = 0.0
+        if bar_emer_dc_v > 0 then
+            bat_pcp_discharge_rate = bat_pcp_discharge_rate + 0.5 / 600
+        end
+        if bar_avi_mst_emer_dc_v > 0 then
+            bat_pcp_discharge_rate = bat_pcp_discharge_rate + 0.5 / 600
+        end
+
+        -- Discharge every 1 second
+        if bat_pcp_next_discharge == -1.0 then
+            bat_pcp_next_discharge = get_absolute_model_time() + 1
+        elseif get_absolute_model_time() > bat_pcp_next_discharge then
+            bat_pcp_next_discharge = get_absolute_model_time() + 1
+            bat_pcp_v = math.max(bat_pcp_v - bat_pcp_discharge_rate, bat_pcp_vmin)
+        end
+
+    -- External power is connected
+    elseif contact_cfe then
+
+        -- Don't discharge the main battery
+        bat_pcp_next_discharge = -1.0
+
+    -- Generator is on
+    elseif contact_clg then
+
+        -- Charge the main battery
+        bat_pcp_v = math.min(bat_pcp_v + 0.01, bat_pcp_vmax)
+        bat_pcp_next_discharge = -1.0
+    end
+
+    if bar_pcp_dc_v <= bar_pcp_dc_vmin and relay_rbr then
+
+        local bat_res_discharge_rate = 1.0 / 3600
+
+        -- Discharge every 1 second
+        if bat_res_next_discharge == -1.0 then
+            bat_res_next_discharge = get_absolute_model_time() + 1
+        elseif get_absolute_model_time() > bat_res_next_discharge then
+            bat_res_next_discharge = get_absolute_model_time() + 1
+            bat_res_v = math.max(bat_res_v - bat_res_discharge_rate, bat_res_vmin)
+        end
+    elseif bar_pcp_dc_v > bar_pcp_dc_vmin then
+        bat_res_next_discharge = -1.0
+        bat_res_v = math.min(bat_res_v + 0.01, bat_res_vmax)
+    end
+
+    -- if the generator is off, the battery will go down from 24V to 21V in 30 minutes
+    -- when the generator and engine come back on, the battery will recharge up to 24V
+
+    -- -- Power up buses
+
+    -- Check if the buses have the minimum voltage
+    elec_main_bar_ok:set((bar_pcp_dc_v > bar_pcp_dc_vmin) and 1 or 0)
+    elec_hot_ok:set((bar_hot_v > bar_hot_vmin) and 1 or 0)
+    elec_hot_res_ok:set((bar_hot_res_v > bar_hot_res_vmin) and 1 or 0)
+    elec_emergency_ok:set((bar_emer_dc_v > bar_emer_dc_vmin) and 1 or 0)
+    elec_reserve1_ok:set((bar_res1_v > bar_res1_vmin) and 1 or 0)
+    elec_reserve2_ok:set((bar_res2_v > bar_res2_vmin) and 1 or 0)
+    elec_emergency_reserve_ok:set((bar_emer_res_v > bar_emer_res_vmin) and 1 or 0)
+    elec_avionics_emergency_ok:set((bar_avi_mst_emer_dc_v > bar_avi_mst_emer_dc_vmin) and 1 or 0)
+
+    -- Add a delay to turn on the avionics bus
+    if elec_avionics_ok:get() == 0 and bar_avi_mst_pcp_dc_v > bar_avi_mst_pcp_dc_vmin then
+        if elec_avionics_warm_up_until == -1 then
+            elec_avionics_warm_up_until = get_absolute_model_time() + mdp_switch_delay
+        elseif get_absolute_model_time() >= elec_avionics_warm_up_until then
+            elec_avionics_ok:set((bar_avi_mst_pcp_dc_v > bar_avi_mst_pcp_dc_vmin) and 1 or 0)
+            elec_avionics_warm_up_until = -1
+        end
+        
+    else
+        elec_avionics_ok:set((bar_avi_mst_pcp_dc_v > bar_avi_mst_pcp_dc_vmin) and 1 or 0)
+    end
+
+    -- -- Power up systems
+    if elec_emergency_ok:get() == 1 or elec_avionics_ok:get() == 1 or elec_reserve1_ok:get() == 1 then
+        -- MDPs are powered up
 
         local mdp = elec_avionics_master_mdp:get()
         if mdp == 0 and get_mdp1_on() then
@@ -199,6 +461,7 @@ function update()
             elec_avionics_master_mdp:set(2)
         elseif (mdp == 1 and not get_mdp1_on()) or (mdp == 2 and not get_mdp2_on()) then
             elec_avionics_master_mdp:set(0)
+            elec_mdp_ok:set(0)
     
             -- Load backup MDP in two seconds, if available
             if get_mdp1_on() or get_mdp2_on() then
@@ -208,104 +471,65 @@ function update()
                     elec_avionics_master_mdp:set(2)
                 end
 
-                elec_avionics_emergency_ok:set(0)
-                elec_avionics_ok:set(0)
                 elec_avionics_emergency_warm_up_until = get_absolute_model_time() + mdp_switch_delay
                 elec_avionics_warm_up_until = get_absolute_model_time() + mdp_switch_delay
             end
         end
 
-        if elec_avionics_ok:get() == 0 then
-            if get_avionics_on() and elec_avionics_master_mdp:get() > 0 and get_elec_main_bar_ok() and (sensor_data.getWOW_LeftMainLandingGear() > 0 or get_engine_on()) then
-                if elec_avionics_warm_up_until == -1 then
-                    -- Start warm up
-                    elec_avionics_warm_up_until = get_absolute_model_time() + avoinics_master_on_delay
-                    --elec_avionics_emergency_ok:set(1)
-                elseif get_absolute_model_time() >= elec_avionics_warm_up_until and get_absolute_model_time() >= elec_avionics_emergency_warm_up_until then
-                    -- End warm up
-                    elec_avionics_ok:set(1)
-                    elec_avionics_warm_up_until = -1.0
-                else
-                    -- Continue warm up
-                end
-            else
-                elec_avionics_ok:set(0)
-                if elec_avionics_warm_up_until > 0 then
-                    elec_avionics_warm_up_until = -1.0
-                end
-            end
-        else
-            if get_avionics_on() and elec_avionics_master_mdp:get() > 0 and get_elec_main_bar_ok() and (sensor_data.getWOW_LeftMainLandingGear() > 0 or get_engine_on()) then
+        -- The MDPs are powered up, but they haven't started up yet
+        if elec_mdp_ok:get() == 0 then
 
-            else
-                elec_avionics_ok:set(0)
-                elec_avionics_warm_up_until = -1.0
-            end
-        end
-
-        if elec_avionics_emergency_ok:get() == 0 then
-            -- Take 28 seconds to turn it on
-            if elec_avionics_master_mdp:get() > 0 and get_elec_emergency_ok() then
+            -- Take 28 seconds to start up the mdps
+            if elec_avionics_master_mdp:get() > 0 then
+                
                 if elec_avionics_emergency_warm_up_until == -1 then
                     -- Start warm up
                     elec_avionics_emergency_warm_up_until = get_absolute_model_time() + mdp_warmup_delay
-                    --elec_avionics_emergency_ok:set(1)
+
                 elseif get_absolute_model_time() >= elec_avionics_emergency_warm_up_until then
                     -- End warm up
-                    elec_avionics_emergency_ok:set(1)
+                    elec_mdp_ok:set(1)
                     elec_avionics_emergency_warm_up_until = -1.0
-                else
-                    -- Continue warm up
                 end
             else
-                elec_avionics_emergency_ok:set(0)
                 if elec_avionics_emergency_warm_up_until > 0 then
                     elec_avionics_emergency_warm_up_until = -1.0
                 end
             end
         else
-            if elec_avionics_master_mdp:get() > 0 and get_elec_emergency_ok() then
-
-            else
-                elec_avionics_emergency_ok:set(0)
+            if elec_avionics_master_mdp:get() == 0 then
+                elec_mdp_ok:set(0)
                 elec_avionics_emergency_warm_up_until = -1.0
             end 
         end
-        
     else
-        elec_main_bar_ok:set(0)
-        elec_avionics_ok:set(0)
-        elec_avionics_emergency_ok:set(0)
-        if elec_emergency_ok:get() == 1 then set_caution(CAUTION_ID.EMER_BUS,1) end
-        elec_emergency_ok:set(0)
-        if sensor_data.getWOW_LeftMainLandingGear() > 0 then  elec_emergency_reserve_ok:set(0) end
-    end
-    if sensor_data.getWOW_LeftMainLandingGear() == 0 then
-        elec_emergency_reserve_ok:set(1)
-    end
+        elec_mdp_ok:set(0)
+        elec_avionics_emergency_warm_up_until = -1.0
+    end 
 
-    if not get_batt_on() and battery_caution == 0 then
+    -- Battery is disconnected from the main bus
+    if not contact_cb and battery_caution == 0 then
         set_caution(CAUTION_ID.BATTERY, 1)
         battery_caution = 1
-    elseif get_batt_on() and battery_caution == 1 then
+    elseif contact_cb and battery_caution == 1 then
         set_caution(CAUTION_ID.BATTERY, 0)
         battery_caution = 0
     end
 
+    -- Emergency bus is not powered
+    if elec_emergency_ok:get() == 0 and emer_bus_caution == 0 then
+        set_caution(CAUTION_ID.EMER_BUS, 1)
+        emer_bus_caution = 1
+    elseif elec_emergency_ok:get() == 1 and emer_bus_caution == 1 then
+        set_caution(CAUTION_ID.EMER_BUS, 0)
+        emer_bus_caution = 0
+    end
+
     -- Engine is running but generator switch is off
-    if get_engine_on() and not get_generator_on() and gen_caution == 0 then
+    if not contact_clg and not contact_cfe and gen_caution == 0 and (sensor_data.getWOW_LeftMainLandingGear() == 0 or sensor_data.getEngineLeftRPM() > 50) then
         set_caution(CAUTION_ID.GEN, 1)
         gen_caution = 1
-    -- Engine is running and generator switch is on
-    elseif get_engine_on() and get_generator_on() and gen_caution == 1 then
-        set_caution(CAUTION_ID.GEN, 0)
-        gen_caution = 0
-    -- Engine is not running and aircraft is airborne
-    elseif not get_engine_on() and sensor_data.getWOW_LeftMainLandingGear() == 0 then
-        set_caution(CAUTION_ID.GEN, 1)
-        gen_caution = 1
-    -- Engine is not running and aircraft is on the ground
-    elseif not get_engine_on() and sensor_data.getWOW_LeftMainLandingGear() > 0 then
+    elseif (contact_clg or contact_cfe) and gen_caution == 1 then
         set_caution(CAUTION_ID.GEN, 0)
         gen_caution = 0
     end
@@ -346,10 +570,8 @@ function post_initialize()
 
     if birth=="GROUND_HOT" or birth=="AIR_HOT" then
         dev:performClickableAction(device_commands.ElecBatt, 0, true)
-        dev:performClickableAction(device_commands.AviMst, 1, true)
     elseif birth=="GROUND_COLD" then
         dev:performClickableAction(device_commands.ElecBatt, -1, true)
-        dev:performClickableAction(device_commands.AviMst, 0, true)
         elec_avionics_emergency_warm_up_until = -1.0
         elec_avionics_warm_up_until = -1.0
     end
@@ -361,6 +583,7 @@ function post_initialize()
 
     dev:performClickableAction(device_commands.AviMdp1, 1, true)
     dev:performClickableAction(device_commands.AviMdp2, 1, true)
+    dev:performClickableAction(device_commands.AviMst, 1, true)
     dev:performClickableAction(device_commands.ElecBkp, 1, true)
     dev:performClickableAction(device_commands.AviSms, 1, true)
     dev:performClickableAction(device_commands.ElecGen, 1, true)

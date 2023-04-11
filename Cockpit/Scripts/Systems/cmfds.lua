@@ -185,8 +185,8 @@ local function load_dtc()
 end
 
 function update()
-    CMFD1On:set((get_elec_avionics_ok() or (CMFD2SwOn:get() == 0 and get_elec_avionics_emergency_ok())) and 1 or 0)
-    CMFD2On:set(get_elec_avionics_emergency_ok() and 1 or 0)
+    CMFD1On:set(((get_elec_avionics_ok() or CMFD2SwOn:get() == 0) and get_elec_mdp_ok()) and 1 or 0)
+    CMFD2On:set((get_elec_emergency_ok() and get_elec_mdp_ok()) and 1 or 0)
 
     load_dtc()
 

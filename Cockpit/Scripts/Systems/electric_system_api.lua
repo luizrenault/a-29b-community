@@ -10,12 +10,32 @@ function get_elec_main_bar_ok()
     return elec_main_bar_ok:get()==1 and true or false
 end
 
+function get_elec_hot_ok()
+    return elec_hot_ok:get()==1 and true or false
+end
+
+function get_elec_hot_res_ok()
+    return elec_hot_res_ok:get()==1 and true or false
+end
+
 function get_elec_emergency_ok()
     return elec_emergency_ok:get()==1 and true or false
 end
 
+function get_elec_reserve1_ok()
+    return elec_reserve1_ok:get()==1 and true or false
+end
+
+function get_elec_reserve2_ok()
+    return elec_reserve2_ok:get()==1 and true or false
+end
+
 function get_elec_emergency_reserve_ok()
     return elec_emergency_reserve_ok:get()==1 and true or false
+end
+
+function get_elec_mdp_ok()
+    return elec_mdp_ok:get()==1 and true or false
 end
 
 ----- api cockpit
@@ -37,6 +57,10 @@ end
 
 function get_ext_pwr_on()
     return get_cockpit_draw_argument_value(963) == 1
+end
+
+function get_bkp_on()
+    return get_cockpit_draw_argument_value(964) == 1
 end
 
 function get_mdp1_on()
@@ -61,9 +85,15 @@ end
 elec_avionics_ok=get_param_handle("ELEC_AVIONICS_OK") -- 1 or 0
 elec_avionics_emergency_ok=get_param_handle("ELEC_AVIONICS_EMEGENCY_OK") -- 1 or 0
 elec_main_bar_ok=get_param_handle("ELEC_MAIN_BAR_OK") -- 1 or 0
+elec_hot_ok=get_param_handle("ELEC_HOT_OK") -- 1 or 0
+elec_hot_res_ok=get_param_handle("ELEC_HOT_RES_OK") -- 1 or 0
 elec_emergency_ok=get_param_handle("ELEC_EMERGENCY_OK") -- 1 or 0
+elec_reserve1_ok=get_param_handle("ELEC_RESERVE1_OK") -- 1 or 0
+elec_reserve2_ok=get_param_handle("ELEC_RESERVE2_OK") -- 1 or 0
 elec_emergency_reserve_ok=get_param_handle("ELEC_EMERGENCY_RESERVE_OK") -- 1 or 0
 elec_avionics_master_mdp=get_param_handle("ELEC_AVIONICS_MASTER_MDP") -- 0, 1 or 2
+elec_mdp_ok=get_param_handle("ELEC_MDP_OK") -- 0, 1 or 2
+elec_emer_dc_v=get_param_handle("ELEC_EMER_DC_V") -- 0, 1 or 2
 
 -- elec_aft_mon_ac_ok=get_param_handle("ELEC_AFT_MON_AC_OK") -- 1 or 0
 -- elec_fwd_mon_ac_ok=get_param_handle("ELEC_FWD_MON_AC_OK") -- 1 or 0
