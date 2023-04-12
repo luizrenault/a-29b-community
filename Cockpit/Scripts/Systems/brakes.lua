@@ -1,6 +1,7 @@
 dofile(LockOn_Options.script_path.."command_defs.lua")
 dofile(LockOn_Options.script_path.."functions.lua")
 dofile(LockOn_Options.script_path.."Systems/avionics_api.lua")
+dofile(LockOn_Options.script_path.."Systems/alarm_api.lua")
 dofile(LockOn_Options.script_path.."Systems/electric_system_api.lua")
 
 startup_print("brakes: load")
@@ -53,6 +54,11 @@ local right_wheelbrake_AXIS_value = -1
 local wheelbrake_axis_value = -1
 local wheelbrake_toggle_state = false
 
+local accumulator_pressure = 3000
+local accumulator_pressure_min = 1500
+local accumulator_pressure_max = 3000
+
+local caution_emer_brk = 0
 
 function update1()
 end
@@ -61,7 +67,7 @@ local pbrake_on = 0
 
 function update()
 
-        if pbrake_on == 1 or PANEL_ALARM_TEST:get() == 1 then 
+        if (pbrake_on == 1 and accumulator_pressure >= 2000) or PANEL_ALARM_TEST:get() == 1 then 
             pbrake_light:set(1)
         else
             pbrake_light:set(0)
@@ -96,7 +102,7 @@ function update()
             -- brakes are enabled if brake_now <= x
             -- adjust ratios in brake_table above
     
-            if brake_now <= x then
+            if brake_now <= x and accumulator_pressure >= 2000 then
                 dispatch_action(nil,iCommandPlaneWheelBrakeOn)
             else
                 dispatch_action(nil,iCommandPlaneWheelBrakeOff)
@@ -119,6 +125,20 @@ function update()
         left_brake_pedal_param:set(wheelbrake_axis_value)
         right_brake_pedal_param:set(wheelbrake_axis_value)
         -- print_message_to_user(wheelbrake_axis_value)
+
+        -- Recharge accumulator if engine is on
+        if sensor_data.getEngineLeftRPM() >= 21 then
+            accumulator_pressure = math.min(accumulator_pressure + 100, accumulator_pressure_max)
+        end
+
+            -- EMER BRK alarm
+        if accumulator_pressure < 2000 and caution_emer_brk == 0 then
+            set_caution(CAUTION_ID.EMER_BRK, 1)
+            caution_emer_brk = 1
+        elseif accumulator_pressure >= 2000 and caution_emer_brk == 1 then
+            set_caution(CAUTION_ID.EMER_BRK, 0)
+            caution_emer_brk = 0
+        end
 end
 
 function post_initialize()
@@ -154,8 +174,14 @@ function SetCommand(command,value)
             dispatch_action(nil,iCommandPlaneWheelBrakeOff)
             pbrake_on = 0
         else 
+            if pbrake_on == 0 and accumulator_pressure >= 2000 then
+                -- Discharge the accumulator.
+                accumulator_pressure = math.max(accumulator_pressure - 1000 / 6, accumulator_pressure_min)
+            end
+
             dispatch_action(nil,iCommandPlaneWheelBrakeOn)
             pbrake_on = 1
+            
         end
     elseif command == iCommandPlaneWheelBrakeOff then
         dev:performClickableAction(device_commands.EmerParkBrake, -1, true)

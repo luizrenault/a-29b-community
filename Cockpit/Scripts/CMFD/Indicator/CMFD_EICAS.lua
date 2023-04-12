@@ -476,7 +476,7 @@ mesh_poly.primitivetype     = "triangles"
 mesh_poly.vertices          = { {-0.09, 0.03}, {0.09,0.03}, {0.09,-0.03}, {-0.09, -0.03} }
 mesh_poly.indices           = default_box_indices
 mesh_poly.isvisible         = true
-mesh_poly.element_params    = {"EICAS_BAT_VOLT_COR", "CMFD"..tostring(CMFDNu).."_BRIGHT"}
+mesh_poly.element_params    = {"EICAS_BUS_VOLT_COR", "CMFD"..tostring(CMFDNu).."_BRIGHT"}
 mesh_poly.controllers       = {{"parameter_in_range",0 , 1.95, 2.05}, {"opacity_using_parameter", 1}}
 AddElementObject(mesh_poly)
 mesh_poly = nil
@@ -488,7 +488,7 @@ Poly_Text.init_pos          = {0.493, 0.148, 0}
 Poly_Text.alignment         = "CenterCenter"
 Poly_Text.formats           = {"%02.1f"}
 Poly_Text.parent_element    = page_root.name
-Poly_Text.element_params    = {"EICAS_BAT_VOLT", "EICAS_BAT_VOLT_COR", "CMFD"..tostring(CMFDNu).."_BRIGHT"}
+Poly_Text.element_params    = {"EICAS_BUS_VOLT", "EICAS_BUS_VOLT_COR", "CMFD"..tostring(CMFDNu).."_BRIGHT"}
 Poly_Text.controllers       = {{"text_using_parameter",0,0},
                                 {"change_color_when_parameter_equal_to_number",1 , 2,-1,-1,-1},
                                 {"opacity_using_parameter", 2}

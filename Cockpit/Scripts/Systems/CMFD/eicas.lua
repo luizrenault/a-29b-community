@@ -38,8 +38,8 @@ local EICAS_CAB_PRESS_COR = get_param_handle("EICAS_CAB_PRESS_COR")
 local EICAS_BAT_AMP = get_param_handle("EICAS_BAT_AMP")
 local EICAS_BAT_AMP_COR = get_param_handle("EICAS_BAT_AMP_COR")
 
-local EICAS_BAT_VOLT = get_param_handle("EICAS_BAT_VOLT")
-local EICAS_BAT_VOLT_COR = get_param_handle("EICAS_BAT_VOLT_COR")
+local EICAS_BUS_VOLT = get_param_handle("EICAS_BUS_VOLT")
+local EICAS_BUS_VOLT_COR = get_param_handle("EICAS_BUS_VOLT_COR")
 
 local EICAS_BAT_TEMP = get_param_handle("EICAS_BAT_TEMP")
 local EICAS_BAT_TEMP_COR = get_param_handle("EICAS_BAT_TEMP_COR")
@@ -358,8 +358,8 @@ function update_eicas()
     if bat_amp <= 400 then bat_amp_cor = 0 
     else bat_amp_cor = 1 end
 
-    local bat_volt = 24
-    if get_generator_on() and get_engine_on() then bat_volt = 28.8 end
+    -- Voltage of the emer bus
+    local bat_volt = elec_emer_dc_v:get()
 
     bat_volt = round_to(bat_volt,0.1)
     if bat_volt < 0 then bat_volt = 0 end
@@ -523,8 +523,8 @@ function update_eicas()
     EICAS_BAT_AMP:set(bat_amp)
     EICAS_BAT_AMP_COR:set(bat_amp_cor)
 
-    EICAS_BAT_VOLT:set(bat_volt)
-    EICAS_BAT_VOLT_COR:set(bat_volt_cor)
+    EICAS_BUS_VOLT:set(bat_volt)
+    EICAS_BUS_VOLT_COR:set(bat_volt_cor)
 
     EICAS_BAT_TEMP:set(bat_temp)
     EICAS_BAT_TEMP_COR:set(bat_temp_cor)
