@@ -203,6 +203,8 @@ local bkup_bat_caution = 0
 local elec_avionics_emergency_warm_up_until = 0
 local elec_avionics_warm_up_until = 0
 
+local engine_starter=get_param_handle("ENGINE_STARTER") -- 1 or 0
+
 function update()
 
     -- Reset the buses
@@ -361,6 +363,9 @@ function update()
         end
         if bar_avi_mst_emer_dc_v > 0 then
             bat_pcp_discharge_rate = bat_pcp_discharge_rate + 0.5 / 600
+        end
+        if engine_starter:get() == 1 then
+            bat_pcp_discharge_rate = bat_pcp_discharge_rate + 0.035
         end
 
         -- Discharge every 1 second
