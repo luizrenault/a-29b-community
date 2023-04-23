@@ -21,7 +21,7 @@ A_29B =  {
 	Picture 			= "A-29B.png",
 	Rate 				= 40, -- RewardPoint in Multiplayer
 	Shape 				= "A-29B",
-	propellorShapeType  = '3ARG_PROC_BLUR',
+	propellorShapeType  = "3ARG_PROC_BLUR",
 	propellorShapeName  = 'a29b_blade.fbx',
 	debrisGeneration     = true,
 	shape_table_data 	= 
@@ -105,7 +105,7 @@ A_29B =  {
 
 		
     index       =  WSTYPE_PLACEHOLDER;
-	attribute  	= {wsType_Air, wsType_Airplane, wsType_Fighter, WSTYPE_PLACEHOLDER ,A_29B,"Fighters", "Refuelable",},
+	attribute  	= {wsType_Air, wsType_Airplane, wsType_Fighter, WSTYPE_PLACEHOLDER , "Fighters", "Refuelable",},
 	Categories	= {"{78EFB7A2-FD52-4b57-A6A6-3BF0E1D6555F}", "Interceptor",},	
 	    M_empty									=	3356,  -- kg
 		M_nominal								=	3900,  -- kg  -- kg ~ %50 fuel, combat load
@@ -154,7 +154,7 @@ A_29B =  {
 		wing_area 					= 19.4, -- wing area in m2
 		wing_span 					= 11.135, -- wing span in m
 		wing_chord					= 1.82,
-		wing_type 					= 0,
+		wing_type 					= 0, -- 0 = Fixed wing, 1 = Variable geometry, 2 = Fold-able wing
 
 		thrust_sum_max 				= 17000, -- thrust in kg (44kN)
 		thrust_sum_ab 				= 17000, -- thrust inkg (71kN)
@@ -618,7 +618,7 @@ A_29B =  {
 			-- B - Induced drag factor -- Polar quad coeff
 			-- B4 - Viscous drag factor --Polar 4th power coeff
 			-- Omxmax - Roll rate - roll rate, rad/s
-			-- Aldop - Visual effects settings for stability / controlability -- Alfadop Max AOA at current M - departure threshold
+			-- Aldop - Stall AOA at current M
 			-- Cymax - Maximum coefficient of lift, corresponding to αstall -- Coefficient, lift, maximum possible (ignores other calculations if current Cy > Cymax)
 
 			-- Cold start sound.
@@ -632,17 +632,17 @@ A_29B =  {
 			-- This is necessary, since the SFM does not differentiate between different angles of attack, but has to take into account, that a plane at 15° AoA has a lot more drag than 
 			-- one at 1°AoA. The basic formula is 
 			-- CD = Cx0 + B * CL^2 + B4 * CL^4
-			-- CD is the "total" Drag at the given Speed, in NASA-Papers CD. Cx0 is drag at zero lift, in NASA-Papers 
-			-- CDmin. CL is Lift at given speeds, in NASA-Papers CL, which is once squared and once put to the 4th power for the formula. B on the other hand is also known as K which is 
+			-- CD is the "total" Drag at the given Speed, in NASA-Papers CD. Cx0 is drag at zero lift, in NASA-Papers CDmin.
+			-- CL is Lift at given speeds, in NASA-Papers CL, which is once squared and once put to the 4th power for the formula. B on the other hand is also known as K which is 
 			-- 1 / (pi * AR * e). pi needs no explanation, since it is the number pi. AR is the aspect-ratio of the wing which is AR = S^2 / A where S is the Wingspan and A is the wing area. 
+			-- e is the "Oswald Factor" or "wing-efficiency-factor" which is somewhere between 0.7 and 1.0. If you take 0.7 for landing speeds and take-off speeds, 
+			-- where flaps and gear is extended, you will be approx. right, for everything else 0.85 or 0.9 is a good guess.
 			-- So if you have a NASA-Report or something like that, the only unknown might be B4. If you solve the equation for B4 it looks like this:
 			-- B4 = (-Cx0 - B * CL^2 + CD) / CL^4
 			-- CL = Cy0 + AoA * Cya
 			-- When angle-of-attack (a) is below Aldop:
 			-- Cy(M,a) = Cy0 + Cya(M)*a
 			-- in other words B4 = (-CDmin - (1 / pi * AR * e) * CL^2 + CD) / CL^4
-			-- Before I forget it, e is the "Oswald Factor" or "wing-efficiency-factor" which is somewhere between 0.7 and 1.0. If you take 0.7 for landing speeds and take-off speeds, 
-			-- where flaps and gear is extended, you will be approx. right, for everything else 0.85 or 0.9 is a good guess.
 			-- Just thought about B and B4 a bit more and forgot that you have to add wave-drag for those speeds, where the wing is supersonic. 
 			-- Wave-Drag = CDwave = a * ((Mach / Mach-crit) - 1)^b. Now comes the problem what is "a" and "b"? 
 			-- From this: https://www.fzt.haw-hamburg.de/pers/Scholz/HOOU/AircraftDesign_13_Drag.pdf you could see, that a and b are given (or already calculated) for a few aircrafts. 
@@ -699,7 +699,7 @@ A_29B =  {
 			prop_pitch_min		= 23.0,	-- prop pitch min, degrees 
 			prop_pitch_max		= 65.0,	-- prop pitch max, degrees 
 			prop_pitch_feather	= 80.0,	-- prop pitch feather position, degrees if feather < prop_pitch_max no feathering available
-			Nominal_RPM = 2000,
+			Nominal_RPM = 30000,
 			Nominal_Fan_RPM = 2000,
 			Startup_RPMs = {
 				{0.0, 0},
@@ -812,6 +812,7 @@ A_29B =  {
 						--	RPM  = {0, 50, 100},
 						--	t    = {0.3,0.3,0.3}
 						--},
+
 						rpm_throttle_responce = -- required RPM according to throttle position
 						{
 							throttle = {0, 0.1, 0.55,  1.0},

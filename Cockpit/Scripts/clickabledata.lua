@@ -119,7 +119,7 @@ elements["PNT_802"] = multiposition_switch_limited("Fuel Aux Pump (LH/Auto/RH/Bo
 elements["PNT_803"] = default_3_position_tumb("Fuel Transfer (U-Wing/Ventral-Auto/Off)",        devices.FUEL, device_commands.FuelXfr,          803, nil,true,TOGGLECLICK_MID_FWD)
 
 -- PARKING BRAKES
-elements["PNT_791"] = default_3_position_tumb("Emergency/Parking Brakes",                       devices.BRAKES, device_commands.EmerParkBrake, 791, nil, true, TOGGLECLICK_MID_FWD)
+elements["PNT_791"] = default_3_position_tumb("Emergency/Parking Brakes",                       devices.BRAKES, device_commands.EmerParkBrake,	791, false, true, TOGGLECLICK_MID_FWD)
 
 -- WEAPONS
 elements["PNT_781"] = default_3_position_tumb("Mass (Sim/Save/Live)",                           devices.WEAPON_SYSTEM, device_commands.Mass,   781,nil,true,KNOBCLICK_MID_FWD)

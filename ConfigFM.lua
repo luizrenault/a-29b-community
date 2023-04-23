@@ -46,14 +46,14 @@ main_amortizer_back_damper_force_factor 	= main_damper_force --Damping force in 
 
 main_damper_coeff 							= 100.0
 
-main_wheel_moment_of_inertia 				= 2.65
+main_wheel_moment_of_inertia 				= 3.6
 
-wheel_static_friction_factor_COMMON 		= 0.75
-wheel_side_friction_factor_COMMON 			= 0.6
-wheel_roll_friction_factor_COMMON 			= 0.0125
-wheel_glide_friction_factor_COMMON 			= 0.15 --this needs to be low to go from standstill to moving smoothly
+wheel_static_friction_factor_COMMON 		= 0.71
+wheel_side_friction_factor_COMMON 			= 0.73 --affects the abillity to slide in turns - decrease for better turning
+wheel_roll_friction_factor_COMMON 			= 0.022
+wheel_glide_friction_factor_COMMON 			= 0.69 --this needs to be low to go from standstill to moving smoothly
 
-brake_moment_main 							= 5500.0
+brake_moment_main 							= 8000.0
 
 wheel_radius_factor 						= 1.0
 
@@ -118,7 +118,7 @@ suspension =
 		wheel_moment_of_inertia					= nose_wheel_moment_of_inertia,
 		wheel_radius 							= 0.425,
 		wheel_static_friction_factor 			= wheel_static_friction_factor_COMMON,
-		wheel_side_friction_factor 				= wheel_side_friction_factor_COMMON,--affects the abillity to slide in turns - decrease for better turning
+		wheel_side_friction_factor 				= wheel_side_friction_factor_COMMON,
 		wheel_roll_friction_factor 				= wheel_roll_friction_factor_COMMON,
 		wheel_glide_friction_factor 			= wheel_glide_friction_factor_COMMON,
 		wheel_damage_force_factor 				= 250.0,--/N/ 250 Su-25, damage to tires
@@ -150,7 +150,7 @@ suspension =
 
     --MAINGEAR LEFT
     {
-        anti_skid_installed = false,
+        anti_skid_installed 					= true,
 	
 		mass 									= 200.0,
 		damage_element 							= 84,
@@ -198,7 +198,7 @@ suspension =
 
     --MAINGEAR RIGHT
     {
-        anti_skid_installed 					= false,
+        anti_skid_installed 					= true,
 		
 		mass 									= 200.0,
 		damage_element 							= 85,--?

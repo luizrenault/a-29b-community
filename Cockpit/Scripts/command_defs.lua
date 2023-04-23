@@ -2416,7 +2416,7 @@ flir_commands =
 -- iCommandBrakeGo	52
 -- iCommandPlaneWheelBrakeOn	74
 -- iCommandPlaneWheelBrakeOff	75
--- iCommandPlaneWheelParkingBrake	855
+iCommandPlaneWheelParkingBrake = 855
 -- iCommandPlaneEmergencyBrake	960
 -- iCommandPlaneWheelBrakeLeftOn	961
 -- iCommandPlaneWheelBrakeLeftOff	962
