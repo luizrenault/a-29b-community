@@ -54,6 +54,9 @@ creators[devices.ILS_DEVICE]	  = {"LR::avSimplestILS"         ,LockOn_Options.sc
 
 creators[devices.FLIR]		      = {"LR::avSimplestFLIR"    ,LockOn_Options.script_path.."FLIR/device.lua"}
 
+-- creators[devices.MAP]		      = {"LR::avSimplestMap"    ,LockOn_Options.script_path.."Systems/map.lua"}
+
+
 -- creators[devices.TEST]		      = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/test_device.lua"}
 
 indicators                  = {}
@@ -64,6 +67,7 @@ indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."HUD/I
 indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."UFCP/UFCP_page_init.lua" , devices.UFCP ,	{ {"PTR-UFCP-CENTER", "PTR-UFCP-DOWN", "PTR-UFCP-RIGHT"},{},2}}
 indicators[#indicators + 1] = {"LR::ccCamera", LockOn_Options.script_path.."FLIR/indicator.lua", devices.FLIR,	{{}}}
 
+-- indicators[#indicators + 1] = {"LR::ccSimplestMap", LockOn_Options.script_path.."MAP/indicator.lua" , devices.MAP ,	{{}}}
 
 --indicators[#indicators + 1] = {"ccChart", LockOn_Options.script_path.."Systems/test_device.lua" , devices.TEST ,	{ {"PTR-HUD-CENTER", "PTR-HUD-DOWN", "PTR-HUD-RIGHT"},{},2},2}
 

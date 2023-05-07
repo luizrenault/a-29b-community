@@ -48,6 +48,12 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Changelog
 
+## Version 0.5.5 - 06 Mai 2023
+
+### Fixes
+- Engine response time.
+- Rudder and Elevator prop wash effect.
+
 ## Version 0.5.4 - 23 Apr 2023
 
 ### Added

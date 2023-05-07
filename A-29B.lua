@@ -801,11 +801,11 @@ A_29B =  {
                         --     },
                         -- },
 
-						--rpm_acceleration_time_factor = -- time factor for engine governor  ie RPM += (desired_RPM - RPM ) * t(RPM) * dt
-						--{
-						--	RPM  = {0, 50, 100},
-						--	t    = {0.3,0.3,0.3}
-						--},
+						rpm_acceleration_time_factor = -- time factor for engine governor  ie RPM += (desired_RPM - RPM ) * t(RPM) * dt
+						{
+							RPM  = {0, 50, 100},
+							t    = {0.9,0.9,0.9}
+						},
 
 						--rpm_deceleration_time_factor = -- time factor for engine governor
 						--{
