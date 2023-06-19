@@ -254,7 +254,7 @@ A_29B =  {
 		HumanRadio = {
 			frequency     = 124.0, -- onboard radio, default DCSW frequency, chnl 0
 			editable     = true,
-			minFrequency     = 30.000,
+			minFrequency     = 108.000,
 			maxFrequency     = 399.975,
 			rangeFrequency = {
 				{min = 30.0,  max = 87.975},
@@ -265,9 +265,12 @@ A_29B =  {
 		
 		panelRadio = {
 			[1] = {
-				name = _("AN/ARC-150(V)-2"), --UHF
+				name = _("V/UHF COM1 XT-6013"),
 				range = {
-					{min = 225.0, max = 399.975}
+					{min = 108.0, max = 117.975},
+					{min = 118.0, max = 136.99167},
+					{min = 137.0, max = 173.975},
+					{min = 225.0, max = 399.975},
 				},
 				channels = {
 					[1] = { name = _("Channel 1"), default = 225.0, modulation = _("AM")}, -- default
@@ -280,23 +283,16 @@ A_29B =  {
 					[8] = { name = _("Channel 8"), default = 257.0, modulation = _("AM")},
 					[9] = { name = _("Channel 9"), default = 253.0, modulation = _("AM")},
 					[10] = { name = _("Channel 10"), default = 263.0, modulation = _("AM")},
-					[11] = { name = _("Channel 11"), default = 267.0, modulation = _("AM")},
-					[12] = { name = _("Channel 12"), default = 254.0, modulation = _("AM")},
-					[13] = { name = _("Channel 13"), default = 264.0, modulation = _("AM")},
-					[14] = { name = _("Channel 14"), default = 266.0, modulation = _("AM")},
-					[15] = { name = _("Channel 15"), default = 265.0, modulation = _("AM")},
-					[16] = { name = _("Channel 16"), default = 252.0, modulation = _("AM")},
-					[17] = { name = _("Channel 17"), default = 268.0, modulation = _("AM")},
-					[18] = { name = _("Channel 18"), default = 269.0, modulation = _("AM")},
-					[19] = { name = _("Channel 19"), default = 268.0, modulation = _("AM")},
-					[20] = { name = _("Channel 20"), default = 269.0, modulation = _("AM")},
 				}
 			},
 			[2] = {
-				name = _("SRT-651/N"), --VHF/UHF
-				range = {{min = 30.0, max = 88.0},
-						 {min = 108.0, max = 174.0},
-						 {min = 225.0, max = 399.975}},
+				name = _("V/UHF COM1 XT-6313D"), --VHF/UHF
+				range = {
+					{min = 108.0, max = 117.975},
+					{min = 118.0, max = 136.99167},
+					{min = 137.0, max = 173.975},
+					{min = 225.0, max = 399.975},
+				},
 				channels = {
 					[1] = { name = _("Channel 1"), default = 225.0, connect = true}, -- default
 					[2] = { name = _("Channel 2"), default = 258.0},
@@ -308,70 +304,11 @@ A_29B =  {
 					[8] = { name = _("Channel 8"), default = 257.0},
 					[9] = { name = _("Channel 9"), default = 253.0},
 					[10] = { name = _("Channel 10"), default = 263.0},
-					[11] = { name = _("Channel 11"), default = 267.0},
-					[12] = { name = _("Channel 12"), default = 254.0},
-					[13] = { name = _("Channel 13"), default = 264.0},
-					[14] = { name = _("Channel 14"), default = 266.0},
-					[15] = { name = _("Channel 15"), default = 265.0},
-					[16] = { name = _("Channel 16"), default = 252.0},
-					[17] = { name = _("Channel 17"), default = 268.0},
-					[18] = { name = _("Channel 18"), default = 269.0},
-					[19] = { name = _("Channel 19"), default = 268.0},
-					[20] = { name = _("Channel 20"), default = 269.0},
-					[21] = { name = _("Channel 21"), default = 225.0},
-					[22] = { name = _("Channel 22"), default = 258.0},
-					[23] = { name = _("Channel 23"), default = 260.0},
-					[24] = { name = _("Channel 24"), default = 270.0},
-					[25] = { name = _("Channel 25"), default = 255.0},
-					[26] = { name = _("Channel 26"), default = 259.0},
-					[27] = { name = _("Channel 27"), default = 262.0},
-					[28] = { name = _("Channel 28"), default = 257.0},
-					[29] = { name = _("Channel 29"), default = 253.0},
-					[30] = { name = _("Channel 30"), default = 263.0},
 				}
 			},
 		},
 	
-		-- HumanRadio = {
-		-- 	frequency = 254.0, -- Maykop (Caucasus) or Nellis (NTTR)
-		-- 	editable = true,
-		-- 	minFrequency = 225.000,
-		-- 	maxFrequency = 399.900,
-		-- 	modulation = MODULATION_AM
-		-- },
 
-		-- panelRadio = {
-		-- 	[1] = {
-		-- 		name = _("AN/ARC-51A"),
-		-- 		range = {
-		-- 			{min = 225.0, max = 399.9}
-		-- 		},
-		-- 		channels = {  -- matches L-39C except for channel 8, which was changed to a Georgian airport and #20 which is NTTR only (for now).  This radio goes 1-20 not 0-19.
-		-- 			[1] = { name = _("Channel 1"),		default = 264.0, modulation = _("AM"), connect = true}, -- mineralnye-vody (URMM) : 264.0
-		-- 			[2] = { name = _("Channel 2"),		default = 265.0, modulation = _("AM")},	-- nalchik (URMN) : 265.0
-		-- 			[3] = { name = _("Channel 3"),		default = 256.0, modulation = _("AM")},	-- sochi-adler (URSS) : 256.0
-		-- 			[4] = { name = _("Channel 4"),		default = 254.0, modulation = _("AM")},	-- maykop-khanskaya (URKH), nellis (KLSV) : 254.0
-		-- 			[5] = { name = _("Channel 5"),		default = 250.0, modulation = _("AM")},	-- anapa (URKA) : 250.0
-		-- 			[6] = { name = _("Channel 6"),		default = 270.0, modulation = _("AM")},	-- beslan (URMO) : 270.0
-		-- 			[7] = { name = _("Channel 7"),		default = 257.0, modulation = _("AM")},	-- krasnodar-pashkovsky (URKK) : 257.0
-		-- 			[8] = { name = _("Channel 8"),		default = 258.0, modulation = _("AM")},	-- sukhumi-babushara (UGSS) : 255.0
-		-- 			[9] = { name = _("Channel 9"),		default = 262.0, modulation = _("AM")},	-- kobuleti (UG5X) : 262.0
-		-- 			[10] = { name = _("Channel 10"),	default = 259.0, modulation = _("AM")},	-- gudauta (UG23) : 259.0
-		-- 			[11] = { name = _("Channel 11"),	default = 268.0, modulation = _("AM")},	-- tbilisi-soganlug (UG24) : 268.0
-		-- 			[12] = { name = _("Channel 12"),	default = 269.0, modulation = _("AM")},	-- tbilisi-vaziani (UG27) : 269.0
-		-- 			[13] = { name = _("Channel 13"),	default = 260.0, modulation = _("AM")},	-- batumi (UGSB) : 260.0
-		-- 			[14] = { name = _("Channel 14"),	default = 263.0, modulation = _("AM")},	-- kutaisi-kopitnari (UGKO) : 263.0
-		-- 			[15] = { name = _("Channel 15"),	default = 261.0, modulation = _("AM")},	-- senaki-kolkhi (UGKS) :  261.0
-		-- 			[16] = { name = _("Channel 16"),	default = 267.0, modulation = _("AM")},	-- tbilisi-lochini (UGTB) : 267.0
-		-- 			[17] = { name = _("Channel 17"),	default = 251.0, modulation = _("AM")},	-- krasnodar-center (URKI), creech (KINS) : 251.0
-		-- 			[18] = { name = _("Channel 18"),	default = 253.0, modulation = _("AM")},	-- krymsk (URKW), mccarran (KLAS) : 253.0
-		-- 			[19] = { name = _("Channel 19"),	default = 266.0, modulation = _("AM")},	-- mozdok (XRMF) : 266.0
-		-- 			[20] = { name = _("Channel 20"),	default = 252.0, modulation = _("AM")}, -- N/A, groom lake/homey (KXTA) : 252.0
-		-- 		}
-		-- 	},
-		-- },
-	
-		
 		-- Countermeasures
 		SingleChargeTotal = 60,
 		CMDS_Incrementation = 15,

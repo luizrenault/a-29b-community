@@ -5,6 +5,8 @@ dofile(LockOn_Options.script_path.."devices.lua")
 dofile(LockOn_Options.script_path.."command_defs.lua")
 
 
+debug = true
+
 local gettext = require("i_18n")
 _ = gettext.translate
 
@@ -27,16 +29,57 @@ agr = {
 	regulation_time				= 0.25, --sec
 }
 
+staticNoises = {
+    {
+        effect = {"Aircrafts/Cockpits/Static"},
+    },
+    {
+        filter = {1, 2, 2e6, 3e6},
+        effect = {"Aircrafts/Cockpits/Atmospheric"},
+    },
+}
+
+local commands = {}
+commands[devices["VUHF1_RADIO"]] = {ptt = Keys.COM1, volume = device_commands.AUDIO_COM1_VOL}
+commands[devices["VUHF2_RADIO"]] = {ptt = Keys.COM2, volume = device_commands.AUDIO_COM2_VOL}
+command = commands[dev:id()];
+
+local displayNames = {}
+displayNames[devices["VUHF1_RADIO"]]=_('V/UHF COM1 XT-6013')
+displayNames[devices["VUHF2_RADIO"]]=_('V/UHF COM2 XT-6313D')
+
+local radiosOrder = {}
+radiosOrder[devices["VUHF1_RADIO"]]=1
+radiosOrder[devices["VUHF2_RADIO"]]=2
+
+radioOrder = radiosOrder[dev:id()]
+
+local radioGuardFrequencies = {}
+radioGuardFrequencies[devices["VUHF1_RADIO"]] = 121.5e6
+radioGuardFrequencies[devices["VUHF2_RADIO"]] = 243.0e6
+
+
+guard_receiver = {
+	default_frequency = radioGuardFrequencies[dev:id()],
+	modulation = 0,
+}
+
+
 GUI = {
-	range = {min = 108E6, max = 399.975E6, step = 25E3}, --Hz
-	displayName = _('V/UHF XT-6013'),
+	-- range = {min = 108E6, max = 399.975E6, step = 25E3}, --Hz
+	ranges = {
+		{min = 108.0 * 1e6, max = 117.975 * 1e6, step = 25e3},
+		{min = 118.0 * 1e6, max = 136.99167 * 1e6, step = 8.33e3},
+		{min = 137.0 * 1e6, max = 173.975 * 1e6, step = 25e3},
+		{min = 225.0 * 1e6, max = 399.975 * 1e6, step = 25e3},
+	},
+
+	displayName = displayNames[dev:id()],
 	AM = true,
 	FM = true,
 }
 
 function post_initialize()
-  dev:set_frequency(261E6) -- Sochi
-  dev:set_modulation(MODULATION_AM)
 end
 
 need_to_be_closed = false -- close lua state after initialization

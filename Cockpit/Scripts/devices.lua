@@ -20,7 +20,6 @@ devices["AVIONICS"]           = counter()
 devices["VUHF1_RADIO"]          = counter()
 devices["VUHF2_RADIO"]          = counter()
 devices["HF3_RADIO"]          = counter()
-devices["RADIO"]          = counter()
 
 devices["AIRBRAKE"]          = counter()
 

@@ -134,8 +134,8 @@ elements["PNT_743"] = default_3_position_tumb("Slave (Free/Slave/Fast Slave)",  
 
 -- AUDIO
 elements["PNT_761"] = default_2_position_tumb("Audio Selector (Normal/Backup)",                 devices.EXTANIM, device_commands.AudioNormal,        761,TOGGLECLICK_MID_FWD); elements["PNT_761"].arg_value = {1, -1}
-elements["PNT_762"] = default_movable_axis("COM 1 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM1_VOL,     762)
-elements["PNT_763"] = default_movable_axis("COM 2 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM2_VOL,     763)
+elements["PNT_762"] = default_movable_axis("COM 1 Audio",      		           					devices.VUHF1_RADIO, device_commands.AUDIO_COM1_VOL,     762)
+elements["PNT_763"] = default_movable_axis("COM 2 Audio",      		           					devices.VUHF2_RADIO, device_commands.AUDIO_COM2_VOL,     763)
 elements["PNT_764"] = default_movable_axis("COM 3 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM3_VOL,     764)
 elements["PNT_765"] = default_movable_axis("COM 4 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM4_VOL,     765)
 elements["PNT_766"] = default_movable_axis("ADF",		      		           					devices.EXTANIM, device_commands.AUDIO_ADF_VOL,      766)

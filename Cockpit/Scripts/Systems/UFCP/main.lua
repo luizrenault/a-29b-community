@@ -56,12 +56,14 @@ function update_main()
 
     -- Line 2
     text = text .. "COM1 "
-    if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-        text = text .. string.format("%-2d", ufcp_com1_channel)
+    local radio1 = GetDevice(devices["VUHF1_RADIO"])
+
+    if radio1:get_channel_mode() then
+        text = text .. string.format("%-2d", radio1:get_channel())
         if ufcp_main_sel == SEL_IDS.COM1 then text = text .. "^" else text = text .. " " end 
-        text = text .. string.format("[%07.3f]       ", ufcp_com1_frequency)
+        text = text .. string.format("[%07.3f]       ", radio1:get_set_frequency()/1e6)
     else
-        text = text .. string.format("%07.3f", ufcp_com1_frequency)
+        text = text .. string.format("%07.3f", radio1:get_set_frequency()/1e6)
         if ufcp_main_sel == SEL_IDS.COM1 then text = text .. "^" else text = text .. " " end 
         text = text .. "           "
     end
@@ -69,13 +71,14 @@ function update_main()
 
     -- Line 3
     text = text .. "COM2 "
+    local radio2 = GetDevice(devices["VUHF2_RADIO"])
     
-    if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-        text = text .. string.format("%-2d", ufcp_com2_channel)
+    if radio2:get_channel_mode() then
+        text = text .. string.format("%-2d", radio2:get_channel())
         if ufcp_main_sel == SEL_IDS.COM2 then text = text .. "^" else text = text .. " " end 
-        text = text .. string.format("[%07.3f]    ", ufcp_com2_frequency)
+        text = text .. string.format("[%07.3f]    ", radio2:get_set_frequency()/1e6)
     else
-        text = text .. string.format("%07.3f", ufcp_com2_frequency)
+        text = text .. string.format("%07.3f", radio2:get_set_frequency()/1e6)
         if ufcp_main_sel == SEL_IDS.COM2 then text = text .. "^" else text = text .. " " end 
         text = text .. "        "
     end
@@ -165,41 +168,35 @@ function SetCommandMain(command,value)
             ufcp_cmfd_ref:performClickableAction(device_commands.NAV_DEC_FYT, 1, true)
         end
     elseif ufcp_main_sel == SEL_IDS.COM1 then
-        if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-            if command == device_commands.UFCP_UP and value == 1 and ufcp_com1_channel < ufcp_com1_max_channel then
-                ufcp_com1_channel = (ufcp_com1_channel + 1)
-                ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
-            elseif command == device_commands.UFCP_DOWN and value == 1 and ufcp_com1_channel > 0 then
-                ufcp_com1_channel = (ufcp_com1_channel - 1)
-                ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
+        local radio1 = GetDevice(devices["VUHF1_RADIO"])
+        if radio1:get_channel_mode() then
+            if command == device_commands.UFCP_UP and value == 1 then
+                radio1:set_channel((radio1:get_channel() + 1))
+            elseif command == device_commands.UFCP_DOWN and value == 1 then
+                radio1:set_channel((radio1:get_channel() - 1))
             end
         end
         if command == device_commands.UFCP_0 and value == 1 then
-            if ufcp_com1_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
-                ufcp_com1_frequency = ufcp_com1_frequency_manual
+            if radio1:get_channel_mode() then
+                radio1:set_frequency(ufcp_com1_frequency_manual)
             else
-                ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
-                ufcp_com1_frequency = ufcp_com1_channels[ufcp_com1_channel + 1]
+                radio1:set_channel(radio1:get_channel())
             end
         end
     elseif ufcp_main_sel == SEL_IDS.COM2 then
-        if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-            if command == device_commands.UFCP_UP and value == 1 and ufcp_com2_channel < ufcp_com2_max_channel then
-                ufcp_com2_channel = (ufcp_com2_channel + 1)
-                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
-            elseif command == device_commands.UFCP_DOWN and value == 1 and ufcp_com2_channel > 0 then
-                ufcp_com2_channel = (ufcp_com2_channel - 1)
-                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com1_channel + 1]
+        local radio2 = GetDevice(devices["VUHF2_RADIO"])
+        if radio2:get_channel_mode() then
+            if command == device_commands.UFCP_UP and value == 1 then
+                radio2:set_channel((radio2:get_channel() + 1))
+            elseif command == device_commands.UFCP_DOWN and value == 1 then
+                radio2:set_channel((radio2:get_channel() - 1))
             end
         end
         if command == device_commands.UFCP_0 and value == 1 then
-            if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
-                ufcp_com2_frequency = ufcp_com2_frequency_manual
+            if radio2:get_channel_mode() then
+                radio2:set_frequency(ufcp_com2_frequency_manual)
             else
-                ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
-                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
+                radio2:set_channel(radio2:get_channel())
             end
         end
     elseif ufcp_main_sel == SEL_IDS.TIME then

@@ -35,13 +35,9 @@ creators[devices.CANOPY]          = {"avLuaDevice"           ,LockOn_Options.scr
 creators[devices.FLAPS]           = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/flaps.lua"}
 creators[devices.EXTANIM]         = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/externalanimations.lua"}
 creators[devices.WEAPON_SYSTEM]   = {"avSimplestWeaponSystem"  ,LockOn_Options.script_path.."Systems/weapon_system.lua"}
-creators[devices.RADIO]           = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/radio.lua"}
--- creators[devices.VUHF1_RADIO]     = {"avSimplestRadio"         ,LockOn_Options.script_path.."Systems/uhf_radio.lua", {devices.ELECTRIC_SYSTEM}}
--- creators[devices.VUHF2_RADIO]     = {"avSimplestRadio"         ,LockOn_Options.script_path.."Systems/uhf_radio.lua", {devices.ELECTRIC_SYSTEM}}
+creators[devices.VUHF1_RADIO]     = {"avSimplestRadio"         ,LockOn_Options.script_path.."Systems/uhf_radio.lua", {{"electric", devices.ELECTRIC_SYSTEM}}}
+creators[devices.VUHF2_RADIO]     = {"avSimplestRadio"         ,LockOn_Options.script_path.."Systems/uhf_radio.lua", {{"electric", devices.ELECTRIC_SYSTEM}}}
 -- creators[devices.HF3_RADIO]       = {"avSimplestRadio"         ,LockOn_Options.script_path.."Systems/uhf_radio.lua", {devices.ELECTRIC_SYSTEM}}
-creators[devices.VUHF1_RADIO]     = {"avUHF_ARC_164"         ,LockOn_Options.script_path.."Systems/uhf_radio.lua"}
-creators[devices.VUHF2_RADIO]     = {"avUHF_ARC_164"         ,LockOn_Options.script_path.."Systems/uhf_radio.lua"}
-creators[devices.HF3_RADIO]       = {"avUHF_ARC_164"         ,LockOn_Options.script_path.."Systems/uhf_radio.lua"}
 
 creators[devices.INTERCOM]        = {"avIntercom"            ,LockOn_Options.script_path.."Systems/intercom.lua"}
 

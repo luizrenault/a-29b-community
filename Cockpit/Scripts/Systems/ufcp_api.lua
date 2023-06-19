@@ -63,10 +63,6 @@ UFCP_FORMAT_IDS = {
 }
 
 -- COM 1 & 2
-UFCP_COM_FREQUENCY_SEL_IDS = {
-    MAN = 0,
-    PRST = 1,
-}
 
 UFCP_NAV_MODE_IDS = {
     MAN = 0,

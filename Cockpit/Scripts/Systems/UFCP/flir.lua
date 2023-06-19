@@ -204,6 +204,6 @@ function SetCommandFlir(command,value)
 
 end
 
-function flir_post_initialize()
+function post_initialize_flir()
     FLIR.LOOK_WPT_SET:set(0)
 end
