@@ -5,7 +5,7 @@ dofile(LockOn_Options.script_path.."devices.lua")
 dofile(LockOn_Options.script_path.."command_defs.lua")
 
 
-debug = true
+debug = false
 
 local gettext = require("i_18n")
 _ = gettext.translate
