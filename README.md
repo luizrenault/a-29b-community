@@ -9,8 +9,6 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 
 # Download
 
-[Download Latest Release](https://github.com/luizrenault/a-29b-community/archive/refs/heads/main.zip)
-
 [Livery Pack](https://mega.nz/file/UAxUmYAY#0PyL3pO6i5x2QTrBWEkE5LsqeKFW5IuSJG_Er42PAas)
 
 # Tutorial videos 
@@ -47,6 +45,12 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 [A-29 Super Tucano](https://forums.eagle.ru/topic/265017-a-29-super-tucano/)
 
 # Changelog
+
+## Version 0.6.0 - 30 Oct 2023
+
+### Fixes
+- DCS 2.9.0.47168 Open Beta compatibility
+- Removed debug dialogs
 
 ## Version 0.5.5 - 06 Mai 2023
 
