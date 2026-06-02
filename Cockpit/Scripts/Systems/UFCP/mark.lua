@@ -34,35 +34,60 @@ local function get_ontop()
     return lat, lon, elev
 end
 
-local function get_hud()
-    -- TOOD Get HUD coordinates
-    local lat = nil
-    local lon = nil
-    local elev = nil
+local function get_coords_from_meters(lat_m, lon_m, alt_m)
+    if lat_m == nil or lon_m == nil or alt_m == nil then
+        return nil, nil, nil
+    end
 
+    if lat_m == 0 and lon_m == 0 and alt_m == 0 then
+        return nil, nil, nil
+    end
+
+    local lat, lon = Terrain.convertMetersToLatLon(lat_m, lon_m)
+    local elev = alt_m * 3.28084
     return lat, lon, elev
 end
 
 local FLIR_TGT_LAT = get_param_handle("FLIR_TGT_LAT")
 local FLIR_TGT_LON = get_param_handle("FLIR_TGT_LON")
 local FLIR_TGT_ALT = get_param_handle("FLIR_TGT_ALT")
+local FLIR_TGT_AVAILABLE = get_param_handle("FLIR_TGT_AVAILABLE")
 
+local UFCP_OAP_ENABLED = get_param_handle("UFCP_OAP")
+local CMFD_NAV_FYT_VALID = get_param_handle("CMFD_NAV_FYT_VALID")
+local CMFD_NAV_FYT_LAT_M = get_param_handle("CMFD_NAV_FYT_LAT_M")
+local CMFD_NAV_FYT_LON_M = get_param_handle("CMFD_NAV_FYT_LON_M")
+local CMFD_NAV_FYT_ALT_M = get_param_handle("CMFD_NAV_FYT_ALT_M")
+local CMFD_NAV_OAP_LAT_M = get_param_handle("CMFD_NAV_OAP_LAT_M")
+local CMFD_NAV_OAP_LON_M = get_param_handle("CMFD_NAV_OAP_LON_M")
+local CMFD_NAV_OAP_ALT_M = get_param_handle("CMFD_NAV_OAP_ALT_M")
+
+local function get_hud()
+    -- Mirror HUD TD target source priority used by weapon_system (FLIR > OAP > FYT).
+    if FLIR_TGT_AVAILABLE:get() == 1 then
+        local lat, lon, elev = get_coords_from_meters(FLIR_TGT_LAT:get(), FLIR_TGT_LON:get(), FLIR_TGT_ALT:get())
+        if lat ~= nil then
+            return lat, lon, elev
+        end
+    end
+
+    if UFCP_OAP_ENABLED:get() == 1 then
+        local lat, lon, elev = get_coords_from_meters(CMFD_NAV_OAP_LAT_M:get(), CMFD_NAV_OAP_LON_M:get(), CMFD_NAV_OAP_ALT_M:get())
+        if lat ~= nil then
+            return lat, lon, elev
+        end
+    end
+
+    if CMFD_NAV_FYT_VALID:get() == 1 then
+        return get_coords_from_meters(CMFD_NAV_FYT_LAT_M:get(), CMFD_NAV_FYT_LON_M:get(), CMFD_NAV_FYT_ALT_M:get())
+    end
+
+    return nil, nil, nil
+end
 
 local function get_flir()
     -- Get FLIR coordinates
-    local lat_m = FLIR_TGT_LAT:get()
-    local lon_m = FLIR_TGT_LON:get()
-    local alt_m = FLIR_TGT_ALT:get()
-
-    local lat, lon = Terrain.convertMetersToLatLon(lat_m, lon_m)
-    local elev = alt_m * 3.28084
-    if lat_m == 0 and lon_m == 0 and alt_m == 0 then
-        lat = nil
-        lon = nil
-        elev = nil
-    end
-
-    return lat, lon, elev
+    return get_coords_from_meters(FLIR_TGT_LAT:get(), FLIR_TGT_LON:get(), FLIR_TGT_ALT:get())
 end
 
 function mark()

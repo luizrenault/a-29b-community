@@ -272,11 +272,12 @@ local function SetCommandSmsAg(command,value, CMFD)
             SMS_FUSE_SEL:set((SMS_FUSE_SEL:get() + 1)% 4)
         elseif command==device_commands.CMFD1OSS10 or command==device_commands.CMFD2OSS10 then 
         elseif command==device_commands.CMFD1OSS11 or command==device_commands.CMFD2OSS11 then 
-            -- SMS_TIME_ALT_SEL:set((SMS_TIME_ALT_SEL:get() + 1)% 3)
+            SMS_TIME_ALT_SEL:set((SMS_TIME_ALT_SEL:get() + 1)% 3)
         elseif command==device_commands.CMFD1OSS24 or command==device_commands.CMFD2OSS24 then 
             if not get_avionics_master_mode_ag_gun() then 
                     local weapon_type = WPN_SELECTED_WEAPON_TYPE:get()
-                if weapon_type == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET then 
+                if weapon_type == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET 
+                   or weapon_type == WPN_WEAPON_TYPE_IDS.AG_GUIDED_MISSILE then 
                     CallEditFormat(sms_is_time_data)
                 elseif weapon_type == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then 
                     CallEditFormat(sms_is_dist_data)
@@ -291,7 +292,7 @@ local function SetCommandSmsAg(command,value, CMFD)
                 weapons:performClickableAction(device_commands.WPN_AG_LAUNCH_OP_STEP, 1, true)
             end
         elseif command==device_commands.CMFD1OSS27 or command==device_commands.CMFD2OSS27 then 
-            -- SMS_PROF_SEL:set((SMS_PROF_SEL:get() + 1)% 2)
+            SMS_PROF_SEL:set((SMS_PROF_SEL:get() + 1)% 5)
             if not get_avionics_master_mode_ag_gun() then 
                 -- weapons:performClickableAction(device_commands.WPN_AG_STEP, 1, true)
             end

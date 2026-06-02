@@ -103,13 +103,17 @@ object = addStrokeText(nil, "FRZ", CMFD_STRINGDEFS_DEF_X06, "CenterBottom", flir
 object.element_params = {CMFD_BRIGHT}
 object.controllers = { {"opacity_using_parameter", 0}, {"text_from_lua_function", CMFD_TEXT.FLIR_FREEZE, 0.5}}
 
-object = addStrokeText(nil, "WHT", CMFD_STRINGDEFS_DEF_X06, "CenterBottom", flir_status_pos(10), FLIR_top_bar.name, nil, nil, CMFD_FONT_K)
+object = addStrokeText(nil, "WHT", CMFD_STRINGDEFS_DEF_X06, "CenterBottom", flir_status_pos(9.3), FLIR_top_bar.name, nil, nil, CMFD_FONT_K)
 object.element_params = {CMFD_BRIGHT}
 object.controllers = { {"opacity_using_parameter", 0}, {"text_from_lua_function", CMFD_TEXT.FLIR_POLARITY, 0.5}}
 
-object = addStrokeText(nil, "RDY", CMFD_STRINGDEFS_DEF_X06, "CenterBottom", flir_status_pos(11), FLIR_top_bar.name, nil, nil, CMFD_FONT_K)
+object = addStrokeText(nil, "RDY", CMFD_STRINGDEFS_DEF_X06, "CenterBottom", flir_status_pos(10.3), FLIR_top_bar.name, nil, nil, CMFD_FONT_K)
 object.element_params = {CMFD_BRIGHT}
 object.controllers = { {"opacity_using_parameter", 0}, {"text_from_lua_function", CMFD_TEXT.FLIR_STATUS, 0.5}}
+
+object = addStrokeText(nil, "L ARM", CMFD_STRINGDEFS_DEF_X06, "RightBottom", flir_status_pos(12), FLIR_top_bar.name, nil, nil, CMFD_FONT_K)
+object.element_params = {CMFD_BRIGHT}
+object.controllers = { {"opacity_using_parameter", 0}, {"text_from_lua_function", CMFD_TEXT.FLIR_LASER_STATUS, 0.5}}
 
 -- Bottom Bar
 FLIR_bottom_bar = addFillBox(nil, 2, 0.06, "CenterBottom", {0, -0.81}, FLIR_Video.name, nil, CMFD_MATERIAL_WHITE)
@@ -123,6 +127,9 @@ object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1
 object = addStrokeText(nil, "-93.4oAZ", CMFD_STRINGDEFS_DEF_X05, "RightBottom", flir_status_pos(8.25), FLIR_bottom_bar.name, nil, {"%2.1f`EL"}, CMFD_FONT_K)
 object.element_params = {CMFD_BRIGHT, "FLIR_EL_DEG"}
 object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1, 0}}
+object = addStrokeText(nil, "L1688", CMFD_STRINGDEFS_DEF_X05, "RightTop", {0.95, -0.94}, FLIR_Video.name, nil, {"%s"}, CMFD_FONT_W)
+object.element_params = {CMFD_BRIGHT}
+object.controllers = {{"opacity_using_parameter", 0}, {"text_from_lua_function", CMFD_TEXT.FLIR_LASER_CODE, 0.5}}
 object = addStrokeText(nil, "DD-MM-YY HH:MM:SSL", CMFD_STRINGDEFS_DEF_X05, "RightBottom", flir_status_pos(11.5), FLIR_bottom_bar.name, nil, {"%s"}, CMFD_FONT_K)
 object.element_params = {CMFD_BRIGHT}
 object.controllers = {{"opacity_using_parameter", 0}, {"date_time"}}

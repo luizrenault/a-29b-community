@@ -53,21 +53,21 @@ object.controllers = {{"opacity_using_parameter", 0}, {"text_using_parameter", 1
 object.formats = {"%s"}
 
 -- CLR
-object = addOSSText(3, "CLR", page_root.name)
+object = addOSSText(3, "CLR\nSTS", page_root.name)
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_DTE_FORMAT"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, CMFD_DTE_FORMAT_IDS.DTE}}
 
 -- QCHK
-object = addOSSText(4, "QCHK", page_root.name)
+object = addOSSText(4, "DTE\nQCHK", page_root.name)
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
 object.controllers = {{"opacity_using_parameter", 0}}
 
 object = addOSSStrokeBox(4,1, nil, nil, nil, nil, 4)
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_DTE_FORMAT"}
-object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}, {"parameter_compare_with_number", 1, CMFD_DTE_FORMAT_IDS.QCHK}}
+object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, CMFD_DTE_FORMAT_IDS.QCHK}}
 
 -- ALL
-object = addOSSText(5, "ALL", page_root.name)
+object = addOSSText(5, "LOAD\nALL", page_root.name)
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "CMFD_DTE_FORMAT"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, CMFD_DTE_FORMAT_IDS.DTE}}
 

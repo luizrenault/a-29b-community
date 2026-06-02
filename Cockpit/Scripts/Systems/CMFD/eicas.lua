@@ -69,7 +69,7 @@ local EICAS_SPD_BRK_TXT = get_param_handle("EICAS_SPD_BRK_TXT")
 
 local EICAS_INIT = get_param_handle("EICAS_INIT")
 
-fuel_init = 495;
+fuel_init = 800; -- combustível interno real (~1000 L = ~800 kg JET-A)
 fuel_random = 0 --os.time()%30
 fuel_joker = 300;
 
@@ -115,7 +115,7 @@ function update_eicas()
 
 
     ------------------ mostrador de torque
-    local torque = sensor_data.getEngineLeftRPM()
+    local torque = sensor_data.getEngineLeftRPM() * 100
     if torque < 84 then 
         torque = (torque - 64.6) / 19.4 * 10
     else
@@ -179,7 +179,7 @@ function update_eicas()
     end
 
     ------------------- pressão de óleo
-    local oil_press=sensor_data.getEngineLeftRPM()
+    local oil_press=sensor_data.getEngineLeftRPM() * 100
     if oil_press > 45 then oil_press = 99+(oil_press-45)/20*13
     elseif oil_press > 35 then oil_press = 92+(oil_press-35)/10*7
     elseif oil_press > 28 then oil_press = 64+(oil_press-28)/7*28
@@ -211,7 +211,7 @@ function update_eicas()
     end
 
     ------------------- temperatura do óleo
-    local oil_temp=oat + sensor_data.getEngineLeftRPM()*0.76
+    local oil_temp=oat + sensor_data.getEngineLeftRPM() * 0.76 * 100
 
     if oil_temp < -50 then oil_temp = -50 end
     if oil_temp > 150 then oil_temp = 150 end
@@ -236,7 +236,7 @@ function update_eicas()
     end
     
     ------------------- rotação da hélice %
-    local np = sensor_data.getEngineLeftRPM()
+    local np = sensor_data.getEngineLeftRPM() * 100
 
     if get_avionics_onground() then
         if np > 70 then np = 100
@@ -280,7 +280,7 @@ function update_eicas()
     end
 
     ----------------- rotação do gerador de gases
-    local ng = sensor_data.getEngineLeftRPM()
+    local ng = sensor_data.getEngineLeftRPM() * 100
     if ng < 0 then ng = 0 end
     if ng > 130 then ng = 130 end
 
@@ -307,7 +307,7 @@ function update_eicas()
     end
 
     ------------------- indicador digital de pressão hidráulica
-    local hyd=sensor_data.getEngineLeftRPM()*50
+    local hyd=sensor_data.getEngineLeftRPM() * 50 * 100
     if hyd > 3200 then hyd = 3200 end -- simulação
     
     if hyd < 0 then hyd = 0 end
@@ -385,14 +385,14 @@ function update_eicas()
     --if fuel_flow > 500 then fuel_flow = 500 end
 
     fuel_init = EICAS_FUEL_INIT:get()
-    if fuel_init > 1465 then fuel_init = 1465 end
+    if fuel_init > 1770 then fuel_init = 1770 end -- 800 interno + 970 ext (real, 2x 300L + 1x 470L wing/ventral)
     if fuel_init < 0 then fuel_init = 0 end
     fuel_init = fuel_init - sensor_data.getEngineLeftFuelConsumption()*update_time_step
 
     -- Se os dados de fluxo de combustível não estiverem disponíveis por mais de 5 minutos, o campo apresenta os caracteres “XXXX” na cor vermelha e os dados não mais estarão disponíveis.
     fuel_joker = EICAS_FUEL_JOKER:get()
 
-    if fuel_joker > 1465 then fuel_joker = 1465 end
+    if fuel_joker > 1770 then fuel_joker = 1770 end -- mesmo limite teórico com tanques externos
     if fuel_joker < 95 then fuel_joker = 95 end
 
     -- Calculate the remaining fuel after navigating to the homepoint
@@ -413,13 +413,13 @@ function update_eicas()
 
     local fuel = sensor_data.getTotalFuelWeight() + fuel_random
     if fuel < 0 then fuel = 0 end
-    if fuel > 495 then fuel = 495 end
+    if fuel > 800 then fuel = 800 end -- combustível interno real (~1000 L)
     local fuel_left = fuel / 2 -- simple model
     if fuel_left < 0 then fuel_left = 0 end
-    if fuel_left > 245 then fuel_left = 245 end
+    if fuel_left > 400 then fuel_left = 400 end -- tanque esquerdo (split simétrico)
     local fuel_right = fuel - fuel_left -- simple model
     if fuel_right < 0 then fuel_right = 0 end
-    if fuel_right > 250 then fuel_right = 250 end
+    if fuel_right > 400 then fuel_right = 400 end -- tanque direito (split simétrico)
     fuel = round_to(fuel, 5)
     fuel_left = round_to(fuel_left, 5)
     fuel_right = round_to(fuel_right, 5)
@@ -444,9 +444,9 @@ function update_eicas()
 
     local fuel_int_rot = 0
     if fuel <= 300 then
-        fuel_int_rot = math.rad((300 - fuel) * 10 / 50) + math.rad((500 - 300) * 12.5 / 100)
+        fuel_int_rot = math.rad((300 - fuel) * 10 / 50) + math.rad((800 - 300) * 12.5 / 100)
     else
-        fuel_int_rot = math.rad((500 - fuel) * 12.5 / 100)
+        fuel_int_rot = math.rad((800 - fuel) * 12.5 / 100)
     end
 
     -- cores dos indicadores de combustível

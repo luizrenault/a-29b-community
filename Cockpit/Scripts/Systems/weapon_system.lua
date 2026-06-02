@@ -18,6 +18,7 @@ local dev = GetSelf()
 
 
 local update_time_step = 0.02 --update will be called 50 times per second
+local CCRP_RELEASE_LEAD_TIME = 0.00 -- seconds; positive value releases slightly earlier
 make_default_activity(update_time_step)
 
 local sensor_data = get_base_data()
@@ -94,6 +95,11 @@ local CMFD = {
     NAV_FYT_LON_M = get_param_handle("CMFD_NAV_FYT_LON_M"),
     NAV_FYT_ALT_M = get_param_handle("CMFD_NAV_FYT_ALT_M"),
 
+    FLIR_TGT_LAT_M = get_param_handle("FLIR_TGT_LAT"),
+    FLIR_TGT_LON_M = get_param_handle("FLIR_TGT_LON"),
+    FLIR_TGT_ALT_M = get_param_handle("FLIR_TGT_ALT"),
+    FLIR_TGT_AVAILABLE = get_param_handle("FLIR_TGT_AVAILABLE"),
+
     NAV_FYT_DTK_AZIMUTH = get_param_handle("CMFD_NAV_FYT_DTK_AZIMUTH"),
     NAV_FYT_DTK_ELEVATION = get_param_handle("CMFD_NAV_FYT_DTK_ELEVATION"),
     NAV_FYT_DTK_DIST = get_param_handle("CMFD_NAV_FYT_DTK_DIST"),
@@ -144,6 +150,308 @@ end
 
 -- dofile(LockOn_Options.script_path.."dump.lua")
 
+local APKWS_CLSIDS = {
+    ["{A29B_LAU_61_AGR_20_APKWS}"] = true,
+    ["{A29B_LAU68_M282__APKWS_MPP}"] = true,
+}
+
+local LASER_GUIDED_MISSILE_CLSIDS = {
+    -- Legacy custom CLSIDs (kept for backward-compat with old missions; harmless if unused)
+    ["{A29B_M299_QUAD_HELLFIRE}"] = true,
+    ["{A29B_HELLFIRE_DUAL_RAIL}"] = true,
+    ["{A29B_MAVERICK_SINGLE_RAIL}"] = true,
+    ["{A29B_MAVERICK_DUAL_RAIL}"] = true,
+    ["{F16A4DE0-116C-4A71-97F0-2CF85B0313EC}"] = true,
+    -- Native DCS launchers (laser-guided missiles)
+    ["{M299_2xAGM_114K}"]   = true,  -- M299 - 2x AGM-114K Hellfire (laser)
+    ["AGM114x2_OH_58"]      = true,  -- 2x AGM-114K Hellfire (laser)
+    ["{LAU_117_AGM_65E}"]   = true,  -- LAU-117 - AGM-65E Maverick (laser)
+    ["{LAU_117_AGM_65L}"]   = true,  -- LAU-117 - AGM-65L Maverick (laser)
+    ["{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}"] = true,  -- AGM-65L Maverick GUID
+}
+
+local LASER_GUIDED_BOMB_CLSIDS = {
+    ["{DB769D48-67D7-42ED-A2BE-108D566C8B1E}"] = true,  -- GBU-12
+    ["{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}"] = true,  -- GBU-16
+    ["{GBU_49}"] = true,                                 -- GBU-49
+}
+
+-- K_drag por arma (CCRP travel_dist = Vgs * t_fall * K_drag).
+-- Paveway II planeia mais que bomba burra: K_drag maior => libera antes,
+-- cobre mais distancia horizontal e atinge alvo (corrige miss curto).
+-- Bombas nao-guiadas (Mk-82/81/etc.) continuam com 0.88 via fallback.
+local LASER_GUIDED_BOMB_K_DRAG = {
+    ["{DB769D48-67D7-42ED-A2BE-108D566C8B1E}"] = 0.95,  -- GBU-12 (Mk-82 + Paveway II)
+    ["{0D33DDAE-524F-4A4E-B5B8-621754FE3ADE}"] = 0.92,  -- GBU-16 (Mk-83, mais pesada)
+    ["{GBU_49}"] = 0.95,                                 -- GBU-49 (Mk-82 + Enhanced Paveway II)
+}
+local DEFAULT_BOMB_K_DRAG = 0.88
+
+-- Ajustes dinamicos de K_drag para CCRP laser:
+-- - altitude/densidade do ar (ISA)
+-- - massa total da aeronave (quando disponivel no sensor)
+-- - vento longitudinal aproximado (GS - TAS horizontal)
+local ISA_RHO0 = 1.225
+local ISA_T0_K = 288.15
+local ISA_P0_PA = 101325
+local ISA_LAPSE_K_PER_M = 0.0065
+local ISA_G_M_S2 = 9.80665
+local ISA_R_AIR = 287.05
+
+local CCRP_DYNAMIC_K_ENABLED = true
+local CCRP_K_DRAG_MIN = 0.84
+local CCRP_K_DRAG_MAX = 1.04
+local CCRP_K_DENSITY_GAIN = 0.06
+local CCRP_K_WEIGHT_GAIN = 0.08
+local CCRP_K_WIND_GAIN = 0.03
+local CCRP_WEIGHT_NOMINAL_KG = 4300
+
+local GUIDED_MISSILE_CLSIDS = {
+    -- Legacy custom CLSIDs (kept for backward-compat)
+    ["{A29B_M299_QUAD_HELLFIRE}"] = true,
+    ["{A29B_HELLFIRE_DUAL_RAIL}"] = true,
+    ["{A29B_MAVERICK_SINGLE_RAIL}"] = true,
+    ["{A29B_MAVERICK_DUAL_RAIL}"] = true,
+    ["{A29B_MAVERICK_IR_SINGLE_RAIL}"] = true,
+    ["{A29B_MAVERICK_IR_DUAL_RAIL}"] = true,
+    ["{F16A4DE0-116C-4A71-97F0-2CF85B0313EC}"] = true,
+    ["{444BA8AE-82A7-4345-842E-76154EFCCA46}"] = true,
+    -- Native DCS launchers
+    ["{M299_2xAGM_114K}"]   = true,  -- Hellfire (laser)
+    ["AGM114x2_OH_58"]      = true,  -- Hellfire (laser)
+    ["{LAU_117_AGM_65E}"]   = true,  -- AGM-65E Maverick (laser)
+    ["{LAU_117_AGM_65L}"]   = true,  -- AGM-65L Maverick (laser)
+    ["{B06DD79A-F21E-4EB9-BD9D-AB3844618C93}"] = true,  -- AGM-65L Maverick GUID
+}
+
+local IR_GUIDED_MAVERICK_CLSIDS = {
+    -- Legacy custom CLSIDs (kept for backward-compat)
+    ["{A29B_MAVERICK_IR_SINGLE_RAIL}"] = true,
+    ["{A29B_MAVERICK_IR_DUAL_RAIL}"] = true,
+    ["{444BA8AE-82A7-4345-842E-76154EFCCA46}"] = true,
+}
+
+local auto_lase_timeout = 0
+
+local function is_laser_guided_station(station_index)
+    local station_info = dev:get_station_info(station_index - 1)
+    return station_info ~= nil and (
+        APKWS_CLSIDS[station_info["CLSID"]] == true or
+        LASER_GUIDED_MISSILE_CLSIDS[station_info["CLSID"]] == true or
+        LASER_GUIDED_BOMB_CLSIDS[station_info["CLSID"]] == true
+    )
+end
+
+local function is_laser_guided_bomb_station(station_index)
+    local station_info = dev:get_station_info(station_index - 1)
+    return station_info ~= nil and LASER_GUIDED_BOMB_CLSIDS[station_info["CLSID"]] == true
+end
+
+local function clamp_value(value, min_value, max_value)
+    if value < min_value then return min_value end
+    if value > max_value then return max_value end
+    return value
+end
+
+local function get_isa_density_kg_m3(altitude_m)
+    local h = clamp_value(altitude_m or 0, 0, 11000)
+    local t = ISA_T0_K - ISA_LAPSE_K_PER_M * h
+    if t <= 0 then
+        return ISA_RHO0
+    end
+    local p = ISA_P0_PA * (t / ISA_T0_K) ^ (ISA_G_M_S2 / (ISA_R_AIR * ISA_LAPSE_K_PER_M))
+    return p / (ISA_R_AIR * t)
+end
+
+local function get_aircraft_total_weight_kg()
+    if not sensor_data.getTotalWeight then
+        return nil
+    end
+    local ok, weight = pcall(function()
+        return sensor_data:getTotalWeight()
+    end)
+    if ok and type(weight) == "number" and weight > 0 then
+        return weight
+    end
+    return nil
+end
+
+local function get_true_air_speed_ms()
+    if not sensor_data.getTrueAirSpeed then
+        return nil
+    end
+    local ok, tas = pcall(function()
+        return sensor_data:getTrueAirSpeed()
+    end)
+    if ok and type(tas) == "number" and tas > 0 then
+        return tas
+    end
+    return nil
+end
+
+local function get_along_track_wind_ms(gs, vy)
+    local tas = get_true_air_speed_ms()
+    if tas == nil or gs == nil or gs <= 0 then
+        return 0
+    end
+    local vertical_speed = vy or 0
+    local tas_h = math.sqrt(math.max(tas * tas - vertical_speed * vertical_speed, 0))
+    if tas_h <= 0 then
+        return 0
+    end
+    return gs - tas_h
+end
+
+local function get_weapon_k_drag(station_index, gs, vy, altitude_m)
+    local base_k = DEFAULT_BOMB_K_DRAG
+
+    if station_index ~= nil and station_index > 0 then
+        local station_info = dev:get_station_info(station_index - 1)
+        if station_info ~= nil then
+            local configured_k = LASER_GUIDED_BOMB_K_DRAG[station_info["CLSID"]]
+            if configured_k ~= nil then
+                base_k = configured_k
+            end
+        end
+    end
+
+    if not CCRP_DYNAMIC_K_ENABLED or station_index == nil or station_index <= 0 or not is_laser_guided_bomb_station(station_index) then
+        return base_k
+    end
+
+    local density = get_isa_density_kg_m3(math.max(0, altitude_m or 0))
+    local density_factor = 1 + (1 - density / ISA_RHO0) * CCRP_K_DENSITY_GAIN
+
+    local weight_factor = 1
+    local total_weight = get_aircraft_total_weight_kg()
+    if total_weight ~= nil then
+        local weight_ratio = clamp_value(total_weight / CCRP_WEIGHT_NOMINAL_KG, 0.80, 1.30)
+        weight_factor = 1 - (weight_ratio - 1) * CCRP_K_WEIGHT_GAIN
+    end
+
+    local wind_factor = 1
+    if gs ~= nil and gs > 0 then
+        local along_wind = get_along_track_wind_ms(gs, vy)
+        wind_factor = 1 + clamp_value(along_wind / 60, -1, 1) * CCRP_K_WIND_GAIN
+    end
+
+    local effective_k = base_k * density_factor * weight_factor * wind_factor
+    return clamp_value(effective_k, CCRP_K_DRAG_MIN, CCRP_K_DRAG_MAX)
+end
+
+local function is_laser_guided_missile_station(station_index)
+    local station_info = dev:get_station_info(station_index - 1)
+    return station_info ~= nil and LASER_GUIDED_MISSILE_CLSIDS[station_info["CLSID"]] == true
+end
+
+local function is_ir_guided_maverick_station(station_index)
+    local station_info = dev:get_station_info(station_index - 1)
+    return station_info ~= nil and IR_GUIDED_MAVERICK_CLSIDS[station_info["CLSID"]] == true
+end
+
+local function requires_ir_lock_for_current_ag_release(launch_op)
+    if wpn_ag_sel <= 0 then
+        return false
+    end
+
+    if launch_op == WPN_LAUNCH_OP_IDS.SALVO or launch_op == WPN_LAUNCH_OP_IDS.PAIR then
+        for i = 1, 5 do
+            local param = get_param_handle("WPN_POS_"..i.."_SEL")
+            if param:get() == 1 and is_ir_guided_maverick_station(i) then
+                return true
+            end
+        end
+        return false
+    end
+
+    return is_ir_guided_maverick_station(wpn_ag_sel)
+end
+
+local function has_ag_ir_maverick_lock()
+    if WS_IR_MISSILE_LOCK:get() == 1 then
+        return true
+    end
+
+    -- Native AGM-65 IR may not always drive WS_IR_MISSILE_LOCK in AG mode.
+    -- Accept a valid FLIR designation as launch authorization fallback.
+    local flir_has_target = CMFD.FLIR_TGT_AVAILABLE:get() == 1
+    local flir_lat = CMFD.FLIR_TGT_LAT_M:get()
+    local flir_lon = CMFD.FLIR_TGT_LON_M:get()
+    return flir_has_target and flir_lat ~= nil and flir_lon ~= nil and (flir_lat ~= 0 or flir_lon ~= 0)
+end
+
+local function set_flir_laser_enabled(enabled)
+    local flir = GetDevice(devices.FLIR)
+    if flir then
+        flir:SetCommand(flir_commands.LaserOn, enabled and 1 or 0)
+    end
+end
+
+local function start_guided_auto_lase()
+    local total_releases = math.max(wpn_ripple_count + 1, 1)
+    local duration = math.max(8, total_releases * math.max(wpn_ripple_interval, update_time_step) + 6)
+    auto_lase_timeout = math.max(auto_lase_timeout, duration)
+    set_flir_laser_enabled(true)
+end
+
+-- Laser-guided missiles can have a longer flight time than rockets.
+-- Keep laser active for ripple window + estimated time to impact.
+local function start_missile_auto_lase()
+    local total_releases = math.max(wpn_ripple_count + 1, 1)
+    local ripple_window = total_releases * math.max(wpn_ripple_interval, update_time_step)
+    local missile_fly_time = WPN.TIME_TO_IMPACT:get()
+    if missile_fly_time <= 0 then
+        missile_fly_time = 12
+    end
+    local duration = math.max(12, ripple_window + missile_fly_time + 4)
+    auto_lase_timeout = math.max(auto_lase_timeout, duration)
+    set_flir_laser_enabled(true)
+end
+
+-- Para bombas laser-guiadas (GBU), o laser deve ficar ativo durante todo o voo da bomba.
+-- WPN.TIME_TO_IMPACT é atualizado a cada frame pelo update_ccrp().
+local function start_bomb_auto_lase()
+    local bomb_fly_time = WPN.TIME_TO_IMPACT:get()
+    local duration = math.max(8, (bomb_fly_time > 0 and bomb_fly_time or 30) + 4)
+    auto_lase_timeout = math.max(auto_lase_timeout, duration)
+    set_flir_laser_enabled(true)
+end
+
+local function stop_auto_lase()
+    auto_lase_timeout = 0
+    set_flir_laser_enabled(false)
+end
+
+local function should_hold_flir_designation()
+    return auto_lase_timeout > 0 and wpn_ag_sel > 0 and (is_laser_guided_bomb_station(wpn_ag_sel) or is_laser_guided_missile_station(wpn_ag_sel))
+end
+
+local function begin_guided_release_lase(launch_op)
+    if launch_op == WPN_LAUNCH_OP_IDS.SALVO or launch_op == WPN_LAUNCH_OP_IDS.PAIR then
+        for i = 1, 5 do
+            local param = get_param_handle("WPN_POS_"..i.."_SEL")
+            if param:get() == 1 and is_laser_guided_station(i) then
+                if is_laser_guided_bomb_station(i) then
+                    start_bomb_auto_lase()
+                elseif is_laser_guided_missile_station(i) then
+                    start_missile_auto_lase()
+                else
+                    start_guided_auto_lase()
+                end
+                return
+            end
+        end
+    elseif wpn_ag_sel > 0 and is_laser_guided_station(wpn_ag_sel) then
+        if is_laser_guided_bomb_station(wpn_ag_sel) then
+            start_bomb_auto_lase()
+        elseif is_laser_guided_missile_station(wpn_ag_sel) then
+            start_missile_auto_lase()
+        else
+            start_guided_auto_lase()
+        end
+    end
+end
+
 local function update_storages()
     wpn_sto_total_count = {}
     for i = 0, station_count-1 do
@@ -159,7 +467,11 @@ local function update_storages()
             wpn_sto_total_count[wname] = (wpn_sto_total_count[wname] or 0) + station_info["count"]
         end
         
-        if station_info.weapon.level2 == wsType_NURS then 
+        if APKWS_CLSIDS[station_info["CLSID"]] then
+            wpn_sto_type[i+1] = WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET
+        elseif GUIDED_MISSILE_CLSIDS[station_info["CLSID"]] then
+            wpn_sto_type[i+1] = WPN_WEAPON_TYPE_IDS.AG_GUIDED_MISSILE
+        elseif station_info.weapon.level2 == wsType_NURS then 
             wpn_sto_type[i+1] = WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET
         elseif station_info.weapon.level2 == wsType_Bomb then
             wpn_sto_type[i+1] = WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB
@@ -376,6 +688,91 @@ end
 
 local Ralt_last = 1600
 local Balt_last = 1600
+local ralt_cache_valid = false
+
+local function refresh_ralt_baro_cache()
+    local Ralt = sensor_data.getRadarAltitude()
+    local Balt = sensor_data.getBarometricAltitude()
+
+    if Ralt ~= nil and Balt ~= nil and Ralt >= 0 and Ralt < 1600 then
+        Ralt_last = Ralt
+        Balt_last = Balt
+        ralt_cache_valid = true
+    end
+end
+
+local function get_nav_target_level()
+    if UFCP.OAP_ENABLED:get() == 1 then
+        return CMFD.NAV_OAP_ALT_M:get()
+    end
+    return CMFD.NAV_FYT_ALT_M:get()
+end
+
+local function get_terrain_target_level(y, p_pitch, p_roll)
+    local Balt = sensor_data.getBarometricAltitude() or Balt_last
+    local h_agl = Ralt_last + (Balt - Balt_last)
+    if h_agl < 0 then h_agl = 0 end
+    return y - h_agl * math.cos(math.abs(p_pitch)) * math.cos(math.abs(p_roll))
+end
+
+local function get_ralt_target_level(y, p_pitch, p_roll)
+    local Ralt = sensor_data.getRadarAltitude()
+    if Ralt ~= nil and Ralt >= 0 and Ralt < 1600 then
+        return y - Ralt * math.cos(math.abs(p_pitch)) * math.cos(math.abs(p_roll))
+    end
+    return nil
+end
+
+local function get_ccip_target_level(master_mode, y, p_pitch, p_roll)
+    refresh_ralt_baro_cache()
+
+    local nav_h0 = get_nav_target_level()
+    local terrain_h0 = nil
+    if ralt_cache_valid then
+        terrain_h0 = get_terrain_target_level(y, p_pitch, p_roll)
+    end
+
+    if master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R or master_mode == AVIONICS_MASTER_MODE_ID.GUN_R then
+        local ralt_h0 = get_ralt_target_level(y, p_pitch, p_roll)
+        if ralt_h0 ~= nil then
+            return ralt_h0
+        elseif terrain_h0 ~= nil then
+            return terrain_h0
+        elseif nav_h0 ~= nil then
+            return nav_h0
+        end
+        return y
+    end
+
+    if terrain_h0 ~= nil then
+        return terrain_h0
+    elseif nav_h0 ~= nil then
+        return nav_h0
+    end
+    return y
+end
+
+local function get_legacy_target_level(master_mode, y, p_pitch, p_roll)
+    local Ralt = sensor_data.getRadarAltitude()
+    local Balt = sensor_data.getBarometricAltitude()
+
+    if Ralt ~= nil and Balt ~= nil and Ralt < 1600 then
+        Ralt_last = Ralt
+        Balt_last = Balt
+    end
+
+    Balt = Balt or Balt_last
+    local h0 = y - (Ralt_last + Balt - Balt_last) * math.cos(math.abs(p_pitch)) * math.cos(math.abs(p_roll))
+    if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.GUN then
+        if UFCP.OAP_ENABLED:get() == 1 then
+            h0 = CMFD.NAV_OAP_ALT_M:get()
+        else
+            h0 = CMFD.NAV_FYT_ALT_M:get()
+        end
+    end
+
+    return h0
+end
 
 local wpn_target
 
@@ -397,47 +794,121 @@ local function calculate_ccip_max_range(h0)
     return Sx, fly_time, h0
 end
 
+local function get_target_angles_from_point(lat_m, lon_m, alt_m)
+    if lat_m == nil or lon_m == nil or alt_m == nil then
+        return nil, nil, nil, nil
+    end
+
+    local x, y, z = sensor_data.getSelfCoordinates()
+    local dx = lat_m - x
+    local dy = alt_m - y
+    local dz = lon_m - z
+    local p_hdg = 2 * math.pi - sensor_data:getHeading()
+    local p_roll = sensor_data:getRoll()
+    local p_pitch = sensor_data:getPitch()
+
+    local dif_hdg = (math.atan2(dz, dx) - p_hdg) % (2 * math.pi)
+    if dif_hdg > math.pi then dif_hdg = dif_hdg - 2 * math.pi end
+
+    local target_horiz_dist = math.sqrt(dx * dx + dz * dz)
+    local target_elevation = math.atan2(dy, target_horiz_dist)
+
+    local s = math.sin(p_roll)
+    local c = math.cos(p_roll)
+
+    local new_azimuth = dif_hdg * c - target_elevation * s
+    local new_elevation = dif_hdg * s + target_elevation * c
+
+    dif_hdg = new_azimuth
+    target_elevation = new_elevation - p_pitch * c
+
+    return dif_hdg, target_elevation, dx, dz
+end
+
 local function  update_ccrp()
     if master_mode == AVIONICS_MASTER_MODE_ID.CCRP and wpn_ag_sel > 0 and wpn_sto_count[wpn_ag_sel]>0  then
         wpn_target = {}
-        if UFCP.OAP_ENABLED:get() == 1 then
+        local target_source = "NAV"
+        local flir_lat_m = CMFD.FLIR_TGT_LAT_M:get()
+        local flir_lon_m = CMFD.FLIR_TGT_LON_M:get()
+        local flir_alt_m = CMFD.FLIR_TGT_ALT_M:get()
+
+        if CMFD.FLIR_TGT_AVAILABLE:get() == 1
+            and flir_lat_m ~= nil and flir_lon_m ~= nil and flir_alt_m ~= nil
+            and (flir_lat_m ~= 0 or flir_lon_m ~= 0) then
+            wpn_target.lat_m = flir_lat_m
+            wpn_target.lon_m = flir_lon_m
+            wpn_target.alt_m = flir_alt_m
+            target_source = "FLIR"
+        elseif UFCP.OAP_ENABLED:get() == 1 then
             wpn_target.lat_m = CMFD.NAV_OAP_LAT_M:get()
             wpn_target.lon_m = CMFD.NAV_OAP_LON_M:get()
             wpn_target.alt_m = CMFD.NAV_OAP_ALT_M:get()
+            target_source = "OAP"
         else
             wpn_target.lat_m = CMFD.NAV_FYT_LAT_M:get()
             wpn_target.lon_m = CMFD.NAV_FYT_LON_M:get()
             wpn_target.alt_m = CMFD.NAV_FYT_ALT_M:get()
         end
+
+        if wpn_target.lat_m == nil or wpn_target.lon_m == nil or wpn_target.alt_m == nil then
+            WPN.CCRP_TIME:set(-1)
+            WPN.TIME_MAX_RANGE:set(-1)
+            WPN.TD_AVAILABLE:set(0)
+            return
+        end
+
         local x, y, z = sensor_data.getSelfCoordinates()
         local dx = wpn_target.lat_m - x
         local dy = wpn_target.alt_m - y
         local dz = wpn_target.lon_m - z
+        local target_azimuth, target_elevation = get_target_angles_from_point(wpn_target.lat_m, wpn_target.lon_m, wpn_target.alt_m)
 
         local max_range = calculate_ccip_max_range(dy)
 
-        local valid, az, el, travel_dist = Calculate()
+        local valid, az, el, _ = Calculate()
         local vx, vy, vz = sensor_data.getSelfVelocity()
         local gs = math.sqrt(vx*vx + vz*vz)
-        fly_time=travel_dist/gs
+
+        -- Calculate() subestima alcance da GBU-12 em ~60% (alto arrasto kit Paveway II),
+        -- atrasando o cue CCRP em 40-80s. Substituído por fórmula física balística:
+        --   t_fall = (Vy + sqrt(Vy^2 + 2*g*H)) / g   (inclui componente vertical Vy)
+        --   travel_dist = Vgs * t_fall * K_drag        (K_drag = arrasto + guiagem)
+        local H = math.abs(dy)         -- altitude acima do alvo (m), sempre positivo
+        local g_const = 9.81
+        local fall_time = (vy + math.sqrt(vy * vy + 2 * g_const * H)) / g_const
+        -- K_drag varia por arma: GBU (Paveway II) plana mais => K_drag maior => release antecipado.
+        -- Bombas nao-guiadas usam DEFAULT_BOMB_K_DRAG (0.88) via fallback do helper.
+        local K_drag = get_weapon_k_drag(wpn_ag_sel, gs, vy, y)
+        local travel_dist = gs * fall_time * K_drag
+        fly_time = fall_time           -- timeout do laser = tempo de voo real da bomba
 
         local target_dist = math.sqrt(dx * dx + dy * dy +  dz * dz)
         local target_horiz_dist = math.sqrt(dx * dx +  dz * dz)
 
-        local ccrp_dif = target_dist - travel_dist
+        -- CCRP release gating must use horizontal distance; using 3D slant range delays release after overflight.
+        local ccrp_dif = target_horiz_dist - travel_dist
         local ccrp_time = 0
-        if ccrp_dif >= 0 then 
+        if ccrp_dif >= 0 and gs > 0 then
             ccrp_time = ccrp_dif / gs
+        else
+            ccrp_time = -1
         end
 
-        local time_to_max_range = (target_horiz_dist - max_range) / gs
+        local time_to_max_range = -1
+        if gs > 0 then
+            time_to_max_range = (target_horiz_dist - max_range) / gs
+        end
 
         WPN.CCRP_TIME:set(ccrp_time)
         WPN.TIME_MAX_RANGE:set(time_to_max_range)
         WPN.TIME_TO_IMPACT:set(fly_time)
 
         WPN.TD_AVAILABLE:set(1)
-        if UFCP.OAP_ENABLED:get() == 1 then
+        if target_azimuth ~= nil and target_elevation ~= nil then
+            WPN.TD_AZIMUTH:set(target_azimuth)
+            WPN.TD_ELEVATION:set(target_elevation)
+        elseif target_source == "OAP" then
             WPN.TD_AZIMUTH:set(CMFD.NAV_OAP_AZIMUTH:get())
             WPN.TD_ELEVATION:set(CMFD.NAV_OAP_ELEVATION:get())
         else
@@ -446,7 +917,40 @@ local function  update_ccrp()
         end
     else 
         WPN.CCRP_TIME:set(-1)
+        WPN.TIME_MAX_RANGE:set(-1)
+        WPN.TD_AVAILABLE:set(0)
     end
+end
+
+local function update_man_guided_td()
+    if get_avionics_master_mode() ~= AVIONICS_MASTER_MODE_ID.MAN then
+        return
+    end
+
+    if wpn_ag_sel <= 0 or wpn_sto_type[wpn_ag_sel] ~= WPN_WEAPON_TYPE_IDS.AG_GUIDED_MISSILE then
+        WPN.TD_AVAILABLE:set(0)
+        return
+    end
+
+    local flir_lat_m = CMFD.FLIR_TGT_LAT_M:get()
+    local flir_lon_m = CMFD.FLIR_TGT_LON_M:get()
+    local flir_alt_m = CMFD.FLIR_TGT_ALT_M:get()
+    local flir_available = CMFD.FLIR_TGT_AVAILABLE:get() == 1
+
+    if not flir_available or flir_lat_m == nil or flir_lon_m == nil or flir_alt_m == nil or (flir_lat_m == 0 and flir_lon_m == 0) then
+        WPN.TD_AVAILABLE:set(0)
+        return
+    end
+
+    local target_azimuth, target_elevation = get_target_angles_from_point(flir_lat_m, flir_lon_m, flir_alt_m)
+    if target_azimuth == nil or target_elevation == nil then
+        WPN.TD_AVAILABLE:set(0)
+        return
+    end
+
+    WPN.TD_AVAILABLE:set(1)
+    WPN.TD_AZIMUTH:set(target_azimuth)
+    WPN.TD_ELEVATION:set(target_elevation)
 end
 
 wpn_ccip_delayed_target = {}
@@ -487,7 +991,8 @@ local function  update_ccip_delayed()
         local gs = math.sqrt(vx*vx + vz*vz)
         fly_time=travel_dist/gs
 
-        local ccrp_dif = target_dist - travel_dist
+        -- CCIP delayed release uses the same timing geometry as CCRP (horizontal closure).
+        local ccrp_dif = target_horiz_dist - travel_dist
         local ccrp_time = 0
         if ccrp_dif >= 0 then 
             ccrp_time = ccrp_dif / gs
@@ -521,26 +1026,12 @@ local function  update_ccip()
         local x, y, z = sensor_data.getSelfCoordinates()
         local p_roll = sensor_data:getRoll()
         local p_pitch = sensor_data:getPitch()
-        local Ralt = sensor_data.getRadarAltitude()
-        local Balt = sensor_data.getBarometricAltitude()
         local Vx0, Vy0, Vz0 = sensor_data.getSelfVelocity()
         local V0 = math.sqrt(Vx0 * Vx0 + Vy0 * Vy0 + Vz0 * Vz0)
         local gs = get_avionics_gs()
-        local h0 = 0
-
-
-        if Ralt < 1600 then 
-            Ralt_last = Ralt
-            Balt_last = Balt
-        else
-        end
-        h0 = y - (Ralt_last + Balt - Balt_last) * math.cos(math.abs(p_pitch)) * math.cos(math.abs(p_roll))
-        if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.GUN then
-            if UFCP.OAP_ENABLED:get() == 1 then
-                h0 = CMFD.NAV_OAP_ALT_M:get()
-            else 
-                h0 = CMFD.NAV_FYT_ALT_M:get()
-            end
+        local h0 = get_legacy_target_level(master_mode, y, p_pitch, p_roll)
+        if wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB or wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET then
+            h0 = get_ccip_target_level(master_mode, y, p_pitch, p_roll)
         end
  
         set_target_level(h0)
@@ -603,7 +1094,9 @@ local wpn_is_m_last
 local wpn_is_time_last
 local function update_ag_sel_wpn()
     if wpn_ag_sel == 0 or (wpn_ag_sel ~= 0 and ((wpn_sto_count[wpn_ag_sel] <=0 or wpn_sto_type[wpn_ag_sel] < WPN_WEAPON_TYPE_IDS.AG_WEAPON_BEG or wpn_sto_type[wpn_ag_sel] > WPN_WEAPON_TYPE_IDS.AG_WEAPON_END))) then 
-        update_ag_sel_next(true)
+        if not should_hold_flir_designation() then
+            update_ag_sel_next(true)
+        end
     end
     if get_wpn_ag_ready() or get_wpn_guns_ready() then  WPN_READY:set(1) else  WPN_READY:set(0) end
     if get_wpn_ag_sim_ready() or get_wpn_guns_sim_ready() then WPN_SIM_READY:set(1) else WPN_SIM_READY:set(0) end
@@ -659,7 +1152,8 @@ local function update_ag_sel_wpn()
         if wpn_is_m < 12 then wpn_is_m = 12
         elseif wpn_is_m > 999 then wpn_is_m = 999 
         end
-    elseif WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET then
+    elseif WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET 
+        or WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_GUIDED_MISSILE then
         if wpn_is_time < 0 then wpn_is_time = 0
         elseif wpn_is_time > 9999 then wpn_is_time = 9999
         end
@@ -683,6 +1177,7 @@ local function update_ag()
     update_ccip()
     update_ccip_delayed()
     update_ccrp()
+    update_man_guided_td()
 end
 
 local function update_aa_sel_wpn()
@@ -839,6 +1334,12 @@ local time_elapsed = 0
 function update()
 
     time_elapsed = time_elapsed + update_time_step
+    if auto_lase_timeout > 0 then
+        auto_lase_timeout = auto_lase_timeout - update_time_step
+        if auto_lase_timeout <= 0 then
+            stop_auto_lase()
+        end
+    end
     update_storages()
     update_master_mode_changed()
 
@@ -860,7 +1361,7 @@ function update()
 
 
     if wpn_ripple_count > 0 then
-        if (master_mode == AVIONICS_MASTER_MODE_ID.CCRP and WPN.CCRP_TIME:get() > 0) then
+        if (master_mode == AVIONICS_MASTER_MODE_ID.CCRP and WPN.CCRP_TIME:get() > CCRP_RELEASE_LEAD_TIME) then
         elseif ((master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R) and WPN.CCIP_DELAYED:get() == 1 and WPN.CCIP_DELAYED_TIME:get() > 0) then
         else
             wpn_ripple_elapsed = wpn_ripple_elapsed + update_time_step
@@ -875,18 +1376,27 @@ function update()
                 end
 
                 local lauch_op = WPN_LAUNCH_OP:get()
+                local released_this_step = false
                 if lauch_op == WPN_LAUNCH_OP_IDS.SALVO or lauch_op == WPN_LAUNCH_OP_IDS.PAIR then
                     for i=1,5 do
                         local param = get_param_handle("WPN_POS_"..i.."_SEL")
                         if param:get() == 1 then
                             dev:launch_station(i-1)
+                            released_this_step = true
                         end
                     end
                 else 
                     dev:launch_station(wpn_ag_sel-1)
+                    released_this_step = true
                 end
-                update_storages()
-                update_ag_sel_next(true)
+
+                if released_this_step then
+                    begin_guided_release_lase(lauch_op)
+                    update_storages()
+                    if not should_hold_flir_designation() then
+                        update_ag_sel_next(true)
+                    end
+                end
             end
         end
     end
@@ -942,6 +1452,9 @@ end
 
 local iCommandPlaneDropFlareOnce = 357
 local iCommandPlaneDropChaffOnce = 358
+local iCommandPlaneWingtipSmokeOnOff = 78
+
+dev:listen_command(iCommandPlaneWingtipSmokeOnOff)
 
 dev:listen_command(iCommandPlaneDropFlareOnce)
 dev:listen_command(iCommandPlaneDropChaffOnce)
@@ -963,6 +1476,8 @@ dev:listen_command(Keys.Cage)
 dev:listen_command(Keys.TDCX)
 dev:listen_command(Keys.TDCY)
 dev:listen_command(Keys.JettisonWeapons)
+dev:listen_command(Keys.MassSelectorStep)
+dev:listen_command(Keys.LateArmSelectorStep)
 
 local step_time_elapsed = -1;
 
@@ -1007,6 +1522,26 @@ function SetCommand(command,value)
         WPN_MASS:set(value)
     elseif command == device_commands.LateArm then
         WPN_LATEARM:set(value)
+    elseif command == Keys.MassSelectorStep and value == 1 then
+        local mass = get_wpn_mass()
+        if mass == WPN_MASS_IDS.LIVE then
+            mass = WPN_MASS_IDS.SIM
+        elseif mass == WPN_MASS_IDS.SIM then
+            mass = WPN_MASS_IDS.SAFE
+        else
+            mass = WPN_MASS_IDS.LIVE
+        end
+        dev:performClickableAction(device_commands.Mass, mass, true)
+    elseif command == Keys.LateArmSelectorStep and value == 1 then
+        local latearm = get_wpn_latearm()
+        if latearm == WPN_LATEARM_IDS.GUARD then
+            latearm = WPN_LATEARM_IDS.SAFE
+        elseif latearm == WPN_LATEARM_IDS.SAFE then
+            latearm = WPN_LATEARM_IDS.ON
+        else
+            latearm = WPN_LATEARM_IDS.GUARD
+        end
+        dev:performClickableAction(device_commands.LateArm, latearm, true)
     elseif command == Keys.JettisonWeapons then
         dev:performClickableAction(device_commands.Salvo, value, true)
     elseif command == device_commands.Salvo then
@@ -1043,7 +1578,7 @@ function SetCommand(command,value)
         end
         if get_wpn_ag_ready() and not get_avionics_master_mode_ag_gun() and value == 1 then
             wpn_ripple_count = WPN_RP:get()-1
-            if wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET or (wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB and get_avionics_master_mode() == AVIONICS_MASTER_MODE_ID.MAN) then
+            if wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_ROCKET or wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_GUIDED_MISSILE or (wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB and get_avionics_master_mode() == AVIONICS_MASTER_MODE_ID.MAN) then
                 wpn_ripple_interval = WPN_IS_TIME:get() / 1000
             elseif wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
                 wpn_ripple_interval = WPN_IS_M:get() / (get_avionics_gs() or 100)
@@ -1051,7 +1586,7 @@ function SetCommand(command,value)
             wpn_ripple_elapsed = 0
             if master_mode == AVIONICS_MASTER_MODE_ID.CCRP then
                 wpn_ripple_count = wpn_ripple_count + 1
-            elseif ((master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R) and get_param_handle("HUD_CCIP_PIPER_HIDDEN"):get() == 1) then
+            elseif ((master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R) and get_param_handle("HUD_CCIP_PIPER_HIDDEN"):get() == 1 and wpn_sto_type[wpn_ag_sel] == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB) then
                 local slide = HUD.FPM_SLIDE:get()
                 local vert = HUD.FPM_VERT:get()
             
@@ -1078,22 +1613,7 @@ function SetCommand(command,value)
 
                 wpn_ccip_delayed_target = {}
 
-                local Ralt = sensor_data.getRadarAltitude()
-                local Balt = sensor_data.getBarometricAltitude()
-
-                if Ralt < 1600 then 
-                    Ralt_last = Ralt
-                    Balt_last = Balt
-                else
-                end
-                local h0 = y - (Ralt_last + Balt - Balt_last) * math.cos(math.abs(p_pitch)) * math.cos(math.abs(p_roll))
-                if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.GUN then
-                    if UFCP.OAP_ENABLED:get() == 1 then
-                        h0 = CMFD.NAV_OAP_ALT_M:get()
-                    else 
-                        h0 = CMFD.NAV_FYT_ALT_M:get()
-                    end
-                end
+                local h0 = get_ccip_target_level(master_mode, y, p_pitch, p_roll)
         
                 local t_dist = (h0-y) / math.tan (t_pitch);
                 
@@ -1109,6 +1629,7 @@ function SetCommand(command,value)
                 end
 
                 local lauch_op = WPN_LAUNCH_OP:get()
+                begin_guided_release_lase(lauch_op)
                 if lauch_op == WPN_LAUNCH_OP_IDS.SALVO or lauch_op == WPN_LAUNCH_OP_IDS.PAIR then
                     for i=1,5 do
                         local param = get_param_handle("WPN_POS_"..i.."_SEL")
@@ -1120,13 +1641,16 @@ function SetCommand(command,value)
                     dev:launch_station(wpn_ag_sel-1)
                 end
                 update_storages()
-                update_ag_sel_next(true)
+                if not should_hold_flir_designation() then
+                    update_ag_sel_next(true)
+                end
+                WPN_RELEASE:set(1)
+                wpn_release = true
+                wpn_release_elapsed = 0.5
             end
-            WPN_RELEASE:set(1)
-            wpn_release = true
-            wpn_release_elapsed = 0.5
         elseif wpn_ripple_count > 0 and get_wpn_ag_ready() and not get_avionics_master_mode_ag_gun() and value == 0 then
             wpn_ripple_count = 0
+            stop_auto_lase()
         end
         if value == 0 and wpn_release  then
             if wpn_release_elapsed == -1 then WPN_RELEASE:set(0) end
@@ -1161,23 +1685,29 @@ function SetCommand(command,value)
         if value == 1 then
             step_time_elapsed = time_elapsed + 0.5
         end
-        if get_avionics_master_mode_aa() and value == 1 then 
+        if get_avionics_master_mode_aa() and value == 1 then
             update_aa_sel_next()
         elseif get_avionics_master_mode_ag() and value == 1 then
-            if WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
-                if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R then
-                    set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DTOS)
-                elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then
-                    set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCRP)
-                elseif master_mode == AVIONICS_MASTER_MODE_ID.CCRP or master_mode == AVIONICS_MASTER_MODE_ID.CCRP_R then
-                    set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
-                elseif master_mode == AVIONICS_MASTER_MODE_ID.MAN then
-                    set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
-                elseif master_mode == AVIONICS_MASTER_MODE_ID.GUN_M then
-                    set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.GUN)
+            -- Stick Step must prioritize cycling AG stores within AG mode.
+            local prev_ag_sel = wpn_ag_sel
+            update_storages()
+            update_ag_sel_next(false)
+
+            -- If there is no different AG store to cycle to, keep legacy bomb submode step behavior.
+            if wpn_ag_sel == prev_ag_sel then
+                if WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB then
+                    if master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R then
+                        set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.DTOS)
+                    elseif master_mode == AVIONICS_MASTER_MODE_ID.DTOS or master_mode == AVIONICS_MASTER_MODE_ID.DTOS_R then
+                        set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCRP)
+                    elseif master_mode == AVIONICS_MASTER_MODE_ID.CCRP or master_mode == AVIONICS_MASTER_MODE_ID.CCRP_R then
+                        set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+                    elseif master_mode == AVIONICS_MASTER_MODE_ID.MAN then
+                        set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
+                    elseif master_mode == AVIONICS_MASTER_MODE_ID.GUN_M then
+                        set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.GUN)
+                    end
                 end
-            else
-                set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
             end
         elseif value == 1 then
             set_avionics_master_mode(AVIONICS_MASTER_MODE_ID.CCIP)
@@ -1205,7 +1735,11 @@ function SetCommand(command,value)
         if dev:get_chaff_count() > 1 then 
             dev:drop_chaff()
         end
+    elseif command == iCommandPlaneWingtipSmokeOnOff then
+        print_message_to_user("Smoke")
+        dev:launch_station(6)
     end
+
 end
 
 dev:listen_event("WeaponRearmComplete")

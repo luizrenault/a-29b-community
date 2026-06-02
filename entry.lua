@@ -6,7 +6,7 @@ installed 	 = true, -- if false that will be place holder , or advertising
 displayName     = _("A-29B"),
 developerName   =   "Fight's On BR",
 developerLink   = "https://github.com/luizrenault/a-29b-community",
-version		 = "0.5.3b",
+version		 = "0.7.0.2",
 state		 = "installed",
 info		 = _("A-29B"),
 binaries 	 = {'avSimplest'},
@@ -60,6 +60,7 @@ mount_vfs_model_path    (current_mod_path ..  "/Shapes")
 --local support_cockpit = current_mod_path..'/Cockpit/Scripts/'
 dofile(current_mod_path..'/loadout.lua')
 dofile(current_mod_path..'/weapons.lua')
+dofile(current_mod_path..'/ExtraWeapons.lua')
 
 dofile(current_mod_path..'/A-29B.lua')
 dofile(current_mod_path.."/Views.lua")
@@ -67,7 +68,7 @@ make_view_settings('A-29B', ViewSettings, SnapViews)
 mount_vfs_sound_path (current_mod_path.."/Sounds/")
 
 local cfg_path = current_mod_path.."/ConfigFM.lua"
-dofile(cfg_path)  
+dofile(cfg_path)
 
 
 local FM = 
@@ -81,6 +82,6 @@ local FM =
 }
 
 ----------------------------------------------------------------------------------------
-make_flyable('A-29B', current_mod_path..'/Cockpit/Scripts/' , nil , current_mod_path..'/comm.lua')
+make_flyable(self_ID, current_mod_path..'/Cockpit/Scripts/' , FM , current_mod_path..'/comm.lua')
 ----------------------------------------------------------------------------------------
 plugin_done()

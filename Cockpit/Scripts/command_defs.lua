@@ -129,6 +129,13 @@ Keys =
     COM2                     = __custom_counter(),
     COM3                     = __custom_counter(),
 
+    MassSelectorStep         = __custom_counter(),
+    LateArmSelectorStep      = __custom_counter(),
+    CMFDLeftFLIR             = __custom_counter(),
+    CMFDRightFLIR            = __custom_counter(),
+    CMFDLeftSMS              = __custom_counter(),
+    CMFDRightSMS             = __custom_counter(),
+
 }
 
 start_command   = 3000
@@ -743,7 +750,6 @@ flir_commands =
 -- iCommandPlane_HOTAS_PinkySwitchAft	569
 -- iCommandPlaneIntercomINTIncrease	1162
 -- iCommandGroundPowerAC	710
--- iCommandCockpitCursorVerticalAbs	2039
 -- iCommandViewLocomotivesToggle	348
 -- iCommandHelicopter_PPR_button_DIR_up	305
 -- iCommandPlaneCMSP_MWS_MENU	1334
@@ -872,7 +878,6 @@ flir_commands =
 -- iCommandViewFromTo	185
 -- iCommandPlaneShowKneeboard	1587
 -- iCommandPlaneUFC_SEL_UP	1318
--- iCommandCockpitCursorVertical	2037
 -- iCommandPlane_ILS_Volume_Decrease	1443
 -- iCommandThrottle2Increase	1038
 -- iCommandPlane_I251_Background_WhiteBlack	846
@@ -1222,7 +1227,6 @@ flir_commands =
 -- iCommandHelicopter_Engine_Temperature_Control	822
 -- iCommandHelicopter_Selected_Engine_interrupt_start	597
 -- iCommandPlaneBase_Distance	2040
--- iCommandCockpitCursorHorizontalAbs	2038
 -- iCommandHUDTest	748
 -- iCommandAccelerate	53
 -- iCommandPlaneEmerFlightControl	1114
@@ -1809,7 +1813,6 @@ flir_commands =
 -- iCommandPlaneCDU_7	1248
 -- iCommandPlaneNavLights_CodeModeOn	519
 -- iCommandHSI_CourseRotaryLeft	764
--- iCommandCockpitClickOn	361
 -- iCommandViewPlaneAndGround	134
 -- iCommandViewLaserChangeCode	1561
 -- iCommandViewAWACSInfoPathButton	2104
@@ -2283,7 +2286,6 @@ flir_commands =
 -- iCommandDebriefing	1537
 -- iCommandViewUpSlow	34
 -- iCommandMechClock_LeftLever_Down_up	753
--- iCommandCockpitCursorHorizontal	2036
 -- iCommandPlane_ABRIS_Brightness_Increase	504
 -- iCommandPlaneHeadLightOnOff	328
 -- iCommandViewSnapView9	405
@@ -2416,7 +2418,7 @@ flir_commands =
 -- iCommandBrakeGo	52
 -- iCommandPlaneWheelBrakeOn	74
 -- iCommandPlaneWheelBrakeOff	75
--- iCommandPlaneWheelParkingBrake	855
+iCommandPlaneWheelParkingBrake = 855
 -- iCommandPlaneEmergencyBrake	960
 -- iCommandPlaneWheelBrakeLeftOn	961
 -- iCommandPlaneWheelBrakeLeftOff	962
@@ -2452,3 +2454,11 @@ flir_commands =
 
 -- iCommandPlane_HOTAS_NoseWheelSteeringButton	562
 -- iCommandPlane_HOTAS_NoseWheelSteeringButtonOff	606
+
+-- iCommandCockpitCursorVertical	2037
+-- iCommandCockpitCursorHorizontal	2036
+-- iCommandCockpitCursorHorizontalAbs	2038
+-- iCommandCockpitCursorVerticalAbs	2039
+
+-- iCommandCockpitVirtualAxis	2074
+-- iCommandCockpitClickOn	361

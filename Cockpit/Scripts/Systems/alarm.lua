@@ -17,6 +17,48 @@ local cautions = {}
 
 local advices = {}
 
+local voice_state = {}
+local voice_valid_ids = {}
+for _, value in pairs(VOICE_ID) do
+  voice_valid_ids[value] = true
+end
+
+local sndhost = nil
+local voice_sounds = {}
+
+local function create_voice_sound(paths)
+  if sndhost == nil then
+    return nil
+  end
+
+  for _, path in ipairs(paths) do
+    local ok, snd = pcall(function()
+      return sndhost:create_sound(path)
+    end)
+    if ok and snd ~= nil then
+      return snd
+    end
+  end
+
+  return nil
+end
+
+local function init_voice_sounds()
+  local ok, host = pcall(function()
+    return create_sound_host("COCKPIT_ALERTS","HEADPHONES",0,0,0)
+  end)
+  if not ok or host == nil then
+    return
+  end
+
+  sndhost = host
+  voice_sounds[VOICE_ID.STALL] = create_voice_sound({
+    "Aircrafts/Cockpits/WarningTone2",
+    "Aircrafts/Cockpits/SidewinderLow",
+    "Aircrafts/A-29B/pushpress",
+  })
+end
+
 local function acknowledge_warnings()
     for i,v in pairs(warnings) do
         if v.state ==  1 then
@@ -85,6 +127,32 @@ local function set_advice(id, state)
   end
 end
 
+local function set_voice(id, state)
+  state = state or 1
+  if id == nil or not voice_valid_ids[id] then
+    return
+  end
+
+  if state == 0 then
+    voice_state[id] = 0
+    local snd = voice_sounds[id]
+    if snd ~= nil then
+      snd:stop()
+    end
+    return
+  end
+
+  if voice_state[id] == 1 then
+    return
+  end
+
+  voice_state[id] = 1
+  local snd = voice_sounds[id]
+  if snd ~= nil then
+    snd:play_continue()
+  end
+end
+
 
 
 local dev = GetSelf()
@@ -95,6 +163,7 @@ make_default_activity(update_time_step) -- enables call to update
 local sensor_data = get_base_data()
 
 function post_initialize()
+  init_voice_sounds()
 end
 
 dev:listen_command(74)
@@ -113,8 +182,12 @@ function SetCommand(command,value)
     elseif command == device_commands.ALERTS_RESET_CAUTION then set_caution(value, 0)
     elseif command == device_commands.ALERTS_ACK_CAUTION then set_caution(value, 2)
     elseif command == device_commands.ALERTS_ACK_CAUTIONS then acknowledge_cautions()
-    elseif command == device_commands.ALERTS_SET_ADVICE then  set_advice(value, 1)
-    elseif command == device_commands.ALERTS_RESET_ADVICE then set_advice(value, 0)
+    elseif command == device_commands.ALERTS_SET_ADVICE then
+      set_advice(value, 1)
+      set_voice(value, 1)
+    elseif command == device_commands.ALERTS_RESET_ADVICE then
+      set_advice(value, 0)
+      set_voice(value, 0)
     elseif command == device_commands.WARNING_PRESS then acknowledge_warnings()
     elseif command == device_commands.CAUTION_PRESS then acknowledge_cautions()
     elseif command == device_commands.UFCP_WARNRST and value == 1 then hud_warning_supress = 1

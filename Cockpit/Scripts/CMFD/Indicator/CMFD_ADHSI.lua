@@ -164,8 +164,8 @@ object = addStrokeText("ADHSI_NAV_TEXT", "NAV", CMFD_STRINGDEFS_DEF_X08, "Center
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_AP_NAV"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
 
--- AP LOC
-object = addStrokeText("ADHSI_LOC_TEXT", "LOC", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {-0.714, 1.226}, nil, nil, nil, CMFD_FONT_W)
+-- AP APR (driven by legacy ADHSI_AP_LOC parameter)
+object = addStrokeText("ADHSI_APR_TEXT", "APR", CMFD_STRINGDEFS_DEF_X08, "CenterCenter", {-0.714, 1.226}, nil, nil, nil, CMFD_FONT_W)
 object.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT", "ADHSI_AP_LOC"}
 object.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1}}
 

@@ -6,6 +6,16 @@ local res = external_profile("Config/Input/Aircrafts/common_joystick_binding.lua
 
 join(res.keyCommands,{
 
+-- Weapons
+{down = Keys.MassSelectorStep,                               up = Keys.MassSelectorStep,                          name = _('Mass Selector - STEP'),                               category = _('Weapons'), value_down =  1.0,     value_up = 0.0},
+{down = Keys.LateArmSelectorStep,                            up = Keys.LateArmSelectorStep,                       name = _('Late Arm Selector - STEP'),                           category = _('Weapons'), value_down =  1.0,     value_up = 0.0},
+
+-- CMFD
+{down = Keys.CMFDLeftFLIR,                                   up = Keys.CMFDLeftFLIR,                              name = _('Panel Left FLIR'),                                    category = {_('CMFD')}, value_down =  1.0,     value_up = 0.0},
+{down = Keys.CMFDRightFLIR,                                  up = Keys.CMFDRightFLIR,                             name = _('Panel Right FLIR'),                                   category = {_('CMFD')}, value_down =  1.0,     value_up = 0.0},
+{down = Keys.CMFDLeftSMS,                                    up = Keys.CMFDLeftSMS,                               name = _('SMS Left FLIR'),                                      category = {_('CMFD')}, value_down =  1.0,     value_up = 0.0},
+{down = Keys.CMFDRightSMS,                                   up = Keys.CMFDRightSMS,                              name = _('SMS Right FLIR'),                                     category = {_('CMFD')}, value_down =  1.0,     value_up = 0.0},
+
 
 
 
@@ -68,7 +78,7 @@ join(res.keyCommands,{
 {pressed = iCommandPlaneTrimLeft,		                    up = iCommandPlaneTrimStop,                         name = _('Trim: Left Wing Down'),	                            category = {_('Stick'), _('HOTAS')}},
 {pressed = iCommandPlaneTrimRight,		                    up = iCommandPlaneTrimStop,                         name = _('Trim: Right Wing Down'),	                            category = {_('Stick'), _('HOTAS')}},
     
-{down = Keys.StickStep,	                                    up = Keys.StickStep,                                name = _('Step'),		                                        category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+{down = Keys.StickStep,	                                    up = Keys.StickStep,                                name = _('Target Step (Cycle Weapon)'),                        category = {_('Stick'), _('HOTAS'), _('Weapons')}, value_down =  1.0,		value_up = 0.0},
 {down = Keys.StickDesignate,	                            up = Keys.StickDesignate,                           name = _('Designate'),                                          category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
 {down = Keys.StickUndesignate,	                            up = Keys.StickUndesignate,                         name = _('Undesignate'),	                                    category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
 
@@ -77,8 +87,17 @@ join(res.keyCommands,{
 {down = Keys.MasterModeSw,	                                up = Keys.MasterModeSw,                             name = _('Main Mode Switch - A/A INT'),	                        category = {_('Stick'), _('HOTAS')}, value_down =  3.0,		value_up = 0.0},
 {down = Keys.MasterModeSw,	                                up = Keys.MasterModeSw,                             name = _('Main Mode Switch - A/A DGFT'),                        category = {_('Stick'), _('HOTAS')}, value_down =  4.0,		value_up = 0.0},
 
-{down = Keys.APDisengage,	                                up = Keys.APDisengage,                              name = _('Autopilot Disengage'),                                category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
-{down = Keys.APOvrd,                                        up = Keys.APOvrd,                                   name = _('Autopilot Override'),                                 category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+{down = Keys.APDisengage,	                                up = Keys.APDisengage,                              name = _('Autopilot - Disengage'),                                category = {_('Autopilot'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+{down = Keys.APOvrd,                                        up = Keys.APOvrd,                                   name = _('Autopilot - Override'),                                 category = {_('Autopilot'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
+
+{down = device_commands.AP_ON,                              up = device_commands.AP_ON,                         name = _('Autopilot - Master Toggle'),                                  category = {_('Autopilot'), _('HOTAS')}, value_down =  1.0,      value_up =  0.0,                                               cockpit_device_id = devices.AUTOPILOT},
+{down = device_commands.AP_RP,                              up = device_commands.AP_RP,                         name = _('Autopilot - Attitude Hold (R/P)'),                              category = {_('Autopilot'), _('HOTAS')}, value_down =  1.0,      value_up =  0.0,                                               cockpit_device_id = devices.AUTOPILOT},
+{down = device_commands.AP_HDG,                             up = device_commands.AP_HDG,                        name = _('Autopilot - Heading Hold (HDG)'),                                 category = {_('Autopilot'), _('HOTAS')}, value_down =  1.0,      value_up =  0.0,                                               cockpit_device_id = devices.AUTOPILOT},
+{down = device_commands.AP_ALT,                             up = device_commands.AP_ALT,                        name = _('Autopilot - Altitude Hold (ALT)'),                                category = {_('Autopilot'), _('HOTAS')}, value_down =  1.0,      value_up =  0.0,                                               cockpit_device_id = devices.AUTOPILOT},
+{down = device_commands.AP_NAV,                             up = device_commands.AP_NAV,                        name = _('Autopilot - Route Following (NAV)'),                                     category = {_('Autopilot'), _('HOTAS')}, value_down =  1.0,      value_up =  0.0,                                               cockpit_device_id = devices.AUTOPILOT},
+{down = device_commands.AP_APR,                             up = device_commands.AP_APR,                        name = _('Autopilot - Approach Hold (APR)'),                                category = {_('Autopilot'), _('HOTAS')}, value_down =  1.0,      value_up =  0.0,                                               cockpit_device_id = devices.AUTOPILOT},
+{down = device_commands.AP_GS,                              up = device_commands.AP_GS,                         name = _('Autopilot - Glideslope Hold (GS)'),                              category = {_('Autopilot'), _('HOTAS')}, value_down =  1.0,      value_up =  0.0,                                               cockpit_device_id = devices.AUTOPILOT},
+{down = device_commands.AP_TEST,                            up = device_commands.AP_TEST,                       name = _('Autopilot - Lamp Test'),                                    category = {_('Autopilot'), _('HOTAS')}, value_down =  1.0,      value_up =  0.0,                                               cockpit_device_id = devices.AUTOPILOT},
 
 {down = Keys.Call,	                                        up = Keys.Call,                                     name = _('Call'),                                               category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
 
@@ -87,7 +106,7 @@ join(res.keyCommands,{
 {down = Keys.WeaponRelease,	                                up = Keys.WeaponRelease,	                        name = _('Weapon Release Button (WRB)'),                        category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
 
 {down = Keys.DisplayMngt,                                   up = Keys.DisplayMngt,                              name = _('DMS Fwd - HUD'),                                      category = {_('Stick'), _('HOTAS')}, value_down =  1.0,		value_up = 0.0},
-{down = Keys.DisplayMngt,                                   up = Keys.DisplayMngt,                              name = _('DMS Aft - No Function'),                              category = {_('Stick'), _('HOTAS')}, value_down =  2.0,		value_up = 0.0},
+{down = Keys.DisplayMngt,                                   up = Keys.DisplayMngt,                              name = _('DMS Aft - Reserved (No Function)'),                   category = {_('Stick'), _('HOTAS')}, value_down =  2.0,		value_up = 0.0},
 {down = Keys.DisplayMngt,                                   up = Keys.DisplayMngt,                              name = _('DMS Left - CMFD #1'),                                 category = {_('Stick'), _('HOTAS')}, value_down =  3.0,		value_up = 0.0},
 {down = Keys.DisplayMngt,                                   up = Keys.DisplayMngt,                              name = _('DMS Right - CMFD #2'),                                category = {_('Stick'), _('HOTAS')}, value_down =  4.0,		value_up = 0.0},
 {down = Keys.DisplayMngt,                                   up = Keys.DisplayMngt,                              name = _('DMS Depress - Autopilot'),                            category = {_('Stick'), _('HOTAS')}, value_down =  5.0,		value_up = 0.0},
@@ -113,24 +132,11 @@ join(res.keyCommands,{
 {pressed = iCommandPlane_Helmet_Brightess_Down,                                                                 name = _('Gain goggles down'),                                  category = _('Sensors')},
 
 
--- Autopilot
--- {down = iCommandPlaneAutopilot,                                                                                 name = _('Autopilot'),                                          category = _('Autopilot')},
--- {down = iCommandPlaneAUTOnOff,                                                                                  name = _('Autothrust'),                                         category = _('Autopilot')},
--- {down = iCommandPlaneSAUHBarometric,                                                                            name = _('Autopilot - Barometric Altitude Hold \'H\''),         category = _('Autopilot')},
--- {down = iCommandPlaneStabTangBank,                                                                              name = _('Autopilot - Attitude Hold'),                          category = _('Autopilot')},
--- {down = iCommandPlaneStabHbarBank,                                                                              name = _('Autopilot - Altitude And Roll Hold'),                 category = _('Autopilot')},
--- {down = iCommandPlaneStabHorizon,	                                                                            name = _('Autopilot - Transition To Level Flight Control'),     category = _('Autopilot')},
--- {down = iCommandPlaneStabHbar,                                                                                  name = _('Autopilot - Barometric Altitude Hold'),               category = _('Autopilot')},
--- {down = iCommandPlaneStabHrad,                                                                                  name = _('Autopilot - Radar Altitude Hold'),                    category = _('Autopilot')},
--- {down = iCommandPlaneRouteAutopilot,                                                                            name = _('Autopilot - \'Route following\''),                    category = _('Autopilot')},
--- {down = iCommandPlaneStabCancel,                                                                                name = _('Autopilot Disengage'),                                category = _('Autopilot')},
--- {down = iCommandPlaneAutopilotOverrideOn, up = iCommandPlaneAutopilotOverrideOff, name = _('Autopilot override'), category = _('Autopilot')},
-
 -- Countermeasures
 -- {down = iCommandPlaneDropSnar,			                                                                        name = _('Countermeasures Continuously Dispense'),				category = _('Countermeasures') , features = {"Countermeasures"}},
 -- {down = iCommandPlaneDropSnarOnce,                          up = iCommandPlaneDropSnarOnceOff,                  name = _('Countermeasures Release'),	                        category = _('Countermeasures') , features = {"Countermeasures"}},
-{down = iCommandPlaneDropFlareOnce,		                                                                        name = _('Countermeasures Flares Dispense'),					category = _('Countermeasures') , features = {"Countermeasures"}},
-{down = iCommandPlaneDropChaffOnce,		                                                                        name = _('Countermeasures Chaff Dispense'),						category = _('Countermeasures') , features = {"Countermeasures"}},
+{down = iCommandPlaneDropFlareOnce,		                                                                        name = _('CMS Up - Countermeasures Flares Dispense'),          category = {_('Countermeasures')}, features = {"Countermeasures"}},
+{down = iCommandPlaneDropChaffOnce,		                                                                        name = _('CMS Down - Countermeasures Chaff Dispense'),         category = {_('Countermeasures')}, features = {"Countermeasures"}},
 
 
 -- UFCP 
@@ -246,7 +252,7 @@ join(res.keyCommands,{
 {down = flir_commands.FocusIn,                       up = flir_commands.FocusIn,                 name = _('FLIR Focus In'),                                      category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
 {down = flir_commands.Cage,                          up = flir_commands.Cage,                    name = _('FLIR Cage'),                                          category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
 {down = flir_commands.IPHH,                          up = flir_commands.IPHH,                    name = _('FLIR IPHH'),                                          category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
-{down = flir_commands.Polarity,                      up = flir_commands.Polarity,                name = _('FLIR Polarity'),                                      category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
+{down = flir_commands.Polarity,                                                          name = _('FLIR Polarity'),                                      category = {_('FLIR')},                         value_down =  1.0,                             cockpit_device_id = devices.FLIR},
 {down = flir_commands.SlewLeft,                      up = flir_commands.SlewLeft,                name = _('FLIR Slew Left'),                                     category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
 {down = flir_commands.SlewRight,                     up = flir_commands.SlewRight,               name = _('FLIR Slew Right'),                                    category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
 {down = flir_commands.SlewUp,                        up = flir_commands.SlewUp,                  name = _('FLIR Slew Up'),                                       category = {_('FLIR')},                         value_down =  1.0,		value_up = 0.0,     cockpit_device_id = devices.FLIR},
@@ -277,3 +283,4 @@ join(res.axisCommands,{
 })
 
 return res
+

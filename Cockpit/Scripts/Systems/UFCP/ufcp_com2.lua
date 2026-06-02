@@ -40,19 +40,9 @@ local UFCP_COM2_DTC_READ = get_param_handle("UFCP_COM2_DTC_READ")
 UFCP_COM2_DTC_READ:set("")
 
 -- Variables
-ufcp_com2_mode = UFCP_COM_MODE_IDS.TR
-ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
-ufcp_com2_channel = 0
-ufcp_com2_frequency = 118
-ufcp_com2_tx = false
-ufcp_com2_rx = false
-ufcp_com2_channels = {}
 ufcp_com2_max_channel = 79
 ufcp_com2_frequency_manual = 118.0
 ufcp_com2_frequency_next = 136.0
-ufcp_com2_power = UFCP_COM_POWER_IDS.HIGH
-ufcp_com2_modulation = UFCP_COM_MODULATION_IDS.AM
-ufcp_com2_sql = true
 ufcp_com2_sync = false
 ufcp_com2_por = false
 ufcp_com2_data = false
@@ -78,7 +68,6 @@ ufcp_com2_eccms1 = {}
 ufcp_com2_nets2 = {}
 ufcp_com2_eccms2 = {}
 
-for i = 1,ufcp_com2_max_channel+1 do ufcp_com2_channels[i] = 118 end
 for i = 1,ufcp_com2_max_channel+1 do ufcp_com2_nets1[i] = 0 end
 for i = 1,ufcp_com2_max_channel+1 do ufcp_com2_nets2[i] = 0 end
 for i = 1,ufcp_com2_max_channel+1 do ufcp_com2_eccms1[i] = 1 end
@@ -93,32 +82,7 @@ ufcp_com2_memory = {
 }
 -- Methods
 
-function ufcp_com2_check()
-    if ufcp_com2_memory.frequency_last ~= ufcp_com2_frequency then
-        local radio = GetDevice(devices.VUHF2_RADIO)
-        if radio then
-            radio:set_frequency(ufcp_com2_frequency * 1e6)
-        end
-        ufcp_com2_memory.frequency_last = ufcp_com2_frequency
-    end
-    if ufcp_com2_memory.modulation_last ~= ufcp_com2_modulation then
-        local radio = GetDevice(devices.VUHF2_RADIO)
-        if radio then
-            if ufcp_com2_modulation == UFCP_COM_MODE_IDS.AM then
-                radio:set_modulation(MODULATION_AM)
-            elseif ufcp_com2_modulation == UFCP_COM_MODE_IDS.FM then
-                radio:set_modulation(MODULATION_FM)
-            end
-        end
-        ufcp_com2_memory.modulation_last = ufcp_com2_modulation
-    end
-end
-
-
 function ufcp_com2_select_channel(channel)
-    -- Set frequency
-    ufcp_com2_frequency = ufcp_com2_channels[channel + 1]
-
     -- Set NET and ECCM
     if ufcp_com2_net_dataset == 1 then
         ufcp_com2_net = ufcp_com2_nets1[channel + 1]
@@ -134,10 +98,15 @@ end
 local function ufcp_com2_channel_validate(text, save)
     if text:len() >= ufcp_edit_lim or save then
         local number = tonumber(text)
-        if number ~= nil and number <= ufcp_com2_max_channel then
-            ufcp_com2_channel = number
-            if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                ufcp_com2_select_channel(ufcp_com2_channel)
+        local radio = GetDevice(devices.VUHF2_RADIO)
+        if number ~= nil and radio:is_channel_in_range(number) then
+            if radio:get_channel_mode() then
+                ufcp_com2_select_channel(number)
+                radio:set_channel(number)
+            else
+                local freq = radio:get_frequency()
+                radio:set_channel(number)
+                radio:set_frequency(freq)
             end
 
             ufcp_edit_clear()
@@ -163,8 +132,9 @@ local function ufcp_com2_frequency_man_validate(text, save)
         local number = tonumber(text)
         if number ~= nil and is_com_frequency(number) then
             ufcp_com2_frequency_manual = number
-            if ufcp_com2_frequency_sel ~= UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                ufcp_com2_frequency = number
+            local radio = GetDevice(devices.VUHF2_RADIO)
+            if not radio:get_channel_mode() then
+                radio:set_frequency(ufcp_com2_frequency_manual * 1e6)
             end
 
             ufcp_edit_clear()
@@ -188,12 +158,9 @@ local function ufcp_com2_frequency_prst_validate(text, save)
 
     if text:len() >= ufcp_edit_lim or save then
         local number = tonumber(text)
-        if number ~= nil and is_com_frequency(number) then
-            ufcp_com2_channels[ufcp_com2_channel + 1] = number
-            if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                -- Set frequency
-                ufcp_com2_frequency = number
-            end
+        local radio = GetDevice(devices.VUHF2_RADIO)
+        if number ~= nil and radio:is_frequency_in_range(number * 1e6) then
+            radio:set_channel_frequency(radio:get_channel(), number * 1e6)
 
             ufcp_edit_clear()
             text = ""
@@ -216,7 +183,8 @@ local function ufcp_com2_frequency_next_validate(text, save)
 
     if text:len() >= ufcp_edit_lim or save then
         local number = tonumber(text)
-        if number ~= nil and is_com_frequency(number) then
+        local radio = GetDevice(devices.VUHF2_RADIO)
+        if number ~= nil and radio:is_frequency_in_range(number * 1e6) then
             ufcp_com2_frequency_next = number
 
             ufcp_edit_clear()
@@ -231,14 +199,15 @@ end
 local function ufcp_com2_net_validate(text, save)
     if text:len() >= ufcp_edit_lim or save then
         local number = tonumber(text)
-        if number ~= nil and number <= 79 then
+        local radio = GetDevice(devices.VUHF2_RADIO)
+        if number ~= nil and radio:is_channel_in_range(number) then
             ufcp_com2_net = number
 
-            if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
+            if radio:get_channel_mode() then
                 if ufcp_com2_net_dataset == 1 then
-                    ufcp_com2_nets1[ufcp_com2_channel + 1] = number
+                    ufcp_com2_nets1[radio:get_channel() + 1] = number
                 elseif ufcp_com2_net_dataset == 2 then
-                    ufcp_com2_nets2[ufcp_com2_channel + 1] = number
+                    ufcp_com2_nets2[radio:get_channel() + 1] = number
                 end
             end
 
@@ -294,7 +263,7 @@ function ufcp_com2_load_dtc()
 
         for _, value in pairs(COMM2) 
         do
-            ufcp_com2_channels[value.ID + 1] = value.Freq.Mhz + value.Freq.Khz / 1000
+            radio:set_channel_frequency(value.ID, value.Freq.Mhz * 1e6 + value.Freq.Khz * 1000)
         end
         
         UFCP_COM2_DTC_READ:set("")
@@ -321,6 +290,9 @@ local net_max_sel = 8
 function update_com2()
     local text = ""
 
+    local radio = GetDevice(devices["VUHF2_RADIO"])
+
+
     if ufcp_sel_format == UFCP_FORMAT_IDS.COM2 then
         -- Line 1
 
@@ -336,12 +308,14 @@ function update_com2()
 
         -- Mode
         if sel == SEL_IDS.MODE then text = text .. "*" else text = text .. " " end
-        if ufcp_com2_mode == UFCP_COM_MODE_IDS.OFF then
+        if radio:is_on() then
+            if radio:get_guard_on_off() then
+                text = text .. "TR+G"
+            else 
+                text = text .. "TR  "
+            end
+        else
             text = text .. "OFF "
-        elseif ufcp_com2_mode == UFCP_COM_MODE_IDS.TR then
-            text = text .. "TR  "
-        elseif ufcp_com2_mode == UFCP_COM_MODE_IDS.TR_G then
-            text = text .. "TR+G"
         end
         if sel == SEL_IDS.MODE then text = text .. "*" else text = text .. " " end
 
@@ -365,13 +339,13 @@ function update_com2()
         -- Line 3
         text = text .. " PRST "
         if sel == SEL_IDS.CHANNEL then text = text .. "*" else text = text .. " " end
-        if sel == SEL_IDS.CHANNEL and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit() else text = text .. string.format("%02.0f", ufcp_com2_channel) end
+        if sel == SEL_IDS.CHANNEL and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit() else text = text .. string.format("%02.0f", radio:get_channel()) end
         text = text .. "^"
         if sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY then text = text .. "*" else text = text .. " " end
-        if sel == SEL_IDS.PRST_FREQUENCY and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit() else text = text .. string.format("%07.3f", ufcp_com2_channels[ufcp_com2_channel + 1]) end
+        if sel == SEL_IDS.PRST_FREQUENCY and ufcp_edit_pos > 0 then text = text .. ufcp_print_edit() else text = text .. string.format("%07.3f", radio:get_channel_frequency(radio:get_channel()) / 1e6 ) end
         if sel == SEL_IDS.PRST_FREQUENCY then text = text .. "*" else text = text .. " " end
         text = text .. "  "
-        if ufcp_com2_tx then text = text .. "TX" else text = text .. "  " end
+        if radio:is_transmitting() then text = text .. "TX" else text = text .. "  " end
         text = text .. " "
         text = text .. "\n"
     
@@ -382,24 +356,25 @@ function update_com2()
         if sel == SEL_IDS.NEXT_FREQUENCY then text = text .. "*" else text = text .. " " end
         text = text .. "     "
         text = text .. " "
-        if ufcp_com2_rx then text = text .. "RX" else text = text .. "  " end
+        if radio:is_receiving() then text = text .. "RX" else text = text .. "  " end
         text = text .. " "
         text = text .. "\n"
   
         -- Line 5
         text = text .. " POWER"
         if sel == SEL_IDS.POWER then text = text .. "*" else text = text .. " " end
-        if ufcp_com2_power == UFCP_COM_POWER_IDS.HIGH then
+        local power = radio:get_transmitter_power()
+        if power > 7 then
             text = text .. "HIGH"
-        elseif ufcp_com2_power == UFCP_COM_POWER_IDS.MED then
+        elseif power > 3 then
             text = text .. "MED "
-        elseif ufcp_com2_power == UFCP_COM_POWER_IDS.LOW then
+        else 
             text = text .. "LOW "
         end
         if sel == SEL_IDS.POWER then text = text .. "*" else text = text .. " " end
         text = text .. " "
         if sel == SEL_IDS.MODULATION then text = text .. "*" else text = text .. " " end
-        if ufcp_com2_modulation == UFCP_COM_MODULATION_IDS.FM then
+        if radio:get_modulation() == UFCP_COM_MODULATION_IDS.FM then
             text = text .. "FM"
         else
             text = text .. "AM"
@@ -412,7 +387,7 @@ function update_com2()
         text = text .. "SQL"
         if sel == SEL_IDS.SQL then text = text .. "*" else text = text .. " " end
 
-        if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.MAN then 
+        if not radio:get_channel_mode() then 
             text = replace_pos(text, 28)
             text = replace_pos(text, 32)
         else
@@ -420,7 +395,7 @@ function update_com2()
             text = replace_pos(text, 58)
         end
     
-        if ufcp_com2_sql then
+        if radio:get_squelch() then
             text = replace_pos(text, 122)
             text = replace_pos(text, 126)
         end
@@ -551,20 +526,41 @@ function SetCommandCom2(command,value)
             if sel == SEL_IDS.FORMAT then
                 ufcp_sel_format = UFCP_FORMAT_IDS.COM2_NET
             elseif sel == SEL_IDS.POWER then
-                ufcp_com2_power = (ufcp_com2_power + 1) % 3
+                local radio = GetDevice(devices["VUHF2_RADIO"])
+                local power = radio:get_transmitter_power()
+                if power > 7 then
+                    radio:set_transmitter_power(1)
+                elseif power > 3 then
+                    radio:set_transmitter_power(10)
+                else 
+                    radio:set_transmitter_power(5)
+                end
             elseif sel == SEL_IDS.MODULATION and value == 1 then
-                ufcp_com2_modulation = (ufcp_com2_modulation + 1) % 2
+                local radio = GetDevice(devices["VUHF2_RADIO"])
+                radio:set_modulation((radio:get_modulation() + 1) % 2)
             elseif sel == SEL_IDS.MODE then
-                ufcp_com2_mode = (ufcp_com2_mode + 1) % 3
+                local radio = GetDevice(devices["VUHF2_RADIO"])
+                if radio:is_on() then
+                    if radio:get_guard_on_off() then
+                        radio:set_on_off(false)
+                        radio:set_guard_on_off(false)
+                    else 
+                        radio:set_guard_on_off(true)
+                    end
+                else
+                    radio:set_on_off(true)
+                    radio:set_guard_on_off(false)
+                end
             elseif sel == SEL_IDS.ECCM then
                 ufcp_com2_eccm = ufcp_com2_eccm % 4 + 1;
 
                 -- Save data
-                if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
+                local radio = GetDevice(devices["VUHF2_RADIO"])
+                if radio:get_channel_mode() then
                     if ufcp_com2_net_dataset == 1 then
-                        ufcp_com2_eccms1[ufcp_com2_channel + 1] = ufcp_com2_eccm
+                        ufcp_com2_eccms1[radio:get_channel() + 1] = ufcp_com2_eccm
                     elseif ufcp_com2_net_dataset == 2 then
-                        ufcp_com2_eccms2[ufcp_com2_channel + 1] = ufcp_com2_eccm
+                        ufcp_com2_eccms2[radio:get_channel() + 1] = ufcp_com2_eccm
                     end
                 end
             end
@@ -578,8 +574,9 @@ function SetCommandCom2(command,value)
             elseif net_sel == NET_SEL_IDS.DATASET then
                 ufcp_com2_net_dataset = 3 - ufcp_com2_net_dataset
 
-                if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                    ufcp_com2_select_channel(ufcp_com2_channel)
+                local radio = GetDevice(devices["VUHF2_RADIO"])
+                if radio:get_channel_mode() then
+                    ufcp_com2_select_channel(radio:get_channel())
                 end
             end
         end
@@ -588,23 +585,21 @@ function SetCommandCom2(command,value)
     -- Activate field
     if ufcp_sel_format == UFCP_FORMAT_IDS.COM2 then
         if command == device_commands.UFCP_0 and value == 1 and ufcp_edit_pos <= 0 then
+            local radio = GetDevice(devices["VUHF2_RADIO"])
             if sel == SEL_IDS.MAN_FREQUENCY then
-                ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
-                ufcp_com2_frequency = ufcp_com2_frequency_manual
+                radio:set_frequency(ufcp_com2_frequency_manual * 1e6)
                 ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
             elseif sel == SEL_IDS.CHANNEL then
-                ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.PRST
-                ufcp_com2_frequency = ufcp_com2_channels[ufcp_com2_channel + 1]
+                radio:set_channel(radio:get_channel())
                 ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
             elseif sel == SEL_IDS.NEXT_FREQUENCY then
                 local current_frequency_manual = ufcp_com2_frequency_manual
                 ufcp_com2_frequency_manual = ufcp_com2_frequency_next
                 ufcp_com2_frequency_next = current_frequency_manual
-                ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
-                ufcp_com2_frequency = ufcp_com2_frequency_manual
+                radio:set_frequency(ufcp_com2_frequency_manual * 1e6)
                 ufcp_sel_format = UFCP_FORMAT_IDS.MAIN
             elseif sel == SEL_IDS.SQL then
-                ufcp_com2_sql = not ufcp_com2_sql
+                radio:set_squelch(not radio:get_squelch())
             end
         elseif command == device_commands.UFCP_ENTR and value == 1 then
             if sel == SEL_IDS.MAN_FREQUENCY or sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY or sel == SEL_IDS.NEXT_FREQUENCY then
@@ -628,15 +623,17 @@ function SetCommandCom2(command,value)
                     allow_erase_at = ufcp_time + 1
                     cancel_erase_at = ufcp_time + 6
                 elseif ufcp_time > allow_erase_at then
+                    local radio = GetDevice(devices["VUHF2_RADIO"])
                     -- Confirm ERASE
-                    for i = 1,ufcp_com2_max_channel+1 do ufcp_com2_channels[i] = 118 end
+                    for i = 1,ufcp_com2_max_channel+1 do radio:set_channel_frequency(i,118 * 1e6) end
                     for i = 1,ufcp_com2_max_channel+1 do ufcp_com2_nets1[i] = 0 end
                     for i = 1,ufcp_com2_max_channel+1 do ufcp_com2_nets2[i] = 0 end
                     for i = 1,ufcp_com2_max_channel+1 do ufcp_com2_eccms1[i] = 1 end
                     for i = 1,ufcp_com2_max_channel+1 do ufcp_com2_eccms2[i] = 1 end
 
-                    if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                        ufcp_com2_select_channel(ufcp_com2_channel)
+                    if radio:get_channel_mode() then
+                        ufcp_com2_select_channel(radio:get_channel())
+                        radio:set_channel(radio:get_channel())
                     end
                     ufcp_com2_erase = false
                     allow_erase_at = -1.0
@@ -649,19 +646,31 @@ function SetCommandCom2(command,value)
     -- Increase/Decrease field
     if ufcp_sel_format == UFCP_FORMAT_IDS.COM2 then
         if command == device_commands.UFCP_UP and value == 1 then
-            if (sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY) and ufcp_edit_pos == 0 and ufcp_com2_channel < ufcp_com2_max_channel then
-                ufcp_com2_channel = (ufcp_com2_channel + 1)
-                if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                    ufcp_com2_select_channel(ufcp_com2_channel)
+            local radio = GetDevice(devices["VUHF2_RADIO"])
+            if (sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY) and ufcp_edit_pos == 0 and radio:is_channel_in_range(radio:get_channel() + 1) then
+                if radio:get_channel_mode() then
+                    radio:set_channel(radio:get_channel() + 1)
+                    ufcp_com2_select_channel(radio:get_channel())
+                else
+                    local freq = radio:get_frequency()
+                    radio:set_channel(radio:get_channel() + 1)
+                    ufcp_com2_select_channel(radio:get_channel())
+                    radio:set_frequency(freq)
                 end
             end
-        elseif command == device_commands.UFCP_DOWN and value == 1 and ufcp_com2_channel > 0 and ufcp_com2_channel > 0 then
-            if (sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY) and ufcp_edit_pos == 0 then
-                ufcp_com2_channel = (ufcp_com2_channel - 1)
-                if ufcp_com2_frequency_sel == UFCP_COM_FREQUENCY_SEL_IDS.PRST then
-                    ufcp_com2_select_channel(ufcp_com2_channel)
+        elseif command == device_commands.UFCP_DOWN and value == 1 then
+            local radio = GetDevice(devices["VUHF2_RADIO"])
+            if (sel == SEL_IDS.CHANNEL or sel == SEL_IDS.PRST_FREQUENCY) and ufcp_edit_pos == 0 and radio:get_channel() > 0 then
+                if radio:get_channel_mode() then
+                    radio:set_channel(radio:get_channel() - 1)
+                    ufcp_com2_select_channel(radio:get_channel())
+                else
+                    local freq = radio:get_frequency()
+                    radio:set_channel(radio:get_channel() - 1)
+                    ufcp_com2_select_channel(radio:get_channel())
+                    radio:set_frequency(freq)
                 end
-            end
+                end
         end
     elseif ufcp_sel_format == UFCP_FORMAT_IDS.COM2_NET then
 

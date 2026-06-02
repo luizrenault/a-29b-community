@@ -1,6 +1,9 @@
 dofile(LockOn_Options.script_path.."command_defs.lua")
 
 local dev = GetSelf()
+local FLIR_LASER_ARM = get_param_handle("FLIR_LASER_ARM")
+local FLIR_LASER_CODE = get_param_handle("FLIR_LASER_CODE")
+local FLIR_LASER_ON = get_param_handle("FLIR_LASER_ON")
 
 local update_time_step = 0.02 --update will be called 50 times per second
 make_default_activity(update_time_step)
@@ -58,17 +61,29 @@ mechanical = {
     temperature = {-40, 55},                -- min, max, in deg celsius
 }
 
+local function set_laser_on(is_on)
+    FLIR_LASER_ON:set(is_on and FLIR_LASER_ARM:get() == 1 and 1 or 0)
+end
+
 function update()
     -- print_message_to_user("LR::avSimplestFLIR")
 end
 
 function post_initialize()
     -- print_message_to_user("LR::avSimplestFLIR")
+    FLIR_LASER_ARM:set(1)
+    FLIR_LASER_CODE:set(designator.default_code)
+    FLIR_LASER_ON:set(0)
 end
 
 
 function SetCommand(command, value)
     -- print_message_to_user("flir: command "..tostring(command).." = "..tostring(value))
+    if command == flir_commands.LaserOn then
+        set_laser_on(value > 0)
+    elseif command == flir_commands.Power and value == 0 then
+        set_laser_on(false)
+    end
 end
 
 need_to_be_closed = false

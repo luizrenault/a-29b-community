@@ -84,6 +84,7 @@ VOICE_ID = {
     PULL_UP        = counter(),
     XFER_OVRD        = counter(),
     AUTOPILOT       = counter(),
+    JOKER       = counter(),
 }
 
 -- alarm state 0 = off; 1 = on; 2 = acknowledged
@@ -116,12 +117,16 @@ function set_advice(id, state)
     end
 end
 
-function set_voice(id, state) -- TODO create voice alarms
+function set_voice(id, state)
     state = state or 1
+    if id == nil then
+        return
+    end
+
     local alarm = GetDevice(devices.ALARM)
-    --if state == 0 then          alarm:SetCommand(device_commands.ALERTS_RESET_ADVICE,id)
-    --elseif state == 1 then      alarm:SetCommand(device_commands.ALERTS_SET_ADVICE,id)
-    --end
+    if state == 0 then          alarm:SetCommand(device_commands.ALERTS_RESET_ADVICE,id)
+    elseif state == 1 then      alarm:SetCommand(device_commands.ALERTS_SET_ADVICE,id)
+    end
 end
 
 

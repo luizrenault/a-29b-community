@@ -4,6 +4,7 @@ local adhsi_ap_status = 0
 local adhsi_ap_ovrd = 0
 local adhsi_ap_elapsed = 0
 local adhsi_ap_period = 0.4
+local adhsi_ap = 0
 
 local adhsi_turnrate_elapsed = 0
 local adhsi_turnrate_period = 0.4
@@ -49,6 +50,22 @@ local ADHSI_GPS_NAME = get_param_handle("ADHSI_GPS_NAME")
 
 local CMFD_NAV_FYT_DTK_DIST = get_param_handle("CMFD_NAV_FYT_DTK_DIST")
 
+local AP_RP = get_param_handle("AP_RP")
+local AP_HDG = get_param_handle("AP_HDG")
+local AP_ALT = get_param_handle("AP_ALT")
+local AP_NAV = get_param_handle("AP_NAV")
+local AP_APR = get_param_handle("AP_APR")
+local AP_GS = get_param_handle("AP_GS")
+local AP_ON = get_param_handle("AP_ON")
+
+local ADHSI_AP_ROL = get_param_handle("ADHSI_AP_ROL")
+local ADHSI_AP_HDG = get_param_handle("ADHSI_AP_HDG")
+local ADHSI_AP_PIT = get_param_handle("ADHSI_AP_PIT")
+local ADHSI_AP_ALT = get_param_handle("ADHSI_AP_ALT")
+local ADHSI_AP_NAV = get_param_handle("ADHSI_AP_NAV")
+local ADHSI_AP_LOC = get_param_handle("ADHSI_AP_LOC")
+local ADHSI_AP_GS = get_param_handle("ADHSI_AP_GS")
+
 ADHSI_COURSE:set(0)
 ADHSI_CDI_SHOW:set(1)
 ADHSI_GPS_NAME:set("")
@@ -57,6 +74,16 @@ function update_adhsi()
     adhsi_dtk_hdg = ADHSI_DTK_HDG:get()
     adhsi_dtk_dist = ADHSI_DTK_DIST:get()
     adhsi_dtk = ADHSI_DTK:get()
+
+    local ap_on = AP_ON:get() == 1
+    local ap_rp = AP_RP:get() == 1
+    local ap_hdg = AP_HDG:get() == 1
+    local ap_alt = AP_ALT:get() == 1
+    local ap_nav = AP_NAV:get() == 1
+    local ap_apr = AP_APR:get() == 1
+    local ap_gs = AP_GS:get() == 1
+
+    adhsi_ap_status = ap_on and 1 or 0
 
 
     adhsi_ap_elapsed = adhsi_ap_elapsed + update_time_step
@@ -139,6 +166,13 @@ function update_adhsi()
 
     ADHSI_VV_LIM:set(adhsi_vv_lim)
     ADHSI_AP:set(adhsi_ap)
+    ADHSI_AP_ROL:set(ap_on and ap_rp and 1 or 0)
+    ADHSI_AP_HDG:set(ap_on and ap_hdg and 1 or 0)
+    ADHSI_AP_PIT:set(ap_on and ap_rp and 1 or 0)
+    ADHSI_AP_ALT:set(ap_on and ap_alt and 1 or 0)
+    ADHSI_AP_NAV:set(ap_on and ap_nav and 1 or 0)
+    ADHSI_AP_LOC:set(ap_on and ap_apr and 1 or 0)
+    ADHSI_AP_GS:set(ap_on and ap_gs and 1 or 0)
     ADHSI_ROLL:set(adhsi_roll)
     ADHSI_PITCH:set(adhsi_pitch)
     ADHSI_TURN_RATE:set(adhsi_turnrate)

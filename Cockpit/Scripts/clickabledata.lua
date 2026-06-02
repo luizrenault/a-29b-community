@@ -119,7 +119,7 @@ elements["PNT_802"] = multiposition_switch_limited("Fuel Aux Pump (LH/Auto/RH/Bo
 elements["PNT_803"] = default_3_position_tumb("Fuel Transfer (U-Wing/Ventral-Auto/Off)",        devices.FUEL, device_commands.FuelXfr,          803, nil,true,TOGGLECLICK_MID_FWD)
 
 -- PARKING BRAKES
-elements["PNT_791"] = default_3_position_tumb("Emergency/Parking Brakes",                       devices.BRAKES, device_commands.EmerParkBrake, 791, nil, true, TOGGLECLICK_MID_FWD)
+elements["PNT_791"] = default_3_position_tumb("Emergency/Parking Brakes",                       devices.BRAKES, device_commands.EmerParkBrake,	791, false, true, TOGGLECLICK_MID_FWD)
 
 -- WEAPONS
 elements["PNT_781"] = default_3_position_tumb("Mass (Sim/Save/Live)",                           devices.WEAPON_SYSTEM, device_commands.Mass,   781,nil,true,KNOBCLICK_MID_FWD)
@@ -134,8 +134,8 @@ elements["PNT_743"] = default_3_position_tumb("Slave (Free/Slave/Fast Slave)",  
 
 -- AUDIO
 elements["PNT_761"] = default_2_position_tumb("Audio Selector (Normal/Backup)",                 devices.EXTANIM, device_commands.AudioNormal,        761,TOGGLECLICK_MID_FWD); elements["PNT_761"].arg_value = {1, -1}
-elements["PNT_762"] = default_movable_axis("COM 1 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM1_VOL,     762)
-elements["PNT_763"] = default_movable_axis("COM 2 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM2_VOL,     763)
+elements["PNT_762"] = default_movable_axis("COM 1 Audio",      		           					devices.VUHF1_RADIO, device_commands.AUDIO_COM1_VOL,     762)
+elements["PNT_763"] = default_movable_axis("COM 2 Audio",      		           					devices.VUHF2_RADIO, device_commands.AUDIO_COM2_VOL,     763)
 elements["PNT_764"] = default_movable_axis("COM 3 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM3_VOL,     764)
 elements["PNT_765"] = default_movable_axis("COM 4 Audio",      		           					devices.EXTANIM, device_commands.AUDIO_COM4_VOL,     765)
 elements["PNT_766"] = default_movable_axis("ADF",		      		           					devices.EXTANIM, device_commands.AUDIO_ADF_VOL,      766)
@@ -282,11 +282,11 @@ elements["PNT_441"] = default_button("Warning",												devices.ALARM, device
 elements["PNT_442"] = default_button("Caution",												devices.ALARM, device_commands.CAUTION_PRESS,  	 	442, nil, nil, TOGGLECLICK_MID_FWD)
 
 elements["PNT_431"] = default_button("AP Roll/Pitch",										devices.AUTOPILOT, device_commands.AP_RP,  				431)
--- elements["PNT_432"] = default_button("AP Heading",											devices.AUTOPILOT, device_commands.AP_HDG,  	 		432)
+elements["PNT_432"] = default_button("AP Heading",											devices.AUTOPILOT, device_commands.AP_HDG,  	 		432)
 elements["PNT_433"] = default_button("AP Altitude",											devices.AUTOPILOT, device_commands.AP_ALT,  	 		433)
--- elements["PNT_434"] = default_button("AP Test",												devices.AUTOPILOT, device_commands.AP_TEST,  	 		434)
--- elements["PNT_435"] = default_button("AP Nav",												devices.AUTOPILOT, device_commands.AP_NAV,  	 		435)
--- elements["PNT_436"] = default_button("AP Approach",											devices.AUTOPILOT, device_commands.AP_APR,  	 		436)
--- elements["PNT_437"] = default_button("AP GS",												devices.AUTOPILOT, device_commands.AP_GS,  	 			437)
+elements["PNT_434"] = default_button("AP Test",												devices.AUTOPILOT, device_commands.AP_TEST,  	 		434)
+elements["PNT_435"] = default_button("AP Nav",												devices.AUTOPILOT, device_commands.AP_NAV,  	 		435)
+elements["PNT_436"] = default_button("AP Approach",											devices.AUTOPILOT, device_commands.AP_APR,  	 		436)
+elements["PNT_437"] = default_button("AP GS",												devices.AUTOPILOT, device_commands.AP_GS,  	 			437)
 elements["PNT_438"] = default_button("AP",													devices.AUTOPILOT, device_commands.AP_ON,  		 		438)
 

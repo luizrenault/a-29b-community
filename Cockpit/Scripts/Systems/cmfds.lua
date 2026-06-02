@@ -105,6 +105,10 @@ dev:listen_command(device_commands.CMFD1ButtonSymb)
 dev:listen_command(device_commands.CMFD1ButtonBright)
 
 dev:listen_command(Keys.DisplayMngt)
+dev:listen_command(Keys.CMFDLeftFLIR)
+dev:listen_command(Keys.CMFDRightFLIR)
+dev:listen_command(Keys.CMFDLeftSMS)
+dev:listen_command(Keys.CMFDRightSMS)
 
 
 local CMFDNumber=get_param_handle("CMFDNumber")
@@ -286,6 +290,34 @@ CMFD[2]["Sel"]             = CMFD2Sel
 CMFD[2]["On"]              = CMFD2On
 CMFD[2]["SwOn"]            = CMFD2SwOn
 
+local function set_cmfd_flir(cmfdnumber)
+    local page = SUB_PAGE_ID.FLIR
+    CMFD[cmfdnumber]["Sel"]:set(page)
+    CMFD[cmfdnumber]["Format"]:set(page)
+
+    if CMFD[cmfdnumber]["Primary"]:get() == 0 then
+        CMFD[cmfdnumber]["SelLeft"]:set(page)
+        CMFD[cmfdnumber]["SelLeftName"]:set(SUB_PAGE_NAME[page])
+    else
+        CMFD[cmfdnumber]["SelRight"]:set(page)
+        CMFD[cmfdnumber]["SelRightName"]:set(SUB_PAGE_NAME[page])
+    end
+end
+
+local function set_cmfd_sms(cmfdnumber)
+    local page = SUB_PAGE_ID.SMS
+    CMFD[cmfdnumber]["Sel"]:set(page)
+    CMFD[cmfdnumber]["Format"]:set(page)
+
+    if CMFD[cmfdnumber]["Primary"]:get() == 0 then
+        CMFD[cmfdnumber]["SelLeft"]:set(page)
+        CMFD[cmfdnumber]["SelLeftName"]:set(SUB_PAGE_NAME[page])
+    else
+        CMFD[cmfdnumber]["SelRight"]:set(page)
+        CMFD[cmfdnumber]["SelRightName"]:set(SUB_PAGE_NAME[page])
+    end
+end
+
 function SetCommand(command,value)
     local cmfdnumber = 0
     if command >= device_commands.CMFD1OSS1 and command <= device_commands.CMFD1ButtonBright then 
@@ -306,6 +338,20 @@ function SetCommand(command,value)
         SetCommandNav(command, value)
         return 0
     end
+    if command == Keys.CMFDLeftFLIR and value == 1 then
+        set_cmfd_flir(1)
+        return 0
+    elseif command == Keys.CMFDRightFLIR and value == 1 then
+        set_cmfd_flir(2)
+        return 0
+    elseif command == Keys.CMFDLeftSMS and value == 1 then
+        set_cmfd_sms(1)
+        return 0
+    elseif command == Keys.CMFDRightSMS and value == 1 then
+        set_cmfd_sms(2)
+        return 0
+    end
+
     if command == Keys.DisplayMngt then
         if value == 1 then -- Fwd
             CMFDDoi:set(0)

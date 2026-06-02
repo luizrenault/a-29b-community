@@ -75,6 +75,26 @@ local sim_inv_state = CMFD_DTE_STATE_IDS.UNLOADED
 local msmd_state = CMFD_DTE_STATE_IDS.UNLOADED
 
 local mission_dir
+local dtc_root_dir = LockOn_Options.script_path.."../../DTC/"
+local dtc_fallback_dir = dtc_root_dir.."Caucasus/"
+
+local DTC_THEATRE_ALIASES = {
+    caucasus = {"Caucasus"},
+    nevada = {"Nevada", "NTTR", "Nevada Test and Training Range"},
+    nevadatestandtrainingrange = {"Nevada", "NTTR", "Nevada Test and Training Range"},
+    syria = {"Syria"},
+    persiangulf = {"Persian Gulf", "PersianGulf"},
+    marianaislands = {"Mariana Islands", "MarianaIslands", "The Marianas"},
+    themarianas = {"Mariana Islands", "MarianaIslands", "The Marianas"},
+    thechannel = {"The Channel", "TheChannel"},
+    normandy = {"Normandy", "Normandy2", "Normandy 2.0"},
+    normandy20 = {"Normandy2", "Normandy", "Normandy 2.0"},
+    southatlantic = {"South Atlantic", "SouthAtlantic"},
+    sinai = {"Sinai"},
+    kola = {"Kola"},
+    afghanistan = {"Afghanistan"},
+    iraq = {"Iraq"},
+}
 
 -- TESTING
 --local terrainVersion          = get_terrain_related_data("edterrainVersion") or 3.0
@@ -152,18 +172,99 @@ local function read_FLT_AREA()
     CMFD_NAV_DTC_FLTAREA_READ:set(mission_dir .. "FLT_AREA.lua")
 end
 
+local function dtc_field_text(value)
+    return string.sub(tostring(value or ""):upper(), 1, 12)
+end
+
+local function normalize_theatre_name(name)
+    if type(name) ~= "string" then
+        return "", ""
+    end
+
+    local trimmed = name:gsub("^%s+", ""):gsub("%s+$", "")
+    local key = trimmed:lower():gsub("[^%w]", "")
+    return trimmed, key
+end
+
+local function dtc_dir_has_general(dir)
+    local file = io.open(dir .. "GENERAL.lua", "r")
+    if file then
+        file:close()
+        return true
+    end
+    return false
+end
+
+local function resolve_dtc_dir(theatre_name)
+    local trimmed, key = normalize_theatre_name(theatre_name)
+    if trimmed == "" then
+        return dtc_fallback_dir
+    end
+
+    local seen = {}
+    local candidates = {}
+
+    local function add_candidate(name)
+        if type(name) ~= "string" then
+            return
+        end
+        local candidate = name:gsub("^%s+", ""):gsub("%s+$", "")
+        if candidate == "" or seen[candidate] then
+            return
+        end
+        seen[candidate] = true
+        candidates[#candidates + 1] = candidate
+    end
+
+    add_candidate(trimmed)
+    add_candidate(trimmed:gsub("%s+", ""))
+
+    local aliases = DTC_THEATRE_ALIASES[key]
+    if aliases then
+        for _, alias in ipairs(aliases) do
+            add_candidate(alias)
+        end
+    end
+
+    for _, candidate in ipairs(candidates) do
+        local candidate_dir = dtc_root_dir .. candidate .. "/"
+        if dtc_dir_has_general(candidate_dir) then
+            return candidate_dir
+        end
+    end
+
+    return dtc_fallback_dir
+end
+
+local function read_general_from(dir)
+    GENERAL = nil
+    local loaded = pcall(dofile, dir .. "GENERAL.lua")
+    if not loaded or type(GENERAL) ~= "table" or type(GENERAL.General) ~= "table" then
+        return false
+    end
+
+    local general = GENERAL.General
+    dtcid = dtc_field_text(general.DTC_Name)
+    pilot = dtc_field_text(general.Pilot_1_Name)
+    copilot = dtc_field_text(general.Pilot_2_Name)
+    mission = dtc_field_text(general.Mission_Name)
+    return true
+end
+
 local function read_GENERAL()
     dtcid = ""
     pilot = ""
     copilot = ""
     mission = ""
-    
-    dofile(mission_dir .. "GENERAL.lua")
 
-    dtcid = string.sub(GENERAL["General"]["DTC_Name"]:upper(),1,12)
-    pilot = string.sub(GENERAL["General"]["Pilot_1_Name"]:upper(),1,12)
-    copilot = string.sub(GENERAL.General.Pilot_2_Name:upper(),1,12)
-    mission = string.sub(GENERAL.General.Mission_Name:upper(),1,12)
+    -- Try current map DTC first, then fallback to Caucasus for unsupported maps.
+    if read_general_from(mission_dir) then
+        return
+    end
+
+    if mission_dir ~= dtc_fallback_dir and read_general_from(dtc_fallback_dir) then
+        mission_dir = dtc_fallback_dir
+    end
 end
 
 local function read_IFF()
@@ -230,22 +331,24 @@ function update_dte()
     pcall(read_GENERAL)
 
     if format == CMFD_DTE_FORMAT_IDS.DTE then
-        text = text .. "MISSION : " .. string.format("%-12s", mission) .. "\n\n"
-        text = text .. "  PILOT : " .. string.format("%-12s", pilot) .. "\n\n"
-        text = text .. "COPILOT : " .. string.format("%-12s", copilot) .. "\n\n"
-        text = text .. " DTC ID : " .. string.format("%-12s", dtcid)
+        text = text .. "DTC SUMMARY\n\n"
+        text = text .. "MISSION      " .. string.format("%-12s", mission) .. "\n\n"
+        text = text .. "PILOT        " .. string.format("%-12s", pilot) .. "\n\n"
+        text = text .. "COPILOT      " .. string.format("%-12s", copilot) .. "\n\n"
+        text = text .. "DTC ID       " .. string.format("%-12s", dtcid)
     elseif format == CMFD_DTE_FORMAT_IDS.QCHK then
-        text = text .. "MAG G        " .. string.format("%4s", string.format("%3.1f", UFCP_LMT_MAX_G:get())) .. "\n\n"
-        text = text .. "MAX AOA F UP " .. string.format("%4s", string.format("%4.1f", UFCP_LMT_MAX_AOA:get())) .. "\n\n"
-        text = text .. "MAX AOA F DN " .. string.format("%4s", string.format("%4.1f", UFCP_LMT_MAX_AOA_FLAPS:get())) .. "\n\n"
+        text = text .. "QCHK LIMITS\n\n"
+        text = text .. "MAX G        " .. string.format("%4s", string.format("%3.1f", UFCP_LMT_MAX_G:get())) .. "\n\n"
+        text = text .. "MAX AOA UP   " .. string.format("%4s", string.format("%4.1f", UFCP_LMT_MAX_AOA:get())) .. "\n\n"
+        text = text .. "MAX AOA DN   " .. string.format("%4s", string.format("%4.1f", UFCP_LMT_MAX_AOA_FLAPS:get())) .. "\n\n"
         text = text .. "MAX VEL      " .. string.format("%4s", UFCP_LMT_MAX_VEL:get()) .. "\n\n"
         text = text .. "MAX MACH     " .. string.format("%4s", string.format("%4.2f", UFCP_LMT_MAX_MACH:get())) .. "\n\n"
         text = text .. "MIN VEL      " .. string.format("%4s", UFCP_LMT_MIN_VEL:get()) .. "\n\n"
 
         text = text .. "\n\n"
 
-        text = text .. "DA\\H BARO    " .. string.format("%4s", UFCP_DAH_BARO:get()) .. "\n\n"
-        text = text .. "DA\\H RALT    " .. string.format("%4s", UFCP_DAH_RALT:get()) .. "\n\n"
+        text = text .. "DA/H BARO    " .. string.format("%4s", UFCP_DAH_BARO:get()) .. "\n\n"
+        text = text .. "DA/H RALT    " .. string.format("%4s", UFCP_DAH_RALT:get()) .. "\n\n"
 
         text = text .. "\n\n"
 
@@ -419,10 +522,22 @@ end
 
 function SetCommandDte(command,value, CMFD)
     if value == 1 then
+        if (command==device_commands.CMFD1OSS4 or command==device_commands.CMFD2OSS4) then
+            if format == CMFD_DTE_FORMAT_IDS.DTE then
+                format = CMFD_DTE_FORMAT_IDS.QCHK
+            else
+                format = CMFD_DTE_FORMAT_IDS.DTE
+            end
+            return
+        end
+
+        -- Only DTE format executes load/clear actions.
+        if format ~= CMFD_DTE_FORMAT_IDS.DTE then
+            return
+        end
+
         if (command==device_commands.CMFD1OSS3 or command==device_commands.CMFD2OSS3) then
             clear_all()
-        elseif (command==device_commands.CMFD1OSS4 or command==device_commands.CMFD2OSS4) then
-            format = 1 - format
         elseif (command==device_commands.CMFD1OSS5 or command==device_commands.CMFD2OSS5) then
             load_all()
         elseif (command==device_commands.CMFD1OSS7 or command==device_commands.CMFD2OSS7) then
@@ -465,8 +580,8 @@ function post_initialize_dte()
     -- I doubt anyone is gonna make them.
 
     if theatre ~= "none" then
-        mission_dir = LockOn_Options.script_path.."../../DTC/" .. theatre .. "/"
+        mission_dir = resolve_dtc_dir(theatre)
     else
-        mission_dir = LockOn_Options.script_path.."../../DTC/"
+        mission_dir = dtc_fallback_dir
     end
 end

@@ -6,7 +6,7 @@ indicator_type       = indicator_types.COMMON
 page_subsets    	 = {LockOn_Options.script_path.."FLIR/page.lua"}
 pages 				 = {{1}}
 init_pageID     	 = 1
-
+purposes 	 = {render_purpose.SCREENSPACE_INSIDE_COCKPIT}
 
 camera = -- superseeded by ccSimplestFLIR when used with it.
 {
@@ -17,4 +17,4 @@ camera = -- superseeded by ccSimplestFLIR when used with it.
 
 update_screenspace_diplacement(36/24,false,0)
 dedicated_viewport_arcade = dedicated_viewport
-
+debug=false

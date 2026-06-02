@@ -75,6 +75,7 @@ local HUD = {
 local WPN = {
     TD_AZIMUTH = get_param_handle("WPN_TD_AZIMUTH"),
     TD_ELEVATION = get_param_handle("WPN_TD_ELEVATION"),
+    TD_AVAILABLE = get_param_handle("WPN_TD_AVAILABLE"),
     CCRP_TIME = get_param_handle("WPN_CCRP_TIME"),
     TIME_MAX_RANGE = get_param_handle("WPN_TIME_MAX_RANGE"),
     WEAPON_RELEASE = get_param_handle("WPN_WEAPON_RELEASE"),
@@ -82,6 +83,9 @@ local WPN = {
     CCIP_DELAYED = get_param_handle("WPN_CCIP_DELAYED"),
     TIME_TO_IMPACT = get_param_handle("WPN_TIME_TO_IMPACT"),
 }
+
+local WPN_SELECTED_WEAPON_TYPE = get_param_handle("WPN_SELECTED_WEAPON_TYPE")
+local HUD_SHOW_TD = get_param_handle("HUD_SHOW_TD")
 
 local CMFD = {
     NAV_OAP_AZIMUTH = get_param_handle("CMFD_NAV_OAP_AZIMUTH"),
@@ -115,6 +119,9 @@ local HUD_AOA = get_param_handle("HUD_AOA")
 local HUD_AOA_DELTA = get_param_handle("HUD_AOA_DELTA")
 local HUD_PL = get_param_handle("HUD_PL")
 
+local UFCP_LMT_MAX_AOA = get_param_handle("UFCP_LMT_MAX_AOA")
+local UFCP_LMT_MAX_AOA_FLAPS = get_param_handle("UFCP_LMT_MAX_AOA_FLAPS")
+
 local HUD_ON = get_param_handle("HUD_ON")
 
 local HUD_BRIGHT = get_param_handle("HUD_BRIGHT")
@@ -126,6 +133,15 @@ local hud_limit = {
     x= math.rad(6),
     y = math.rad(6)
 }
+
+-- CCRP/GBU HUD calibration preset (small offsets by design).
+-- Units are radians; 1 mrad = 0.001 rad.
+local HUD_CCRP_GBU_TD_AZ_GAIN = 1.00
+local HUD_CCRP_GBU_TD_EL_GAIN = 1.00
+local HUD_CCRP_GBU_TD_AZ_BIAS = 0.00000
+local HUD_CCRP_GBU_TD_EL_BIAS = -0.00020
+local HUD_CCRP_GBU_LIMIT_GAIN = 1.05
+local HUD_CCRP_GBU_SI_BIAS = 0.00010
 
 local HUD_PIPER_LINE_A_X = get_param_handle("HUD_PIPER_LINE_A_X")
 local HUD_PIPER_LINE_A_Y = get_param_handle("HUD_PIPER_LINE_A_Y")
@@ -236,9 +252,9 @@ local function update_piper_ccip()
 end
 
 local function global_az_el_to_cockpit(az, el)
-    local p_roll = sensor_data.getRoll()
+    local p_roll = sensor_data:getRoll()
     local s = math.sin(p_roll)
-    local c = math.sin(p_roll)
+    local c = math.cos(p_roll)
 
     local az1 = az * c - el * s
     local el1 = az * s + el * c
@@ -394,29 +410,43 @@ end
 
 local function update_td()
     local master_mode = get_avionics_master_mode()
+    local show_td = false
 
-    local td_azimuth = WPN.TD_AZIMUTH:get()
-    local td_elevation = WPN.TD_ELEVATION:get()
+    local td_azimuth = WPN.TD_AZIMUTH:get() or 0
+    local td_elevation = WPN.TD_ELEVATION:get() or 0
+    local td_available = (WPN.TD_AVAILABLE:get() or 0) == 1
+    local ccrp_gbu_tuning_active = (master_mode == AVIONICS_MASTER_MODE_ID.CCRP) and (WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_UNGUIDED_BOMB)
+
+    if ccrp_gbu_tuning_active then
+        td_azimuth = td_azimuth * HUD_CCRP_GBU_TD_AZ_GAIN + HUD_CCRP_GBU_TD_AZ_BIAS
+        td_elevation = td_elevation * HUD_CCRP_GBU_TD_EL_GAIN + HUD_CCRP_GBU_TD_EL_BIAS
+    end
+
     local td_angle = math.atan2(td_elevation - math.rad(1.2), td_azimuth)
     
-    local hud_fyt_azimuth, hud_fyt_elevation, hud_fyt_os, hud_fyt_lim_x, hud_fyt_lim_y = limit_xy(CMFD_NAV_FYT_DTK_AZIMUTH:get(), CMFD_NAV_FYT_DTK_ELEVATION:get(), hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
+    local fyt_azimuth = CMFD_NAV_FYT_DTK_AZIMUTH:get() or 0
+    local fyt_elevation = CMFD_NAV_FYT_DTK_ELEVATION:get() or 0
+    local hud_fyt_azimuth, hud_fyt_elevation, hud_fyt_os, hud_fyt_lim_x, hud_fyt_lim_y = limit_xy(fyt_azimuth, fyt_elevation, hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
     HUD.FYT_AZIMUTH:set(hud_fyt_azimuth)
     HUD.FYT_ELEVATION:set(hud_fyt_elevation)
     HUD.FYT_OS:set(hud_fyt_os)
     HUD.FYT_HIDE:set(0)
 
-    local time_to_impact = WPN.CCRP_TIME:get()
+    local time_to_impact = WPN.CCRP_TIME:get() or 0
 
     if master_mode == AVIONICS_MASTER_MODE_ID.CCRP and (get_wpn_mass() == WPN_MASS_IDS.SAFE or get_avionics_onground() or (get_wpn_mass() == WPN_MASS_IDS.LIVE and WPN_AG_SEL:get() == 0) or (get_wpn_mass() == WPN_MASS_IDS.SIM and WPN_AG_SEL:get() == 0) ) then
         HUD.CCRP:set(0)
     elseif master_mode == AVIONICS_MASTER_MODE_ID.CCRP then
         HUD.CCRP:set(1)
-        HUD.TD_HIDE:set(0)
         HUD.FYT_HIDE:set(1)
+        show_td = true
     elseif (master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R) and WPN.CCIP_DELAYED:get() == 1 then
         HUD.CCRP:set(1)
-        time_to_impact = WPN.CCIP_DELAYED_TIME:get()
-        HUD.TD_HIDE:set(0)
+        time_to_impact = WPN.CCIP_DELAYED_TIME:get() or 0
+        show_td = true
+    elseif master_mode == AVIONICS_MASTER_MODE_ID.MAN and WPN_SELECTED_WEAPON_TYPE:get() == WPN_WEAPON_TYPE_IDS.AG_GUIDED_MISSILE and td_available then
+        HUD.CCRP:set(0)
+        show_td = true
     elseif get_avionics_master_mode_aa() then
         HUD.CCRP:set(0)
         HUD.FYT_HIDE:set(1)
@@ -424,16 +454,24 @@ local function update_td()
         HUD.CCRP:set(0)
     end
 
-    local hud_td_azimuth, hud_td_elevation, hud_td_lim, hud_td_lim_x, hud_td_lim_y = limit_xy(td_azimuth, td_elevation, hud_limit.x, hud_limit.y, -hud_limit.x, -hud_limit.y * 1.3)
+    local td_limit_x = hud_limit.x
+    local td_limit_y = hud_limit.y
+    if ccrp_gbu_tuning_active then
+        td_limit_x = td_limit_x * HUD_CCRP_GBU_LIMIT_GAIN
+        td_limit_y = td_limit_y * HUD_CCRP_GBU_LIMIT_GAIN
+    end
+
+    local hud_td_azimuth, hud_td_elevation, hud_td_lim, hud_td_lim_x, hud_td_lim_y = limit_xy(td_azimuth, td_elevation, td_limit_x, td_limit_y, -td_limit_x, -td_limit_y * 1.3)
    
     HUD.TD_AZIMUTH:set(hud_td_azimuth)
     HUD.TD_ELEVATION:set(hud_td_elevation)
     HUD.TD_OS:set(hud_td_lim_y and 1 or 0)
     HUD.TD_ANGLE:set(td_angle)
-    HUD.TD_HIDE:set(hud_td_lim_x and 1 or 0) 
-    HUD.SL_AZIMUTH:set(td_azimuth + td_elevation * math.sin(sensor_data.getRoll()))
+    HUD.TD_HIDE:set((not show_td or not td_available or hud_td_lim_x) and 1 or 0)
+    HUD_SHOW_TD:set((show_td and td_available) and 1 or 0)
+    HUD.SL_AZIMUTH:set(td_azimuth + td_elevation * math.sin(sensor_data:getRoll()))
 
-    local time_to_max_range = WPN.TIME_MAX_RANGE:get()
+    local time_to_max_range = WPN.TIME_MAX_RANGE:get() or 0
     if time_to_max_range > 0 and time_to_max_range < 2 then
         HUD.MAX_RANGE:set(1)
     elseif time_to_max_range > -2 and time_to_max_range < 0 then
@@ -444,13 +482,18 @@ local function update_td()
     end
 
     if time_to_impact > 5 then time_to_impact = 5 end
+    if time_to_impact < -5 then time_to_impact = -5 end
 
     if WPN.WEAPON_RELEASE:get() == 1 or time_to_max_range <= 2 then
         HUD.SI_HIDE:set(0)
     elseif time_to_max_range > 2 then 
         HUD.SI_HIDE:set(1)
     end
-    HUD.SI_ELEVATION:set(HUD_FPM_VERT:get() - 0.0025 + time_to_impact/100)
+    local si_bias = -0.0025
+    if ccrp_gbu_tuning_active then
+        si_bias = si_bias + HUD_CCRP_GBU_SI_BIAS
+    end
+    HUD.SI_ELEVATION:set((HUD_FPM_VERT:get() or 0) + si_bias + time_to_impact/100)
 end
 
 
@@ -459,6 +502,8 @@ HUD_DRIFT_CO:set(0)
 UFCP_VAH:set(0)
 
 local max_accel = 0
+local stall_voice_active = 0
+local HUD_STALL_AOA_HYST = 0.5
 
 local hud_warning = get_param_handle("HUD_WARNING")
 
@@ -471,6 +516,36 @@ local function blinking(period, duty_cycle, offset)
     local period_elapsed = ((time_elapsed + offset) % period) / period
     if period_elapsed > duty_cycle then return false
     else return true end
+end
+
+local function update_stall_voice(aoa)
+    local flaps_pos = sensor_data.getFlapsPos() or 0
+    local aoa_limit = UFCP_LMT_MAX_AOA:get()
+
+    if flaps_pos > 0.1 then
+        aoa_limit = UFCP_LMT_MAX_AOA_FLAPS:get()
+    end
+
+    if aoa_limit == nil or aoa_limit <= 0 then
+        aoa_limit = 15
+    end
+
+    local can_warn = get_elec_avionics_ok() and not get_avionics_onground()
+    if not can_warn then
+        if stall_voice_active == 1 then
+            set_voice(VOICE_ID.STALL, 0)
+            stall_voice_active = 0
+        end
+        return
+    end
+
+    if stall_voice_active == 0 and aoa >= aoa_limit then
+        set_voice(VOICE_ID.STALL, 1)
+        stall_voice_active = 1
+    elseif stall_voice_active == 1 and aoa <= (aoa_limit - HUD_STALL_AOA_HYST) then
+        set_voice(VOICE_ID.STALL, 0)
+        stall_voice_active = 0
+    end
 end
 
 function update()
@@ -639,7 +714,7 @@ function update()
     local ttd = CMFD_NAV_FYT_DTK_TTD:get()
     local dt = CMFD_NAV_FYT_DTK_DT:get()
     local tti = HUD.TIME_TO_IMPACT:get()
-    local ccrp_time = WPN.CCRP_TIME:get()
+    local ccrp_time = WPN.CCRP_TIME:get() or 0
     
     if (master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R or master_mode == AVIONICS_MASTER_MODE_ID.CCRP) and tti >= 0 then
         time_text = time_text .. string.format("¨\t %2.0f", math.floor(tti))
@@ -647,7 +722,7 @@ function update()
     elseif  master_mode == AVIONICS_MASTER_MODE_ID.CCRP then
         time_text = time_text .. string.format("%02.0f:%02.0f ", math.floor(ccrp_time / 60), math.floor(ccrp_time % 60) )
     elseif (master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R) and WPN.CCIP_DELAYED:get() == 1 then
-        ccrp_time = WPN.CCIP_DELAYED_TIME:get()
+        ccrp_time = WPN.CCIP_DELAYED_TIME:get() or 0
         time_text = time_text .. string.format("%02.0f:%02.0f ", math.floor(ccrp_time / 60), math.floor(ccrp_time % 60) )
     elseif (master_mode == AVIONICS_MASTER_MODE_ID.CCIP or master_mode == AVIONICS_MASTER_MODE_ID.CCIP_R) then
     elseif nav_time == UFCP_NAV_TIME_IDS.DT then
@@ -678,6 +753,7 @@ function update()
     end
 
     local aoa = math.deg(sensor_data.getAngleOfAttack())
+    update_stall_voice(aoa)
     if aoa < -9 then aoa = -9 end
     if aoa > 40 then aoa = 40 end
     local aoa_delta = aoa - 4.5

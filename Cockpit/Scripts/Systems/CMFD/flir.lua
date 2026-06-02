@@ -15,6 +15,7 @@ end
 dev:listen_command(Keys.Cage)
 dev:listen_command(Keys.TDCX)
 dev:listen_command(Keys.TDCY)
+dev:listen_command(Keys.TDC_Depress)
 
 function SetCommandFlir(command,value, CMFD)
     local flir = GetDevice(devices.FLIR)
@@ -52,6 +53,9 @@ FLIR = {
     POLARITY = get_param_handle("FLIR_POL"),
     MODE = get_param_handle("FLIR_MODE"),
     TRACKING = get_param_handle("FLIR_TRK"),
+    LASER_ARM = get_param_handle("FLIR_LASER_ARM"),
+    LASER_CODE = get_param_handle("FLIR_LASER_CODE"),
+    LASER_ON = get_param_handle("FLIR_LASER_ON"),
     CAGED = get_param_handle("FLIR_CAGED"),
     ZOOM = get_param_handle("FLIR_ZOOM"),
     TGT_LAT = get_param_handle("FLIR_TGT_LAT"),
@@ -115,9 +119,10 @@ function text_from_lua_function_flir (number)
         else return "WHT" end
     elseif number == CMFD_TEXT.FLIR_STATUS then
         local status = FLIR.STATUS:get()
-        if flir_status_old ~= stats and status == 5 then
+        if flir_status_old ~= status and status == 5 then
             flir_status_time = get_absolute_model_time()
         end
+        flir_status_old = status
         if status < 5 then
             return "BIT"
         elseif status == 5 and (get_absolute_model_time()-flir_status_time) < 5 then
@@ -125,6 +130,19 @@ function text_from_lua_function_flir (number)
         else
             return ""
         end
+    elseif number == CMFD_TEXT.FLIR_LASER_STATUS then
+        if FLIR.LASER_ON:get() == 1 then
+            return "LASE"
+        elseif FLIR.LASER_ARM:get() == 1 then
+            return "L ARM"
+        end
+        return ""
+    elseif number == CMFD_TEXT.FLIR_LASER_CODE then
+        local code = FLIR.LASER_CODE:get()
+        if code > 0 then
+            return string.format("L%04.0f", code)
+        end
+        return ""
     elseif number == CMFD_TEXT.FLIR_TARGET then
         if FLIR.TGT_AVALILABLE:get() ~= 0 then
             local lat = FLIR.TGT_LAT:get()

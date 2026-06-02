@@ -15,6 +15,8 @@ CMFD_TEXT = {
     FLIR_FREEZE = counter(),
     FLIR_POLARITY = counter(),
     FLIR_STATUS = counter(),
+    FLIR_LASER_STATUS = counter(),
+    FLIR_LASER_CODE = counter(),
     FLIR_COORDS = counter(),
     FLIR_TARGET = counter(),
 }
