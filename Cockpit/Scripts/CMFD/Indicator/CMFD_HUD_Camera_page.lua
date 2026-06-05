@@ -1,6 +1,4 @@
 dofile(LockOn_Options.common_script_path.."elements_defs.lua")
-
-
 SetScale(FOV)
 picture					 = CreateElement "ceTexPoly"
 picture.name			 = "picture"
@@ -13,10 +11,8 @@ picture.tex_coords		 = {{0, 0},
                             {1, 0},
                             {1, 1},
                             {0, 1}}
-picture.material		 = "render_target_3"
+picture.material		 = "render_target_"..string.format("%d",GetRenderTarget() + 1)
 picture.isvisible = true
 picture.level = 1
 Add(picture)
-
-
 

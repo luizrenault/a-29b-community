@@ -49,12 +49,12 @@ A_29B =  {
     -- add model draw args for network transmitting to this draw_args table (32 limit)
     net_animation ={
         0, -- front gear
-        -- 1, -- front gear suspension
+        1, -- front gear suspension
 		2, -- nose wheel steering
 		3, -- main gear
-        -- 4, -- main gear suspension
+        4, -- main gear suspension
 		5, -- main gear
-		-- 6, -- main gear suspension
+		6, -- main gear suspension
         9, -- right flap
         10, -- left flap
         11, -- right aileron
@@ -67,14 +67,14 @@ A_29B =  {
 		-- 39, -- pilots heads
 		-- 49, -- nav lights
 		50, -- pilots fron eject
-		-- 51, -- landing lights
-		-- 77, -- wheel rollAngle
+		51, -- landing lights
+		77, -- wheel rollAngle
 		83, -- formation lights
 		-- 99, -- front pilot up down
 		101, -- wheel rolling
 		102, -- wheel rolling
 		103, -- wheel rolling
-		-- 114, -- canopy
+		114, -- canopy
 		190, -- nav light
 		191, -- nav light
 		192, -- strobe light
@@ -143,7 +143,7 @@ A_29B =  {
 		nose_gear_amortizer_reversal_stroke      = -0.156,   -- up
 		nose_gear_amortizer_normal_weight_stroke = -0.056,   
 		main_gear_amortizer_direct_stroke        = 0.00,     -- down from main_gear_pos !!!
-		main_gear_amortizer_reversal_stroke      = -0.156,   -- up
+		main_gear_amortizer_reversal_stroke      = -0.356,   -- up
 		main_gear_amortizer_normal_weight_stroke = -0.056,   
 
 		nose_gear_wheel_diameter	=	0.433, --in m

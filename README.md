@@ -46,6 +46,20 @@ All aircraft systems implemented in C++ can be freely used in other non-paid pub
 
 # Changelog
 
+## Unreleased
+
+### Added
+- New CMFD HUD camera pages for the simplified FLIR display path.
+- New quick start mission.
+
+### Changes
+- FM and other upgrades for DCS 2.9.26.23303 compatibility.
+- Updated CMFD, FLIR, and MAP indicator wiring for the new render-target flow.
+- Moved flight model tuning into `FM/config.lua` and refreshed gear parameters.
+
+### Fixes
+- MAP page now renders visibly in cockpit.
+
 ## Version 0.7.0 - 10 Sep 2024
 
 ### Fixes

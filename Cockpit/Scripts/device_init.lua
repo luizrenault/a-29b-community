@@ -2,10 +2,11 @@ dofile(LockOn_Options.script_path.."devices.lua")
 dofile(LockOn_Options.common_script_path.."tools.lua")
 dofile(LockOn_Options.script_path.."materials.lua")
 
--- show_param_handles_list()
+--show_param_handles_list()
 
 layoutGeometry = {}
 
+--MainPanel = {"ccSimplestMainPanel",LockOn_Options.script_path.."mainpanel_init.lua", {},}
 MainPanel = {"ccMainPanel",LockOn_Options.script_path.."mainpanel_init.lua", {},}
 
 -- Avionics devices initialization example
@@ -27,7 +28,7 @@ creators[devices.ICEPROT]         = {"avLuaDevice"           ,LockOn_Options.scr
 creators[devices.ENVIRON]         = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/environ.lua"}
 -- creators[devices.GEAR]            = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/gear_old.lua"}
 creators[devices.BRAKES]          = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/brakes.lua"}
-creators[devices.CMFD]            = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/cmfds.lua"}--,{devices.ALARM, devices.WEAPON_SYSTEM}}
+creators[devices.CMFD]            = {"avSimplestMFD"           ,LockOn_Options.script_path.."Systems/cmfds.lua"}--,{devices.ALARM, devices.WEAPON_SYSTEM}}
 creators[devices.HUD]             = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/hud.lua"}
 creators[devices.AVIONICS]        = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/avionics.lua"}
 creators[devices.AIRBRAKE]        = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/airbrake.lua"}
@@ -48,7 +49,7 @@ creators[devices.HELMET_DEVICE]	  = {"avNightVisionGoggles"}
 creators[devices.ILS]		      = {"avILS"                 , nil}
 creators[devices.ILS_DEVICE]	  = {"LR::avSimplestILS"         ,LockOn_Options.script_path.."Systems/ils.lua", {{"ils", devices.ILS}}}
 
-creators[devices.FLIR]		      = {"LR::avSimplestFLIR"    ,LockOn_Options.script_path.."FLIR/device.lua"}
+creators[devices.FLIR]		      = {"avSimplestFLIR"    ,LockOn_Options.script_path.."FLIR/device.lua"}
 
 -- creators[devices.MAP]		      = {"LR::avSimplestMap"    ,LockOn_Options.script_path.."Systems/map.lua"}
 
@@ -56,12 +57,14 @@ creators[devices.FLIR]		      = {"LR::avSimplestFLIR"    ,LockOn_Options.script_
 -- creators[devices.TEST]		      = {"avLuaDevice"           ,LockOn_Options.script_path.."Systems/test_device.lua"}
 
 indicators                  = {}
-indicators[#indicators + 1] = {"LR::ccSimplestIndicator", LockOn_Options.script_path.."CMFD/CMFD_Left_init.lua" , devices.CMFD,{{"CENTER_HDD001_PNT","DOWN_HDD001_PNT","RIGHT_HDD001_PNT"}, {},1}}
-indicators[#indicators + 1] = {"LR::ccSimplestIndicator", LockOn_Options.script_path.."CMFD/CMFD_Right_init.lua" , devices.CMFD,{{"CENTER_HDD002_PNT","DOWN_HDD002_PNT","RIGHT_HDD002_PNT"}, {},1}}
+indicators[#indicators + 1] = {"ccSimplestMFD", LockOn_Options.script_path.."CMFD/CMFD_Left_init.lua" , devices.CMFD,{{"CENTER_HDD001_PNT","DOWN_HDD001_PNT","RIGHT_HDD001_PNT"}, {},1}, {{"flir", devices.FLIR}}}
+indicators[#indicators + 1] = {"ccSimplestMFD", LockOn_Options.script_path.."CMFD/CMFD_Right_init.lua" , devices.CMFD,{{"CENTER_HDD002_PNT","DOWN_HDD002_PNT","RIGHT_HDD002_PNT"}, {},2}, {{"flir", devices.FLIR}}}
 indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."BFI/init.lua" , nil,{{"CENTER_BFI_PNT","DOWN_BFI_PNT","RIGHT_BFI_PNT"}, {}}}
-indicators[#indicators + 1] = {"ccSimplestHUD", LockOn_Options.script_path.."HUD/Indicator/HUD_page_init.lua" , devices.HUD ,	{ {"PTR-HUD-CENTER", "PTR-HUD-DOWN", "PTR-HUD-RIGHT"},{},2}}
-indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."UFCP/UFCP_page_init.lua" , devices.UFCP ,	{ {"PTR-UFCP-CENTER", "PTR-UFCP-DOWN", "PTR-UFCP-RIGHT"},{},2}}
-indicators[#indicators + 1] = {"LR::ccCamera", LockOn_Options.script_path.."FLIR/indicator.lua", devices.FLIR,	{{}}}
+indicators[#indicators + 1] = {"ccSimplestHUD", LockOn_Options.script_path.."HUD/Indicator/HUD_page_init.lua" , devices.HUD ,	{ {"PTR-HUD-CENTER", "PTR-HUD-DOWN", "PTR-HUD-RIGHT"},{},3}}
+indicators[#indicators + 1] = {"ccIndicator", LockOn_Options.script_path.."UFCP/UFCP_page_init.lua" , devices.UFCP ,	{ {"PTR-UFCP-CENTER", "PTR-UFCP-DOWN", "PTR-UFCP-RIGHT"},{},4}}
+--indicators[#indicators + 1] = {"ccCamera", LockOn_Options.script_path.."FLIR/indicator.lua", devices.FLIR}
+--indicators[#indicators + 1] = {"ccCamera", LockOn_Options.script_path.."CMFD//Indicator/CMFD_HUD_Camera.lua", nil,	{{}}}
+
 
 -- indicators[#indicators + 1] = {"LR::ccSimplestMap", LockOn_Options.script_path.."MAP/indicator.lua" , devices.MAP ,	{{}}}
 
