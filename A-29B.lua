@@ -21,7 +21,7 @@ A_29B =  {
 	Picture 			= "A-29B.png",
 	Rate 				= 40, -- RewardPoint in Multiplayer
 	Shape 				= "A-29B",
-	propellorShapeType  = '3ARG_PROC_BLUR',
+	propellorShapeType  = "3ARG_PROC_BLUR",
 	propellorShapeName  = 'a29b_blade.fbx',
 	debrisGeneration     = true,
 	shape_table_data 	= 
@@ -49,12 +49,12 @@ A_29B =  {
     -- add model draw args for network transmitting to this draw_args table (32 limit)
     net_animation ={
         0, -- front gear
-        -- 1, -- front gear suspension
+        1, -- front gear suspension
 		2, -- nose wheel steering
 		3, -- main gear
-        -- 4, -- main gear suspension
+        4, -- main gear suspension
 		5, -- main gear
-		-- 6, -- main gear suspension
+		6, -- main gear suspension
         9, -- right flap
         10, -- left flap
         11, -- right aileron
@@ -67,14 +67,14 @@ A_29B =  {
 		-- 39, -- pilots heads
 		-- 49, -- nav lights
 		50, -- pilots fron eject
-		-- 51, -- landing lights
-		-- 77, -- wheel rollAngle
+		51, -- landing lights
+		77, -- wheel rollAngle
 		83, -- formation lights
 		-- 99, -- front pilot up down
 		101, -- wheel rolling
 		102, -- wheel rolling
 		103, -- wheel rolling
-		-- 114, -- canopy
+		114, -- canopy
 		190, -- nav light
 		191, -- nav light
 		192, -- strobe light
@@ -105,7 +105,7 @@ A_29B =  {
 
 		
     index       =  WSTYPE_PLACEHOLDER;
-	attribute  	= {wsType_Air, wsType_Airplane, wsType_Fighter, WSTYPE_PLACEHOLDER ,A_29B,"Fighters", "Refuelable",},
+	attribute  	= {wsType_Air, wsType_Airplane, wsType_Fighter, WSTYPE_PLACEHOLDER , "Fighters", "Refuelable",},
 	Categories	= {"{78EFB7A2-FD52-4b57-A6A6-3BF0E1D6555F}", "Interceptor",},	
 	    M_empty									=	3356,  -- kg
 		M_nominal								=	3900,  -- kg  -- kg ~ %50 fuel, combat load
@@ -115,7 +115,7 @@ A_29B =  {
 		H_max									=	10668 , -- m
 
 		average_fuel_consumption 	= 0.302, -- this is highly relative, but good estimates are 36-40l/min = 28-31kg/min = 0.47-0.52kg/s -- 45l/min = 35kg/min = 0.583kg/s
-        defFuelRatio    			= 0.68, -- топливо по умолчанию в долях от полного
+        defFuelRatio    			= 0.68, -- default fuel in shares from complete
 		CAS_min 					= 53, -- if this is not OVERAL FLIGHT TIME, but jus LOITER TIME, than it sholud be 10-15 minutes.....CAS capability in minute (for AI)
 		V_opt 						= 240/1.944,-- Cruise speed (for AI) –- Assume Mach 0.80 at 20000 ft as optimal. See -- http://www.nasa.gov/centers/dryden/pdf/87789main_H-636.pdf and		–- http://www.hochwarth.com/misc/AviationCalculator.html 		–- Mach 0.8 at 20000 = XXX kts TAS = XXX m / s
 		V_take_off 					= 120/1.944, -- Take off speed in m/s (for AI)
@@ -136,13 +136,14 @@ A_29B =  {
 
 		main_gear_pos 				= 	{-0.66,	-2.13,	1.813}, --{-1,	-2.03,	2.},
 		nose_gear_pos 				= 	{2.544, -2.184,  0}, --{2.808,	-2.09,	0},
+		wheel_steering_angle_max	=   math.rad(20), -- radians
 		tand_gear_max				=	0.363970234, -- tangent of degrees of rotation max of nose wheel steering
 
 		nose_gear_amortizer_direct_stroke        = 0.00,    -- down from nose_gear_pos !!!
 		nose_gear_amortizer_reversal_stroke      = -0.156,   -- up
 		nose_gear_amortizer_normal_weight_stroke = -0.056,   
 		main_gear_amortizer_direct_stroke        = 0.00,     -- down from main_gear_pos !!!
-		main_gear_amortizer_reversal_stroke      = -0.156,   -- up
+		main_gear_amortizer_reversal_stroke      = -0.356,   -- up
 		main_gear_amortizer_normal_weight_stroke = -0.056,   
 
 		nose_gear_wheel_diameter	=	0.433, --in m
@@ -153,7 +154,7 @@ A_29B =  {
 		wing_area 					= 19.4, -- wing area in m2
 		wing_span 					= 11.135, -- wing span in m
 		wing_chord					= 1.82,
-		wing_type 					= 0,
+		wing_type 					= 0, -- 0 = Fixed wing, 1 = Variable geometry, 2 = Fold-able wing
 
 		thrust_sum_max 				= 17000, -- thrust in kg (44kN)
 		thrust_sum_ab 				= 17000, -- thrust inkg (71kN)
@@ -166,8 +167,8 @@ A_29B =  {
 		IR_emission_coeff_ab 		= 0.1, -- With afterburner
 		wing_tip_pos 				= {-0.39, -0.412,     5.591}, -- wingtip coords for visual effects
 		brakeshute_name 			= 0, -- Landing - brake chute visual shape after separation
-		flaps_transmission							=	"Electrical",
-		undercarriage_transmission					=	"Hydraulic",
+		flaps_transmission			= "Electrical",
+		undercarriage_transmission	= "Hydraulic",
 
 		-- The following is used for graphical AB effects
 		engines_count				= 1, -- Engines count
@@ -253,7 +254,7 @@ A_29B =  {
 		HumanRadio = {
 			frequency     = 124.0, -- onboard radio, default DCSW frequency, chnl 0
 			editable     = true,
-			minFrequency     = 30.000,
+			minFrequency     = 108.000,
 			maxFrequency     = 399.975,
 			rangeFrequency = {
 				{min = 30.0,  max = 87.975},
@@ -264,9 +265,12 @@ A_29B =  {
 		
 		panelRadio = {
 			[1] = {
-				name = _("AN/ARC-150(V)-2"), --UHF
+				name = _("V/UHF COM1 XT-6013"),
 				range = {
-					{min = 225.0, max = 399.975}
+					{min = 108.0, max = 117.975},
+					{min = 118.0, max = 136.99167},
+					{min = 137.0, max = 173.975},
+					{min = 225.0, max = 399.975},
 				},
 				channels = {
 					[1] = { name = _("Channel 1"), default = 225.0, modulation = _("AM")}, -- default
@@ -279,23 +283,16 @@ A_29B =  {
 					[8] = { name = _("Channel 8"), default = 257.0, modulation = _("AM")},
 					[9] = { name = _("Channel 9"), default = 253.0, modulation = _("AM")},
 					[10] = { name = _("Channel 10"), default = 263.0, modulation = _("AM")},
-					[11] = { name = _("Channel 11"), default = 267.0, modulation = _("AM")},
-					[12] = { name = _("Channel 12"), default = 254.0, modulation = _("AM")},
-					[13] = { name = _("Channel 13"), default = 264.0, modulation = _("AM")},
-					[14] = { name = _("Channel 14"), default = 266.0, modulation = _("AM")},
-					[15] = { name = _("Channel 15"), default = 265.0, modulation = _("AM")},
-					[16] = { name = _("Channel 16"), default = 252.0, modulation = _("AM")},
-					[17] = { name = _("Channel 17"), default = 268.0, modulation = _("AM")},
-					[18] = { name = _("Channel 18"), default = 269.0, modulation = _("AM")},
-					[19] = { name = _("Channel 19"), default = 268.0, modulation = _("AM")},
-					[20] = { name = _("Channel 20"), default = 269.0, modulation = _("AM")},
 				}
 			},
 			[2] = {
-				name = _("SRT-651/N"), --VHF/UHF
-				range = {{min = 30.0, max = 88.0},
-						 {min = 108.0, max = 174.0},
-						 {min = 225.0, max = 399.975}},
+				name = _("V/UHF COM1 XT-6313D"), --VHF/UHF
+				range = {
+					{min = 108.0, max = 117.975},
+					{min = 118.0, max = 136.99167},
+					{min = 137.0, max = 173.975},
+					{min = 225.0, max = 399.975},
+				},
 				channels = {
 					[1] = { name = _("Channel 1"), default = 225.0, connect = true}, -- default
 					[2] = { name = _("Channel 2"), default = 258.0},
@@ -307,70 +304,11 @@ A_29B =  {
 					[8] = { name = _("Channel 8"), default = 257.0},
 					[9] = { name = _("Channel 9"), default = 253.0},
 					[10] = { name = _("Channel 10"), default = 263.0},
-					[11] = { name = _("Channel 11"), default = 267.0},
-					[12] = { name = _("Channel 12"), default = 254.0},
-					[13] = { name = _("Channel 13"), default = 264.0},
-					[14] = { name = _("Channel 14"), default = 266.0},
-					[15] = { name = _("Channel 15"), default = 265.0},
-					[16] = { name = _("Channel 16"), default = 252.0},
-					[17] = { name = _("Channel 17"), default = 268.0},
-					[18] = { name = _("Channel 18"), default = 269.0},
-					[19] = { name = _("Channel 19"), default = 268.0},
-					[20] = { name = _("Channel 20"), default = 269.0},
-					[21] = { name = _("Channel 21"), default = 225.0},
-					[22] = { name = _("Channel 22"), default = 258.0},
-					[23] = { name = _("Channel 23"), default = 260.0},
-					[24] = { name = _("Channel 24"), default = 270.0},
-					[25] = { name = _("Channel 25"), default = 255.0},
-					[26] = { name = _("Channel 26"), default = 259.0},
-					[27] = { name = _("Channel 27"), default = 262.0},
-					[28] = { name = _("Channel 28"), default = 257.0},
-					[29] = { name = _("Channel 29"), default = 253.0},
-					[30] = { name = _("Channel 30"), default = 263.0},
 				}
 			},
 		},
 	
-		-- HumanRadio = {
-		-- 	frequency = 254.0, -- Maykop (Caucasus) or Nellis (NTTR)
-		-- 	editable = true,
-		-- 	minFrequency = 225.000,
-		-- 	maxFrequency = 399.900,
-		-- 	modulation = MODULATION_AM
-		-- },
 
-		-- panelRadio = {
-		-- 	[1] = {
-		-- 		name = _("AN/ARC-51A"),
-		-- 		range = {
-		-- 			{min = 225.0, max = 399.9}
-		-- 		},
-		-- 		channels = {  -- matches L-39C except for channel 8, which was changed to a Georgian airport and #20 which is NTTR only (for now).  This radio goes 1-20 not 0-19.
-		-- 			[1] = { name = _("Channel 1"),		default = 264.0, modulation = _("AM"), connect = true}, -- mineralnye-vody (URMM) : 264.0
-		-- 			[2] = { name = _("Channel 2"),		default = 265.0, modulation = _("AM")},	-- nalchik (URMN) : 265.0
-		-- 			[3] = { name = _("Channel 3"),		default = 256.0, modulation = _("AM")},	-- sochi-adler (URSS) : 256.0
-		-- 			[4] = { name = _("Channel 4"),		default = 254.0, modulation = _("AM")},	-- maykop-khanskaya (URKH), nellis (KLSV) : 254.0
-		-- 			[5] = { name = _("Channel 5"),		default = 250.0, modulation = _("AM")},	-- anapa (URKA) : 250.0
-		-- 			[6] = { name = _("Channel 6"),		default = 270.0, modulation = _("AM")},	-- beslan (URMO) : 270.0
-		-- 			[7] = { name = _("Channel 7"),		default = 257.0, modulation = _("AM")},	-- krasnodar-pashkovsky (URKK) : 257.0
-		-- 			[8] = { name = _("Channel 8"),		default = 258.0, modulation = _("AM")},	-- sukhumi-babushara (UGSS) : 255.0
-		-- 			[9] = { name = _("Channel 9"),		default = 262.0, modulation = _("AM")},	-- kobuleti (UG5X) : 262.0
-		-- 			[10] = { name = _("Channel 10"),	default = 259.0, modulation = _("AM")},	-- gudauta (UG23) : 259.0
-		-- 			[11] = { name = _("Channel 11"),	default = 268.0, modulation = _("AM")},	-- tbilisi-soganlug (UG24) : 268.0
-		-- 			[12] = { name = _("Channel 12"),	default = 269.0, modulation = _("AM")},	-- tbilisi-vaziani (UG27) : 269.0
-		-- 			[13] = { name = _("Channel 13"),	default = 260.0, modulation = _("AM")},	-- batumi (UGSB) : 260.0
-		-- 			[14] = { name = _("Channel 14"),	default = 263.0, modulation = _("AM")},	-- kutaisi-kopitnari (UGKO) : 263.0
-		-- 			[15] = { name = _("Channel 15"),	default = 261.0, modulation = _("AM")},	-- senaki-kolkhi (UGKS) :  261.0
-		-- 			[16] = { name = _("Channel 16"),	default = 267.0, modulation = _("AM")},	-- tbilisi-lochini (UGTB) : 267.0
-		-- 			[17] = { name = _("Channel 17"),	default = 251.0, modulation = _("AM")},	-- krasnodar-center (URKI), creech (KINS) : 251.0
-		-- 			[18] = { name = _("Channel 18"),	default = 253.0, modulation = _("AM")},	-- krymsk (URKW), mccarran (KLAS) : 253.0
-		-- 			[19] = { name = _("Channel 19"),	default = 266.0, modulation = _("AM")},	-- mozdok (XRMF) : 266.0
-		-- 			[20] = { name = _("Channel 20"),	default = 252.0, modulation = _("AM")}, -- N/A, groom lake/homey (KXTA) : 252.0
-		-- 		}
-		-- 	},
-		-- },
-	
-		
 		-- Countermeasures
 		SingleChargeTotal = 60,
 		CMDS_Incrementation = 15,
@@ -617,7 +555,7 @@ A_29B =  {
 			-- B - Induced drag factor -- Polar quad coeff
 			-- B4 - Viscous drag factor --Polar 4th power coeff
 			-- Omxmax - Roll rate - roll rate, rad/s
-			-- Aldop - Visual effects settings for stability / controlability -- Alfadop Max AOA at current M - departure threshold
+			-- Aldop - Stall AOA at current M
 			-- Cymax - Maximum coefficient of lift, corresponding to αstall -- Coefficient, lift, maximum possible (ignores other calculations if current Cy > Cymax)
 
 			-- Cold start sound.
@@ -631,17 +569,17 @@ A_29B =  {
 			-- This is necessary, since the SFM does not differentiate between different angles of attack, but has to take into account, that a plane at 15° AoA has a lot more drag than 
 			-- one at 1°AoA. The basic formula is 
 			-- CD = Cx0 + B * CL^2 + B4 * CL^4
-			-- CD is the "total" Drag at the given Speed, in NASA-Papers CD. Cx0 is drag at zero lift, in NASA-Papers 
-			-- CDmin. CL is Lift at given speeds, in NASA-Papers CL, which is once squared and once put to the 4th power for the formula. B on the other hand is also known as K which is 
+			-- CD is the "total" Drag at the given Speed, in NASA-Papers CD. Cx0 is drag at zero lift, in NASA-Papers CDmin.
+			-- CL is Lift at given speeds, in NASA-Papers CL, which is once squared and once put to the 4th power for the formula. B on the other hand is also known as K which is 
 			-- 1 / (pi * AR * e). pi needs no explanation, since it is the number pi. AR is the aspect-ratio of the wing which is AR = S^2 / A where S is the Wingspan and A is the wing area. 
+			-- e is the "Oswald Factor" or "wing-efficiency-factor" which is somewhere between 0.7 and 1.0. If you take 0.7 for landing speeds and take-off speeds, 
+			-- where flaps and gear is extended, you will be approx. right, for everything else 0.85 or 0.9 is a good guess.
 			-- So if you have a NASA-Report or something like that, the only unknown might be B4. If you solve the equation for B4 it looks like this:
 			-- B4 = (-Cx0 - B * CL^2 + CD) / CL^4
 			-- CL = Cy0 + AoA * Cya
 			-- When angle-of-attack (a) is below Aldop:
 			-- Cy(M,a) = Cy0 + Cya(M)*a
 			-- in other words B4 = (-CDmin - (1 / pi * AR * e) * CL^2 + CD) / CL^4
-			-- Before I forget it, e is the "Oswald Factor" or "wing-efficiency-factor" which is somewhere between 0.7 and 1.0. If you take 0.7 for landing speeds and take-off speeds, 
-			-- where flaps and gear is extended, you will be approx. right, for everything else 0.85 or 0.9 is a good guess.
 			-- Just thought about B and B4 a bit more and forgot that you have to add wave-drag for those speeds, where the wing is supersonic. 
 			-- Wave-Drag = CDwave = a * ((Mach / Mach-crit) - 1)^b. Now comes the problem what is "a" and "b"? 
 			-- From this: https://www.fzt.haw-hamburg.de/pers/Scholz/HOOU/AircraftDesign_13_Drag.pdf you could see, that a and b are given (or already calculated) for a few aircrafts. 
@@ -698,7 +636,7 @@ A_29B =  {
 			prop_pitch_min		= 23.0,	-- prop pitch min, degrees 
 			prop_pitch_max		= 65.0,	-- prop pitch max, degrees 
 			prop_pitch_feather	= 80.0,	-- prop pitch feather position, degrees if feather < prop_pitch_max no feathering available
-			Nominal_RPM = 2000,
+			Nominal_RPM = 30000,
 			Nominal_Fan_RPM = 2000,
 			Startup_RPMs = {
 				{0.0, 0},
@@ -714,119 +652,117 @@ A_29B =  {
 			table_data = {
 			-- Pmax - total thrust in Mil Pwr in Newtons for all engines
 			-- Pfor - total thrust in AB in Newtons for all engines
-			--   M		Pmax		 Pfor
-			{0.0,		16620.0},
-			{0.1,		15600.0},
-			{0.2,		14340.0},
-			{0.3,		13320.0},
-			{0.4,		12230.0},
-			{0.5,		11300.0},
-			{0.6,		10600.0},
-			{0.7,		10050.0},
-			{0.8,		 9820.0},
-			{0.9,		 5902.0},
-			{1.0,		 3469.0}
-		}, -- end of table_data
+			--   	M		Pmax		 Pfor
+				{0.0,		16620.0},
+				{0.1,		15600.0},
+				{0.2,		14340.0},
+				{0.3,		13320.0},
+				{0.4,		12230.0},
+				{0.5,		11300.0},
+				{0.6,		10600.0},
+				{0.7,		10050.0},
+				{0.8,		 9820.0},
+				{0.9,		 5902.0},
+				{1.0,		 3469.0}
+			},
 			-- M - Mach number
 			-- Pmax - Engine thrust at military power
 			-- Pfor - Engine thrust at AFB
 
-            extended =
-                {
-					thrust_max = -- thrust interpolation table by altitude and mach number, 2d table
-					{ -- Minimum thrust 2000 kN, maximum thrust 16700 kN
-						M 		 = {0/666.739,100/666.739,120/666.739,140/666.739,160/666.739,200/666.739,220/666.739,280/666.739,320/666.739,400/666.739},
-						H		 = {0,3048,6096,9144,10500,12192},
-						thrust	 = {--KCAS 0       100      120      140      160     200     220     280      320     400
-									{    17000,   17000,   17000,   17000,   17000,  17000,  17000,  17000,   16925,  17000 },--H = 0 (sea level)
-									{    16000,   16000,   16000,   16000,   16000,  16000,  16000,  16000,   16000,  16000 },--H = 3048 (10kft)
-									{    11500,   11500,   11500,   11500,   11500,  11500,  11500,  11500,   11500,  11500 },--H = 6096 (20kft)
-									{     7000,    7000,    7000,    7000,    7000,   7000,   7000,   7000,    7000,   7000 },--H = 9144 (30kft)
-									{     5000,    5000,    5000,    5000,    5000,   5000,   5000,   5000,    5000,   5000 },--H = 10500 (34kft)
-									{     5000,    5000,    5000,    5000,    5000,   5000,   5000,   5000,    5000,   5000 },--H = 12192 (40kft)
+			extended = {
+				thrust_max = -- thrust interpolation table by altitude and mach number, 2d table
+				{ -- Minimum thrust 2000 kN, maximum thrust 16700 kN
+					M 		 = {0/666.739,100/666.739,120/666.739,140/666.739,160/666.739,200/666.739,220/666.739,280/666.739,320/666.739,400/666.739},
+					H		 = {0,3048,6096,9144,10500,12192},
+					thrust	 = {--KCAS 0       100      120      140      160     200     220     280      320     400
+								{    17000,   17000,   17000,   17000,   17000,  17000,  17000,  17000,   16925,  17000 },--H = 0 (sea level)
+								{    16000,   16000,   16000,   16000,   16000,  16000,  16000,  16000,   16000,  16000 },--H = 3048 (10kft)
+								{    11500,   11500,   11500,   11500,   11500,  11500,  11500,  11500,   11500,  11500 },--H = 6096 (20kft)
+								{     7000,    7000,    7000,    7000,    7000,   7000,   7000,   7000,    7000,   7000 },--H = 9144 (30kft)
+								{     5000,    5000,    5000,    5000,    5000,   5000,   5000,   5000,    5000,   5000 },--H = 10500 (34kft)
+								{     5000,    5000,    5000,    5000,    5000,   5000,   5000,   5000,    5000,   5000 },--H = 12192 (40kft)
+								
+					},
+				},
+
+
+				TSFC_max =  -- thrust specific fuel consumption by altitude and Mach number for RPM  100%, 2d table
+				{			-- factor = kg/h /2000
+					M 		 = {0/666.739, 140/666.739, 160/666.739, 200/666.739, 220/666.739, 260/666.739, 300/666.739},
+					H		 = {0, 1524, 3048, 4572, 6096, 7620, 9144},
+					TSFC	 = {-- KT 0      	140     	160			200     	220 		260		300--0.1264
+								{   150/1800,  195/1800,  205/1800,    243/1800,  271/1800, 347/1800, 380/1800},--H = 0       -- SL
+								{   140/1800,  180/1800,  188/1800,    218/1800,  240/1800, 300/1800, 360/1800},--H = 1524    -- 5000' 
+								{   130/1800,  152/1800,  175/1800,    195/1800,  215/1800, 268/1800, 330/1800},--H = 3048    -- 10000'
+								{   120/1800,  120/1800,  160/1800,    177/1800,  191/1800, 234/1800, 285/1800},--H = 4572    -- 15000'
+								{   115/1800,  115/1800,  135/1800,    165/1800,  175/1800, 210/1800, 250/1800},--H = 6096    -- 20000'
+								{   110/1800,  110/1800,  110/1800,    160/1800,  165/1800, 195/1800, 210/1800},--H = 7620    -- 25000'
+								{   110/1800,  110/1800,  110/1800,    152/1800,  165/1800, 175/1800, 175/1800},--H = 9144    -- 30000'
+					}
+				},
+
+				-- TSFC_afterburner =  -- thrust specific fuel consumption by altitude and Mach number for RPM  100%, 2d table
+				-- {			-- factor = kg/h /2000
+				--  M 		 = {0/666.739, 140/666.739, 160/666.739, 200/666.739, 220/666.739, 260/666.739, 300/666.739},
+				-- 	H		 = {0, 1524, 3048, 4572, 6096, 7620, 9144},
+				-- 	TSFC	 = {-- KT 0      	140     	160			200     	220 		260		300--0.1264
+				-- 				{   150/1800,  195/1800,  205/1800,    243/1800,  271/1800, 347/1800, 380/1800},--H = 0       -- SL
+				-- 				{   140/1800,  180/1800,  188/1800,    218/1800,  240/1800, 300/1800, 360/1800},--H = 1524    -- 5000' 
+				-- 				{   130/1800,  152/1800,  175/1800,    195/1800,  215/1800, 268/1800, 330/1800},--H = 3048    -- 10000'
+				-- 				{   120/1800,  120/1800,  160/1800,    177/1800,  191/1800, 234/1800, 285/1800},--H = 4572    -- 15000'
+				-- 				{   115/1800,  115/1800,  135/1800,    165/1800,  175/1800, 210/1800, 250/1800},--H = 6096    -- 20000'
+				-- 				{   110/1800,  110/1800,  110/1800,    160/1800,  165/1800, 195/1800, 210/1800},--H = 7620    -- 25000'
+				-- 				{   110/1800,  110/1800,  110/1800,    152/1800,  165/1800, 175/1800, 175/1800},--H = 9144    -- 30000'
+				-- 	}
+				-- },
+
+					TSFC_throttle_responce =  -- correction to TSFC for different engine RPM, 1d table
+					{
+						RPM = {0, 70, 80, 90, 100},
+						K   = {1,  1,  1,  1,   1},
+					},
+
+					-- thrust_afterburner =  -- thrust interpolation table by altitude and mach number, 2d table
+					-- { -- Minimum thrust 2000 kN, maximum thrust 16700 kN
+					--     M 		 = {0*666.739,100*666.739,120*666.739,140*666.739,160*666.739,200*666.739,220*666.739,280*666.739,320*666.739,400*666.739},
+					--     H		 = {0,3048,6096,9144,10500,12192},
+					--     thrust	 = {--KCAS 0       100      120      140      160     200     220     280      320     400
+					--                 {    17000,   17000,   17000,   17000,   17000,  17000,  17000,  17000,   16925,  17000 },--H = 0 (sea level)
+					--                 {    16000,   16000,   16000,   16000,   16000,  16000,  16000,  16000,   16000,  16000 },--H = 3048 (10kft)
+					--                 {    11500,   11500,   11500,   11500,   11500,  11500,  11500,  11500,   11500,  11500 },--H = 6096 (20kft)
+					--                 {     7000,    7000,    7000,    7000,    7000,   7000,   7000,   7000,    7000,   7000 },--H = 9144 (30kft)
+					--                 {     5000,    5000,    5000,    5000,    5000,   5000,   5000,   5000,    5000,   5000 },--H = 10500 (34kft)
+					-- 				{     5000,    5000,    5000,    5000,    5000,   5000,   5000,   5000,    5000,   5000 },--H = 12192 (40kft)
 									
-						},
-					},
-
-
-					TSFC_max =  -- thrust specific fuel consumption by altitude and Mach number for RPM  100%, 2d table
-					{			-- factor = kg/h /2000
-						M 		 = {0/666.739, 140/666.739, 160/666.739, 200/666.739, 220/666.739, 260/666.739, 300/666.739},
-						H		 = {0, 1524, 3048, 4572, 6096, 7620, 9144},
-						TSFC	 = {-- KT 0      	140     	160			200     	220 		260		300--0.1264
-									{   150/1800,  195/1800,  205/1800,    243/1800,  271/1800, 347/1800, 380/1800},--H = 0       -- SL
-									{   140/1800,  180/1800,  188/1800,    218/1800,  240/1800, 300/1800, 360/1800},--H = 1524    -- 5000' 
-									{   130/1800,  152/1800,  175/1800,    195/1800,  215/1800, 268/1800, 330/1800},--H = 3048    -- 10000'
-									{   120/1800,  120/1800,  160/1800,    177/1800,  191/1800, 234/1800, 285/1800},--H = 4572    -- 15000'
-									{   115/1800,  115/1800,  135/1800,    165/1800,  175/1800, 210/1800, 250/1800},--H = 6096    -- 20000'
-									{   110/1800,  110/1800,  110/1800,    160/1800,  165/1800, 195/1800, 210/1800},--H = 7620    -- 25000'
-									{   110/1800,  110/1800,  110/1800,    152/1800,  165/1800, 175/1800, 175/1800},--H = 9144    -- 30000'
-						}
-					},
-
-					-- TSFC_afterburner =  -- thrust specific fuel consumption by altitude and Mach number for RPM  100%, 2d table
-					-- {			-- factor = kg/h /2000
-					--  M 		 = {0/666.739, 140/666.739, 160/666.739, 200/666.739, 220/666.739, 260/666.739, 300/666.739},
-					-- 	H		 = {0, 1524, 3048, 4572, 6096, 7620, 9144},
-					-- 	TSFC	 = {-- KT 0      	140     	160			200     	220 		260		300--0.1264
-					-- 				{   150/1800,  195/1800,  205/1800,    243/1800,  271/1800, 347/1800, 380/1800},--H = 0       -- SL
-					-- 				{   140/1800,  180/1800,  188/1800,    218/1800,  240/1800, 300/1800, 360/1800},--H = 1524    -- 5000' 
-					-- 				{   130/1800,  152/1800,  175/1800,    195/1800,  215/1800, 268/1800, 330/1800},--H = 3048    -- 10000'
-					-- 				{   120/1800,  120/1800,  160/1800,    177/1800,  191/1800, 234/1800, 285/1800},--H = 4572    -- 15000'
-					-- 				{   115/1800,  115/1800,  135/1800,    165/1800,  175/1800, 210/1800, 250/1800},--H = 6096    -- 20000'
-					-- 				{   110/1800,  110/1800,  110/1800,    160/1800,  165/1800, 195/1800, 210/1800},--H = 7620    -- 25000'
-					-- 				{   110/1800,  110/1800,  110/1800,    152/1800,  165/1800, 175/1800, 175/1800},--H = 9144    -- 30000'
-					-- 	}
+					--     },
 					-- },
 
-						TSFC_throttle_responce =  -- correction to TSFC for different engine RPM, 1d table
-						{
-							RPM = {0, 70, 80, 90, 100},
-							K   = {1,  1,  1,  1,   1},
-						},
+					rpm_acceleration_time_factor = -- time factor for engine governor  ie RPM += (desired_RPM - RPM ) * t(RPM) * dt
+					{
+						RPM  = {0, 50, 100},
+						t    = {0.9,0.9,0.9}
+					},
 
-						-- thrust_afterburner =  -- thrust interpolation table by altitude and mach number, 2d table
-                        -- { -- Minimum thrust 2000 kN, maximum thrust 16700 kN
-                        --     M 		 = {0*666.739,100*666.739,120*666.739,140*666.739,160*666.739,200*666.739,220*666.739,280*666.739,320*666.739,400*666.739},
-                        --     H		 = {0,3048,6096,9144,10500,12192},
-                        --     thrust	 = {--KCAS 0       100      120      140      160     200     220     280      320     400
-                        --                 {    17000,   17000,   17000,   17000,   17000,  17000,  17000,  17000,   16925,  17000 },--H = 0 (sea level)
-                        --                 {    16000,   16000,   16000,   16000,   16000,  16000,  16000,  16000,   16000,  16000 },--H = 3048 (10kft)
-                        --                 {    11500,   11500,   11500,   11500,   11500,  11500,  11500,  11500,   11500,  11500 },--H = 6096 (20kft)
-                        --                 {     7000,    7000,    7000,    7000,    7000,   7000,   7000,   7000,    7000,   7000 },--H = 9144 (30kft)
-                        --                 {     5000,    5000,    5000,    5000,    5000,   5000,   5000,   5000,    5000,   5000 },--H = 10500 (34kft)
-						-- 				{     5000,    5000,    5000,    5000,    5000,   5000,   5000,   5000,    5000,   5000 },--H = 12192 (40kft)
-                                        
-                        --     },
-                        -- },
+					--rpm_deceleration_time_factor = -- time factor for engine governor
+					--{
+					--	RPM  = {0, 50, 100},
+					--	t    = {0.3,0.3,0.3}
+					--},
 
-						--rpm_acceleration_time_factor = -- time factor for engine governor  ie RPM += (desired_RPM - RPM ) * t(RPM) * dt
-						--{
-						--	RPM  = {0, 50, 100},
-						--	t    = {0.3,0.3,0.3}
-						--},
-
-						--rpm_deceleration_time_factor = -- time factor for engine governor
-						--{
-						--	RPM  = {0, 50, 100},
-						--	t    = {0.3,0.3,0.3}
-						--},
-						rpm_throttle_responce = -- required RPM according to throttle position
-						{
-							throttle = {0, 0.1, 0.55,  1.0},
-							RPM      = {64.6, 84, 92, 100},
-						},
+					rpm_throttle_responce = -- required RPM according to throttle position
+					{
+						throttle = {0, 0.1, 0.55,  1.0},
+						RPM      = {64.6, 84, 92, 100},
+					},
 
 
-						thrust_rpm_responce = -- thrust = K(RPM) * thrust_max(M,H)
-						{
-							RPM = {0, 64.6, 84,   100},
-							K   = {0, 0.00, 0.1,  1},
-						},
+					thrust_rpm_responce = -- thrust = K(RPM) * thrust_max(M,H)
+					{
+						RPM = {0, 64.6, 84,   100},
+						K   = {0, 0.00, 0.1,  1},
+					},
 
-                }, -- end of extended data
-
-           
+			}, -- end of extended data
 		}, -- end of engine
 
 		-- engine_data = {
@@ -860,47 +796,6 @@ A_29B =  {
 			wCtrl     = 150
 		},
     },
-	--damage , index meaning see in  Scripts\Aircrafts\_Common\Damage.lua
-	Damage = {
-		[0]		= {critical_damage = 5, args = {146}},
-		[3]		= {critical_damage = 20,args = {65}}  ,
-		[4]		= {critical_damage = 20, args = {150}},
-		[5]		= {critical_damage = 20, args = {147}},
-		[7]		= {critical_damage = 4, args = {249}} ,
-		[9]		= {critical_damage = 3, args = {154}},
-		[10]	= {critical_damage = 3, args = {153}},
-		[11]	= {critical_damage = 3, args = {167}},
-		[12]	= {critical_damage = 3, args = {161}},
-		[15]	= {critical_damage = 5, args = {267}},
-		[16]	= {critical_damage = 5, args = {266}},
-		[23]	= {critical_damage = 8, args = {223}, deps_cells = {25}},
-		[24]	= {critical_damage = 8, args = {213}, deps_cells = {26, 60}},
-		[25]	= {critical_damage = 3, args = {226}},
-		[26]	= {critical_damage = 3, args = {216}},
-		[29]	= {critical_damage = 9, args = {224}, deps_cells = {31, 25, 23}},
-		[30]	= {critical_damage = 9, args = {214}, deps_cells = {32, 26, 24, 60}},
-		[31]	= {critical_damage = 4, args = {229}},
-		[32]	= {critical_damage = 4, args = {219}},
-		[35]	= {critical_damage = 10, args = {225}, deps_cells = {29, 31, 25, 23}},
-		[36]	= {critical_damage = 10, args = {215}, deps_cells = {30, 32, 26, 24, 60}} ,
-		[37]	= {critical_damage = 4, args = {227}},
-		[38]	= {critical_damage = 4, args = {217}},
-		[39]	= {critical_damage = 7,	args = {244}, deps_cells = {53}},
-		[40]	= {critical_damage = 7, args = {241}, deps_cells = {54}},
-		[45]	= {critical_damage = 9, args = {235}, deps_cells = {39, 51, 53}},
-		[46]	= {critical_damage = 9, args = {233}, deps_cells = {40, 52, 54}},
-		[51]	= {critical_damage = 3, args = {239}},
-		[52]	= {critical_damage = 3, args = {237}},
-		[53]	= {critical_damage = 3, args = {248}},
-		[54]	= {critical_damage = 3, args = {247}},
-		[55]	= {critical_damage = 20, args = {81}, deps_cells = {39, 40, 45, 46, 51, 52, 53, 54}},
-		[59]	= {critical_damage = 5, args = {148}},
-		[60]	= {critical_damage = 1, args = {144}},
-
-		[83]	= {critical_damage = 3, args = {134}} ,-- nose wheel
-		[84]	= {critical_damage = 3, args = {136}}, -- left wheel
-		[85]	= {critical_damage = 3, args = {135}} ,-- right wheel
-	},
 
 	DamageParts = 
 	{  
@@ -923,6 +818,48 @@ A_29B =  {
 		{ id = 'mfd',  		label = _('MFD'), 		enable = false, hh = 0, mm = 0, mmint = 1, prob = 100 },		
 	},
 
+		--damage , index meaning see in  Scripts\Aircrafts\_Common\Damage.lua
+		Damage = {
+			[0]		= {critical_damage = 5, args = {146}},
+			[3]		= {critical_damage = 20,args = {65}}  ,
+			[4]		= {critical_damage = 20, args = {150}},
+			[5]		= {critical_damage = 20, args = {147}},
+			[7]		= {critical_damage = 4, args = {249}} ,
+			[9]		= {critical_damage = 3, args = {154}},
+			[10]	= {critical_damage = 3, args = {153}},
+			[11]	= {critical_damage = 3, args = {167}},
+			[12]	= {critical_damage = 3, args = {161}},
+			[15]	= {critical_damage = 5, args = {267}},
+			[16]	= {critical_damage = 5, args = {266}},
+			[23]	= {critical_damage = 8, args = {223}, deps_cells = {25}},
+			[24]	= {critical_damage = 8, args = {213}, deps_cells = {26, 60}},
+			[25]	= {critical_damage = 3, args = {226}},
+			[26]	= {critical_damage = 3, args = {216}},
+			[29]	= {critical_damage = 9, args = {224}, deps_cells = {31, 25, 23}},
+			[30]	= {critical_damage = 9, args = {214}, deps_cells = {32, 26, 24, 60}},
+			[31]	= {critical_damage = 4, args = {229}},
+			[32]	= {critical_damage = 4, args = {219}},
+			[35]	= {critical_damage = 10, args = {225}, deps_cells = {29, 31, 25, 23}},
+			[36]	= {critical_damage = 10, args = {215}, deps_cells = {30, 32, 26, 24, 60}} ,
+			[37]	= {critical_damage = 4, args = {227}},
+			[38]	= {critical_damage = 4, args = {217}},
+			[39]	= {critical_damage = 7,	args = {244}, deps_cells = {53}},
+			[40]	= {critical_damage = 7, args = {241}, deps_cells = {54}},
+			[45]	= {critical_damage = 9, args = {235}, deps_cells = {39, 51, 53}},
+			[46]	= {critical_damage = 9, args = {233}, deps_cells = {40, 52, 54}},
+			[51]	= {critical_damage = 3, args = {239}},
+			[52]	= {critical_damage = 3, args = {237}},
+			[53]	= {critical_damage = 3, args = {248}},
+			[54]	= {critical_damage = 3, args = {247}},
+			[55]	= {critical_damage = 20, args = {81}, deps_cells = {39, 40, 45, 46, 51, 52, 53, 54}},
+			[59]	= {critical_damage = 5, args = {148}},
+			[60]	= {critical_damage = 1, args = {144}},
+	
+			[83]	= {critical_damage = 3, args = {134}} ,-- nose wheel
+			[84]	= {critical_damage = 3, args = {136}}, -- left wheel
+			[85]	= {critical_damage = 3, args = {135}} ,-- right wheel
+		},
+	
 	lights_data = {
         typename = "collection",
         lights = {

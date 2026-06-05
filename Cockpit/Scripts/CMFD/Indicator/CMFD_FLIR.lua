@@ -34,7 +34,7 @@ local CMFD_BRIGHT = "CMFD"..tostring(CMFDNu).."_BRIGHT"
 
 -- FLIR Video
 
-local FLIR_Video = addTextureBox(nil, 2, 1.5, "CenterCenter", {0, aspect / 4}, nil, nil, "render_target_1");
+local FLIR_Video = addTextureBox(nil, 2, 1.5, "CenterCenter", {0, aspect / 4}, nil, nil, "render_target_"..string.format("%d",GetRenderTarget() + 1));
 FLIR_Video.element_params = {CMFD_BRIGHT, "FLIR_STATUS"}
 FLIR_Video.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1, 1}}
 

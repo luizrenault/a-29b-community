@@ -246,7 +246,7 @@ HUD_CCIP_ROCKET_origin.controllers = {
 }
 
 -- CCIP Rocket cue
-object = addStrokeCircle(nil, 16, {0,0}, HUD_CCIP_ROCKET_origin.name)
+object = addStrokeCircle(nil, 12, {0,0}, HUD_CCIP_ROCKET_origin.name)
 object.element_params = {"HUD_BRIGHT", "HUD_CCIP_PIPER_AZIMUTH", "HUD_CCIP_PIPER_ELEVATION"}
 object.controllers = {
 	{"opacity_using_parameter", 0}, 
@@ -254,6 +254,18 @@ object.controllers = {
 	{"move_up_down_using_parameter", 2, yScale},
 }
 object = addStrokeCircle(nil, 1, {0,0}, object.name)
+object = addStrokeCircle(nil, 16, {0,0}, object.name)
+object.controllers = {{"piper_range"}}
+object.init_rot = {90}
+
+local rocket_piper = object
+object = addPlaceholder(nil, {0, 0}, rocket_piper.name)
+object.init_rot = {-30-90}
+object = addStrokeLine(nil, 6, {0, 16}, 0, object.name)
+object = addPlaceholder(nil, {0, 0}, rocket_piper.name)
+object.init_rot = {-180-90}
+object = addStrokeLine(nil, 6, {0, 16}, 0, object.name)
+
 
 -- CCIP out of screen
 object = addStrokeSymbol(nil, {"a29b_stroke_symbols_HUD", "fpm-cross"}, "CenterCenter", {0, 0}, object.name)

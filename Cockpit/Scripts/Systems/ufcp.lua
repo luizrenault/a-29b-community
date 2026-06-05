@@ -343,28 +343,69 @@ function update()
     local ufcp_bright = get_cockpit_draw_argument_value(480)
     update_egir()
 
-    ufcp_com1_check()
-    ufcp_com2_check()
+    local radio1 = GetDevice(devices["VUHF1_RADIO"])
+    
+    if(not radio1:get_channel_mode()) then
+        if ufcp_com1_frequency_manual * 1e6 ~= radio1:get_set_frequency() then
+            ufcp_com1_frequency_manual = radio1:get_set_frequency() / 1e6
+        end
+    end
 
-    UFCP_COM1_FREQ:set(ufcp_com1_frequency)
-    UFCP_COM1_MOD:set(ufcp_com1_modulation)
-    UFCP_COM1_SQL:set(ufcp_com1_sql and 1 or 0)
-    UFCP_COM1_PWR:set(ufcp_com1_power)
-    if get_elec_emergency_ok() then 
-        UFCP_COM1_MODE:set(ufcp_com1_mode)
-    else
-        UFCP_COM1_MODE:set(0)
-    end    
+    UFCP_COM1_FREQ:set(radio1:get_frequency() / 1e6)
+    UFCP_COM1_MOD:set(radio1:get_modulation())
+    UFCP_COM1_SQL:set(radio1:get_squelch() and 1 or 0)
 
-    UFCP_COM2_FREQ:set(ufcp_com2_frequency)
-    UFCP_COM2_MOD:set(ufcp_com2_modulation)
-    UFCP_COM2_SQL:set(ufcp_com2_sql and 1 or 0)
-    UFCP_COM2_PWR:set(ufcp_com2_power)
-    if get_elec_avionics_ok() then
-        UFCP_COM2_MODE:set(ufcp_com2_mode)
+    local power = radio1:get_transmitter_power()
+    if power > 7 then
+        UFCP_COM1_PWR:set(UFCP_COM_POWER_IDS.HIGH)
+    elseif power > 3 then
+        UFCP_COM1_PWR:set(UFCP_COM_POWER_IDS.MED)
+    else 
+        UFCP_COM1_PWR:set(UFCP_COM_POWER_IDS.LOW)
+    end
+
+
+    if(radio1:is_on()) then
+        if radio1:get_guard_on_off() then
+            UFCP_COM1_MODE:set(UFCP_COM_MODE_IDS.TR_G)
+        else
+            UFCP_COM1_MODE:set(UFCP_COM_MODE_IDS.TR)
+        end
     else
-        UFCP_COM2_MODE:set(0)
-    end    
+        UFCP_COM1_MODE:set(UFCP_COM_MODE_IDS.OFF)
+    end
+
+    local radio2 = GetDevice(devices["VUHF2_RADIO"])
+
+    if(not radio2:get_channel_mode()) then
+        if ufcp_com2_frequency_manual * 1e6 ~= radio2:get_set_frequency() then
+            ufcp_com2_frequency_manual = radio2:get_set_frequency() / 1e6
+        end
+    end
+
+    UFCP_COM2_FREQ:set(radio2:get_frequency() / 1e6)
+    UFCP_COM2_MOD:set(radio2:get_modulation())
+    UFCP_COM2_SQL:set(radio2:get_squelch() and 1 or 0)
+
+
+    power = radio2:get_transmitter_power()
+    if power > 7 then
+        UFCP_COM2_PWR:set(UFCP_COM_POWER_IDS.HIGH)
+    elseif power > 3 then
+        UFCP_COM2_PWR:set(UFCP_COM_POWER_IDS.MED)
+    else 
+        UFCP_COM2_PWR:set(UFCP_COM_POWER_IDS.LOW)
+    end
+
+    if(radio2:is_on()) then
+        if radio2:get_guard_on_off() then
+            UFCP_COM2_MODE:set(UFCP_COM_MODE_IDS.TR_G)
+        else
+            UFCP_COM2_MODE:set(UFCP_COM_MODE_IDS.TR)
+        end
+    else
+        UFCP_COM2_MODE:set(UFCP_COM_MODE_IDS.OFF)
+    end
 
 
     if ufcp_on() then 
@@ -458,14 +499,10 @@ function update()
     -- UPDATE VUHF GUARD
     if get_vuhf_guard_on() then -- Should it only work when both MDPs are off?
         -- Set COM1 to 121.5
-        ufcp_com1_frequency_manual = 121.5
-        ufcp_com1_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
-        ufcp_com1_frequency = ufcp_com1_frequency_manual
+        radio1:set_frequency(121.5 * 1e6)
 
         -- Set COM2 to 243.0
-        ufcp_com2_frequency_manual = 243
-        ufcp_com2_frequency_sel = UFCP_COM_FREQUENCY_SEL_IDS.MAN
-        ufcp_com2_frequency = ufcp_com2_frequency_manual
+        radio2:set_frequency(243.0 * 1e6)
     end
 
     UFCP_NAV_MODE:set(ufcp_nav_mode)
@@ -495,7 +532,7 @@ function post_initialize()
     dev:performClickableAction(device_commands.UFCP_UFC, 1, true)
     dev:performClickableAction(device_commands.UFCP_DAY_NIGHT, 0, true)
 
-    flir_post_initialize()
+    post_initialize_flir()
 
     startup_print("ufcs: postinit end")
 end

@@ -1,17 +1,13 @@
 # DCS World A-29B Super Tucano
 
-This is a free, open source, SFM, A-29B independent module for DCS World. By independent it is meant that it does not require any other modules to work.
+This is a free open source EFM A-29B independent module for DCS World. By independent it is meant that it does not require any other modules to work.
 
-The development is in a very early stage, but the author has decided on releasing it in hopes it will help others on the implementation of modern aircraft systems using SFM.
+The development is in a very early stage, but the author has decided on releasing it in hopes it will help others on the implementation of modern aircraft systems using EFM/SFM.
 
-All aircraft systems are implemented in Lua and can be freely used in other non-paid DCS World Modules.
-
+All aircraft systems implemented in Lua can be freely used in other non-paid DCS World Modules.
+All aircraft systems implemented in C++ can be freely used in other non-paid public open-source DCS World Modules on request.
 
 # Download
-
-[Download Latest Release](https://github.com/luizrenault/a-29b-community/archive/refs/heads/main.zip)
-
-[Download Latest Release DLL only for DCS 2.8.3.37556 Open Beta](https://github.com/luizrenault/a-29b-community/raw/main/bin/avSimplest.dll) 
 
 [Livery Pack](https://mega.nz/file/UAxUmYAY#0PyL3pO6i5x2QTrBWEkE5LsqeKFW5IuSJG_Er42PAas)
 
@@ -49,6 +45,46 @@ All aircraft systems are implemented in Lua and can be freely used in other non-
 [A-29 Super Tucano](https://forums.eagle.ru/topic/265017-a-29-super-tucano/)
 
 # Changelog
+
+## Unreleased
+
+### Added
+- New CMFD HUD camera pages for the simplified FLIR display path.
+- New quick start mission.
+
+### Changes
+- FM and other upgrades for DCS 2.9.26.23303 compatibility.
+- Updated CMFD, FLIR, and MAP indicator wiring for the new render-target flow.
+- Moved flight model tuning into `FM/config.lua` and refreshed gear parameters.
+
+### Fixes
+- MAP page now renders visibly in cockpit.
+
+## Version 0.7.0 - 10 Sep 2024
+
+### Fixes
+- FLIR in DCS MT
+- FLIR camera position stutter
+
+### Added
+- Rocket CCIP cue distance indicator
+
+## Version 0.6.0 - 30 Oct 2023
+
+### Fixes
+- DCS 2.9.0.47168 Open Beta compatibility
+- Removed debug dialogs
+
+## Version 0.5.5 - 06 Mai 2023
+
+### Fixes
+- Engine response time.
+- Rudder and Elevator prop wash effect.
+
+## Version 0.5.4 - 23 Apr 2023
+
+### Added
+- External Flight Model.
 
 ## Version 0.5.3 - 18 Mar 2023
 

@@ -40,8 +40,6 @@ ufcp_navaids_adf_mode = ADF_MODE_IDS.ADF
 ADHSI_COURSE:set(ufcp_navaids_crs)
 ADHSI_ILS_FREQ:set(ufcp_navaids_ils)
 
-for i = 1,ufcp_com1_max_channel+1 do ufcp_com1_channels[i] = 118 end
-
 -- Methods
 
 local function is_adf_frequency(frequency)

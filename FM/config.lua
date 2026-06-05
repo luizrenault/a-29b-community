@@ -1,11 +1,12 @@
 debug = false
+nws = true
 
 
 --NOSEGEAR
 nose_amortizer_min_length 					= 0.00
-nose_amortizer_max_length 					= 0.156 --0.32
-nose_amortizer_basic_length 				= 0.056
-nose_amortizer_reduce_length 				= 0.01
+nose_amortizer_max_length 					= 0.25
+nose_amortizer_basic_length 				= 0.14
+nose_amortizer_reduce_length 				= 0.50
 
 
 nose_amortizer_spring_force_factor 			= 3.0e+06
@@ -25,10 +26,9 @@ nose_wheel_moment_of_inertia 				= 0.6
 
 --MAINGEAR2
 main_amortizer_min_length 					= 0.00
-main_amortizer_max_length 					= 0.156 --0.7
-main_amortizer_basic_length 				= 0.056 --0.7
---This is the length over which the amortizer will reduce. Smaller values mean higher ride height, larger values lower ride height.
-main_amortizer_reduce_length 				= 0.01  --yes you read that right, 28 metres.
+main_amortizer_max_length 					= 0.7 --0.7
+main_amortizer_basic_length 				= 0.7 --0.7
+main_amortizer_reduce_length 				= 0.00 
 
 -- F = kx^y, where x is the displacement from the default position (determined by the reduce length)
 --This is k in the above equation
@@ -45,20 +45,80 @@ main_amortizer_back_damper_force_factor 	= main_damper_force --Damping force in 
 
 main_damper_coeff 							= 100.0
 
-main_wheel_moment_of_inertia 				= 2.65
+main_wheel_moment_of_inertia 				= 3.6
 
-wheel_static_friction_factor_COMMON 		= 0.75
-wheel_side_friction_factor_COMMON 			= 0.6
-wheel_roll_friction_factor_COMMON 			= 0.04
-wheel_glide_friction_factor_COMMON 			= 0.15 --this needs to be low to go from standstill to moving smoothly
+wheel_static_friction_factor_COMMON 		= 0.71
+wheel_side_friction_factor_COMMON 			= 0.73 --affects the abillity to slide in turns - decrease for better turning
+wheel_roll_friction_factor_COMMON 			= 0.022
+wheel_glide_friction_factor_COMMON 			= 0.69 --this needs to be low to go from standstill to moving smoothly
 
-brake_moment_main 							= 5500.0
+brake_moment_main 							= 8000.0
 
 wheel_radius_factor 						= 1.0
 
 --Absolutely no idea what these do but they might be helpful.
 main_wheel_kz_factor					= 0.52
 main_noise_k							= 0.4
+
+
+local mainGear = {
+	--amortizer_min_length					= 0.0,
+	amortizer_max_length					= 0.19,
+	amortizer_basic_length					= 0.13,
+	amortizer_spring_force_factor			= 7.0e+7,
+	amortizer_spring_force_factor_rate		= 3.5,
+	amortizer_static_force					= 3500 * 9.81 * 1.0,
+	amortizer_reduce_length					= 0.01,
+	amortizer_direct_damper_force_factor	= 7.0e+4 * 0.75,
+	amortizer_back_damper_force_factor		= 7.0e+4,
+	allowable_hard_contact_length			= 0.01,
+
+	anti_skid_installed						= true,
+
+	crossover_locked_wheel_protection		= true,
+	crossover_locked_wheel_protection_speed_min	= 10.0,
+	anti_skid_improved						= true,
+	anti_skid_gain							= 0.5,
+	
+	wheel_radius							= 0.53,
+	wheel_static_friction_factor			= 0.71,
+	wheel_glide_friction_factor				= 0.69,
+	wheel_side_friction_factor				= 0.73,
+	wheel_roll_friction_factor				= 0.022,
+	wheel_damage_force_factor				= 250.0,
+	wheel_brake_moment_max					= 8000.0,
+	wheel_kz_factor							= 0.52,
+	noise_k									= 0.4,
+	wheel_damage_speedX						= 200.0,
+	wheel_damage_delta_speedX				= 50.0,
+}
+
+
+	-- spinner_tip_position = {3.594, -0.552, 0}
+	-- empty_cg_position = (spinner_tip_position[1] - 3.454) - 1.820 * 0.335
+	-- center_of_mass		=	{ empty_cg_position , spinner_tip_position[2] , 0.0},		-- center of mass position relative to object 3d model center for empty aircraft
+	-- moment_of_inertia  	= 	{14056.0, 40927.0, 30700.0},   	-- moment of inertia of empty aircraft
+
+
+A29B =
+{
+	center_of_mass		=	{-0.4697  , -0.552 , 0.0},			-- center of mass position relative to object 3d model center for empty aircraft
+	moment_of_inertia  	= 	{14056.0, 40927.0, 30700.0},   -- moment of inertia of empty aircraft
+
+	disable_built_in_oxygen_system	= true,
+
+	-- FFB force multiplier
+	ffbPitchK	= 0.65,
+	ffbRollK	= 0.65,
+
+	-- view shake amplitude
+	minor_shake_ampl = 0.07,
+	major_shake_ampl = 0.25,
+
+	debugLine = "{M}:%1.3f {KCAS}:%4.1f {KEAS}:%4.1f {KTAS}:%4.1f {Mind}:%1.3f {IndAS}:%4.1f {AoA}:%4.1f {AoS}:%4.1f {nx}:%2.1f {ny}:%4.1f {nz}:%5.2f {wx}:%4.1f {wy}:%4.1f {wz}:%4.1f {Fx}:%7.0f {Pl}:%7.0f {mass_lb}:%4.1f {X}:%2.2f {Lstab}:%2.1f {Lail}:%2.1f {Rud}:%2.1f {pitch}:%2.1f {Vy}:%7.1f {DI}:%3.0f",
+
+}
+
 
 suspension = 
 {
@@ -82,7 +142,7 @@ suspension =
 		wheel_axle_offset 						= 0.0,
 		self_attitude 							= true,
 		--axle_angle
-		yaw_limit 								= math.rad(90.0), --so apparently this must be set to half the animation angle for some reason
+		yaw_limit 								= math.rad(20),
 		--moment_limit
 		damper_coeff 							= main_damper_coeff,
 		--wheel_ground_block_flag
@@ -117,7 +177,7 @@ suspension =
 		wheel_moment_of_inertia					= nose_wheel_moment_of_inertia,
 		wheel_radius 							= 0.433,
 		wheel_static_friction_factor 			= wheel_static_friction_factor_COMMON,
-		wheel_side_friction_factor 				= wheel_side_friction_factor_COMMON,--affects the abillity to slide in turns - decrease for better turning
+		wheel_side_friction_factor 				= wheel_side_friction_factor_COMMON,
 		wheel_roll_friction_factor 				= wheel_roll_friction_factor_COMMON,
 		wheel_glide_friction_factor 			= wheel_glide_friction_factor_COMMON,
 		wheel_damage_force_factor 				= 250.0,--/N/ 250 Su-25, damage to tires
@@ -130,12 +190,11 @@ suspension =
 		--anti_skid_installed
 
 		--damper_coeff = damper_coeff_tail_wheel,
-		--arg_post 								= 999,
 		arg_amortizer 							= 1,
 		arg_wheel_rotation 						= 76,
 		arg_wheel_yaw 							= 2,
 		--arg_wheel_damage						= 999,
-		--arg_post								= 999,
+		arg_post								= 0,
 		collision_shell_name					= "WHEEL_F",
 		--filter_yaw							= 999,???
 		--noise_k
@@ -150,7 +209,7 @@ suspension =
 
     --MAINGEAR LEFT
     {
-        anti_skid_installed = false,
+        anti_skid_installed 					= true,
 	
 		mass 									= 200.0,
 		damage_element 							= 84,
@@ -186,16 +245,19 @@ suspension =
 		damper_coeff 							= main_damper_coeff,
 
 		--damper_coeff = damper_coeff_main_wheel,
-		--arg_post = 5,
+		arg_post 								= 5,
 		arg_amortizer 							= 6,
 		arg_wheel_rotation 						= 77,
 		arg_wheel_yaw 							= -1,
-		collision_shell_name 					= "WHEEL_R",
+		collision_shell_name 					= "WHEEL_L",
+
+		track_width								= 0.2,
+
     },
 
     --MAINGEAR RIGHT
     {
-        anti_skid_installed 					= false,
+        anti_skid_installed 					= true,
 		
 		mass 									= 200.0,
 		damage_element 							= 85,--?
@@ -216,7 +278,7 @@ suspension =
 		amortizer_direct_damper_force_factor 	= main_amortizer_direct_damper_force_factor/2.0,
 		amortizer_back_damper_force_factor 		= main_amortizer_back_damper_force_factor,
 		
-		wheel_radius 							= 0.563,
+		wheel_radius 							= 0.53,
 		wheel_static_friction_factor 			= wheel_static_friction_factor_COMMON,
 		wheel_side_friction_factor 				= wheel_side_friction_factor_COMMON,
 		wheel_roll_friction_factor 				= wheel_roll_friction_factor_COMMON,
@@ -231,10 +293,13 @@ suspension =
 		damper_coeff 							= main_damper_coeff,
 
 		--damper_coeff = damper_coeff_main_wheel,
-		--arg_post = 3,
+		arg_post 								= 3,
 		arg_amortizer 							= 4,
-		arg_wheel_rotation 						= 77,
+		arg_wheel_rotation 						= 103,
 		arg_wheel_yaw 							= -1,
 		collision_shell_name 					= "WHEEL_R",
-    },
+ 
+		track_width								= 0.2,
+
+	},
 }

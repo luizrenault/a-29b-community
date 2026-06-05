@@ -942,6 +942,9 @@ end
 
 local iCommandPlaneDropFlareOnce = 357
 local iCommandPlaneDropChaffOnce = 358
+local iCommandPlaneWingtipSmokeOnOff = 78
+
+dev:listen_command(iCommandPlaneWingtipSmokeOnOff)
 
 dev:listen_command(iCommandPlaneDropFlareOnce)
 dev:listen_command(iCommandPlaneDropChaffOnce)
@@ -1205,7 +1208,11 @@ function SetCommand(command,value)
         if dev:get_chaff_count() > 1 then 
             dev:drop_chaff()
         end
+    elseif command == iCommandPlaneWingtipSmokeOnOff then
+        print_message_to_user("Smoke")
+        dev:launch_station(6)
     end
+
 end
 
 dev:listen_event("WeaponRearmComplete")

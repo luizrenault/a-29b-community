@@ -1,5 +1,6 @@
 dofile(LockOn_Options.script_path .. "CMFD/CMFD_defs.lua")
 dofile(LockOn_Options.script_path .. "CMFD/CMFD_pageID_defs.lua")
+dofile(LockOn_Options.script_path .. "Indicator/Indicator_defs.lua")
 
 local CMFDNumber=get_param_handle("CMFDNumber")
 local CMFDNu = CMFDNumber:get()
@@ -20,5 +21,12 @@ Poly_Text.element_params = {"CMFD"..tostring(CMFDNu).."_BRIGHT"}
 Poly_Text.controllers = {{"opacity_using_parameter", 0}}
 
 AddToUpper(Poly_Text)
-Poly_Text = nil
 
+DEFAULT_LEVEL = 9
+local aspect = GetAspect()
+
+local FLIR_Video = addTextureBox(nil, 2, 1.5, "CenterCenter", {0, aspect / 4}, page_root.name, nil, "render_target_"..string.format("%d",GetRenderTarget() + 1));
+
+--FLIR_Video.element_params = {CMFD_BRIGHT, "FLIR_STATUS"}
+--FLIR_Video.controllers = {{"opacity_using_parameter", 0}, {"parameter_compare_with_number", 1, 1, 1}}
+render_target		 = 1 -- mfd0 
