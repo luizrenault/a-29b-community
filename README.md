@@ -46,7 +46,7 @@ All aircraft systems implemented in C++ can be freely used in other non-paid pub
 
 # Changelog
 
-## Unreleased
+## Version 0.8.0 - 05 Jun 2026
 
 ### Added
 - New CMFD HUD camera pages for the simplified FLIR display path.
